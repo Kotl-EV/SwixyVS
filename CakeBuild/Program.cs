@@ -30,7 +30,8 @@ public class BuildContext : FrostingContext
 {
     public List<string> ProjectNames =
     [
-        "SwixyClaimChunk"
+        "SwixyClaimChunk",
+        "SwixySkyBlock"
     ];
 
     public BuildContext(ICakeContext context) : base(context)

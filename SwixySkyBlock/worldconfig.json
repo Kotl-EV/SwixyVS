@@ -1,0 +1,36 @@
+{
+  "playstyles": [
+    {
+      "code": "skyblock",
+      "playListCode": "survival",
+      "langCode": "preset-skyblock",
+      "mods": ["game", "survival"],
+      "listOrder": 2,
+      "worldType": "standard",
+      "worldConfig": {
+        "worldClimate": "realistic",
+        "seasons": "enabled",
+        "colorAccurateWorldmap": "true",
+        "gameMode": "survival",
+        "spawnRadius": "0",
+        "temporalStability": "true",
+        "temporalStorms": "sometimes",
+        "graceTimer": "0",
+        "microblockChiseling": "stonewood",
+        "polarEquatorDistance": "100000",
+        "lungCapacity": "40000",
+        "harshWinters": "false",
+        "daysPerMonth": "9",
+        "saplingGrowthRate": "1",
+        "propickNodeSearchRadius": "6",
+        "allowUndergroundFarming": "false",
+        "allowFallingBlocks": "true",
+        "allowFireSpread": "true",
+        "temporalGearRespawnUses": "-1",
+        "temporalStormSleeping": "0",
+        "clutterObtainable": "ifrepaired"
+      }
+    }
+  ],
+  "worldConfigAttributes": []
+}

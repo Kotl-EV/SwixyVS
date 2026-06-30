@@ -7,7 +7,7 @@
     "Kotl"
   ],
   "description": "Chunk claim map interface.",
-  "Version": "1.0.0",
+  "Version": "1.0.1",
   "dependencies": {
     "game": "1.22.0"
   }

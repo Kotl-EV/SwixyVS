@@ -1,0 +1,15 @@
+{
+  "type": "code",
+  "modid": "swixyskyblock",
+  "name": "SwixySkyBlock",
+  "authors": [
+    "Tehtelev",
+    "Kotl"
+  ],
+  "description": "SkyBlock gameplay for Vintage Story.",
+  "Version": "1.0.0",
+  "dependencies": {
+    "game": "1.22.0",
+    "survival": "1.22.0"
+  }
+}

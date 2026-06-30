@@ -118,7 +118,7 @@ internal sealed class PlayerIslandRegistry
     {
         var templates = IslandBlueprint.LoadAll(api);
         var template = templates.FirstOrDefault(t => t.Name == record.TemplateName)
-            ?? IslandBlueprint.PickForWorld(templates);
+            ?? (templates.Count > 0 ? IslandBlueprint.PickForWorld(templates) : IslandBlueprint.LoadSpawn(api));
         return template.GetSpawnPosition(record.Origin);
     }
 

@@ -11,6 +11,7 @@
   "island-action-spawn": "Go to spawn",
   "island-action-delete": "Delete island",
   "island-action-recreate": "Recreate island",
+  "island-status-title": "Status",
   "island-template-pick": "Choose island template:",
   "island-template-starter": "Starter",
   "island-template-classic": "Classic",

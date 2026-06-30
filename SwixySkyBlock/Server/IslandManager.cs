@@ -323,6 +323,11 @@ public sealed partial class SwixySkyBlockMod
         }
 
         var templates = IslandBlueprint.LoadAll(serverApi);
+        if (templates.Count == 0)
+        {
+            return null;
+        }
+
         if (!string.IsNullOrWhiteSpace(templateName))
         {
             return templates.FirstOrDefault(t => t.Name == templateName.Trim())
@@ -410,6 +415,12 @@ public sealed partial class SwixySkyBlockMod
         }
 
         var templates = IslandBlueprint.LoadAll(serverApi);
+        if (templates.Count == 0)
+        {
+            serverApi.Logger.Warning("[SwixySkyBlock] No player island templates available; restore skipped.");
+            return;
+        }
+
         foreach (var record in islandRegistry.All.ToList())
         {
             var template = templates.FirstOrDefault(t => t.Name == record.TemplateName)
@@ -440,6 +451,11 @@ public sealed partial class SwixySkyBlockMod
         }
 
         var templates = IslandBlueprint.LoadAll(serverApi);
+        if (templates.Count == 0)
+        {
+            return;
+        }
+
         foreach (var record in islandRegistry.All)
         {
             var template = templates.FirstOrDefault(t => t.Name == record.TemplateName)

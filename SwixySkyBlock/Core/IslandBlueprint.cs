@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -10,36 +12,26 @@ namespace SwixySkyBlock;
 /// <summary>Загрузка и сборка схематик островов.</summary>
 internal static class IslandBlueprint
 {
-    private static readonly string[] DefaultAssetNames = ["starter", "classic"];
-    private static IReadOnlyList<IslandTemplate>? cachedTemplates;
+    private const string SpawnTemplateName = "Spawn";
+    private const string SpawnSchematicPath = "schematics/Spawn.json";
+    private const string PlayerIslandSchematicPath = "schematics/islands/";
+    private static IslandTemplate? cachedSpawnTemplate;
 
     public static IReadOnlyList<IslandTemplate> LoadAll(ICoreServerAPI api)
     {
-        if (cachedTemplates != null)
-        {
-            return cachedTemplates;
-        }
-
         var templates = new List<IslandTemplate>();
         var loadedFromAssets = 0;
 
-        foreach (var name in DefaultAssetNames)
+        foreach (var asset in api.Assets.GetMany(PlayerIslandSchematicPath)
+            .Where(static asset => string.Equals(asset.Location.Domain, "swixyskyblock", StringComparison.Ordinal))
+            .OrderBy(static asset => asset.Location.Path, StringComparer.OrdinalIgnoreCase))
         {
-            if (TryAddFromAsset(api, templates, name))
-            {
-                loadedFromAssets++;
-            }
-        }
-
-        foreach (var asset in api.Assets.GetMany("schematics/"))
-        {
-            if (!string.Equals(asset.Location.Domain, "swixyskyblock", StringComparison.Ordinal))
+            if (!asset.Location.Path.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            var name = asset.Location.Path.Replace("schematics/", "", StringComparison.Ordinal)
-                .Replace(".json", "", StringComparison.Ordinal);
+            var name = GetTemplateName(asset.Location.Path);
             if (templates.Exists(t => t.Name == name))
             {
                 continue;
@@ -51,53 +43,108 @@ internal static class IslandBlueprint
             }
         }
 
+        loadedFromAssets += LoadFromLooseFiles(api, templates);
+
         if (templates.Count == 0)
         {
-            templates.Add(CreateBuiltInCircular("starter", 10, "game:cobblestone-granite", "game:soil-medium-normal", "game:soil-medium-normal"));
-            templates.Add(CreateBuiltInCircular("classic", 10, "game:rock-andesite", "game:cobblestone-andesite", "game:soil-medium-normal"));
             api.Logger.Warning(
-                "[SwixySkyBlock] No schematic assets loaded (check Mods folder contains assets/swixyskyblock/schematics/). Using built-in islands.");
+                "[SwixySkyBlock] No player island schematics loaded (check assets/swixyskyblock/schematics/islands/). Island creation templates list will be empty.");
         }
         else if (loadedFromAssets == 0)
         {
             api.Logger.Warning("[SwixySkyBlock] Schematic files found but none passed validation; using partial/built-in list.");
         }
 
-        cachedTemplates = templates;
         return templates;
     }
 
-    public static void ClearCache() => cachedTemplates = null;
+    public static IslandTemplate LoadSpawn(ICoreServerAPI api)
+    {
+        if (cachedSpawnTemplate != null)
+        {
+            return cachedSpawnTemplate;
+        }
+
+        var asset = api.Assets.TryGet(new AssetLocation("swixyskyblock", SpawnSchematicPath))
+            ?? api.Assets.TryGet(new AssetLocation($"swixyskyblock:{SpawnSchematicPath}"));
+        if (asset != null)
+        {
+            var templates = new List<IslandTemplate>(1);
+            if (TryAddFromText(api, templates, SpawnTemplateName, asset.ToText()))
+            {
+                cachedSpawnTemplate = templates[0];
+                return cachedSpawnTemplate;
+            }
+        }
+
+        api.Logger.Warning(
+            "[SwixySkyBlock] Spawn schematic not loaded (check assets/swixyskyblock/schematics/Spawn.json). Using built-in spawn island.");
+        cachedSpawnTemplate = CreateBuiltInCircular(SpawnTemplateName, 10, "game:cobblestone-granite", "game:soil-medium-normal", "game:soil-medium-normal");
+        return cachedSpawnTemplate;
+    }
+
+    public static void ClearCache()
+    {
+        cachedSpawnTemplate = null;
+    }
 
     public static IslandTemplate PickForWorld(IReadOnlyList<IslandTemplate> templates) =>
-        templates.FirstOrDefault(t => t.Name == "starter") ?? templates[0];
+        templates.FirstOrDefault(t => string.Equals(t.Name, "starter", StringComparison.OrdinalIgnoreCase)) ?? templates[0];
 
-    private static bool TryAddFromAsset(ICoreServerAPI api, List<IslandTemplate> templates, string name)
+    private static int LoadFromLooseFiles(ICoreServerAPI api, List<IslandTemplate> templates)
     {
-        var locations = new[]
+        var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (string.IsNullOrEmpty(assemblyDir))
         {
-            new AssetLocation("swixyskyblock", $"schematics/{name}.json"),
-            new AssetLocation($"swixyskyblock:schematics/{name}.json")
-        };
+            return 0;
+        }
 
-        foreach (var location in locations)
+        var schematicsDir = Path.Combine(
+            assemblyDir,
+            "assets",
+            "swixyskyblock",
+            "schematics",
+            "islands");
+        if (!Directory.Exists(schematicsDir))
         {
-            var asset = api.Assets.TryGet(location);
-            if (asset == null)
+            return 0;
+        }
+
+        var loaded = 0;
+        foreach (var file in Directory.EnumerateFiles(schematicsDir, "*.json").OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase))
+        {
+            var name = Path.GetFileNameWithoutExtension(file);
+            if (templates.Exists(t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase)))
             {
                 continue;
             }
 
-            api.Logger.Notification("[SwixySkyBlock] Found schematic asset {0}.", location);
-            return TryAddFromText(api, templates, name, asset.ToText());
+            if (TryAddFromText(api, templates, name, File.ReadAllText(file)))
+            {
+                loaded++;
+            }
         }
 
-        api.Logger.Debug("[SwixySkyBlock] Schematic asset not found for '{0}'.", name);
-        return false;
+        return loaded;
+    }
+
+    private static string GetTemplateName(string assetPath)
+    {
+        var path = assetPath.Replace('\\', '/');
+        var fileNameStart = path.LastIndexOf('/') + 1;
+        var fileName = fileNameStart > 0 ? path[fileNameStart..] : path;
+        return fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+            ? fileName[..^5]
+            : fileName;
     }
 
     private static bool TryAddFromText(ICoreServerAPI api, List<IslandTemplate> templates, string name, string json)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return false;
+        }
+
         string? error = null;
         var schematic = BlockSchematic.LoadFromString(json, ref error);
         if (schematic == null || !string.IsNullOrEmpty(error))

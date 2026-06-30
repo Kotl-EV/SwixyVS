@@ -38,14 +38,16 @@ public sealed class IslandHubDialog : GuiDialog
     private string selectedMemberUid = "";
     private string memberNameInput = "";
     private string claimNameInput = "";
-    private bool showTemplatePicker;
 
     private float claimListScrollValue;
     private float memberListScrollValue;
+    private float templateListScrollValue;
     private ElementBounds? claimListTableBounds;
     private ElementBounds? claimListClipBounds;
     private ElementBounds? memberListTableBounds;
     private ElementBounds? memberListClipBounds;
+    private ElementBounds? templateListTableBounds;
+    private ElementBounds? templateListClipBounds;
 
     private bool claimsUiDeferScheduled;
     private Action? deferredClaimsUiAction;
@@ -74,16 +76,23 @@ public sealed class IslandHubDialog : GuiDialog
 
     public void ApplyHubState(IslandHubStatePacket packet)
     {
+        var previousTemplateCount = hubState?.AvailableTemplates?.Count ?? -1;
+        var previousHasIsland = hubState?.HasIsland;
+        var previousIsResident = hubState?.IsIslandResident;
+
         hubState = packet;
 
         if (activePage == PageIsland)
         {
-            SingleComposer?.GetDynamicText("hubStatusText")?.SetNewText(packet.Message ?? "");
-            if (showTemplatePicker && (packet.AvailableTemplates == null || packet.AvailableTemplates.Count == 0))
+            if (previousTemplateCount != (packet.AvailableTemplates?.Count ?? 0)
+                || previousHasIsland != packet.HasIsland
+                || previousIsResident != packet.IsIslandResident)
             {
-                showTemplatePicker = false;
                 ComposeDialog();
+                return;
             }
+
+            SingleComposer?.GetDynamicText("hubStatusText")?.SetNewText(packet.Message ?? "");
         }
     }
 
@@ -255,20 +264,13 @@ public sealed class IslandHubDialog : GuiDialog
 
     public override bool OnEscapePressed()
     {
-        if (showTemplatePicker)
-        {
-            showTemplatePicker = false;
-            ComposeDialog();
-            return true;
-        }
-
         TryClose();
         return true;
     }
 
     private void ComposeDialog()
     {
-        var mainBounds = ElementBounds.Fixed(0, 0, 780, 690);
+        var mainBounds = ElementBounds.Fixed(0, 0, 780, GetDialogHeight());
         var bgBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding);
         bgBounds.BothSizing = ElementSizing.FitToChildren;
         bgBounds.WithChildren(mainBounds);
@@ -305,102 +307,66 @@ public sealed class IslandHubDialog : GuiDialog
         }
 
         SingleComposer = composer.EndChildElements().Compose();
+        ApplyIslandPageScrollState();
         ApplyClaimsPageScrollState();
         ApplyClaimsPageInputState();
         UpdateHubStatusText();
     }
 
+    private int GetDialogHeight()
+    {
+        return 690;
+    }
+
     private void ComposeIslandPage(GuiComposer composer)
     {
-        const int buttonY = 100;
-        const int buttonW = 200;
-        const int buttonH = 120;
-        const int gap = 18;
-        const int startX = 28;
+        const int areaY = 84;
+        const int areaH = 568;
+        const int leftX = 18;
+        const int leftW = 344;
+        const int gap = 14;
+        const int rightX = leftX + leftW + gap;
+        const int rightW = 370;
+        const int actionPanelGap = 14;
+        const int actionPanelH = (areaH - actionPanelGap) / 2;
+        const int actionInnerXPadding = 24;
+        const int actionInnerYPadding = 13;
+        const int actionW = leftW - actionInnerXPadding * 2;
+        const int actionH = actionPanelH - actionInnerYPadding * 2;
+        const int spawnPanelY = areaY;
+        const int homePanelY = areaY + actionPanelH + actionPanelGap;
         var hasIsland = hubState?.HasIsland == true;
         var hasHome = hasIsland || hubState?.IsIslandResident == true;
-        var canCreate = !hasIsland && hubState?.IsIslandResident != true;
 
-        AddHubActionCard(
-            composer,
-            startX,
-            buttonY,
-            buttonW,
-            buttonH,
-            "createIsland",
-            "swixyskyblock:island-action-create",
-            IslandHubIcons.DrawCreateIsland,
-            OnCreateIslandButton,
-            enabled: canCreate);
-        AddHubActionCard(
-            composer,
-            startX + (buttonW + gap),
-            buttonY,
-            buttonW,
-            buttonH,
-            "homeIsland",
-            "swixyskyblock:island-action-home",
-            IslandHubIcons.DrawGoHome,
-            OnGoHomeButton,
-            enabled: hasHome);
-        AddHubActionCard(
-            composer,
-            startX + (buttonW + gap) * 2,
-            buttonY,
-            buttonW,
-            buttonH,
-            "spawnIsland",
-            "swixyskyblock:island-action-spawn",
-            IslandHubIcons.DrawGoSpawn,
-            OnGoSpawnButton);
-        composer.AddDynamicText(
-            hubState?.Message ?? "",
-            CairoFont.WhiteDetailText(),
-            ElementBounds.Fixed(40, 250, 700, 80),
-            "hubStatusText");
+        composer
+            .AddDynamicCustomDraw(ElementBounds.Fixed(leftX, spawnPanelY, leftW, actionPanelH), DrawSidePanelBackground, "spawnActionBg")
+            .AddDynamicCustomDraw(ElementBounds.Fixed(leftX, homePanelY, leftW, actionPanelH), DrawSidePanelBackground, "homeActionBg")
+            .AddDynamicCustomDraw(ElementBounds.Fixed(rightX, areaY, rightW, areaH), DrawSidePanelBackground, "templatePickerBg");
 
-        if (showTemplatePicker)
-        {
-            var templates = hubState?.AvailableTemplates ?? [];
-            var templateY = 360;
-            var templateX = 40;
-            const int cardW = 180;
-            const int cardH = 118;
-            const int templateGap = 16;
-            const int cols = 3;
+        var spawnActionBounds = ElementBounds.Fixed(leftX + actionInnerXPadding, spawnPanelY + actionInnerYPadding, actionW, actionH);
+        var homeActionBounds = ElementBounds.Fixed(leftX + actionInnerXPadding, homePanelY + actionInnerYPadding, actionW, actionH);
 
-            composer.AddDynamicText(
-                Lang.Get("swixyskyblock:island-template-pick"),
-                CairoFont.WhiteSmallText(),
-                ElementBounds.Fixed(templateX, templateY - 28, 500, 22),
-                "templatePickLabel");
+        composer
+            .AddCellList(spawnActionBounds, CreateActionCell, BuildActionCell("spawn", true), "spawnActionList")
+            .AddCellList(homeActionBounds, CreateActionCell, BuildActionCell("home", hasHome), "homeActionList");
 
-            for (var i = 0; i < templates.Count; i++)
-            {
-                var templateName = templates[i];
-                var col = i % cols;
-                var row = i / cols;
-                var x = templateX + col * (cardW + templateGap);
-                var y = templateY + row * (cardH + templateGap);
-                var label = ResolveTemplateLabel(templateName);
+        composer.AddStaticText(
+            Lang.Get("swixyskyblock:island-template-pick"),
+            CairoFont.WhiteSmallText(),
+            ElementBounds.Fixed(rightX + 16, areaY + 12, rightW - 32, 22),
+            "templatePickLabel");
 
-                composer
-                    .AddDynamicCustomDraw(
-                        ElementBounds.Fixed(x, y, cardW, cardH),
-                        (ctx, _, bounds) => IslandHubIcons.DrawTemplateCard(
-                            ctx,
-                            bounds.OuterWidth,
-                            bounds.OuterHeight,
-                            templateName),
-                        $"templateCard{i}")
-                    .AddButton(
-                        label,
-                        () => OnTemplateSelected(templateName),
-                        ElementBounds.Fixed(x, y + cardH - 30, cardW, 28),
-                        EnumButtonStyle.Small,
-                        $"templateBtn{i}");
-            }
-        }
+        var templateListBounds = ElementBounds.Fixed(rightX + 16, areaY + 44, rightW - 52, areaH - 64);
+        templateListClipBounds = templateListBounds.ForkContainingChild(3, 3, 3, 3);
+        templateListTableBounds = templateListClipBounds.ForkContainingChild(0, 0, 0, -3).WithFixedPadding(3);
+
+        composer
+            .AddDynamicCustomDraw(templateListBounds, DrawScrollAreaBackground, "templateListScrollBg")
+            .AddInset(templateListBounds, 3, 0.85f)
+            .AddVerticalScrollbar(OnTemplateListScroll, ElementStdBounds.VerticalScrollbar(templateListBounds), "templateListScroll")
+            .BeginClip(templateListClipBounds)
+            .AddCellList(templateListTableBounds, CreateTemplateCell, BuildTemplateCells(), "templateList")
+            .EndClip();
     }
 
     private static string ResolveTemplateLabel(string templateName)
@@ -408,36 +374,6 @@ public sealed class IslandHubDialog : GuiDialog
         var key = $"swixyskyblock:island-template-{templateName}";
         var translated = Lang.Get(key);
         return translated == key ? templateName : translated;
-    }
-
-    private static void AddHubActionCard(
-        GuiComposer composer,
-        int x,
-        int y,
-        int width,
-        int height,
-        string id,
-        string labelKey,
-        Action<Context, double, double, double> drawIcon,
-        ActionConsumable onClick,
-        bool enabled = true)
-    {
-        composer
-            .AddDynamicCustomDraw(
-                ElementBounds.Fixed(x, y, width, height),
-                (ctx, _, bounds) => IslandHubIcons.DrawActionCard(
-                    ctx,
-                    bounds.OuterWidth,
-                    bounds.OuterHeight,
-                    drawIcon,
-                    enabled),
-                $"{id}Draw")
-            .AddButton(
-                Lang.Get(labelKey),
-                onClick,
-                ElementBounds.Fixed(x, y + height - 28, width, 28),
-                EnumButtonStyle.Small,
-                $"{id}Label");
     }
 
     private void ComposeAccessPage(GuiComposer composer)
@@ -575,7 +511,6 @@ public sealed class IslandHubDialog : GuiDialog
     private bool SwitchToIslandPage()
     {
         activePage = PageIsland;
-        showTemplatePicker = false;
         ComposeDialog();
         return true;
     }
@@ -583,20 +518,7 @@ public sealed class IslandHubDialog : GuiDialog
     private bool SwitchToAccessPage()
     {
         activePage = PageAccess;
-        showTemplatePicker = false;
         RequestClaimList();
-        ComposeDialog();
-        return true;
-    }
-
-    private bool OnCreateIslandButton()
-    {
-        if (hubState?.HasIsland == true || hubState?.IsIslandResident == true)
-        {
-            return true;
-        }
-
-        showTemplatePicker = true;
         ComposeDialog();
         return true;
     }
@@ -622,7 +544,20 @@ public sealed class IslandHubDialog : GuiDialog
 
     private bool OnTemplateSelected(string templateName)
     {
-        showTemplatePicker = false;
+        if (hubState?.HasIsland == true || hubState?.IsIslandResident == true)
+        {
+            SingleComposer?.GetDynamicText("hubStatusText")
+                ?.SetNewText(Lang.Get(hubState.IsIslandResident
+                    ? "swixyskyblock:island-error-resident-cannot-create"
+                    : "swixyskyblock:island-error-already-exists"));
+            return true;
+        }
+
+        if (string.IsNullOrWhiteSpace(templateName))
+        {
+            return true;
+        }
+
         channel.SendPacket(new IslandActionPacket
         {
             Action = IslandHubActionType.Create,
@@ -796,6 +731,22 @@ public sealed class IslandHubDialog : GuiDialog
         };
     }
 
+    private IGuiElementCell CreateTemplateCell(SavegameCellEntry cell, ElementBounds bounds)
+    {
+        return new IslandTemplateListCell(clientApi, cell, bounds)
+        {
+            OnSelect = SelectTemplateCell
+        };
+    }
+
+    private IGuiElementCell CreateActionCell(SavegameCellEntry cell, ElementBounds bounds)
+    {
+        return new IslandHubActionListCell(clientApi, cell, bounds)
+        {
+            OnSelect = _ => SelectActionCell(cell.Title)
+        };
+    }
+
     private string BuildClaimListDetailText(IslandClaimInfoPacket claim)
     {
         return claim.ViewerCanLeave
@@ -836,6 +787,58 @@ public sealed class IslandHubDialog : GuiDialog
                 DrawAsButton = true
             };
         }
+    }
+
+    private IEnumerable<SavegameCellEntry> BuildTemplateCells()
+    {
+        foreach (var templateName in hubState?.AvailableTemplates ?? [])
+        {
+            var label = ResolveTemplateLabel(templateName);
+            yield return new SavegameCellEntry
+            {
+                Title = templateName,
+                DetailText = label == templateName ? $"schematics/islands/{templateName}.json" : label,
+                LeftOffY = 2,
+                DetailTextOffY = 2,
+                Enabled = true,
+                DrawAsButton = true
+            };
+        }
+    }
+
+    private static IEnumerable<SavegameCellEntry> BuildActionCell(string title, bool enabled)
+    {
+        yield return new SavegameCellEntry
+        {
+            Title = title,
+            Enabled = enabled,
+            DrawAsButton = true
+        };
+    }
+
+    private void SelectActionCell(string action)
+    {
+        if (action == "spawn")
+        {
+            OnGoSpawnButton();
+            return;
+        }
+
+        if (action == "home")
+        {
+            OnGoHomeButton();
+        }
+    }
+
+    private void SelectTemplateCell(int index)
+    {
+        var templates = hubState?.AvailableTemplates;
+        if (templates == null || index < 0 || index >= templates.Count)
+        {
+            return;
+        }
+
+        OnTemplateSelected(templates[index]);
     }
 
     private IslandClaimMemberPacket? FindMemberForCell(SavegameCellEntry cell)
@@ -1296,6 +1299,29 @@ public sealed class IslandHubDialog : GuiDialog
         cellList.Bounds.CalcWorldBounds();
     }
 
+    private void OnTemplateListScroll(float value)
+    {
+        templateListScrollValue = value;
+        var cellList = SingleComposer?.GetCellList<SavegameCellEntry>("templateList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        cellList.Bounds.fixedY = -value;
+        cellList.Bounds.CalcWorldBounds();
+    }
+
+    private void ApplyIslandPageScrollState()
+    {
+        if (activePage != PageIsland || SingleComposer == null)
+        {
+            return;
+        }
+
+        RestoreTemplateListScroll(templateListScrollValue);
+    }
+
     private void ApplyClaimsPageScrollState()
     {
         if (activePage == PageIsland || SingleComposer == null)
@@ -1372,6 +1398,40 @@ public sealed class IslandHubDialog : GuiDialog
         }
 
         cellList.Bounds.fixedY = -memberListScrollValue;
+        cellList.Bounds.CalcWorldBounds();
+    }
+
+    private void RestoreTemplateListScroll(float scrollValue)
+    {
+        if (SingleComposer == null || templateListClipBounds == null)
+        {
+            return;
+        }
+
+        var cellList = SingleComposer.GetCellList<SavegameCellEntry>("templateList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        cellList.CalcTotalHeight();
+        cellList.Bounds.CalcWorldBounds();
+        templateListClipBounds.CalcWorldBounds();
+
+        var clipHeight = (float)templateListClipBounds.fixedHeight;
+        var tableHeight = (float)cellList.Bounds.fixedHeight;
+        var maxScroll = Math.Max(0, tableHeight - clipHeight);
+        templateListScrollValue = Math.Clamp(scrollValue, 0, maxScroll);
+
+        var templateScroll = SingleComposer.GetScrollbar("templateListScroll");
+        if (templateScroll != null)
+        {
+            templateScroll.SetHeights(clipHeight, tableHeight);
+            templateScroll.CurrentYPosition = templateListScrollValue;
+            templateScroll.RecomposeHandle();
+        }
+
+        cellList.Bounds.fixedY = -templateListScrollValue;
         cellList.Bounds.CalcWorldBounds();
     }
 

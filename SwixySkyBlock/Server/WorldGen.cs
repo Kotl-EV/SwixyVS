@@ -149,8 +149,7 @@ public sealed partial class SwixySkyBlockMod
     {
         ResolveIslandOrigin(api, forNewWorld: true);
 
-        var templates = IslandBlueprint.LoadAll(api);
-        activeIsland = IslandBlueprint.PickForWorld(templates);
+        activeIsland = IslandBlueprint.LoadSpawn(api);
         islandSpawn = activeIsland.GetSpawnPosition(islandOrigin);
 
         api.WorldManager.SaveGame.StoreData(
@@ -165,13 +164,7 @@ public sealed partial class SwixySkyBlockMod
     {
         ResolveIslandOrigin(api, forNewWorld: false);
 
-        var data = api.WorldManager.SaveGame.GetData(SkyBlockWorld.SaveKeyIslandTemplate);
-        var savedName = data != null ? Encoding.UTF8.GetString(data) : null;
-
-        var templates = IslandBlueprint.LoadAll(api);
-        activeIsland = string.IsNullOrEmpty(savedName)
-            ? IslandBlueprint.PickForWorld(templates)
-            : templates.FirstOrDefault(t => t.Name == savedName) ?? IslandBlueprint.PickForWorld(templates);
+        activeIsland = IslandBlueprint.LoadSpawn(api);
 
         islandSpawn = activeIsland.GetSpawnPosition(islandOrigin);
     }

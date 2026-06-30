@@ -376,7 +376,7 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         DrawColumnIcon(ctx, GetIconX(dividerX, columnWidth, 2, iconSize), iconY, iconSize, HoverRegion.Build);
 
         // Колонка 3: корзина удаления (destructive-стиль, если не владелец)
-        ClaimTrashIconDrawer.Draw(
+        ClaimCairoIcons.DrawTrash(
             ctx,
             GetIconX(dividerX, columnWidth, 3, iconSize),
             iconY,
@@ -399,8 +399,8 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     }
 
     /// <summary>
-    /// Делегирует отрисовку иконки соответствующему методу <see cref="ClaimAccessIconDrawer"/> по типу колонки.
-    /// Колонка Delete рисуется отдельно через <see cref="ClaimTrashIconDrawer"/>.
+    /// Делегирует отрисовку иконки соответствующему методу <see cref="ClaimCairoIcons"/> по типу колонки.
+    /// Колонка Delete рисуется отдельно через <see cref="ClaimCairoIcons.DrawTrash"/>.
     /// </summary>
     /// <param name="ctx">Контекст Cairo.</param>
     /// <param name="x">Левая координата иконки.</param>
@@ -412,13 +412,13 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         switch (column)
         {
             case HoverRegion.Owner:
-                ClaimAccessIconDrawer.DrawOwner(ctx, x, y, size, CrownState);
+                ClaimCairoIcons.DrawOwner(ctx, x, y, size, CrownState);
                 break;
             case HoverRegion.Use:
-                ClaimAccessIconDrawer.DrawGear(ctx, x, y, size, AccessUse, IsOwner);
+                ClaimCairoIcons.DrawGear(ctx, x, y, size, AccessUse, IsOwner);
                 break;
             case HoverRegion.Build:
-                ClaimAccessIconDrawer.DrawHammer(ctx, x, y, size, AccessBuild, IsOwner);
+                ClaimCairoIcons.DrawPickaxe(ctx, x, y, size, AccessBuild, IsOwner);
                 break;
         }
     }
@@ -674,202 +674,4 @@ internal enum CrownVisualState
 
     /// <summary>Владелец — яркая корона со свечением.</summary>
     Owner
-}
-
-/// <summary>
-/// Статический отрисовщик векторных иконок прав доступа в колонках ячейки участника привата.
-/// Использует Cairo: активные состояния — насыщенные цвета с обводкой; неактивные — серые полупрозрачные.
-/// </summary>
-internal static class ClaimAccessIconDrawer
-{
-    /// <summary>
-    /// Рисует иконку короны в колонке 0.
-    /// Владелец — золотая со свечением; со-владелец — золотая без свечения; участник — серая.
-    /// </summary>
-    public static void DrawOwner(Context ctx, double x, double y, double size, CrownVisualState state)
-    {
-        var centerX = x + size * 0.5;
-        var offsetY = -size * 0.07;
-        var topY = y + offsetY;
-        var baseY = topY + size * 0.72;
-
-        if (state == CrownVisualState.Owner)
-        {
-            DrawOwnerGlow(ctx, centerX, y + size * 0.5, size);
-        }
-
-        ctx.NewPath();
-        ctx.MoveTo(centerX - size * 0.28, baseY);
-        ctx.LineTo(centerX - size * 0.22, topY + size * 0.34);
-        ctx.LineTo(centerX - size * 0.1, topY + size * 0.48);
-        ctx.LineTo(centerX, topY + size * 0.3);
-        ctx.LineTo(centerX + size * 0.1, topY + size * 0.48);
-        ctx.LineTo(centerX + size * 0.22, topY + size * 0.34);
-        ctx.LineTo(centerX + size * 0.28, baseY);
-        ctx.ClosePath();
-
-        switch (state)
-        {
-            case CrownVisualState.Owner:
-                ctx.SetSourceRGBA(1, 0.92, 0.38, 1);
-                ctx.FillPreserve();
-                ctx.SetSourceRGBA(0.55, 0.35, 0.02, 0.95);
-                ctx.LineWidth = System.Math.Max(1.3, size * 0.045);
-                ctx.Stroke();
-                ctx.SetSourceRGBA(1, 0.78, 0.12, 1);
-                break;
-            case CrownVisualState.CoOwner:
-                ctx.SetSourceRGBA(1, 0.86, 0.28, 0.95);
-                ctx.FillPreserve();
-                ctx.SetSourceRGBA(0, 0, 0, 0.9);
-                ctx.LineWidth = System.Math.Max(1.2, size * 0.04);
-                ctx.Stroke();
-                ctx.SetSourceRGBA(0.92, 0.74, 0.18, 0.95);
-                break;
-            default:
-                ctx.SetSourceRGBA(0.5, 0.52, 0.56, 0.55);
-                ctx.Fill();
-                ctx.SetSourceRGBA(0.42, 0.44, 0.48, 0.5);
-                break;
-        }
-
-        ctx.Rectangle(centerX - size * 0.3, baseY, size * 0.6, size * 0.12);
-        ctx.Fill();
-    }
-
-    /// <summary>Мягкое свечение за короной владельца.</summary>
-    private static void DrawOwnerGlow(Context ctx, double centerX, double centerY, double size)
-    {
-        foreach (var (radius, alpha) in new (double radius, double alpha)[]
-        {
-            (size * 0.62, 0.1),
-            (size * 0.5, 0.16),
-            (size * 0.4, 0.22)
-        })
-        {
-            ctx.NewPath();
-            ctx.Arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.SetSourceRGBA(1, 0.82, 0.2, alpha);
-            ctx.Fill();
-        }
-    }
-
-    /// <summary>
-    /// Рисует иконку шестерёнки (право use) в колонке 1.
-    /// activeVisual = active || locked: у владельца шестерёнка всегда «включена» визуально (locked).
-    /// Активная: голубая (0.32, 0.74, 0.92) с обводкой; неактивная: серая.
-    /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="x">Левая координата иконки.</param>
-    /// <param name="y">Верхняя координата иконки.</param>
-    /// <param name="size">Размер иконки.</param>
-    /// <param name="active">Право use включено.</param>
-    /// <param name="locked">Владелец — иконка отображается как активная независимо от active.</param>
-    public static void DrawGear(Context ctx, double x, double y, double size, bool active, bool locked)
-    {
-        var activeVisual = active || locked;
-        var centerX = x + size * 0.5;
-        var centerY = y + size * 0.5;
-        const int teeth = 10; // число зубьев шестерёнки
-        var outerR = size * 0.38;
-        var innerR = size * 0.3;
-        var holeR = size * 0.11; // радиус центрального отверстия
-
-        AppendGearOutline(ctx, centerX, centerY, teeth, outerR, innerR);
-        if (activeVisual)
-        {
-            // Активное/заблокированное право use: голубая шестерёнка
-            ctx.SetSourceRGBA(0.32, 0.74, 0.92, 0.95);
-            ctx.FillPreserve();
-            ctx.SetSourceRGBA(0, 0, 0, 0.9);
-            ctx.LineWidth = System.Math.Max(1.2, size * 0.04);
-            ctx.Stroke();
-            ctx.SetSourceRGBA(0.16, 0.42, 0.55, 0.95);
-        }
-        else
-        {
-            // Право use выключено: серая шестерёнка
-            ctx.SetSourceRGBA(0.5, 0.52, 0.56, 0.55);
-            ctx.Fill();
-            ctx.SetSourceRGBA(0.42, 0.44, 0.48, 0.5);
-        }
-
-        // Центральное круглое отверстие шестерёнки
-        ctx.Arc(centerX, centerY, holeR, 0, Math.PI * 2);
-        ctx.Fill();
-    }
-
-    /// <summary>
-    /// Рисует иконку молотка (право build) в колонке 2.
-    /// activeVisual = active || locked — для владельца молоток всегда в активной палитре.
-    /// Активная: жёлто-оранжевая (0.95, 0.72, 0.22); неактивная: серая.
-    /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="x">Левая координата иконки.</param>
-    /// <param name="y">Верхняя координата иконки.</param>
-    /// <param name="size">Размер иконки.</param>
-    /// <param name="active">Право build включено.</param>
-    /// <param name="locked">Владелец — визуально активный молоток.</param>
-    public static void DrawHammer(Context ctx, double x, double y, double size, bool active, bool locked)
-    {
-        var activeVisual = active || locked;
-        var centerX = x + size * 0.5;
-        var headY = y + size * 0.3;
-
-        // Головка молотка (прямоугольник) + клиновидная рукоять
-        ctx.NewPath();
-        ctx.Rectangle(centerX - size * 0.24, headY, size * 0.48, size * 0.18);
-        ctx.MoveTo(centerX - size * 0.07, headY + size * 0.18);
-        ctx.LineTo(centerX - size * 0.03, y + size * 0.82);
-        ctx.LineTo(centerX + size * 0.03, y + size * 0.82);
-        ctx.LineTo(centerX + size * 0.07, headY + size * 0.18);
-        ctx.ClosePath();
-
-        if (activeVisual)
-        {
-            // Активное право build: золотисто-оранжевый молоток с обводкой
-            ctx.SetSourceRGBA(0.95, 0.72, 0.22, 0.95);
-            ctx.FillPreserve();
-            ctx.SetSourceRGBA(0, 0, 0, 0.9);
-            ctx.LineWidth = System.Math.Max(1.2, size * 0.04);
-            ctx.Stroke();
-        }
-        else
-        {
-            // Право build выключено: серый молоток
-            ctx.SetSourceRGBA(0.5, 0.52, 0.56, 0.55);
-            ctx.Fill();
-        }
-    }
-
-    /// <summary>
-    /// Строит замкнутый контур шестерёнки: чередование внешнего и внутреннего радиуса по углу.
-    /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="centerX">Центр по X.</param>
-    /// <param name="centerY">Центр по Y.</param>
-    /// <param name="teeth">Количество зубьев (точек на внешнем радиусе).</param>
-    /// <param name="outerR">Радиус вершин зубьев.</param>
-    /// <param name="innerR">Радиус впадин между зубьями.</param>
-    private static void AppendGearOutline(Context ctx, double centerX, double centerY, int teeth, double outerR, double innerR)
-    {
-        var steps = teeth * 2; // два шага на зуб: пик и впадина
-        for (var i = 0; i <= steps; i++)
-        {
-            var angle = Math.PI * 2 * i / steps - Math.PI / 2; // старт сверху (-90°)
-            var radius = i % 2 == 0 ? outerR : innerR;
-            var px = centerX + Math.Cos(angle) * radius;
-            var py = centerY + Math.Sin(angle) * radius;
-            if (i == 0)
-            {
-                ctx.MoveTo(px, py);
-            }
-            else
-            {
-                ctx.LineTo(px, py);
-            }
-        }
-
-        ctx.ClosePath();
-    }
 }

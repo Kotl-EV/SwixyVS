@@ -4,7 +4,7 @@
 // Клиентская ячейка списка приватов с тремя зонами клика: основная область (слева),
 // переключатель подсветки (лампочка, справа сверху) и удаление (корзина, справа снизу).
 // Рисует фон кнопки, многострочный заголовок/описание, иконки и оверлеи наведения.
-// Вспомогательные классы ClaimHighlightIconDrawer и ClaimTrashIconDrawer — векторная
+// Вспомогательный класс ClaimCairoIcons — векторная
 // отрисовка иконок через Cairo без внешних текстур.
 // =============================================================================
 
@@ -274,7 +274,7 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
         var zoneHeight = Bounds.OuterHeight / 2;
         var iconSize = GetZoneIconSize(rightBoxWidth, zoneHeight);
         GetZoneIconPosition(dividerX, rightBoxWidth, 0, zoneHeight, iconSize, yOffset, out var iconX, out var iconY);
-        ClaimHighlightIconDrawer.Draw(ctx, iconX, iconY, iconSize, HighlightActive);
+        ClaimCairoIcons.DrawHighlight(ctx, iconX, iconY, iconSize, HighlightActive);
     }
 
     /// <summary>Рисует иконку корзины в нижней половине правой панели.</summary>
@@ -285,7 +285,7 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
         var iconSize = GetZoneIconSize(rightBoxWidth, zoneHeight);
         // zoneTop = zoneHeight — нижняя зона начинается от середины ячейки.
         GetZoneIconPosition(dividerX, rightBoxWidth, zoneHeight, zoneHeight, iconSize, yOffset, out var iconX, out var iconY);
-        ClaimTrashIconDrawer.Draw(ctx, iconX, iconY, iconSize, destructive: AllowDelete);
+        ClaimCairoIcons.DrawTrash(ctx, iconX, iconY, iconSize, destructive: AllowDelete);
     }
 
     /// <summary>
@@ -530,143 +530,5 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
         rightBottomHighlightTexture.Dispose();
         releasedButtonTexture.Dispose();
         pressedButtonTexture.Dispose();
-    }
-}
-
-/// <summary>
-/// Векторная отрисовка иконки лампочки (вкл/выкл подсветки привата) средствами Cairo.
-/// </summary>
-internal static class ClaimHighlightIconDrawer
-{
-    /// <summary>
-    /// Рисует лампочку в заданном квадрате: свечение и насыщенные цвета при <paramref name="active"/>.
-    /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="x">Левый верхний угол области иконки.</param>
-    /// <param name="y">Левый верхний угол области иконки.</param>
-    /// <param name="size">Сторона квадрата иконки.</param>
-    /// <param name="active">Подсветка включена — яркое свечение и «нить» внутри колбы.</param>
-    public static void Draw(Context ctx, double x, double y, double size, bool active)
-    {
-        var bulbRadius = size * 0.28;
-        var centerX = x + size * 0.5;
-        var centerY = y + size * 0.5;
-
-        // Внешнее мягкое свечение только в активном состоянии.
-        if (active)
-        {
-            ctx.SetSourceRGBA(1, 0.88, 0.2, 0.28);
-            ctx.Arc(centerX, centerY, bulbRadius * 1.55, 0, Math.PI * 2);
-            ctx.Fill();
-        }
-
-        // Основной стеклянный шар колбы.
-        ctx.SetSourceRGBA(active ? 0.98 : 0.72, active ? 0.9 : 0.74, active ? 0.35 : 0.55, active ? 0.95 : 0.65);
-        ctx.Arc(centerX, centerY, bulbRadius, 0, Math.PI * 2);
-        ctx.Fill();
-
-        // Блик для объёма (смещён вверх-влево от центра).
-        ctx.SetSourceRGBA(active ? 1 : 0.85, active ? 0.95 : 0.8, active ? 0.55 : 0.7, active ? 0.55 : 0.25);
-        ctx.Arc(centerX - bulbRadius * 0.25, centerY - bulbRadius * 0.2, bulbRadius * 0.35, 0, Math.PI * 2);
-        ctx.Fill();
-
-        // Цоколь лампочки (два прямоугольника разной ширины).
-        var baseY = centerY + bulbRadius * 0.82;
-        ctx.SetSourceRGBA(0.5, 0.52, 0.56, 0.95);
-        ctx.Rectangle(centerX - bulbRadius * 0.5, baseY, bulbRadius, size * 0.16);
-        ctx.Fill();
-
-        ctx.SetSourceRGBA(0.35, 0.36, 0.4, 0.95);
-        ctx.Rectangle(centerX - bulbRadius * 0.35, baseY + size * 0.14, bulbRadius * 0.7, size * 0.08);
-        ctx.Fill();
-
-        // Горизонтальная «нить» накала при активной подсветке.
-        if (active)
-        {
-            ctx.SetSourceRGBA(1, 0.82, 0.15, 0.95);
-            ctx.LineWidth = 1.4;
-            ctx.MoveTo(centerX - bulbRadius * 0.22, centerY + bulbRadius * 0.05);
-            ctx.LineTo(centerX + bulbRadius * 0.22, centerY + bulbRadius * 0.05);
-            ctx.Stroke();
-        }
-    }
-}
-
-/// <summary>
-/// Векторная отрисовка иконки корзины (удаление привата) с режимом приглушённых цветов.
-/// </summary>
-internal static class ClaimTrashIconDrawer
-{
-    /// <summary>
-    /// Рисует корзину: крышка, трапециевидное тело и вертикальные «прутья».
-    /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="x">Левый верхний угол области иконки.</param>
-    /// <param name="y">Левый верхний угол области иконки.</param>
-    /// <param name="size">Сторона квадрата иконки.</param>
-    /// <param name="destructive">True — красная «опасная» палитра; false — нейтральная серая.</param>
-    public static void Draw(Context ctx, double x, double y, double size, bool destructive = true)
-    {
-        var centerX = x + size * 0.5;
-        var lidY = y + size * 0.14;
-        var bodyTop = y + size * 0.28;
-
-        if (destructive)
-        {
-            // Крышка и ручка — акцент удаления.
-            ctx.SetSourceRGBA(0.9, 0.42, 0.42, 0.95);
-            ctx.Rectangle(x + size * 0.18, lidY, size * 0.64, size * 0.1);
-            ctx.Fill();
-
-            ctx.SetSourceRGBA(0.98, 0.55, 0.55, 0.95);
-            ctx.LineWidth = 1.3;
-            ctx.MoveTo(centerX - size * 0.14, lidY);
-            ctx.LineTo(centerX + size * 0.14, lidY);
-            ctx.Stroke();
-
-            // Тело корзины — трапеция (сужение к низу).
-            ctx.SetSourceRGBA(0.82, 0.32, 0.32, 0.95);
-            ctx.MoveTo(x + size * 0.24, bodyTop);
-            ctx.LineTo(x + size * 0.76, bodyTop);
-            ctx.LineTo(x + size * 0.66, y + size * 0.84);
-            ctx.LineTo(x + size * 0.34, y + size * 0.84);
-            ctx.ClosePath();
-            ctx.Fill();
-
-            ctx.SetSourceRGBA(0.62, 0.22, 0.22, 0.9);
-        }
-        else
-        {
-            // Неактивный/приглушённый вариант той же геометрии.
-            ctx.SetSourceRGBA(0.56, 0.58, 0.62, 0.55);
-            ctx.Rectangle(x + size * 0.18, lidY, size * 0.64, size * 0.1);
-            ctx.Fill();
-
-            ctx.SetSourceRGBA(0.64, 0.66, 0.7, 0.55);
-            ctx.LineWidth = 1.3;
-            ctx.MoveTo(centerX - size * 0.14, lidY);
-            ctx.LineTo(centerX + size * 0.14, lidY);
-            ctx.Stroke();
-
-            ctx.SetSourceRGBA(0.5, 0.52, 0.56, 0.55);
-            ctx.MoveTo(x + size * 0.24, bodyTop);
-            ctx.LineTo(x + size * 0.76, bodyTop);
-            ctx.LineTo(x + size * 0.66, y + size * 0.84);
-            ctx.LineTo(x + size * 0.34, y + size * 0.84);
-            ctx.ClosePath();
-            ctx.Fill();
-
-            ctx.SetSourceRGBA(0.42, 0.44, 0.48, 0.5);
-        }
-
-        // Три вертикальные линии-разделители на корпусе (общие для обоих режимов).
-        ctx.LineWidth = 1.1;
-        ctx.MoveTo(centerX - size * 0.1, bodyTop + size * 0.06);
-        ctx.LineTo(centerX - size * 0.14, y + size * 0.76);
-        ctx.MoveTo(centerX, bodyTop + size * 0.06);
-        ctx.LineTo(centerX, y + size * 0.76);
-        ctx.MoveTo(centerX + size * 0.1, bodyTop + size * 0.06);
-        ctx.LineTo(centerX + size * 0.14, y + size * 0.76);
-        ctx.Stroke();
     }
 }

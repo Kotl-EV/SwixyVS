@@ -235,6 +235,14 @@ public class ClaimListRequestPacket
 }
 
 /// <summary>
+/// Уведомление сервера: открыть GUI карты приватов на клиенте.
+/// </summary>
+[ProtoContract]
+public class ClaimOpenGuiPacket
+{
+}
+
+/// <summary>
 /// Запрос клиента: включить или снять подсветку областей выбранного привата в мире.
 /// </summary>
 [ProtoContract]

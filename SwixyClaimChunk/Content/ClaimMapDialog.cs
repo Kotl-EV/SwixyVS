@@ -444,7 +444,7 @@ public sealed class ClaimMapDialog : GuiDialog
         catch (Exception exception)
         {
             clientApi.Logger.Error("Failed to send claim batch packet: {0}", exception);
-            SingleComposer?.GetDynamicText("messageText").SetNewText("Failed to send claim request.");
+            SingleComposer?.GetDynamicText("messageText").SetNewText(Lang.Get("swixyclaimchunk:error-send-request-failed"));
         }
     }
 

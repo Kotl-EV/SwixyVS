@@ -236,16 +236,12 @@ public sealed class IslandMemberListCell : GuiElementTextBase, IGuiElementCell
 
         if (cellEntry.DrawAsButton)
         {
-            RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
-            ctx.SetSourceRGB(GuiStyle.DialogDefaultBgColor[0], GuiStyle.DialogDefaultBgColor[1], GuiStyle.DialogDefaultBgColor[2]);
-            ctx.Fill();
-
             if (pressed)
             {
                 pressedYOffset = scaled(UnscaledDepth) / 2;
             }
 
-            EmbossRoundRectangleElement(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, pressed, (int)scaled(UnscaledDepth));
+            IslandHubTheme.DrawListRowInset(ctx, Bounds.OuterWidth, Bounds.OuterHeight);
         }
 
         // Многострочный заголовок (имя участника) — вертикально по центру левой области
@@ -263,7 +259,7 @@ public sealed class IslandMemberListCell : GuiElementTextBase, IGuiElementCell
 
         if (cellEntry.DrawAsButton && pressed)
         {
-            RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
+            IslandHubTheme.DrawRoundedRect(ctx, 1, 1, Bounds.OuterWidth - 2, Bounds.OuterHeight - 2, 4);
             ctx.SetSourceRGBA(0, 0, 0, 0.15);
             ctx.Fill();
         }

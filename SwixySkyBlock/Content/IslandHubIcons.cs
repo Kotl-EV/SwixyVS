@@ -14,22 +14,7 @@ internal static class IslandHubIcons
     {
         var alpha = enabled ? 1.0 : 0.45;
 
-        DrawRoundedRect(ctx, 0, 0, width, height, 6);
-        ctx.SetSourceRGBA(
-            GuiStyle.DialogDefaultBgColor[0],
-            GuiStyle.DialogDefaultBgColor[1],
-            GuiStyle.DialogDefaultBgColor[2],
-            0.96 * alpha);
-        ctx.Fill();
-
-        DrawRoundedRect(ctx, 1.5, 1.5, width - 3, height - 3, 5);
-        ctx.SetSourceRGBA(1, 1, 1, 0.07 * alpha);
-        ctx.Fill();
-
-        DrawRoundedRect(ctx, 1, 1, width - 2, height - 2, 5);
-        ctx.SetSourceRGBA(0, 0, 0, 0.45 * alpha);
-        ctx.LineWidth = 2;
-        ctx.Stroke();
+        IslandHubTheme.DrawActionCard(ctx, width, height, 6, hover: false, pressed: false, alpha);
 
         var iconSize = Math.Min(width, height) * 0.46;
         var iconX = (width - iconSize) / 2;
@@ -39,14 +24,7 @@ internal static class IslandHubIcons
 
     public static void DrawTemplateCard(Context ctx, double width, double height, string templateName)
     {
-        DrawRoundedRect(ctx, 0, 0, width, height, 8);
-        ctx.SetSourceRGBA(0.08, 0.1, 0.12, 0.98);
-        ctx.Fill();
-
-        DrawRoundedRect(ctx, 1, 1, width - 2, height - 2, 7);
-        ctx.SetSourceRGBA(0.45, 0.62, 0.82, 0.22);
-        ctx.LineWidth = 1.5;
-        ctx.Stroke();
+        IslandHubTheme.DrawTemplateCard(ctx, width, height);
 
         var iconSize = Math.Min(width - 24, height - 36);
         var iconX = (width - iconSize) / 2;

@@ -66,16 +66,7 @@ internal sealed class IslandTemplateListCell : GuiElementTextBase, IGuiElementCe
         var alpha = cellEntry.Enabled ? 1.0 : 0.45;
         var yOffset = pressed ? scaled(1) : 0;
 
-        RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 3);
-        ctx.SetSourceRGBA(
-            GuiStyle.DialogDefaultBgColor[0] * 0.82,
-            GuiStyle.DialogDefaultBgColor[1] * 0.86,
-            GuiStyle.DialogDefaultBgColor[2] * 0.92,
-            0.96 * alpha);
-        ctx.FillPreserve();
-        ctx.SetSourceRGBA(0, 0, 0, pressed ? 0.78 : 0.55);
-        ctx.LineWidth = scaled(1.5);
-        ctx.Stroke();
+        IslandHubTheme.ApplyListButtonFill(ctx, Bounds.OuterWidthInt, Bounds.OuterHeightInt, pressed, alpha);
 
         var iconSize = scaled(UnscaledIconSize);
         var iconX = Bounds.absPaddingX;

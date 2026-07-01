@@ -202,7 +202,7 @@ public sealed class IslandClaimListCell : GuiElementTextBase, IGuiElementCell
         if (cellEntry.DrawAsButton)
         {
             RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
-            ctx.SetSourceRGB(GuiStyle.DialogDefaultBgColor[0], GuiStyle.DialogDefaultBgColor[1], GuiStyle.DialogDefaultBgColor[2]);
+            ctx.SetSourceRGB(IslandHubTheme.PanelR, IslandHubTheme.PanelG, IslandHubTheme.PanelB);
             ctx.Fill();
 
             // При нажатии текст и иконки смещаются вниз на половину глубины рельефа.

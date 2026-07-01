@@ -13,6 +13,9 @@ public sealed partial class SwixySkyBlockMod
 {
     private const int ClientClimateApplyRetryMs = 250;
     private const int ClientClimateApplyMaxAttempts = 40;
+    private const int ClientGeneratorLabelsInitialRequestDelayMs = 500;
+    private const int ClientGeneratorLabelsRetryRequestDelayMs = 3000;
+    private const int ClientGeneratorLabelsLateRetryRequestDelayMs = 10000;
 
     private int clientClimateApplyAttempts;
 
@@ -24,12 +27,20 @@ public sealed partial class SwixySkyBlockMod
         clientClimateApplyAttempts = 0;
         clientChannel = RegisterIslandPacketTypes(api.Network.RegisterChannel(ChannelName))
             .SetMessageHandler<IslandHubStatePacket>(OnHubStatePacket)
+            .SetMessageHandler<IslandGeneratorLabelsPacket>(OnGeneratorLabelsPacket)
+            .SetMessageHandler<IslandGeneratorStatePacket>(OnGeneratorStatePacket)
+            .SetMessageHandler<IslandTopStatePacket>(OnTopStatePacket)
             .SetMessageHandler<IslandClaimListStatePacket>(OnClaimListStatePacket)
             .SetMessageHandler<IslandClaimShowStatePacket>(OnClaimShowStatePacket)
             .SetMessageHandler<IslandClaimListDeltaPacket>(OnClaimListDeltaPacket);
 
         api.Event.OnGetClimate += OnClientUniformClimate;
         api.Event.BlockTexturesLoaded += OnClientClimateReady;
+        generatorLabelRenderer = new IslandGeneratorLabelRenderer(api);
+        api.Event.RegisterRenderer(generatorLabelRenderer, EnumRenderStage.Ortho, "swixyskyblock-generator-labels");
+        api.Event.RegisterCallback(_ => RequestGeneratorLabels(), ClientGeneratorLabelsInitialRequestDelayMs);
+        api.Event.RegisterCallback(_ => RequestGeneratorLabels(), ClientGeneratorLabelsRetryRequestDelayMs);
+        api.Event.RegisterCallback(_ => RequestGeneratorLabels(), ClientGeneratorLabelsLateRetryRequestDelayMs);
 
         api.Input.RegisterHotKey(
             OpenIslandHubHotkeyCode,
@@ -137,6 +148,7 @@ public sealed partial class SwixySkyBlockMod
                 clientApi.Logger.Notification("[SwixySkyBlock][Hub] Dialog already open, refreshing.");
                 hubDialog.RequestRefresh();
                 hubDialog.RequestClaimList();
+                hubDialog.RequestGeneratorState();
             }
         }
         catch (Exception exception)
@@ -161,6 +173,52 @@ public sealed partial class SwixySkyBlockMod
         }
 
         hubDialog.ApplyHubState(packet);
+    }
+
+    private void OnGeneratorLabelsPacket(IslandGeneratorLabelsPacket packet)
+    {
+        generatorLabelRenderer?.Apply(packet);
+    }
+
+    private void OnGeneratorStatePacket(IslandGeneratorStatePacket packet)
+    {
+        clientApi?.Logger.Notification(
+            "[SwixySkyBlock][Generator] State received: level={0}/{1}, hasIsland={2}, levels={3}",
+            packet.CurrentLevel,
+            packet.MaxLevel,
+            packet.HasIsland,
+            packet.Levels?.Count ?? 0);
+
+        if (hubDialog == null)
+        {
+            return;
+        }
+
+        hubDialog.ApplyGeneratorState(packet);
+    }
+
+    private void OnTopStatePacket(IslandTopStatePacket packet)
+    {
+        clientApi?.Logger.Notification(
+            "[SwixySkyBlock][Top] State received: entries={0}",
+            packet.Entries?.Count ?? 0);
+
+        if (hubDialog == null)
+        {
+            return;
+        }
+
+        hubDialog.ApplyTopState(packet);
+    }
+
+    private void RequestGeneratorLabels()
+    {
+        if (clientApi == null || clientChannel == null || !SkyBlockWorld.IsSkyBlockWorld(clientApi.World))
+        {
+            return;
+        }
+
+        clientChannel.SendPacket(new IslandGeneratorLabelsRequestPacket());
     }
 
     private void OnClaimListStatePacket(IslandClaimListStatePacket packet)

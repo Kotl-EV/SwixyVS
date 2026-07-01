@@ -21,6 +21,10 @@ public sealed partial class SwixySkyBlockMod
         serverChannel = RegisterIslandPacketTypes(api.Network.RegisterChannel(ChannelName))
             .SetMessageHandler<IslandHubRequestPacket>(OnHubRequest)
             .SetMessageHandler<IslandActionPacket>(OnIslandAction)
+            .SetMessageHandler<IslandGeneratorLabelsRequestPacket>(OnGeneratorLabelsRequest)
+            .SetMessageHandler<IslandGeneratorStateRequestPacket>(OnGeneratorStateRequest)
+            .SetMessageHandler<IslandGeneratorUpgradeRequestPacket>(OnGeneratorUpgradeRequest)
+            .SetMessageHandler<IslandTopRequestPacket>(OnTopRequest)
             .SetMessageHandler<IslandClaimListRequestPacket>(OnClaimListRequest)
             .SetMessageHandler<IslandClaimAccessActionPacket>(OnClaimAccessAction)
             .SetMessageHandler<IslandClaimShowRequestPacket>(OnClaimShowRequest);
@@ -31,6 +35,7 @@ public sealed partial class SwixySkyBlockMod
         RegisterWorldGen(api);
         RegisterClimateHandlers(api);
         RegisterSpawnHandlers(api);
+        RegisterIslandGenerator(api);
 
         api.Logger.Notification(
             "[SwixySkyBlock] Server started (worldType={0}, playstyle={1}, dedicated={2}).",
@@ -49,6 +54,7 @@ public sealed partial class SwixySkyBlockMod
 
         islandRegistry.Load(serverApi);
         islandResidency.Load(serverApi);
+        IslandBlueprint.LoadAll(serverApi);
         OnCoOwnersSaveGameLoaded();
         RestoreAllPlayerIslands();
     }

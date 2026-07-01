@@ -16,8 +16,29 @@ internal static class IslandBlueprint
     private const string SpawnSchematicPath = "schematics/Spawn.json";
     private const string PlayerIslandSchematicPath = "schematics/islands/";
     private static IslandTemplate? cachedSpawnTemplate;
+    private static IReadOnlyList<IslandTemplate>? cachedPlayerTemplates;
+    private static readonly object LoadAllLock = new();
 
     public static IReadOnlyList<IslandTemplate> LoadAll(ICoreServerAPI api)
+    {
+        if (cachedPlayerTemplates != null)
+        {
+            return cachedPlayerTemplates;
+        }
+
+        lock (LoadAllLock)
+        {
+            if (cachedPlayerTemplates != null)
+            {
+                return cachedPlayerTemplates;
+            }
+
+            cachedPlayerTemplates = LoadAllUncached(api);
+            return cachedPlayerTemplates;
+        }
+    }
+
+    private static IReadOnlyList<IslandTemplate> LoadAllUncached(ICoreServerAPI api)
     {
         var templates = new List<IslandTemplate>();
         var loadedFromAssets = 0;

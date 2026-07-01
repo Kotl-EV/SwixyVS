@@ -58,6 +58,85 @@ public class IslandActionPacket
     [ProtoMember(2)] public string TemplateName { get; set; } = "";
 }
 
+[ProtoContract]
+public class IslandGeneratorLabelsPacket
+{
+    [ProtoMember(1)] public List<IslandGeneratorLabelPacket> Labels { get; set; } = [];
+}
+
+[ProtoContract]
+public class IslandGeneratorLabelsRequestPacket { }
+
+[ProtoContract]
+public class IslandGeneratorLabelPacket
+{
+    [ProtoMember(1)] public int X { get; set; }
+    [ProtoMember(2)] public int Y { get; set; }
+    [ProtoMember(3)] public int Z { get; set; }
+    [ProtoMember(4)] public int Level { get; set; }
+}
+
+[ProtoContract]
+public class IslandGeneratorStateRequestPacket { }
+
+[ProtoContract]
+public class IslandGeneratorUpgradeRequestPacket { }
+
+[ProtoContract]
+public class IslandGeneratorStatePacket
+{
+    [ProtoMember(1)] public int CurrentLevel { get; set; }
+    [ProtoMember(2)] public int MaxLevel { get; set; }
+    [ProtoMember(3)] public bool HasIsland { get; set; }
+    [ProtoMember(4)] public bool CanUpgrade { get; set; }
+    [ProtoMember(5)] public string CostItemCode { get; set; } = "";
+    [ProtoMember(6)] public int CostQuantity { get; set; }
+    [ProtoMember(7)] public int PlayerCostItemCount { get; set; }
+    [ProtoMember(8)] public string Message { get; set; } = "";
+    [ProtoMember(9)] public List<IslandGeneratorLevelStatePacket> Levels { get; set; } = [];
+}
+
+[ProtoContract]
+public class IslandGeneratorLevelStatePacket
+{
+    [ProtoMember(1)] public int Level { get; set; }
+    [ProtoMember(2)] public bool Unlocked { get; set; }
+    [ProtoMember(3)] public List<IslandGeneratorEntryStatePacket> Entries { get; set; } = [];
+}
+
+[ProtoContract]
+public class IslandGeneratorEntryStatePacket
+{
+    [ProtoMember(1)] public string BlockCode { get; set; } = "";
+    [ProtoMember(2)] public double Chance { get; set; }
+    [ProtoMember(3)] public double Percent { get; set; }
+    [ProtoMember(4)] public int VariantCount { get; set; }
+    [ProtoMember(5)] public string DisplayBlockCode { get; set; } = "";
+}
+
+// =============================================================================
+// Пакеты рейтинга островов (island top)
+// =============================================================================
+
+[ProtoContract]
+public class IslandTopRequestPacket { }
+
+[ProtoContract]
+public class IslandTopStatePacket
+{
+    [ProtoMember(1)] public List<IslandTopEntryPacket> Entries { get; set; } = [];
+}
+
+[ProtoContract]
+public class IslandTopEntryPacket
+{
+    [ProtoMember(1)] public int Rank { get; set; }
+    [ProtoMember(2)] public string PlayerName { get; set; } = "";
+    [ProtoMember(3)] public int GeneratorLevel { get; set; }
+    [ProtoMember(4)] public string TemplateName { get; set; } = "";
+    [ProtoMember(5)] public bool IsViewer { get; set; }
+}
+
 // =============================================================================
 // Пакеты для управления списками территорий (claim list)
 // =============================================================================

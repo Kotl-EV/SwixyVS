@@ -33,11 +33,19 @@ public sealed partial class SwixySkyBlockMod : ModSystem
     private ICoreClientAPI? clientApi;
     private ICoreServerAPI? serverApi;
     private IslandHubDialog? hubDialog;
+    private IslandGeneratorLabelRenderer? generatorLabelRenderer;
 
     public override bool ShouldLoad(EnumAppSide forSide) => true;
 
     public override void Dispose()
     {
+        if (clientApi != null && generatorLabelRenderer != null)
+        {
+            clientApi.Event.UnregisterRenderer(generatorLabelRenderer, EnumRenderStage.Ortho);
+        }
+
+        generatorLabelRenderer?.Dispose();
+        generatorLabelRenderer = null;
         clientApi = null;
         serverApi = null;
         hubDialog = null;

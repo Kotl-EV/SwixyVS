@@ -103,6 +103,7 @@ public sealed partial class SwixySkyBlockMod
 
         islandRegistry.Remove(serverApi, player.PlayerUID);
         islandResidency.RemoveAllForHost(serverApi, player.PlayerUID);
+        BroadcastGeneratorLabels();
         TeleportToIslandSpawn(player);
     }
 
@@ -308,6 +309,7 @@ public sealed partial class SwixySkyBlockMod
                 }
 
                 TeleportToPlayerIsland(actor, record);
+                EnsureGeneratorBlock(record, template, replaceExistingGenerator: true);
                 var result = onSuccess();
                 SendHubState(actor, result);
                 SendClaimList(actor, result);

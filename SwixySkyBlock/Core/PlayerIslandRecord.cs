@@ -13,6 +13,7 @@ internal sealed class PlayerIslandRecord
     [ProtoMember(4)] public int OriginY { get; set; }
     [ProtoMember(5)] public int OriginZ { get; set; }
     [ProtoMember(6)] public int SlotIndex { get; set; }
+    [ProtoMember(7)] public int GeneratorLevel { get; set; } = 1;
 
     public BlockPos Origin => new(OriginX, OriginY, OriginZ);
 

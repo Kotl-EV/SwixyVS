@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SwixySkyBlock.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -35,6 +36,40 @@ public sealed partial class SwixySkyBlockMod
     private void OnClaimListRequest(IServerPlayer player, IslandClaimListRequestPacket _)
     {
         SendClaimList(player, "", 0);
+    }
+
+    private const int MaxIslandTopEntries = 50;
+
+    private void OnTopRequest(IServerPlayer player, IslandTopRequestPacket _)
+    {
+        if (serverChannel == null)
+        {
+            return;
+        }
+
+        serverChannel.SendPacket(BuildIslandTopStatePacket(player), [player]);
+    }
+
+    private IslandTopStatePacket BuildIslandTopStatePacket(IServerPlayer viewer)
+    {
+        var langCode = viewer.LanguageCode;
+        var entries = islandRegistry.All
+            .OrderByDescending(static record => record.GeneratorLevel)
+            .ThenBy(
+                record => ResolvePlayerName(record.PlayerUid, langCode: langCode),
+                StringComparer.OrdinalIgnoreCase)
+            .Take(MaxIslandTopEntries)
+            .Select((record, index) => new IslandTopEntryPacket
+            {
+                Rank = index + 1,
+                PlayerName = ResolvePlayerName(record.PlayerUid, langCode: langCode),
+                GeneratorLevel = record.GeneratorLevel,
+                TemplateName = record.TemplateName,
+                IsViewer = record.PlayerUid == viewer.PlayerUID
+            })
+            .ToList();
+
+        return new IslandTopStatePacket { Entries = entries };
     }
 
     private void OnClaimAccessAction(IServerPlayer player, IslandClaimAccessActionPacket packet)

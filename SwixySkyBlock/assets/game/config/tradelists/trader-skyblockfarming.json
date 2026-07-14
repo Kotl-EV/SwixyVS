@@ -1,0 +1,51 @@
+{
+  "money": {
+    "avg": 256,
+    "var": 0
+  },
+  "selling": {
+    "maxItems": 32,
+    "list": [
+      { "code": "seeds-spelt", "type": "item", "stacksize": 4, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-rye", "type": "item", "stacksize": 4, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-rice", "type": "item", "stacksize": 4, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-amaranth", "type": "item", "stacksize": 4, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-flax", "type": "item", "stacksize": 4, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "seeds-turnip", "type": "item", "stacksize": 4, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-carrot", "type": "item", "stacksize": 4, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-onion", "type": "item", "stacksize": 4, "stock": { "avg": 5, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-parsnip", "type": "item", "stacksize": 4, "stock": { "avg": 5, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-cabbage", "type": "item", "stacksize": 2, "stock": { "avg": 5, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "seeds-soybean", "type": "item", "stacksize": 4, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "seeds-pumpkin", "type": "item", "stacksize": 2, "stock": { "avg": 3, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "seeds-sunflower", "type": "item", "stacksize": 4, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "cattailroot", "type": "item", "stacksize": 4, "stock": { "avg": 5, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "papyrusroot", "type": "item", "stacksize": 4, "stock": { "avg": 5, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "tuleroot", "type": "item", "stacksize": 4, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "compost", "type": "item", "stacksize": 8, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 3, "var": 0 } },
+      { "code": "saltpeter", "type": "item", "stacksize": 8, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "lime", "type": "item", "stacksize": 8, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "cattailtops", "type": "item", "stacksize": 10, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "papyrustops", "type": "item", "stacksize": 10, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  },
+  "buying": {
+    "maxItems": 16,
+    "list": [
+      { "code": "rot", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-spelt", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-rye", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-rice", "type": "item", "stacksize": 24, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-flax", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-turnip", "type": "item", "stacksize": 16, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-carrot", "type": "item", "stacksize": 16, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-cabbage", "type": "item", "stacksize": 8, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-spelt", "type": "item", "stacksize": 8, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-rye", "type": "item", "stacksize": 8, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-turnip", "type": "item", "stacksize": 8, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "seeds-carrot", "type": "item", "stacksize": 8, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "cattailtops", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "papyrustops", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  }
+}

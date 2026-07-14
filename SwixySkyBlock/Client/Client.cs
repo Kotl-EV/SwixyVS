@@ -30,6 +30,7 @@ public sealed partial class SwixySkyBlockMod
             .SetMessageHandler<IslandGeneratorLabelsPacket>(OnGeneratorLabelsPacket)
             .SetMessageHandler<IslandGeneratorStatePacket>(OnGeneratorStatePacket)
             .SetMessageHandler<IslandTopStatePacket>(OnTopStatePacket)
+            .SetMessageHandler<StoryDungeonStatePacket>(OnStoryDungeonStatePacket)
             .SetMessageHandler<IslandClaimListStatePacket>(OnClaimListStatePacket)
             .SetMessageHandler<IslandClaimShowStatePacket>(OnClaimShowStatePacket)
             .SetMessageHandler<IslandClaimListDeltaPacket>(OnClaimListDeltaPacket);
@@ -209,6 +210,20 @@ public sealed partial class SwixySkyBlockMod
         }
 
         hubDialog.ApplyTopState(packet);
+    }
+
+    private void OnStoryDungeonStatePacket(StoryDungeonStatePacket packet)
+    {
+        clientApi?.Logger.Notification(
+            "[SwixySkyBlock][Story] State received: sites={0}",
+            packet.Sites?.Count ?? 0);
+
+        if (hubDialog == null)
+        {
+            return;
+        }
+
+        hubDialog.ApplyStoryState(packet);
     }
 
     private void RequestGeneratorLabels()

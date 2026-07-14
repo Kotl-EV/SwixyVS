@@ -1,0 +1,91 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "SwixyQuestBook: Client",
+      "type": "coreclr",
+      "request": "launch",
+      "envFile": "${workspaceFolder}/.vscode/.env",
+      "preLaunchTask": "build: SwixyQuestBook",
+      "program": "${env:VINTAGE_STORY}/Vintagestory.dll",
+      "args": [
+        "--tracelog",
+        "--addModPath",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod",
+        "-o",
+        "test"
+      ],
+      "cwd": "${env:VINTAGE_STORY}",
+      "console": "externalTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "SwixyQuestBook: Client (all Swixy mods)",
+      "type": "coreclr",
+      "request": "launch",
+      "envFile": "${workspaceFolder}/.vscode/.env",
+      "preLaunchTask": "build: solution",
+      "program": "${env:VINTAGE_STORY}/Vintagestory.dll",
+      "args": [
+        "--tracelog",
+        "--addModPath",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod",
+        "--addModPath",
+        "${workspaceFolder}/SwixyClaimChunk/bin/Debug/Mods",
+        "--addModPath",
+        "${workspaceFolder}/SwixySkyBlock/bin/Debug/Mods",
+        "-o",
+        "test"
+      ],
+      "cwd": "${env:VINTAGE_STORY}",
+      "console": "externalTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "SwixyQuestBook: Server",
+      "type": "coreclr",
+      "request": "launch",
+      "envFile": "${workspaceFolder}/.vscode/.env",
+      "preLaunchTask": "build: SwixyQuestBook",
+      "program": "${env:VINTAGE_STORY}/VintagestoryServer.dll",
+      "args": [
+        "--tracelog",
+        "--addModPath",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod"
+      ],
+      "cwd": "${env:VINTAGE_STORY}",
+      "console": "externalTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "SwixyQuestBook: Server (all Swixy mods)",
+      "type": "coreclr",
+      "request": "launch",
+      "envFile": "${workspaceFolder}/.vscode/.env",
+      "preLaunchTask": "build: solution",
+      "program": "${env:VINTAGE_STORY}/VintagestoryServer.dll",
+      "args": [
+        "--tracelog",
+        "--addModPath",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod",
+        "--addModPath",
+        "${workspaceFolder}/SwixyClaimChunk/bin/Debug/Mods",
+        "--addModPath",
+        "${workspaceFolder}/SwixySkyBlock/bin/Debug/Mods"
+      ],
+      "cwd": "${env:VINTAGE_STORY}",
+      "console": "externalTerminal",
+      "stopAtEntry": false
+    }
+  ],
+  "compounds": [
+    {
+      "name": "SwixyQuestBook: Full Debug (Server + Client)",
+      "configurations": [
+        "SwixyQuestBook: Server",
+        "SwixyQuestBook: Client"
+      ],
+      "stopAll": true
+    }
+  ]
+}

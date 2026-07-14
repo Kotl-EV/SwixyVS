@@ -1,0 +1,191 @@
+---
+pid: 1548
+cwd: "D:\GitHub\SwixyVS"
+command: "function Get-AsciiStrings($path, $minLen=4) { $bytes = [IO.File]::ReadAllBytes($path); $sb = New-Object System.Text.StringBuilder; $strings = @(); foreach ($b in $bytes) { if ($b -ge 32 -and $b -le 126) { [void]$sb.Append([char]$b) } else { if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; $sb.Clear() | Out-Null } }; if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; return $strings }; $strings = Get-AsciiStrings \"E:\\Vintagestory\\Mods\\VSSurvivalMod.dll\" 5; $strings | Where-Object { $_ -match 'dungeon|Dungeon|Tiled|StoryStruct|refinery|worldgen|GenPass|locator|Locator|teleport|connector|dungeontiles|tileddungeons' } | Sort-Object -Unique"
+started_at: 2026-07-02T15:43:00.503Z
+running_for_ms: 285015   
+---
+        { "category": "worldgen", "code": "geologicActivity", "dataType": "dropdown", "values": ["0", "0.05", "0.1", "0.2", "0.4"], "names": ["None", "Rare", "Uncommon", "Common", "Very Common"], "default": "0.05", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "globalDepositSpawnRate", "dataType": "dropdown", "values": ["3", "2", "1.8", "1.6", "1.4", "1.2", "1", "0.8", "0.6", "0.4", "0.2"], "names": ["300%", "200%", "180%", "160%", "140%", "120%", "100%", "80%", "60%", "40%", "20%"], "default": "1" },
+        { "category": "worldgen", "code": "globalForestation", "dataType": "dropdown", "values": ["1", "0.9", "0.75", "0.5", "0.25", "0", "-0.25", "-0.5", "-0.75", "-0.9", "-1"], "names": ["Forest World (+100%)", "Extremely forested (+90%)", "Very highly forested (+75%)", "Highly forested (+50%)", "Somewhat more forest (+25%)", "Normal", "Somewhat less forest (-25%)", "Significantly less forested (-50%)", "Much less forested (-75%)", "Near Tree-less (-90%)", "Tree-less World (-100%)"], "default": "0", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "globalPrecipitation", "dataType": "dropdown", "values": ["4", "2", "1.5", "1", "0.5", "0.25", "0.1"], "names": ["Super humid", "Very humid", "Humid", "Normal", "Semi-Arid", "Arid", "Hyperarid"], "default": "1", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "globalTemperature", "dataType": "dropdown", "values": ["4", "2", "1.5", "1", "0.75", "0.5", "0.25"], "names": ["Scorching hot", "Very hot", "Hot", "Normal", "Cold", "Very Cold", "Snowball earth"], "default": "1", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "landcover", "dataType": "dropdown", "values": ["0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "0.95", "0.975", "1"], "names": ["~0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "95%", "97.5%", "100%"], "default": "0.975", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "landformScale", "dataType": "dropdown", "values": ["0.2", "0.4", "0.6", "0.8", "1.0", "1.2", "1.4", "1.6", "1.8", "2", "3"], "names": ["20%", "40%", "60%", "80%", "100%", "120%", "140%", "160%", "180%", "200%", "300%"], "default": "1.0", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "oceanscale", "dataType": "dropdown", "values": ["0.1", "0.25", "0.5", "0.75", "1", "1.25", "1.5", "1.75", "2", "3", "4", "5"], "names": ["10%", "25%", "50%", "75%", "100%", "125%", "150%", "175%", "200%", "300%", "400%", "500%"], "default": "5", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "polarEquatorDistance", "dataType": "dropdown", "values": ["800000", "400000", "200000", "100000", "50000", "25000", "15000", "10000", "5000"], "names": ["800k blocks", "400k blocks", "200k blocks", "100k blocks", "50k blocks", "25k blocks", "15k blocks", "10k blocks", "5000 blocks"], "default": "50000", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "snowAccum", "dataType": "dropdown", "values": ["true", "false"], "names": ["Enabled", "Disabled"], "default": "true" },
+        { "category": "worldgen", "code": "storyStructuresDistScaling", "dataType": "dropdown", "values": ["0.15", "0.25", "0.5", "0.75", "1", "1.5", "2", "3"], "names": ["15%", "25%", "50%", "75%", "100%", "150%", "200%", "300%"], "default": "1", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "surfaceCopperDeposits", "dataType": "dropdown", "values": ["1", "0.5", "0.2", "0.12", "0.05", "0.015", "0"], "names": ["Very common", "Common", "Uncommon", "Rare", "Very Rare", "Extremly rare", "Never"], "default": "0.12" },
+        { "category": "worldgen", "code": "surfaceTinDeposits", "dataType": "dropdown", "values": ["0.5", "0.25", "0.12", "0.03", "0.014", "0.007", "0"], "names": ["Very common", "Common", "Uncommon", "Rare", "Very Rare", "Extremly rare", "Never"], "default": "0.007" },
+        { "category": "worldgen", "code": "upheavelCommonness", "dataType": "dropdown", "values": ["0", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1"], "names": ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"], "default": "0.3", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "worldClimate", "dataType": "dropdown", "values": ["realistic", "patchy"], "names": ["Realistic", "Patchy"], "default": "realistic", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "worldEdge", "dataType": "dropdown", "values": ["blocked", "traversable" ], "names": ["Blocked", "Traversable (Can fall down)"], "default": "traversable" },
+        { "category": "worldgen", "code": "worldLength", "dataType": "dropdown", "values": ["8192000", "4096000", "2048000", "1024000", "600000", "512000", "384000", "256000", "102400", "51200", "25600", "10240", "5120", "1024", "512", "384", "256", "128", "64", "32" ], "names": ["8 mil blocks", "4 mil blocks", "2 mil blocks", "1 mil blocks", "600k blocks", "512k blocks", "384k blocks", "256k blocks", "102k blocks", "51k blocks", "25k blocks", "10k blocks", "5120 blocks", "1024 blocks", "512 blocks", "384 blocks", "256 blocks", "128 blocks", "64 blocks", "32 blocks"], "default": "1024000", "onlyDuringWorldCreate": true },
+        { "category": "worldgen", "code": "worldWidth", "dataType": "dropdown", "values": ["8192000", "4096000", "2048000", "1024000", "600000", "512000", "384000", "256000", "102400", "51200", "25600", "10240", "5120", "1024", "512", "384", "256", "128", "64", "32" ], "names": ["8 mil blocks", "4 mil blocks", "2 mil blocks", "1 mil blocks", "600k blocks", "512k blocks", "384k blocks", "256k blocks", "102k blocks", "51k blocks", "25k blocks", "10k blocks", "5120 blocks", "1024 blocks", "512 blocks", "384 blocks", "256 blocks", "128 blocks", "64 blocks", "32 blocks"], "default": "1024000", "onlyDuringWorldCreate": true },
+<DetermineStoryStructures>b__23_0
+<DoTeleportOnUnmount>k__BackingField
+<HandleTeleportingServer>b__14_0
+<OnCmdTiledCungeonCode>b__0
+<OnCmdTiledDungeonTest>b__0
+<OnSetStoryStructurePos>b__0
+<pickDungeon>b__21_0
+<placeDungeon>b__19_0
+<StairsConnector>k__BackingField
+<SystemTobiasTeleporter>k__BackingField
+<TobiasTeleporterLocation>k__BackingField
+<TryPlaceBlockForWorldGen>b__0
+<TryPregenerateTiledDungeon>b__0
+allowTeleportCount
+BETileConnector
+BlockBaseReturnTeleporter
+BlockCorpseReturnTeleporter
+BlockEntityBaseReturnTeleporter
+BlockEntityCorpseReturnTeleporter
+BlockEntityStaticTranslocator
+BlockEntityTeleporter
+BlockEntityTeleporterBase
+BlockEntityTobiasTeleporter
+BlockEntityWorldgenHook
+BlockStaticTranslocator
+BlockTeleporter
+BlockTileConnector
+BlockTobiasTeleporter
+BlockWorldgenHook
+canTeleport
+connector
+ConnectorBlockId
+ConnectorMetaData
+curConnector
+DetermineStoryStructures
+didTeleport
+dungeon
+DungeonBoundaries
+dungeonGen
+DungeonGenerator
+dungeonGenRequest
+DungeonGenWorkspace
+DungeonLocation
+dungeonPlaceTask
+dungeonPlaceTasksByRegion
+dungeons
+DungeonsByCode
+DungeonsDirty
+dungeonTile
+DungeonTileSide
+EnumWorldGenPass
+FindTranslocator
+FruitTreeWorldGenConds
+GenDungeons
+generateDungeonPartial
+generateDungeonSurfacePartial
+genGenStoryStructures
+genStoryStructLoc
+genStoryStructures
+get_DoTeleportOnUnmount
+get_StairsConnector
+get_SystemTobiasTeleporter
+get_TobiasTeleporterLocation
+get_WorldGenTerrainHeightMap
+get_WorldgenWorldAccessor
+GetStoryStructureAt
+GetTeleportOffset
+GetTiledTexturesSelector
+GetWorldgenBlockAccessor
+GuiDialogTiledDungeon
+HandleTeleportingServer
+HasConnector
+HasItemFlowConnectorAt
+HasMechPowerConnectorAt
+InitWorldGen
+IsAllowedToTeleport
+isInStoryStructure
+IStoryStructureSystem
+ItemLocatorMap
+IWorldGenArea
+IWorldGenBlockAccessor
+lastDungeon
+LocatorProps
+MaxTeleporterRangeInBlocks
+MinTeleporterRangeInBlocks
+ModStdWorldGen
+ModSystemCorpseReturnTeleporter
+ModSystemStructureLocator
+ModSystemTiledDungeons
+ModSystemWorldGenStructures
+NpcTeleportCommand
+OnCmdClearAndTiledCungeonCode
+OnCmdTiledCungeonCode
+OnCmdTiledDungeonTest
+OnCmdToggleDebugConnectors
+OnInitWorldGenerator
+OnSetStoryStructurePos
+OnWorldGenBlockAccessor
+pickDungeon
+PlaceConnectorsForDebug
+placeDebugConnectors
+placeDungeon
+projectileDamage
+projectileDamageTier
+RemovePlayerTeleporter
+set_DoTeleportOnUnmount
+set_StairsConnector
+set_SystemTobiasTeleporter
+set_TobiasTeleporterLocation
+somebodyDidTeleport
+somebodyIsTeleporting
+somebodyIsTeleportingReceivedTotalMs
+spawnTeleportParticles
+stackForWorldgen
+storyStructMinDistance
+StoryStructMinDistanceSq
+storyStructSys
+storyStructure
+StoryStructureInstancesDirty
+StoryStructureLocation
+storyStructurePatches
+storyStructures
+storyStructuresClient
+StoryStructuresSpawnConditions
+SurfaceConnectorName
+teleportAccum
+TeleportAction
+TeleporterManager
+TeleportingEntity
+teleportingSound
+TeleportMaxRange
+teleportParticles
+TeleportTo
+TeleportToDouble
+TeleportWarmupSec
+TiledDungeonConfig
+tiledDungeonsSys
+TobiasTeleporterData
+TotalDaysSinceLastTeleport
+TriggerWorldgenHook
+TryPlaceBlockForWorldGen
+TryPlaceBlockForWorldGenUnderwater
+TryPlaceTiledDungeon
+TryPregenerateTiledDungeon
+tryTeleportToFreeLocation
+UpdatePlayerLastTeleport
+UseWorldgenHeight
+Vintagestory.ServerMods.IStoryStructureSystem.get_scfg
+Vintagestory.ServerMods.IStoryStructureSystem.scfg
+worldgen
+worldgenBlockAccessor
+WorldGenHookDelegate
+WorldgenRainfall
+worldgenRand
+worldgenRandom
+WorldGenSpawnConditions
+WorldGenStoryStructure
+WorldGenStoryStructuresConfig
+WorldGenStructure
+WorldGenStructureBase
+WorldGenStructuresConfig
+WorldGenStructuresConfigBase
+WorldGenTemperature
+WorldGenThreadDelegate
+WorldGenVillage
+WorldGenVillageConfig

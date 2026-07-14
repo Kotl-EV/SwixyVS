@@ -22,7 +22,8 @@ public sealed class IslandHubDialog : GuiDialog
     private const int PageIsland = 0;
     private const int PageAccess = 1;
     private const int PageGenerator = 2;
-    private const int PageTop = 3;
+    private const int PageStory = 3;
+    private const int PageTop = 4;
 
     private readonly ICoreClientAPI clientApi;
     private readonly IClientNetworkChannel channel;
@@ -31,6 +32,7 @@ public sealed class IslandHubDialog : GuiDialog
     private IslandClaimListStatePacket? claimListState;
     private IslandGeneratorStatePacket? generatorState;
     private IslandTopStatePacket? topState;
+    private StoryDungeonStatePacket? storyState;
 
     /// <summary>Хранит последнюю полную версию списка территорий (для сравнения с дельта).</summary>
     private List<IslandClaimInfoPacket>? lastFullClaimList = [];
@@ -44,10 +46,13 @@ public sealed class IslandHubDialog : GuiDialog
     private string memberNameInput = "";
     private string claimNameInput = "";
 
+    private bool storyStatePollScheduled;
+
     private float memberListScrollValue;
     private float templateListScrollValue;
     private float generatorListScrollValue;
     private float topListScrollValue;
+    private float storyListScrollValue;
     private ElementBounds? memberListTableBounds;
     private ElementBounds? memberListClipBounds;
     private ElementBounds? templateListTableBounds;
@@ -56,6 +61,8 @@ public sealed class IslandHubDialog : GuiDialog
     private ElementBounds? generatorListTableBounds;
     private ElementBounds? topListClipBounds;
     private ElementBounds? topListTableBounds;
+    private ElementBounds? storyListClipBounds;
+    private ElementBounds? storyListTableBounds;
 
     private bool claimsUiDeferScheduled;
     private Action? deferredClaimsUiAction;
@@ -94,6 +101,11 @@ public sealed class IslandHubDialog : GuiDialog
     public void RequestTopState()
     {
         channel.SendPacket(new IslandTopRequestPacket());
+    }
+
+    public void RequestStoryState()
+    {
+        channel.SendPacket(new StoryDungeonStateRequestPacket());
     }
 
     private void EnsureLocalGeneratorState()
@@ -196,6 +208,54 @@ public sealed class IslandHubDialog : GuiDialog
             ComposeDialog();
             RestoreTopListScroll(savedScroll);
         }
+    }
+
+    public void ApplyStoryState(StoryDungeonStatePacket packet)
+    {
+        var savedScroll = GetStoryListScrollOffset();
+        storyState = packet;
+
+        if (!IsOpened() || activePage != PageStory)
+        {
+            ScheduleStoryStatePoll();
+            return;
+        }
+
+        if (!TryRefreshStoryPageInPlace(savedScroll))
+        {
+            ComposeDialog();
+            RestoreStoryListScroll(savedScroll);
+        }
+
+        ScheduleStoryStatePoll();
+    }
+
+    private void ScheduleStoryStatePoll()
+    {
+        if (storyState?.Sites.Any(static site => !site.Ready) != true)
+        {
+            return;
+        }
+
+        if (storyStatePollScheduled)
+        {
+            return;
+        }
+
+        storyStatePollScheduled = true;
+        clientApi.Event.RegisterCallback(_ =>
+        {
+            storyStatePollScheduled = false;
+            if (!IsOpened())
+            {
+                return;
+            }
+
+            if (storyState?.Sites.Any(static site => !site.Ready) == true)
+            {
+                RequestStoryState();
+            }
+        }, 3000);
     }
 
     /// <summary>Обработка дельта-пакета для оптимизированной передачи списка территорий.</summary>
@@ -375,9 +435,17 @@ public sealed class IslandHubDialog : GuiDialog
             "generatorTab");
         AddHubButton(
             composer,
+            Lang.Get("swixyskyblock:island-tab-story"),
+            SwitchToStoryPage,
+            IslandHubTheme.TabButtonBounds(3),
+            activePage == PageStory,
+            IslandHubButtonKind.Tab,
+            "storyTab");
+        AddHubButton(
+            composer,
             Lang.Get("swixyskyblock:island-tab-top"),
             SwitchToTopPage,
-            IslandHubTheme.TabButtonBounds(3),
+            IslandHubTheme.TabButtonBounds(4),
             activePage == PageTop,
             IslandHubButtonKind.Tab,
             "topTab");
@@ -394,6 +462,10 @@ public sealed class IslandHubDialog : GuiDialog
         {
             ComposeGeneratorPage(composer);
         }
+        else if (activePage == PageStory)
+        {
+            ComposeStoryPage(composer);
+        }
         else
         {
             ComposeTopPage(composer);
@@ -403,6 +475,7 @@ public sealed class IslandHubDialog : GuiDialog
         ApplyIslandPageScrollState();
         ApplyClaimsPageScrollState();
         ApplyGeneratorPageScrollState();
+        ApplyStoryPageScrollState();
         ApplyTopPageScrollState();
         ApplyClaimsPageInputState();
         UpdateHubStatusText();
@@ -544,6 +617,75 @@ public sealed class IslandHubDialog : GuiDialog
             IslandHubButtonKind.Action,
             "generatorUpgrade",
             state?.CanUpgrade == true);
+    }
+
+    private void ComposeStoryPage(GuiComposer composer)
+    {
+        const int areaY = IslandHubTheme.ContentAreaY;
+        const int panelX = IslandHubTheme.ContentAreaX;
+        const int panelW = IslandHubTheme.ContentPanelWidth;
+        const int panelH = IslandHubTheme.ContentPanelHeight;
+        const int headerH = 72;
+        const int sectionGap = 6;
+        const int innerPad = 18;
+        const int headerY = areaY;
+        const int listY = headerY + headerH + sectionGap;
+        const int listH = areaY + panelH - listY;
+        const int columnsY = headerY + 48;
+
+        var listTrackBounds = ElementBounds.Fixed(
+            IslandHubTheme.PanelFullListTrackX,
+            listY,
+            IslandHubTheme.PanelFullListTrackWidth,
+            listH);
+        storyListClipBounds = listTrackBounds.ForkContainingChild(3, 3, 3, 3);
+        storyListTableBounds = storyListClipBounds.ForkContainingChild(0, 0, 0, -3).WithFixedPadding(0);
+
+        var sites = storyState?.Sites ?? [];
+        var subtitle = storyState == null
+            ? Lang.Get("swixyskyblock:story-loading")
+            : Lang.Get("swixyskyblock:story-subtitle");
+
+        composer
+            .AddDynamicCustomDraw(
+                ElementBounds.Fixed(panelX, headerY, panelW, headerH),
+                DrawSidePanelBackground,
+                "storyHeaderBg")
+            .AddDynamicCustomDraw(listTrackBounds, DrawScrollAreaBackground, "storyListScrollBg")
+            .AddDynamicText(
+                Lang.Get("swixyskyblock:story-title"),
+                IslandHubTheme.CreateSectionTitleFont(),
+                ElementBounds.Fixed(panelX + innerPad, headerY + 4, 260, 18),
+                "storyTitle")
+            .AddDynamicText(
+                subtitle,
+                CairoFont.WhiteDetailText().WithFontSize(11),
+                ElementBounds.Fixed(panelX + innerPad, headerY + 22, panelW - innerPad * 2, 16),
+                "storySubtitle")
+            .AddDynamicText(
+                Lang.Get("swixyskyblock:story-hint"),
+                CairoFont.WhiteDetailText().WithFontSize(10),
+                ElementBounds.Fixed(panelX + innerPad, headerY + 38, panelW - innerPad * 2, 28),
+                "storyHint")
+            .AddStaticText(
+                Lang.Get("swixyskyblock:story-col-order"),
+                CairoFont.WhiteDetailText().WithFontSize(11),
+                ElementBounds.Fixed(panelX + innerPad, columnsY, 40, 16),
+                "storyColOrder")
+            .AddStaticText(
+                Lang.Get("swixyskyblock:story-col-name"),
+                CairoFont.WhiteDetailText().WithFontSize(11),
+                ElementBounds.Fixed(panelX + innerPad + 40, columnsY, 220, 16),
+                "storyColName")
+            .AddStaticText(
+                Lang.Get("swixyskyblock:story-col-status"),
+                CairoFont.WhiteDetailText().WithFontSize(11),
+                ElementBounds.Fixed(panelX + panelW - innerPad - 108, columnsY, 108, 16),
+                "storyColStatus")
+            .AddVerticalScrollbar(OnStoryListScroll, ElementStdBounds.VerticalScrollbar(listTrackBounds), "storyListScroll")
+            .BeginClip(storyListClipBounds)
+            .AddCellList(storyListTableBounds, CreateStoryCell, BuildStoryCells(), "storyList")
+            .EndClip();
     }
 
     private void ComposeTopPage(GuiComposer composer)
@@ -820,6 +962,14 @@ public sealed class IslandHubDialog : GuiDialog
         return true;
     }
 
+    private bool SwitchToStoryPage()
+    {
+        activePage = PageStory;
+        RequestStoryState();
+        ComposeDialog();
+        return true;
+    }
+
     private bool SwitchToTopPage()
     {
         activePage = PageTop;
@@ -1081,6 +1231,28 @@ public sealed class IslandHubDialog : GuiDialog
     private IGuiElementCell CreateGeneratorLevelCell(GeneratorLevelCellEntry cell, ElementBounds bounds)
     {
         return new IslandGeneratorLevelListCell(clientApi, cell, bounds);
+    }
+
+    private IGuiElementCell CreateStoryCell(StoryDungeonCellEntry cell, ElementBounds bounds)
+    {
+        return new StoryDungeonListCell(clientApi, cell, bounds);
+    }
+
+    private IEnumerable<StoryDungeonCellEntry> BuildStoryCells()
+    {
+        foreach (var site in (storyState?.Sites ?? []).OrderBy(static site => site.Order))
+        {
+            yield return new StoryDungeonCellEntry
+            {
+                Site = site,
+                OnTeleport = OnStoryTeleportRequested
+            };
+        }
+    }
+
+    private void OnStoryTeleportRequested(string code)
+    {
+        channel.SendPacket(new StoryDungeonTeleportRequestPacket { Code = code });
     }
 
     private IGuiElementCell CreateTopCell(IslandTopCellEntry cell, ElementBounds bounds)
@@ -1748,6 +1920,106 @@ public sealed class IslandHubDialog : GuiDialog
         }
 
         RestoreGeneratorListScroll(generatorListScrollValue);
+    }
+
+    private bool TryRefreshStoryPageInPlace(float savedScroll)
+    {
+        if (activePage != PageStory || SingleComposer == null || storyState == null)
+        {
+            return false;
+        }
+
+        var cellList = SingleComposer.GetCellList<StoryDungeonCellEntry>("storyList");
+        if (cellList == null)
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(storyState.Message))
+        {
+            SingleComposer.GetDynamicText("storyHint")?.SetNewText(storyState.Message);
+        }
+
+        cellList.ReloadCells(BuildStoryCells());
+        RestoreStoryListScroll(savedScroll);
+        return true;
+    }
+
+    private void ApplyStoryPageScrollState()
+    {
+        if (activePage != PageStory || SingleComposer == null)
+        {
+            return;
+        }
+
+        var cellList = SingleComposer.GetCellList<StoryDungeonCellEntry>("storyList");
+        if (cellList != null)
+        {
+            cellList.unscaledCellSpacing = 4;
+            cellList.UnscaledCellHorPadding = 2;
+            cellList.UnscaledCellVerPadding = 2;
+            cellList.ReloadCells(BuildStoryCells());
+        }
+
+        RestoreStoryListScroll(storyListScrollValue);
+    }
+
+    private float GetStoryListScrollOffset()
+    {
+        var cellList = SingleComposer?.GetCellList<StoryDungeonCellEntry>("storyList");
+        if (cellList != null)
+        {
+            return (float)Math.Max(0, -cellList.Bounds.fixedY);
+        }
+
+        return storyListScrollValue;
+    }
+
+    private void OnStoryListScroll(float value)
+    {
+        storyListScrollValue = value;
+        var cellList = SingleComposer?.GetCellList<StoryDungeonCellEntry>("storyList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        cellList.Bounds.fixedY = -value;
+        cellList.Bounds.CalcWorldBounds();
+    }
+
+    private void RestoreStoryListScroll(float scrollValue)
+    {
+        if (SingleComposer == null || storyListClipBounds == null)
+        {
+            return;
+        }
+
+        var cellList = SingleComposer.GetCellList<StoryDungeonCellEntry>("storyList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        cellList.CalcTotalHeight();
+        cellList.Bounds.CalcWorldBounds();
+        storyListClipBounds.CalcWorldBounds();
+
+        var clipHeight = (float)storyListClipBounds.fixedHeight;
+        var tableHeight = (float)cellList.Bounds.fixedHeight;
+        var maxScroll = Math.Max(0, tableHeight - clipHeight);
+        storyListScrollValue = Math.Clamp(scrollValue, 0, maxScroll);
+
+        var scroll = SingleComposer.GetScrollbar("storyListScroll");
+        if (scroll != null)
+        {
+            scroll.SetHeights(clipHeight, tableHeight);
+            scroll.CurrentYPosition = storyListScrollValue;
+            scroll.RecomposeHandle();
+        }
+
+        cellList.Bounds.fixedY = -storyListScrollValue;
+        cellList.Bounds.CalcWorldBounds();
     }
 
     private bool TryRefreshTopPageInPlace(float savedScroll)

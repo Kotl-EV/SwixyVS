@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CakeBuild;
 
@@ -31,7 +32,8 @@ public class BuildContext : FrostingContext
     public List<string> ProjectNames =
     [
         "SwixyClaimChunk",
-        "SwixySkyBlock"
+        "SwixySkyBlock",
+        "SwixyQuestBook"
     ];
 
     public BuildContext(ICakeContext context) : base(context)
@@ -112,15 +114,38 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
                 var releaseDir = $"../Releases/{name}";
                 context.EnsureDirectoryExists(releaseDir);
 
-                var flatPublishDir = $"../{projectName}/bin/{context.BuildConfiguration}/Mods/publish";
-                var nestedPublishDir = $"../{projectName}/bin/{context.BuildConfiguration}/Mods/mod/publish";
-                var publishDir = Directory.Exists(flatPublishDir) ? flatPublishDir : nestedPublishDir;
+                var publishCandidates = new[]
+                {
+                    $"../{projectName}/bin/{context.BuildConfiguration}/Mods/mod/publish",
+                    $"../{projectName}/bin/{context.BuildConfiguration}/Mods/publish",
+                    $"../{projectName}/bin/{context.BuildConfiguration}/Mods/SwixyQuestBook/publish",
+                };
+
+                var publishDir = publishCandidates.FirstOrDefault(Directory.Exists);
+                if (publishDir == null)
+                {
+                    throw new DirectoryNotFoundException(
+                        $"Publish output not found for project {projectName}. Checked:{Environment.NewLine}{string.Join(Environment.NewLine, publishCandidates)}");
+                }
+
                 var publishSource = $"{publishDir}/*";
                 context.Information("Copying published files from {0} to {1}", publishSource, releaseDir);
                 context.CopyFiles(publishSource, releaseDir);
 
-                context.CopyDirectory($"../{projectName}/assets", $"{releaseDir}/assets");
+                var assetsDir = $"../{projectName}/assets";
+                if (Directory.Exists(assetsDir))
+                {
+                    context.CopyDirectory(assetsDir, $"{releaseDir}/assets");
+                }
+
                 context.CopyFile($"../{projectName}/modinfo.json", $"{releaseDir}/modinfo.json");
+
+                var questsJsonPath = $"../{projectName}/Data/quests.json";
+                if (File.Exists(questsJsonPath))
+                {
+                    context.EnsureDirectoryExists($"{releaseDir}/swixyquestbook");
+                    context.CopyFile(questsJsonPath, $"{releaseDir}/swixyquestbook/quests.json");
+                }
 
                 var iconPath = $"../{projectName}/modicon.png";
                 if (File.Exists(iconPath))

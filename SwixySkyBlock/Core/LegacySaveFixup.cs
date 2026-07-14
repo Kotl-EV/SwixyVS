@@ -8,7 +8,7 @@ namespace SwixySkyBlock;
 
 /// <summary>
 /// Старые сейвы с WorldType=skyblock ломают hover-текст в меню Singleplayer.
-/// Патчим protobuf-поле SaveGame.WorldType (field 30) на ванильный empty.
+/// Патчим protobuf-поле SaveGame.WorldType (field 30) на skyblock (или standard→skyblock).
 /// Не добавляйте worldConfigAttributes без поля default — getHoverText упадёт с NRE на всех сейвах.
 /// </summary>
 internal static class LegacySaveFixup
@@ -17,9 +17,13 @@ internal static class LegacySaveFixup
     private static readonly byte[] WorldTypeSkyblock =
         [0xF2, 0x01, 0x08, (byte)'s', (byte)'k', (byte)'y', (byte)'b', (byte)'l', (byte)'o', (byte)'c', (byte)'k'];
 
-    // SaveGame.WorldType = "empty" (field tag 0xF2 0x01, len 5)
-    private static readonly byte[] WorldTypeEmpty =
-        [0xF2, 0x01, 0x05, (byte)'e', (byte)'m', (byte)'p', (byte)'t', (byte)'y'];
+    // SaveGame.WorldType = "standard" (field tag 0xF2 0x01, len 8)
+    private static readonly byte[] WorldTypeStandard =
+        [0xF2, 0x01, 0x08, (byte)'s', (byte)'t', (byte)'a', (byte)'n', (byte)'d', (byte)'a', (byte)'r', (byte)'d'];
+
+    // SaveGame.WorldType = "skyblock" (field tag 0xF2 0x01, len 8)
+    private static readonly byte[] WorldTypeSkyblockPreset =
+        [0xF2, 0x01, 0x08, (byte)'s', (byte)'k', (byte)'y', (byte)'b', (byte)'l', (byte)'o', (byte)'c', (byte)'k'];
 
     // Старый PlayStyleLangCode из serverconfig: swixyskyblock:worldtype-skyblock
     private static readonly byte[] PlayStyleLangSuffixBad = Encoding.UTF8.GetBytes("worldtype-skyblock");
@@ -51,17 +55,23 @@ internal static class LegacySaveFixup
     public static bool TryPatchSaveFile(string path, ILogger logger)
     {
         var bytes = File.ReadAllBytes(path);
-        var worldTypeIndex = IndexOf(bytes, WorldTypeSkyblock);
+        var legacySkyblockIndex = IndexOf(bytes, WorldTypeSkyblock);
+        var standardIndex = IndexOf(bytes, WorldTypeStandard);
         var langCodeIndex = IndexOf(bytes, PlayStyleLangSuffixBad);
-        if (worldTypeIndex < 0 && langCodeIndex < 0)
+        if (legacySkyblockIndex < 0 && standardIndex < 0 && langCodeIndex < 0)
         {
             return false;
         }
 
         var patched = (byte[])bytes.Clone();
-        if (worldTypeIndex >= 0)
+        if (legacySkyblockIndex >= 0)
         {
-            Array.Copy(WorldTypeEmpty, 0, patched, worldTypeIndex, WorldTypeEmpty.Length);
+            Array.Copy(WorldTypeSkyblockPreset, 0, patched, legacySkyblockIndex, WorldTypeSkyblockPreset.Length);
+        }
+
+        if (standardIndex >= 0)
+        {
+            Array.Copy(WorldTypeSkyblockPreset, 0, patched, standardIndex, WorldTypeSkyblockPreset.Length);
         }
 
         if (langCodeIndex >= 0)

@@ -1,0 +1,27 @@
+---
+pid: 2532
+cwd: "E:\рабочие файлы\GitHub\SwixyVS"
+command: "dotnet build \"E:\\рабочие файлы\\GitHub\\SwixyVS\\SwixyBetterQuesting\\SwixyBetterQuesting.csproj\" -o \"E:\\рабочие файлы\\GitHub\\SwixyVS\\SwixyBetterQuesting\\bin\\Debug\\Mods\\Questbook_build\" 2>&1"
+started_at: 2026-07-14T17:59:17.156Z
+running_for_ms: 15825001 
+---
+  Определение проектов для восстановления...
+  Восстановлен E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj (за 67 мс).
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Client\QuestbookClientSystem.cs(87,54): warning CS8604: Возможно, аргумент-ссылка, допускающий значение NULL, для параметра "api" в "void QuestbookSoundHelper.PlayBookOpening(ICoreClientAPI api)". [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(151,22): warning CS0414: Полю "QuestbookDialog.isAdminInputFocused" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(116,30): warning CS0414: Полю "QuestbookDialog.adminPanelComposer" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(152,21): warning CS0414: Полю "QuestbookDialog.focusedInputFieldIndex" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(69,38): warning CS0414: Полю "QuestbookDialog.DebugSidebarScrollLayout" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+  SwixyBetterQuesting -> E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\bin\Debug\Mods\Questbook_build\Questbook.dll
+
+Сборка успешно завершена.
+
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Client\QuestbookClientSystem.cs(87,54): warning CS8604: Возможно, аргумент-ссылка, допускающий значение NULL, для параметра "api" в "void QuestbookSoundHelper.PlayBookOpening(ICoreClientAPI api)". [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(151,22): warning CS0414: Полю "QuestbookDialog.isAdminInputFocused" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(116,30): warning CS0414: Полю "QuestbookDialog.adminPanelComposer" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(152,21): warning CS0414: Полю "QuestbookDialog.focusedInputFieldIndex" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\Gui\QuestbookDialog.cs(69,38): warning CS0414: Полю "QuestbookDialog.DebugSidebarScrollLayout" присвоено значение, но оно ни разу не использовано. [E:\рабочие файлы\GitHub\SwixyVS\SwixyBetterQuesting\SwixyBetterQuesting.csproj]
+    Предупреждений: 5
+    Ошибок: 0
+
+Прошло времени 00:00:18.16

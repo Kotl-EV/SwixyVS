@@ -1,0 +1,15 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user"
+          Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+
+  <PropertyGroup Condition="'$(VINTAGE_STORY)' == '' and '$(Env.VINTAGE_STORY)' != ''">
+    <VINTAGE_STORY>$(Env.VINTAGE_STORY)</VINTAGE_STORY>
+  </PropertyGroup>
+
+  <Target Name="EnsureVintageStoryPath" BeforeTargets="Build">
+    <Error Condition="'$(VINTAGE_STORY)' == ''"
+           Text="VINTAGE_STORY is not set. Copy Directory.Build.props.user.example to Directory.Build.props.user and set your Vintage Story folder." />
+    <Error Condition="!Exists('$(VINTAGE_STORY)/Vintagestory.dll')"
+           Text="Vintagestory.dll not found at '$(VINTAGE_STORY)'. Check VINTAGE_STORY in Directory.Build.props.user." />
+  </Target>
+</Project>

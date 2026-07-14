@@ -86,7 +86,9 @@ public sealed partial class SwixyClaimChunkMod
             claimed = freeChunks.Count;
         }
 
-        if (ownChunks.Count > 0)
+        // Расширение: выделение с уже приватных чанков на свободные — только добавляем новые,
+        // иначе сначала нарастим приват, а потом снимем выбранные свои чанки и обойдём лимит.
+        if (ownChunks.Count > 0 && freeChunks.Count == 0)
         {
             var unclaimResult = TryUnclaimChunksBatch(player, ownChunks, allowOtherPlayersClaims: false);
             if (unclaimResult.MessageType != 0 && claimed == 0 && otherChunks.Count == 0)
@@ -312,6 +314,18 @@ public sealed partial class SwixyClaimChunkMod
             areasByChunk[packed] = area;
         }
 
+        var totalNewVolume = 0L;
+        foreach (var packed in remaining)
+        {
+            totalNewVolume += areasByChunk[packed].SizeXYZ;
+        }
+
+        var allowanceError = ValidateLandClaimAllowance(player, totalNewVolume);
+        if (allowanceError != null)
+        {
+            return allowanceError.Value;
+        }
+
         var ownClaims = GetOwnClaims(player.PlayerUID).ToList();
         LandClaim? targetClaim = null;
         foreach (var packed in remaining)
@@ -326,14 +340,6 @@ public sealed partial class SwixyClaimChunkMod
         var createdNewClaim = targetClaim == null;
         if (createdNewClaim)
         {
-            var usedVolume = ownClaims.Sum(static claim => (long)claim.SizeXYZ);
-            var totalVolume = remaining.Sum(packed => (long)areasByChunk[packed].SizeXYZ);
-            var allowance = GetLandClaimAllowance(player);
-            if (allowance > 0 && usedVolume + totalVolume > allowance)
-            {
-                return ClaimActionResult.Error("swixyclaimchunk:error-allowance");
-            }
-
             var usedAreas = ownClaims.Sum(static claim => claim.Areas?.Count ?? 0);
             var maxAreas = GetLandClaimMaxAreas(player);
             if (maxAreas > 0 && usedAreas + 1 > maxAreas)

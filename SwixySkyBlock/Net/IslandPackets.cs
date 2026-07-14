@@ -138,6 +138,38 @@ public class IslandTopEntryPacket
 }
 
 // =============================================================================
+// Пакеты сюжетных локаций (story dungeons)
+// =============================================================================
+
+[ProtoContract]
+public class StoryDungeonStateRequestPacket { }
+
+[ProtoContract]
+public class StoryDungeonTeleportRequestPacket
+{
+    [ProtoMember(1)] public string Code { get; set; } = "";
+}
+
+[ProtoContract]
+public class StoryDungeonStatePacket
+{
+    [ProtoMember(1)] public List<StoryDungeonSiteStatePacket> Sites { get; set; } = [];
+    [ProtoMember(2)] public string Message { get; set; } = "";
+    [ProtoMember(3)] public int MessageType { get; set; }
+}
+
+[ProtoContract]
+public class StoryDungeonSiteStatePacket
+{
+    [ProtoMember(1)] public string Code { get; set; } = "";
+    [ProtoMember(2)] public string Name { get; set; } = "";
+    [ProtoMember(3)] public bool Ready { get; set; }
+    [ProtoMember(4)] public int Order { get; set; }
+    [ProtoMember(5)] public int Corner { get; set; }
+    [ProtoMember(6)] public bool Generating { get; set; }
+}
+
+// =============================================================================
 // Пакеты для управления списками территорий (claim list)
 // =============================================================================
 

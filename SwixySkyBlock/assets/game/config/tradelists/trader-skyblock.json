@@ -1,0 +1,65 @@
+{
+  "money": {
+    "avg": 512,
+    "var": 0
+  },
+  "selling": {
+    "maxItems": 10,
+    "list": [
+      { "code": "flint", "type": "item", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "drygrass", "type": "item", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "clay-blue", "type": "item", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "clay-red", "type": "item", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "soil-medium-none", "type": "block", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "peatbrick", "type": "block", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-granite", "type": "item", "stacksize": 32, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-andesite", "type": "item", "stacksize": 32, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "sand-granite", "type": "block", "stacksize": 32, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "gravel-granite", "type": "block", "stacksize": 32, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  },
+  "buying": {
+    "maxItems": 96,
+    "list": [
+      { "code": "flint", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "drygrass", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "clay-blue", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "clay-red", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "clay-fire", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "soil-medium-none", "type": "block", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "peatbrick", "type": "block", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stick", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+
+      { "code": "stone-andesite", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-chalk", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-chert", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-conglomerate", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-limestone", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-claystone", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-granite", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-sandstone", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-shale", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-basalt", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-peridotite", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-phyllite", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-slate", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "stone-bauxite", "type": "item", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+
+      { "code": "sand-granite", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "sand-sandstone", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "sand-basalt", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "sand-limestone", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "sand-andesite", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "gravel-granite", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "gravel-sandstone", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "gravel-basalt", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "gravel-limestone", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "gravel-andesite", "type": "block", "stacksize": 64, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+
+      { "code": "log-placed-birch-ud", "type": "block", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "log-placed-oak-ud", "type": "block", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "log-placed-maple-ud", "type": "block", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "log-placed-pine-ud", "type": "block", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  }
+}

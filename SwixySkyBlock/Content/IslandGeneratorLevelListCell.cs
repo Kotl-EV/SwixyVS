@@ -34,12 +34,16 @@ internal sealed class IslandGeneratorLevelListCell : GuiElementTextBase, IGuiEle
     private readonly GeneratorLevelCellEntry cellEntry;
     private readonly CairoFont percentFont;
     private readonly IslandGeneratorSlideshowIconRenderer iconRenderer;
+    private readonly DummyInventory tooltipInventory;
+    private readonly DummySlot tooltipSlot;
     private LoadedTexture rowBackgroundTexture = null!;
     private LoadedTexture titleTexture = null!;
     private readonly List<GeneratorIconEntry> icons = [];
     private string titleText = "";
     private int composedWidth;
     private int composedHeight;
+    private GeneratorIconEntry? tooltipIcon;
+    private int tooltipVariantIndex = -1;
 
     public double? FixedHeight => CalcLayout().UnscaledCellHeight;
 
@@ -57,6 +61,8 @@ internal sealed class IslandGeneratorLevelListCell : GuiElementTextBase, IGuiEle
         rowBackgroundTexture = new LoadedTexture(api);
         titleTexture = new LoadedTexture(api);
         iconRenderer = new IslandGeneratorSlideshowIconRenderer(api);
+        tooltipInventory = new DummyInventory(api);
+        tooltipSlot = new DummySlot(null, tooltipInventory);
         RebuildIconData();
     }
 
@@ -232,6 +238,8 @@ internal sealed class IslandGeneratorLevelListCell : GuiElementTextBase, IGuiEle
                 row++;
             }
         }
+
+        UpdateIconTooltip(layout, startX, baseIconY, iconSize, iconGap, iconRowHeight, wrappedRowExtraOffset);
     }
 
     public void OnMouseDownOnElement(MouseEvent args, int elementIndex)
@@ -248,6 +256,7 @@ internal sealed class IslandGeneratorLevelListCell : GuiElementTextBase, IGuiEle
 
     public override void Dispose()
     {
+        ClearIconTooltip();
         base.Dispose();
         rowBackgroundTexture.Dispose();
         titleTexture.Dispose();
@@ -262,6 +271,84 @@ internal sealed class IslandGeneratorLevelListCell : GuiElementTextBase, IGuiEle
             && mouseX <= iconX + iconSize
             && mouseY >= iconY
             && mouseY <= iconY + iconSize;
+    }
+
+    private void UpdateIconTooltip(
+        LayoutInfo layout,
+        double startX,
+        double baseIconY,
+        float iconSize,
+        double iconGap,
+        double iconRowHeight,
+        double wrappedRowExtraOffset)
+    {
+        GeneratorIconEntry? hovered = null;
+        var iconStep = iconSize + iconGap;
+        var col = 0;
+        var row = 0;
+
+        foreach (var icon in icons)
+        {
+            var iconX = startX + col * iconStep;
+            var iconY = baseIconY + row * iconRowHeight + row * wrappedRowExtraOffset;
+            if (IsMouseOverIcon(iconX, iconY, iconSize))
+            {
+                hovered = icon;
+                break;
+            }
+
+            col++;
+            if (col >= layout.IconsPerRow)
+            {
+                col = 0;
+                row++;
+            }
+        }
+
+        if (hovered == null)
+        {
+            ClearIconTooltip();
+            return;
+        }
+
+        hovered.EnsureVariants(clientApi);
+        if (hovered.VariantStacks.Length == 0)
+        {
+            ClearIconTooltip();
+            return;
+        }
+
+        var variantIndex = Math.Clamp(hovered.CurrentVariantIndex, 0, hovered.VariantStacks.Length - 1);
+        var stack = hovered.VariantStacks[variantIndex];
+        if (stack is not { Id: not 0, Collectible: not null })
+        {
+            ClearIconTooltip();
+            return;
+        }
+
+        if (hovered == tooltipIcon && variantIndex == tooltipVariantIndex)
+        {
+            return;
+        }
+
+        ClearIconTooltip();
+        tooltipIcon = hovered;
+        tooltipVariantIndex = variantIndex;
+        tooltipSlot.Itemstack = stack.Clone();
+        clientApi.Input.TriggerOnMouseEnterSlot(tooltipSlot);
+    }
+
+    private void ClearIconTooltip()
+    {
+        if (tooltipIcon == null)
+        {
+            return;
+        }
+
+        clientApi.Input.TriggerOnMouseLeaveSlot(tooltipSlot);
+        tooltipIcon = null;
+        tooltipVariantIndex = -1;
+        tooltipSlot.Itemstack = null;
     }
 
     private LayoutInfo CalcLayout()

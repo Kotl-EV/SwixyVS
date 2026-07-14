@@ -1,0 +1,16 @@
+---
+pid: 22052
+cwd: "D:\GitHub\SwixyVS"
+command: "function Get-AsciiStrings($path, $minLen=5) { $bytes = [IO.File]::ReadAllBytes($path); $sb = New-Object System.Text.StringBuilder; $strings = @(); foreach ($b in $bytes) { if ($b -ge 32 -and $b -ge 32 -and $b -le 126) { [void]$sb.Append([char]$b) } else { if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; $sb.Clear() | Out-Null } }; if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; return $strings }; $dll = \"E:\\Vintagestory\\Mods\\VSSurvivalMod.dll\"; $strings = Get-AsciiStrings $dll 5; $strings | Where-Object { $_ -match 'PlacePartial|OnSetStoryStructure|DetermineStory|StoryStructureLocation|genStoryStructures|PlaceStory|GenerateStory' } | Sort-Object -Unique"
+started_at: 2026-07-02T17:32:54.342Z
+running_for_ms: 7785014  
+---
+<DetermineStoryStructures>b__23_0
+<OnSetStoryStructurePos>b__0
+DetermineStoryStructures
+genGenStoryStructures
+genStoryStructures
+OnSetStoryStructurePos
+PlacePartial
+StoryStructureLocation
+WorldGenStoryStructuresConfig

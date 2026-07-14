@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "categories": [
+    {
+      "iconFileName": "Introduction.png",
+      "title": "category.introduction.title",
+      "headerTitle": "category.introduction.header",
+      "nodes": [
+        { "id": 0, "x": 0, "y": 0, "nodeType": "Start", "description": "quest.intro.0.description", "requiredItems": [], "rewardItems": [] },
+    10|
+        { "id": 1, "x": 178, "y": 0, "nodeType": "Quest", "description": "quest.intro.1.description", "requiredItems": [{ "collectibleCode": "game:stick", "count": 16 }], "rewardItems": [{ "collectibleCode": "game:flint", "count": 4 }] },
+        { "id": 2, "x": 328, "y": 0, "nodeType": "Quest", "description": "quest.intro.2.description", "requiredItems": [{ "collectibleCode": "game:stone-*", "count": 12 }], "rewardItems": [{ "collectibleCode": "game:stick", "count": 8 }, { "collectibleCode": "game:flint", "count": 2 }] },
+        { "id": 3, "x": 478, "y": 0, "nodeType": "Quest", "description": "quest.intro.3.description", "requiredItems": [{ "collectibleCode": "game:drygrass", "count": 8 }], "rewardItems": [{ "collectibleCode": "game:stick", "count": 4 }] },
+        { "id": 4, "x": 628, "y": 0, "nodeType": "Quest", "description": "quest.intro.4.description", "requiredItems": [{ "collectibleCode": "game:knifeblade-flint", "count": 1 }], "rewardItems": [{ "collectibleCode": "game:stick", "count": 4 }] },
+        { "id": 5, "x": 734, "y": -106, "nodeType": "Quest", "description": "quest.intro.5.description", "requiredItems": [{ "collectibleCode": "game:axe-flint", "count": 1 }], "rewardItems": [{ "collectibleCode": "game:firewood", "count": 16 }] },
+        { "id": 6, "x": 734, "y": 106, "nodeType": "Quest", "description": "quest.intro.6.description", "requiredItems": [{ "collectibleCode": "game:shovel-flint", "count": 1 }], "rewardItems": [{ "collectibleCode": "game:clay-blue", "count": 16 }] },
+        { "id": 7, "x": 778, "y": 0, "nodeType": "Quest", "description": "quest.intro.7.description", "requiredItems": [{ "collectibleCode": "game:hoe-flint", "count": 1 }], "rewardItems": [{ "collectibleCode": "game:seeds-flax", "count": 8 }] },
+
+        { "id": 10, "x": -178, "y": 0, "nodeType": "Quest", "description": "quest.clay.10.description", "requiredItems": [{ "collectibleCode": "game:clay-*", "count": 16 }], "rewardItems": [{ "collectibleCode": "game:shovel-flint", "count": 1 }] },
+    20|        { "id": 11, "x": -284, "y": -106, "nodeType": "Quest", "description": "quest.clay.11.description", "requiredItems": [{ "collectibleCode": "game:bowl-blue-raw", "count": 4 }], "rewardItems": [{ "collectibleCode": "game:stick", "count": 24 }] },
+... 90 lines not shown ...

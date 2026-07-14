@@ -3,5 +3,7 @@ obj/
 .vs/
 .idea/
 *.user
+Directory.Build.props.user
+.vscode/.env
 *.suo
 Releases/

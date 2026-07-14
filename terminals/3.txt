@@ -1,0 +1,7 @@
+---
+pid: 11804
+cwd: "D:\GitHub\SwixyVS"
+command: "function Get-AsciiStrings($path, $minLen=5) { $bytes = [IO.File]::ReadAllBytes($path); $sb = New-Object System.Text.StringBuilder; $strings = @(); foreach ($b in $bytes) { if ($b -ge 32 -and $b -le 126) { [void]$sb.Append([char]$b) } else { if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; $sb.Clear() | Out-Null } }; if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; return $strings }; $api = \"E:\\Vintagestory\\VintagestoryAPI.dll\"; $strings = Get-AsciiStrings $api 6; $strings | Where-Object { $_ -match 'StoryStruct|PlacePartial|IStoryStructure|OnSetStoryStructure|genStory' } | Sort-Object -Unique"
+started_at: 2026-07-02T17:32:54.342Z
+running_for_ms: 7785014  
+---

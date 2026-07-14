@@ -1,0 +1,19 @@
+---
+pid: 9976
+cwd: "D:\GitHub\SwixyVS"
+command: "function Get-AsciiStrings($path, $minLen=6) { $bytes = [IO.File]::ReadAllBytes($path); $sb = New-Object System.Text.StringBuilder; $strings = @(); foreach ($b in $bytes) { if ($b -ge 32 -and $b -le 126) { [void]$sb.Append([char]$b) } else { if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; $sb.Clear() | Out-Null } }; if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; return $strings }; $dll = \"E:\\Vintagestory\\Mods\\VSSurvivalMod.dll\"; $strings = Get-AsciiStrings $dll 5; $strings | Where-Object { $_ -match 'PlacePartial|BlockSchematicPartial|worldgenBlockAccessor|GenStoryStructures|OnSetStoryStructure|PlaceStory|GenerateStory|disableSurface' } | Sort-Object -Unique"
+started_at: 2026-07-02T22:32:19.838Z
+running_for_ms: 3135006  
+---
+<OnSetStoryStructurePos>b__0
+BlockSchematicPartial
+DisableSurfaceTerrainBlending
+genGenStoryStructures
+genStoryStructures
+GetWorldgenBlockAccessor
+IWorldGenBlockAccessor
+OnSetStoryStructurePos
+OnWorldGenBlockAccessor
+PlacePartial
+worldgenBlockAccessor
+WorldGenStoryStructuresConfig

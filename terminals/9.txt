@@ -1,0 +1,8 @@
+---
+pid: 3968
+cwd: "E:\рабочие файлы\GitHub\SwixyVS"
+command: "$vs = 'E:\\Vintagestory'; $assetRoots = @(\"$vs\\assets\\survival\", \"$vs\\assets\\game\"); $codes = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase); foreach ($root in $assetRoots) { if (-not (Test-Path $root)) { Write-Host \"missing $root\"; continue }; Get-ChildItem -Path $root -Recurse -Include *.json -File | ForEach-Object { try { $j = Get-Content -Raw $_.FullName | ConvertFrom-Json; if ($j.code) { [void]$codes.Add(\"game:$($j.code)\") }; if ($j.variants) { foreach ($v in $j.variants) { if ($v.code) { [void]$codes.Add(\"game:$($v.code)\") } } } } catch {} } }; Write-Host \"registry size: $($codes.Count)\""
+started_at: 2026-07-14T20:25:00.576Z
+running_for_ms: 7085012  
+---
+registry size: 450

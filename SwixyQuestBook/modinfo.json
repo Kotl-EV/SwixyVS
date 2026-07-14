@@ -1,0 +1,12 @@
+{
+  "type": "code",
+  "modid": "swixyquestbook",
+  "name": "SwixyQuestBook",
+  "authors": [ "Mengel" ],
+  "description": "[SwixyQuestBook] Открывается клавишей K",
+  "version": "1.0.0",
+  "gameversions": [ "1.22.3" ],
+  "dependencies": {
+    "game": "1.22.3"
+  }
+}

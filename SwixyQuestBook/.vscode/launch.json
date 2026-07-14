@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Questbook: Launch Server",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${env:APPDATA}/VintageStorySwixy/VintageStory/VintagestoryServer.exe",
+            "cwd": "${env:APPDATA}/VintageStorySwixy/VintageStory",
+            "preLaunchTask": "build",
+            "args": [
+                "--tracelog"
+            ],
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Questbook: Launch Client",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${env:APPDATA}/VintageStorySwixy/VintageStory/Vintagestory.exe",
+            "cwd": "${env:APPDATA}/VintageStorySwixy/VintageStory",
+            "preLaunchTask": "build",
+            "args": [
+                "--tracelog"
+            ],
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": "Questbook: Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Questbook: Full Debug (Server + Client)",
+            "configurations": ["Questbook: Launch Server", "Questbook: Launch Client"],
+            "stopAll": true
+        }
+    ]
+}

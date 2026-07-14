@@ -1,0 +1,9 @@
+---
+pid: 9264
+cwd: "E:\рабочие файлы\GitHub\SwixyVS"
+command: "function Get-AsciiStrings($path, $minLen=8) { $bytes = [IO.File]::ReadAllBytes($path); $sb = New-Object System.Text.StringBuilder; $strings = @(); foreach ($b in $bytes) { if ($b -ge 32 -and $b -le 126) { [void]$sb.Append([char]$b) } else { if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; $sb.Clear() | Out-Null } }; if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; return $strings }; $strings = Get-AsciiStrings \"E:\\Vintagestory\\VintagestoryLib.dll\" 10; $strings | Where-Object { $_ -match 'getImageSurfaceFromAsset|mulAlpha|demul|premul' } | Sort-Object -Unique | Select-Object -First 40"
+started_at: 2026-07-14T13:30:34.537Z
+running_for_ms: 31945010 
+---
+Render2DTexturePremultipliedAlpha
+set_RenderAsPremultipliedAlpha

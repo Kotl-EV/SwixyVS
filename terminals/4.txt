@@ -1,0 +1,7 @@
+---
+pid: 14592
+cwd: "D:\GitHub\SwixyVS"
+command: "function Get-AsciiStrings($path, $minLen=6) { $bytes = [IO.File]::ReadAllBytes($path); $sb = New-Object System.Text.StringBuilder; $strings = @(); foreach ($b in $bytes) { if ($b -ge 32 -and $b -le 126) { [void]$sb.Append([char]$b) } else { if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; $sb.Clear() | Out-Null } }; if ($sb.Length -ge $minLen) { $strings += $sb.ToString() }; return $strings }; Get-AsciiStrings \"E:\\Vintagestory\\Mods\\VSSurvivalMod.dll\" 8 | Where-Object { $_ -match 'GenStory|StoryStruct|PlaceStory|GenerateStory|OnDetermineStory' } | Sort-Object -Unique"
+started_at: 2026-07-02T19:17:28.479Z
+running_for_ms: 1510001  
+---

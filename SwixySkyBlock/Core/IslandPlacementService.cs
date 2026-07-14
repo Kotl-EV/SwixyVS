@@ -69,7 +69,6 @@ internal static class IslandPlacementService
             return true;
         }
 
-        var placedAny = false;
         foreach (var (cx, cz) in columns)
         {
             var chunks = CollectColumnChunks(api, cx, cz);
@@ -81,14 +80,9 @@ internal static class IslandPlacementService
                     cz);
                 continue;
             }
-
-            if (IslandPlacer.PlaceIntoLoadedColumn(api, new Vec2i(cx, cz), chunks, template, origin))
-            {
-                placedAny = true;
-            }
         }
 
-        if (!placedAny && !IslandPlacer.PlaceIntoWorld(api, template, origin))
+        if (!IslandPlacer.PlaceIntoWorld(api, template, origin))
         {
             api.Logger.Warning(
                 "[SwixySkyBlock] Island placement failed at {0} (template={1}).",
@@ -130,11 +124,10 @@ internal static class IslandPlacementService
             return;
         }
 
-        if (IslandPlacer.PlaceIntoLoadedColumn(api, chunkCoord, chunks, template, record.Origin))
+        if (TryPlaceNow(api, template, record.Origin))
         {
-            RelightIsland(api, template, record.Origin);
             api.Logger.Notification(
-                "[SwixySkyBlock] Placed registered island for {0} on chunk load at {1}.",
+                "[SwixySkyBlock] Placed registered island for {0} at {1}.",
                 record.PlayerUid,
                 record.Origin);
         }

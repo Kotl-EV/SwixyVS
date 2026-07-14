@@ -1,0 +1,34 @@
+{
+  "money": {
+    "avg": 128,
+    "var": 0
+  },
+  "selling": {
+    "maxItems": 8,
+    "list": [
+      { "code": "grain-spelt", "type": "item", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-rye", "type": "item", "stacksize": 16, "stock": { "avg": 8, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-rice", "type": "item", "stacksize": 12, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-turnip", "type": "item", "stacksize": 8, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-carrot", "type": "item", "stacksize": 8, "stock": { "avg": 6, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-cabbage", "type": "item", "stacksize": 4, "stock": { "avg": 5, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "bread-spelt-perfect", "type": "item", "stacksize": 2, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "bread-rye-perfect", "type": "item", "stacksize": 2, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 2, "var": 0 } }
+    ]
+  },
+  "buying": {
+    "maxItems": 10,
+    "list": [
+      { "code": "grain-spelt", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-rye", "type": "item", "stacksize": 32, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "grain-rice", "type": "item", "stacksize": 24, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-turnip", "type": "item", "stacksize": 16, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-carrot", "type": "item", "stacksize": 16, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-cabbage", "type": "item", "stacksize": 8, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "bread-spelt-perfect", "type": "item", "stacksize": 4, "stock": { "avg": 24, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "bread-rye-perfect", "type": "item", "stacksize": 4, "stock": { "avg": 24, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "bread-rice-perfect", "type": "item", "stacksize": 4, "stock": { "avg": 24, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "vegetable-cookedcattailroot", "type": "item", "stacksize": 12, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  }
+}

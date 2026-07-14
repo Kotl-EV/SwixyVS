@@ -9,8 +9,14 @@ namespace SwixySkyBlock.Content;
 internal static class IslandHubTheme
 {
     public const int DialogFramePadding = 8;
-    /// <summary>Горизонтальный отступ контента; рамка окна — только <see cref="DialogFramePadding"/>.</summary>
-    public const int ContentAreaX = 0;
+    /// <summary>Компенсация ширины кнопки закрытия в title bar (визуальный перекос вправо).</summary>
+    public const int DialogTitleBarCloseInset = 8;
+    /// <summary>Доп. левый отступ контента (тонкая подстройка).</summary>
+    public const int ContentAreaLeftTune = 8;
+    /// <summary>Горизонтальный отступ контента от левого края области диалога.</summary>
+    public const int ContentAreaX = DialogFramePadding + DialogTitleBarCloseInset + ContentAreaLeftTune;
+    /// <summary>Правый отступ контента (зазор под кнопку закрытия title bar).</summary>
+    public const int ContentAreaRight = DialogFramePadding + DialogTitleBarCloseInset;
     public const int ContentPanelWidth = 728;
     public const int ContentPanelHeight = IslandColumnHeight;
     public const int ContentBottomPadding = 8;
@@ -18,12 +24,12 @@ internal static class IslandHubTheme
     public const int TabBarHeight = 38;
     public const int TabBarPadding = 5;
     public const int TabGap = 6;
-    public const int TabCount = 4;
+    public const int TabCount = 5;
     public const int ContentAreaGapBelowTabs = 6;
     public const int ContentAreaY = TabBarY + TabBarHeight + ContentAreaGapBelowTabs;
     public const int TabBarX = ContentAreaX;
-    public const int TabBarWidth = ContentPanelWidth;
-    public const int DialogContentWidth = ContentPanelWidth;
+    public const int TabBarWidth = ContentPanelWidth - DialogTitleBarCloseInset;
+    public const int DialogContentWidth = ContentAreaX + ContentPanelWidth + ContentAreaRight;
     public const int DialogContentHeight = ContentAreaY + ContentPanelHeight + ContentBottomPadding;
 
     public const int AccessHeaderTopInset = 10;

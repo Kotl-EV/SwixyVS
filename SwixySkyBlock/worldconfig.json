@@ -6,7 +6,7 @@
       "langCode": "preset-skyblock",
       "mods": ["game", "survival"],
       "listOrder": 2,
-      "worldType": "standard",
+      "worldType": "skyblock",
       "worldConfig": {
         "worldClimate": "realistic",
         "seasons": "enabled",

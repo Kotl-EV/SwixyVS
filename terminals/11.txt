@@ -1,0 +1,224 @@
+---
+pid: 4832
+cwd: "E:\рабочие файлы\GitHub\SwixyVS"
+command: "powershell -NoProfile -ExecutionPolicy Bypass -File \"E:\\рабочие файлы\\GitHub\\SwixyVS\\tools\\ValidateQuestCodes.ps1\""
+started_at: 2026-07-14T20:29:32.095Z
+running_for_ms: 6810001  
+---
+Checked 483 references, 203 unique codes
+Invalid usages: 146
+
+=== Unique invalid codes ===
+game:anvil-copper
+game:anvil-iron
+game:anvil-steel
+game:armor-arms-plate-copper
+game:armor-arms-plate-steel
+game:armor-body-plate-bronze
+game:armor-body-plate-copper
+game:armor-body-plate-iron
+game:armor-body-plate-steel
+game:armor-head-improvised-wood
+game:armor-head-plate-bronze
+game:armor-head-plate-copper
+game:armor-head-plate-steel
+game:armor-legs-plate-copper
+game:armor-legs-plate-steel
+game:axe-felling-bronze
+game:basket-normal-papyrus
+game:bloomerybase-north
+game:bread-rye
+game:bread-spelt
+game:chisel-bronze
+game:claybrick-red-fired
+game:clay-red
+game:cloth-linen
+game:cobblestone-granite
+game:fish-smoked
+game:flower-catmint-free
+game:flower-heather-free
+game:flower-horsetail-free
+game:flower-wilddaisy-free
+game:hammer-bronze
+game:ingot-bronze
+game:knife-generic-bronze
+game:metalbit-copper
+game:metalbit-iron
+game:metalbit-tin
+game:metalplate-steel
+game:oillamp-genie-*-fired
+game:pickaxe-bronze
+game:pickaxe-flint
+game:pie-meat-redmeat
+game:plank-oak
+game:porridge-spelt
+game:poultice-reed-horsetail
+game:saw-bronze
+game:seeds-bamboo
+game:seeds-bellpepper
+game:seeds-chili
+game:seeds-cotton
+game:seeds-maple
+game:shovel-bronze
+game:sinew
+game:soil-compost-none
+game:soil-high-none
+game:spear-generic-bronze
+game:stonebrick-andesite
+game:storagevessel-talik
+game:supportbeam-oak
+game:toolmold-blue-fired-anvil
+game:toolmold-blue-fired-hammer
+game:toolmold-blue-raw-anvil
+game:toolmold-blue-raw-blade-falx
+game:toolmold-blue-raw-hammer
+game:toolmold-blue-raw-pickaxe
+game:treeseed-oak
+
+=== Invalid usages by quest ===
+game:anvil-copper | node 20 | requiredItems | category.copper.header x1 | quest.copper.39.description
+game:anvil-iron | node 8 | requiredItems | category.iron.header x1 | quest.iron.7.description
+game:anvil-steel | node 3 | requiredItems | category.smithing.header x1 | quest.smithing.2.description
+game:anvil-steel | node 8 | requiredItems | category.steel.header x1 | quest.steel.7.description
+game:armor-arms-plate-copper | node 25 | requiredItems | category.copper.header x1 | quest.copper.45.description
+game:armor-arms-plate-steel | node 10 | requiredItems | category.smithing.header x1 | quest.smithing.9.description
+game:armor-body-plate-bronze | node 12 | requiredItems | category.bronze.header x1 | quest.bronze.11.description
+game:armor-body-plate-copper | node 18 | requiredItems | category.copper.header x1 | quest.copper.37.description
+game:armor-body-plate-iron | node 12 | requiredItems | category.iron.header x1 | quest.iron.11.description
+game:armor-body-plate-steel | node 7 | requiredItems | category.smithing.header x1 | quest.smithing.6.description
+game:armor-body-plate-steel | node 11 | requiredItems | category.steel.header x1 | quest.steel.10.description
+game:armor-head-improvised-wood | node 20 | requiredItems | category.survival.header x1 | quest.survival.21.description
+game:armor-head-improvised-wood | node 7 | requiredItems | category.textiles.header x1 | quest.textiles.7.description
+game:armor-head-plate-bronze | node 13 | requiredItems | category.bronze.header x1 | quest.bronze.12.description
+game:armor-head-plate-copper | node 19 | requiredItems | category.copper.header x1 | quest.copper.38.description
+game:armor-head-plate-steel | node 8 | requiredItems | category.smithing.header x1 | quest.smithing.7.description
+game:armor-head-plate-steel | node 12 | requiredItems | category.steel.header x1 | quest.steel.11.description
+game:armor-legs-plate-copper | node 24 | requiredItems | category.copper.header x1 | quest.copper.44.description
+game:armor-legs-plate-steel | node 9 | requiredItems | category.smithing.header x1 | quest.smithing.8.description
+game:armor-legs-plate-steel | node 13 | requiredItems | category.steel.header x1 | quest.steel.12.description
+game:axe-felling-bronze | node 6 | requiredItems | category.bronze.header x1 | quest.bronze.5.description
+game:basket-normal-papyrus | node 26 | requiredItems | category.survival.header x2 | quest.survival.27.description
+game:bloomerybase-north | node 17 | requiredItems | category.clay.header x1 | quest.clay.26.description
+game:bread-rye | node 30 | rewardItems | category.farming.header x4 | quest.farming.64.description
+game:bread-spelt | node 5 | requiredItems | category.cooking.header x4 | quest.cooking.5.description
+game:bread-spelt | node 22 | rewardItems | category.farming.header x4 | quest.farming.55.description
+game:bread-spelt | node 29 | rewardItems | category.farming.header x4 | quest.farming.63.description
+game:chisel-bronze | node 10 | requiredItems | category.bronze.header x1 | quest.bronze.9.description
+game:claybrick-red-fired | node 8 | requiredItems | category.building.header x32 | quest.building.8.description
+game:clay-red | node 8 | rewardItems | category.building.header x16 | quest.building.8.description
+game:clay-red | node 22 | requiredItems | category.clay.header x24 | quest.clay.32.description
+game:cloth-linen | node 23 | rewardItems | category.farming.header x4 | quest.farming.56.description
+game:cloth-linen | node 27 | rewardItems | category.survival.header x4 | quest.survival.28.description
+game:cloth-linen | node 4 | requiredItems | category.textiles.header x4 | quest.textiles.4.description
+game:cloth-linen | node 7 | rewardItems | category.textiles.header x4 | quest.textiles.7.description
+game:cloth-linen | node 8 | rewardItems | category.textiles.header x6 | quest.textiles.8.description
+game:cloth-linen | node 9 | rewardItems | category.textiles.header x4 | quest.textiles.9.description
+game:cobblestone-granite | node 3 | requiredItems | category.building.header x32 | quest.building.3.description
+game:cobblestone-granite | node 4 | rewardItems | category.building.header x16 | quest.building.4.description
+game:cobblestone-granite | node 7 | rewardItems | category.building.header x12 | quest.building.7.description
+game:fish-smoked | node 8 | requiredItems | category.cooking.header x4 | quest.cooking.8.description
+game:fish-smoked | node 5 | rewardItems | category.nature.header x4 | quest.nature.35.description
+game:flower-catmint-free | node 12 | requiredItems | category.nature.header x12 | quest.nature.42.description
+game:flower-heather-free | node 16 | requiredItems | category.nature.header x12 | quest.nature.46.description
+game:flower-horsetail-free | node 2 | requiredItems | category.nature.header x18 | quest.nature.31.description
+game:flower-horsetail-free | node 24 | rewardItems | category.survival.header x12 | quest.survival.25.description
+game:flower-wilddaisy-free | node 24 | requiredItems | category.nature.header x12 | quest.nature.54.description
+game:hammer-bronze | node 4 | requiredItems | category.bronze.header x1 | quest.bronze.3.description
+game:ingot-bronze | node 3 | requiredItems | category.bronze.header x4 | quest.bronze.2.description
+game:ingot-bronze | node 4 | rewardItems | category.bronze.header x2 | quest.bronze.3.description
+game:ingot-bronze | node 5 | rewardItems | category.bronze.header x2 | quest.bronze.4.description
+game:ingot-bronze | node 7 | rewardItems | category.bronze.header x1 | quest.bronze.6.description
+game:ingot-bronze | node 12 | rewardItems | category.bronze.header x2 | quest.bronze.11.description
+game:ingot-bronze | node 13 | rewardItems | category.bronze.header x1 | quest.bronze.12.description
+game:knife-generic-bronze | node 7 | requiredItems | category.bronze.header x1 | quest.bronze.6.description
+game:metalbit-copper | node 2 | rewardItems | category.bronze.header x8 | quest.bronze.1.description
+game:metalbit-copper | node 26 | rewardItems | category.copper.header x8 | quest.copper.46.description
+game:metalbit-copper | node 3 | rewardItems | category.exploration.header x8 | quest.exploration.3.description
+game:metalbit-iron | node 2 | requiredItems | category.iron.header x24 | quest.iron.1.description
+game:metalbit-iron | node 3 | rewardItems | category.iron.header x8 | quest.iron.2.description
+game:metalbit-iron | node 6 | rewardItems | category.iron.header x12 | quest.iron.5.description
+game:metalbit-iron | node 14 | rewardItems | category.iron.header x8 | quest.iron.13.description
+game:metalbit-iron | node 3 | rewardItems | category.steel.header x8 | quest.steel.2.description
+game:metalbit-tin | node 2 | requiredItems | category.bronze.header x16 | quest.bronze.1.description
+game:metalbit-tin | node 3 | rewardItems | category.bronze.header x6 | quest.bronze.2.description
+game:metalbit-tin | node 8 | rewardItems | category.bronze.header x8 | quest.bronze.7.description
+game:metalbit-tin | node 12 | rewardItems | category.clay.header x4 | quest.clay.21.description
+game:metalbit-tin | node 21 | rewardItems | category.clay.header x4 | quest.clay.31.description
+game:metalbit-tin | node 4 | rewardItems | category.copper.header x5 | quest.copper.23.description
+game:metalbit-tin | node 7 | rewardItems | category.copper.header x5 | quest.copper.26.description
+game:metalbit-tin | node 8 | rewardItems | category.copper.header x5 | quest.copper.27.description
+game:metalbit-tin | node 4 | requiredItems | category.exploration.header x12 | quest.exploration.4.description
+game:metalplate-steel | node 4 | rewardItems | category.smithing.header x4 | quest.smithing.3.description
+game:metalplate-steel | node 14 | requiredItems | category.steel.header x4 | quest.steel.13.description
+game:oillamp-genie-*-fired | node 26 | requiredItems | category.clay.header x2 | quest.clay.36.description
+game:pickaxe-bronze | node 5 | requiredItems | category.bronze.header x1 | quest.bronze.4.description
+game:pickaxe-flint | node 10 | requiredItems | category.survival.header x1 | quest.survival.10.description
+game:pie-meat-redmeat | node 6 | requiredItems | category.cooking.header x2 | quest.cooking.6.description
+game:pie-meat-redmeat | node 31 | requiredItems | category.farming.header x2 | quest.farming.65.description
+game:plank-oak | node 9 | rewardItems | category.bronze.header x24 | quest.bronze.8.description
+game:plank-oak | node 2 | requiredItems | category.building.header x32 | quest.building.2.description
+game:plank-oak | node 6 | rewardItems | category.building.header x16 | quest.building.6.description
+game:plank-oak | node 12 | rewardItems | category.copper.header x32 | quest.copper.31.description
+game:plank-oak | node 11 | rewardItems | category.iron.header x32 | quest.iron.10.description
+game:plank-oak | node 9 | rewardItems | category.steel.header x48 | quest.steel.8.description
+game:porridge-spelt | node 4 | requiredItems | category.cooking.header x4 | quest.cooking.4.description
+game:porridge-spelt | node 32 | requiredItems | category.farming.header x4 | quest.farming.66.description
+game:poultice-reed-horsetail | node 2 | rewardItems | category.nature.header x4 | quest.nature.31.description
+game:poultice-reed-horsetail | node 10 | rewardItems | category.nature.header x6 | quest.nature.40.description
+game:poultice-reed-horsetail | node 16 | rewardItems | category.nature.header x4 | quest.nature.46.description
+game:poultice-reed-horsetail | node 24 | requiredItems | category.survival.header x4 | quest.survival.25.description
+game:saw-bronze | node 9 | requiredItems | category.bronze.header x1 | quest.bronze.8.description
+game:seeds-bamboo | node 21 | requiredItems | category.farming.header x8 | quest.farming.54.description
+game:seeds-bellpepper | node 19 | requiredItems | category.farming.header x8 | quest.farming.52.description
+game:seeds-chili | node 20 | requiredItems | category.farming.header x8 | quest.farming.53.description
+game:seeds-cotton | node 26 | requiredItems | category.farming.header x8 | quest.farming.60.description
+game:seeds-cotton | node 9 | requiredItems | category.textiles.header x8 | quest.textiles.9.description
+game:seeds-maple | node 38 | requiredItems | category.farming.header x8 | quest.farming.72.description
+game:shovel-bronze | node 11 | requiredItems | category.bronze.header x1 | quest.bronze.10.description
+game:sinew | node 18 | requiredItems | category.nature.header x8 | quest.nature.48.description
+game:soil-compost-none | node 14 | rewardItems | category.clay.header x4 | quest.clay.23.description
+game:soil-compost-none | node 2 | rewardItems | category.farming.header x2 | quest.farming.34.description
+game:soil-compost-none | node 3 | rewardItems | category.farming.header x2 | quest.farming.35.description
+game:soil-compost-none | node 4 | rewardItems | category.farming.header x2 | quest.farming.36.description
+game:soil-compost-none | node 5 | rewardItems | category.farming.header x4 | quest.farming.37.description
+game:soil-compost-none | node 6 | rewardItems | category.farming.header x3 | quest.farming.38.description
+game:soil-compost-none | node 7 | rewardItems | category.farming.header x2 | quest.farming.40.description
+game:soil-compost-none | node 11 | rewardItems | category.farming.header x3 | quest.farming.44.description
+game:soil-compost-none | node 12 | rewardItems | category.farming.header x4 | quest.farming.45.description
+game:soil-compost-none | node 13 | rewardItems | category.farming.header x4 | quest.farming.46.description
+game:soil-compost-none | node 16 | rewardItems | category.farming.header x3 | quest.farming.49.description
+game:soil-compost-none | node 18 | rewardItems | category.farming.header x2 | quest.farming.51.description
+game:soil-compost-none | node 19 | rewardItems | category.farming.header x2 | quest.farming.52.description
+game:soil-compost-none | node 26 | rewardItems | category.farming.header x3 | quest.farming.60.description
+game:soil-compost-none | node 28 | rewardItems | category.farming.header x2 | quest.farming.62.description
+game:soil-compost-none | node 39 | rewardItems | category.farming.header x4 | quest.farming.73.description
+game:soil-compost-none | node 40 | rewardItems | category.farming.header x4 | quest.farming.74.description
+game:soil-compost-none | node 9 | rewardItems | category.livestock.header x4 | quest.livestock.8.description
+game:soil-high-none | node 8 | rewardItems | category.farming.header x2 | quest.farming.41.description
+game:soil-high-none | node 9 | rewardItems | category.farming.header x2 | quest.farming.42.description
+game:soil-high-none | node 10 | rewardItems | category.farming.header x6 | quest.farming.43.description
+game:soil-high-none | node 14 | rewardItems | category.farming.header x4 | quest.farming.47.description
+game:soil-high-none | node 15 | rewardItems | category.farming.header x2 | quest.farming.48.description
+game:soil-high-none | node 17 | rewardItems | category.farming.header x4 | quest.farming.50.description
+game:soil-high-none | node 20 | rewardItems | category.farming.header x2 | quest.farming.53.description
+game:soil-high-none | node 21 | rewardItems | category.farming.header x2 | quest.farming.54.description
+game:soil-high-none | node 25 | rewardItems | category.farming.header x4 | quest.farming.58.description
+game:soil-high-none | node 27 | rewardItems | category.farming.header x2 | quest.farming.61.description
+game:soil-high-none | node 37 | rewardItems | category.farming.header x2 | quest.farming.71.description
+game:soil-high-none | node 38 | rewardItems | category.farming.header x2 | quest.farming.72.description
+game:soil-high-none | node 10 | rewardItems | category.steel.header x4 | quest.steel.9.description
+game:spear-generic-bronze | node 14 | requiredItems | category.bronze.header x1 | quest.bronze.13.description
+game:stonebrick-andesite | node 10 | rewardItems | category.bronze.header x24 | quest.bronze.9.description
+game:stonebrick-andesite | node 4 | requiredItems | category.building.header x24 | quest.building.4.description
+game:stonebrick-andesite | node 13 | rewardItems | category.copper.header x16 | quest.copper.32.description
+game:stonebrick-andesite | node 7 | rewardItems | category.steel.header x32 | quest.steel.6.description
+game:storagevessel-talik | node 1 | rewardItems | category.copper.header x1 | quest.copper.20.description
+game:supportbeam-oak | node 6 | requiredItems | category.building.header x8 | quest.building.6.description
+game:toolmold-blue-fired-anvil | node 16 | requiredItems | category.clay.header x1 | quest.clay.25.description
+game:toolmold-blue-fired-hammer | node 20 | requiredItems | category.clay.header x1 | quest.clay.30.description
+game:toolmold-blue-raw-anvil | node 2 | requiredItems | category.copper.header x1 | quest.copper.21.description
+game:toolmold-blue-raw-anvil | node 2 | rewardItems | category.copper.header x1 | quest.copper.21.description
+game:toolmold-blue-raw-blade-falx | node 28 | requiredItems | category.clay.header x1 | quest.clay.38.description
+game:toolmold-blue-raw-hammer | node 19 | requiredItems | category.clay.header x1 | quest.clay.29.description
+game:toolmold-blue-raw-pickaxe | node 27 | requiredItems | category.clay.header x1 | quest.clay.37.description
+game:treeseed-oak | node 23 | requiredItems | category.nature.header x24 | quest.nature.53.description

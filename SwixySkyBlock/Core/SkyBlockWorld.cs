@@ -10,13 +10,21 @@ namespace SwixySkyBlock;
 /// <summary>Параметры мира SkyBlock.</summary>
 internal static class SkyBlockWorld
 {
-    public const string WorldType = "empty";
+    public const string WorldType = "skyblock";
     public const string PlayStyle = "skyblock";
     public const string LegacyPlayStyle = "preset-skyblock";
     public const string SaveKeyIslandTemplate = "swixyskyblock_island_template";
     public const string SaveKeyIslandOrigin = "swixyskyblock_island_origin";
     public const string SaveKeyPlayerIslands = "swixyskyblock_player_islands";
     public const string SaveKeyIslandResidency = "swixyskyblock_island_residency";
+    public const string SaveKeySpawnTrader = "swixyskyblock_spawn_trader";
+    public const string SaveKeySpawnFoodTrader = "swixyskyblock_spawn_food_trader";
+    public const string SaveKeySpawnFarmingTrader = "swixyskyblock_spawn_farming_trader";
+    public const string SaveKeySpawnSurvivalTrader = "swixyskyblock_spawn_survival_trader";
+    public const string SaveKeySpawnDecorTrader = "swixyskyblock_spawn_decor_trader";
+    public const string SaveKeySpawnAnimalsTrader = "swixyskyblock_spawn_animals_trader";
+    public const string SaveKeyStoryDungeons = "swixyskyblock_story_dungeons";
+    public const string SaveKeyStoryPlacementVersion = "swixyskyblock_story_placement_version";
     public const string CoOwnersSaveKey = "swixyskyblock_coowners";
     public const string IslandClaimDescriptionPrefix = "SkyBlock:";
     public const int IslandClaimChunkRadius = 2;
@@ -30,8 +38,11 @@ internal static class SkyBlockWorld
 
     public static readonly BlockPos LegacyIslandOrigin = new(0, LegacyIslandSurfaceY, 0);
 
-    /// <summary>Типы мира, для которых активна генерация SkyBlock (skyblock — legacy-сейвы).</summary>
-    public static readonly string[] SupportedWorldTypes = ["empty", "superflat", "skyblock"];
+    /// <summary>Типы мира, в которых распознаётся SkyBlock (legacy-сейвы до standard).</summary>
+    public static readonly string[] SupportedWorldTypes = ["skyblock", "standard", "empty", "superflat"];
+
+    /// <summary>Старые сейвы без map region / rock strata (до перехода на standard).</summary>
+    public static readonly string[] LegacyWorldTypes = ["empty", "superflat"];
 
     /// <summary>Центр карты — HUD и миникарта считают спавн отсюда.</summary>
     public static BlockPos ComputeIslandOrigin(ICoreServerAPI api)
@@ -62,7 +73,7 @@ internal static class SkyBlockWorld
         IsSkyBlockWorld(api.World, api.WorldManager.SaveGame?.PlayStyle, api.WorldManager.SaveGame.GetData);
 
     /// <summary>
-    /// SkyBlock-мир: по playstyle, данным сейва (сервер) или типу мира empty/superflat/skyblock (клиент).
+    /// SkyBlock-мир: по playstyle, данным сейва (сервер) или типу мира standard/empty/… (клиент).
     /// </summary>
     public static bool IsSkyBlockWorld(IWorldAccessor world, string? savePlayStyle = null, System.Func<string, byte[]?>? getSaveData = null)
     {
@@ -141,7 +152,7 @@ internal static class SkyBlockWorld
         cfg.SetString("temporalStorms", "sometimes");
         cfg.SetString("temporalGearRespawnUses", "-1");
         cfg.SetString("temporalRifts", "off");
-        cfg.SetString("loreContent", "false");
+        cfg.SetString("loreContent", "true");
         cfg.SetString("allowLandClaiming", "true");
         cfg.SetString("allowMap", "true");
         cfg.SetString("allowCoordinateHud", "true");

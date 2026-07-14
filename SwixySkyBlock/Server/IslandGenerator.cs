@@ -15,6 +15,7 @@ public sealed partial class SwixySkyBlockMod
     private const int GeneratorRestoreIntervalMs = 1000;
     private const string GeneratorUpgradeCostItemCode = "game:gear-rusty";
     private const int GeneratorUpgradeCostQuantity = 1;
+
     private IReadOnlyList<IslandTemplate>? islandGeneratorTemplatesCache;
     private readonly Dictionary<string, IReadOnlyList<Block>> generatorBlockMatchesCache = new(StringComparer.Ordinal);
 
@@ -266,10 +267,7 @@ public sealed partial class SwixySkyBlockMod
     }
 
     private static BlockPos GetGeneratorPosition(PlayerIslandRecord record, IslandTemplate template) =>
-        record.Origin.AddCopy(
-            template.Schematic.SizeX / 2,
-            template.Schematic.SizeY,
-            template.Schematic.SizeZ / 2);
+        template.GetSpawnPosition(record.Origin);
 
     private void BroadcastGeneratorLabels()
     {
@@ -732,4 +730,5 @@ public sealed partial class SwixySkyBlockMod
     {
         public Block PickBlock(Random rand) => Blocks[rand.Next(Blocks.Count)];
     }
+
 }

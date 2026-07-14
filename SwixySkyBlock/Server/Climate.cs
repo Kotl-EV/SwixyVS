@@ -15,6 +15,7 @@ public sealed partial class SwixySkyBlockMod
         api.Event.OnGetClimate += OnUniformClimate;
         api.Event.SaveGameLoaded += OnClimateSaveLoaded;
         api.Event.ServerRunPhase(EnumServerRunPhase.RunGame, OnClimateRunGame);
+        SkyBlockClimateMaps.Register(api);
     }
 
     private void OnClimateSaveLoaded()
@@ -50,11 +51,10 @@ public sealed partial class SwixySkyBlockMod
 
         climate.WorldGenTemperature = SkyBlockClimate.AnnualMeanTemperatureC;
         climate.WorldgenRainfall = SkyBlockClimate.Rainfall;
-
-        if (mode == EnumGetClimateMode.WorldGenValues)
-        {
-            climate.Temperature = SkyBlockClimate.AnnualMeanTemperatureC;
-            climate.Rainfall = SkyBlockClimate.Rainfall;
-        }
+        climate.Temperature = SkyBlockClimate.AnnualMeanTemperatureC;
+        climate.Rainfall = SkyBlockClimate.Rainfall;
+        climate.Fertility = 0.5f;
+        climate.ForestDensity = 0.3f;
+        climate.ShrubDensity = 0.2f;
     }
 }

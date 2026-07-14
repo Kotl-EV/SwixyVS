@@ -181,6 +181,24 @@ public sealed partial class SwixyClaimChunkMod
         return (long)roleAllowance + extraAllowance;
     }
 
+    /// <summary>Проверяет, что добавление additionalVolume не превысит квоту игрока.</summary>
+    private ClaimActionResult? ValidateLandClaimAllowance(IServerPlayer player, long additionalVolume)
+    {
+        if (additionalVolume <= 0)
+        {
+            return null;
+        }
+
+        var usedVolume = GetOwnClaims(player.PlayerUID).Sum(static claim => (long)claim.SizeXYZ);
+        var allowance = GetLandClaimAllowance(player);
+        if (allowance > 0 && usedVolume + additionalVolume > allowance)
+        {
+            return ClaimActionResult.Error("swixyclaimchunk:error-allowance");
+        }
+
+        return null;
+    }
+
     /// <summary>Максимум отдельных областей (роль + extra).</summary>
     private static int GetLandClaimMaxAreas(IServerPlayer player)
     {

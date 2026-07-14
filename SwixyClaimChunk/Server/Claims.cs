@@ -63,11 +63,10 @@ public sealed partial class SwixyClaimChunkMod
     private ClaimActionResult TryAddChunkClaim(IServerPlayer player, Cuboidi area)
     {
         var ownClaims = GetOwnClaims(player.PlayerUID).ToList();
-        var usedVolume = ownClaims.Sum(static claim => (long)claim.SizeXYZ);
-        var allowance = GetLandClaimAllowance(player);
-        if (allowance > 0 && usedVolume + area.SizeXYZ > allowance)
+        var allowanceError = ValidateLandClaimAllowance(player, area.SizeXYZ);
+        if (allowanceError != null)
         {
-            return ClaimActionResult.Error("swixyclaimchunk:error-allowance");
+            return allowanceError.Value;
         }
 
         if (TryExpandExistingArea(ownClaims, area, out var expandedClaim, player.PlayerUID))

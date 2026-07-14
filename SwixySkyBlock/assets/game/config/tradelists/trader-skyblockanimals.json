@@ -1,0 +1,69 @@
+{
+  "money": {
+    "avg": 256,
+    "var": 0
+  },
+  "selling": {
+    "maxItems": 12,
+    "list": [
+      { "code": "creature-chicken-hen", "type": "item", "stacksize": 1, "stock": { "avg": 2, "var": 0 }, "price": { "avg": 8, "var": 0 } },
+      { "code": "creature-chicken-rooster", "type": "item", "stacksize": 1, "stock": { "avg": 2, "var": 0 }, "price": { "avg": 8, "var": 0 } },
+      { "code": "creature-pig-eurasian-baby-female", "type": "item", "stacksize": 1, "stock": { "avg": 1, "var": 0 }, "price": { "avg": 12, "var": 0 } },
+      { "code": "creature-pig-eurasian-baby-male", "type": "item", "stacksize": 1, "stock": { "avg": 1, "var": 0 }, "price": { "avg": 12, "var": 0 } },
+      { "code": "creature-sheep-bighorn-baby-female", "type": "item", "stacksize": 1, "stock": { "avg": 1, "var": 0 }, "price": { "avg": 14, "var": 0 } },
+      { "code": "creature-sheep-bighorn-baby-male", "type": "item", "stacksize": 1, "stock": { "avg": 1, "var": 0 }, "price": { "avg": 14, "var": 0 } },
+      { "code": "creature-goat-nubian-baby-female", "type": "item", "stacksize": 1, "stock": { "avg": 1, "var": 0 }, "price": { "avg": 16, "var": 0 } },
+      { "code": "creature-goat-nubian-baby-male", "type": "item", "stacksize": 1, "stock": { "avg": 1, "var": 0 }, "price": { "avg": 16, "var": 0 } },
+      { "code": "skep-reed-populated-east", "type": "block", "stacksize": 1, "stock": { "avg": 2, "var": 0 }, "price": { "avg": 6, "var": 0 } },
+      { "code": "shears-copper", "type": "item", "stacksize": 1, "stock": { "avg": 2, "var": 0 }, "price": { "avg": 3, "var": 0 } },
+      { "code": "knife-generic-copper", "type": "item", "stacksize": 1, "stock": { "avg": 2, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "bowl-cream-fired", "type": "block", "stacksize": 2, "stock": { "avg": 4, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  },
+  "buying": {
+    "maxItems": 20,
+    "list": [
+      { "code": "egg-chicken-raw", "type": "item", "stacksize": 12, "stock": { "avg": 48, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "poultry-raw", "type": "item", "stacksize": 8, "stock": { "avg": 48, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "poultry-cooked", "type": "item", "stacksize": 8, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "redmeat-raw", "type": "item", "stacksize": 8, "stock": { "avg": 48, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "redmeat-cooked", "type": "item", "stacksize": 8, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "hide-raw-small", "type": "item", "stacksize": 4, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "hide-raw-medium", "type": "item", "stacksize": 3, "stock": { "avg": 24, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "hide-raw-large", "type": "item", "stacksize": 2, "stock": { "avg": 16, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "leather-normal-plain", "type": "item", "stacksize": 4, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 2, "var": 0 } },
+      { "code": "fat", "type": "item", "stacksize": 8, "stock": { "avg": 48, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "bone", "type": "item", "stacksize": 16, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "feather", "type": "item", "stacksize": 16, "stock": { "avg": 64, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      {
+        "code": "woodbucket",
+        "type": "block",
+        "stacksize": 1,
+        "stock": { "avg": 24, "var": 0 },
+        "price": { "avg": 2, "var": 0 },
+        "attributes": {
+          "ucontents": [
+            { "type": "item", "code": "milkportion", "makefull": true }
+          ]
+        }
+      },
+      { "code": "cheese-cheddar-1slice", "type": "item", "stacksize": 4, "stock": { "avg": 24, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "cheese-blue-1slice", "type": "item", "stacksize": 4, "stock": { "avg": 24, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "honeycomb", "type": "item", "stacksize": 6, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      { "code": "beeswax", "type": "item", "stacksize": 8, "stock": { "avg": 48, "var": 0 }, "price": { "avg": 1, "var": 0 } },
+      {
+        "code": "woodbucket",
+        "type": "block",
+        "stacksize": 1,
+        "stock": { "avg": 24, "var": 0 },
+        "price": { "avg": 2, "var": 0 },
+        "attributes": {
+          "ucontents": [
+            { "type": "item", "code": "honeyportion", "makefull": true }
+          ]
+        }
+      },
+      { "code": "rot", "type": "item", "stacksize": 16, "stock": { "avg": 32, "var": 0 }, "price": { "avg": 1, "var": 0 } }
+    ]
+  }
+}

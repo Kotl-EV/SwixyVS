@@ -1,0 +1,38 @@
+[
+  {
+    "op": "add",
+    "path": "/variantgroups/1/states/-",
+    "value": "skyblock",
+    "file": "entities/humanoid/trader-male.json"
+  },
+  {
+    "op": "add",
+    "path": "/variantgroups/1/states/-",
+    "value": "skyblockfood",
+    "file": "entities/humanoid/trader-male.json"
+  },
+  {
+    "op": "add",
+    "path": "/variantgroups/1/states/-",
+    "value": "skyblockfarming",
+    "file": "entities/humanoid/trader-male.json"
+  },
+  {
+    "op": "add",
+    "path": "/variantgroups/1/states/-",
+    "value": "skyblocksurvival",
+    "file": "entities/humanoid/trader-male.json"
+  },
+  {
+    "op": "add",
+    "path": "/variantgroups/1/states/-",
+    "value": "skyblockdecor",
+    "file": "entities/humanoid/trader-male.json"
+  },
+  {
+    "op": "add",
+    "path": "/variantgroups/1/states/-",
+    "value": "skyblockanimals",
+    "file": "entities/humanoid/trader-male.json"
+  }
+]

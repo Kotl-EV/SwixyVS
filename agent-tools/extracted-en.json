@@ -1,0 +1,31 @@
+{
+  "title": "QUESTS",
+  "close": "CLOSE",
+  "empty_category": "There are currently no quests in this branch!",
+  "hotkey_name": "Questbook",
+
+  "category.introduction.title": "Introduction",
+  "category.introduction.header": "INTRODUCTION",
+
+    10|  "quest.intro.0.description": "Welcome to the SwixyViStory server. We are the Swixy Studios dev team. Join us on Discord",
+  "quest.intro.1.description": "Ugh, these sticks again. Collect some.",
+  "quest.intro.2.description": "Stones? They say they're useful, but not all of them turned out that way.",
+  "quest.intro.3.description": "Start small. Gather some kindling for a campfire.",
+  "quest.intro.4.description": "The Stone Age begins!",
+  "quest.intro.5.description": "You're a natural lumberjack.",
+  "quest.intro.6.description": "A tool for digging earth. Sturdy and sharp, though fragile.",
+  "quest.intro.7.description": "For working the soil. Loosens dirt well and pulls out weeds.",
+
+  "quest.clay.10.description": "Time to try working with clay. Find some blue clay.",
+    20|  "quest.clay.11.description": "Shape a clay bowl — it'll come in handy for eating.",
+  "quest.clay.12.description": "You can cook soups and porridge in a pot.",
+  "quest.clay.13.description": "A crock is great for storing prepared food.",
+  "quest.clay.14.description": "A crucible can take the heat and help you smelt metal.",
+  "quest.clay.15.description": "A vessel holds a lot of supplies.",
+
+  "quest.copper.20.description": "Gather native copper nuggets — you'll need them for smelting.",
+  "quest.copper.21.description": "Shape a mold for the blacksmith's anvil.",
+  "quest.copper.22.description": "Shape a clay mold for casting copper ingots.",
+  "quest.copper.23.description": "Smelt ore into an ingot — it's the foundation for tools.",
+    30|  "quest.copper.24.description": "Forge a copper hammer — you'll need it for smithing.",
+... 58 lines not shown ...

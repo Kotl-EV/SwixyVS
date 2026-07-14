@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- Copy to Directory.Build.props.user and set your Vintage Story install folder -->
+    <VINTAGE_STORY>C:\Path\To\Vintagestory</VINTAGE_STORY>
+  </PropertyGroup>
+</Project>

@@ -11,7 +11,6 @@ public sealed partial class SwixySkyBlockMod
         base.StartServerSide(api);
 
         serverApi = api;
-        SkyBlockWorldGenHost.Bind(this);
         LegacySaveFixup.MigrateAllSaves(api.Logger);
         if (SkyBlockWorld.IsSkyBlockWorld(api))
         {
@@ -25,6 +24,8 @@ public sealed partial class SwixySkyBlockMod
             .SetMessageHandler<IslandGeneratorStateRequestPacket>(OnGeneratorStateRequest)
             .SetMessageHandler<IslandGeneratorUpgradeRequestPacket>(OnGeneratorUpgradeRequest)
             .SetMessageHandler<IslandTopRequestPacket>(OnTopRequest)
+            .SetMessageHandler<StoryDungeonStateRequestPacket>(OnStoryDungeonStateRequest)
+            .SetMessageHandler<StoryDungeonTeleportRequestPacket>(OnStoryDungeonTeleportRequest)
             .SetMessageHandler<IslandClaimListRequestPacket>(OnClaimListRequest)
             .SetMessageHandler<IslandClaimAccessActionPacket>(OnClaimAccessAction)
             .SetMessageHandler<IslandClaimShowRequestPacket>(OnClaimShowRequest);
@@ -36,6 +37,8 @@ public sealed partial class SwixySkyBlockMod
         RegisterClimateHandlers(api);
         RegisterSpawnHandlers(api);
         RegisterIslandGenerator(api);
+        api.Event.PlayerJoin += OnPlayerJoinStoryState;
+        api.Event.ServerRunPhase(EnumServerRunPhase.RunGame, OnRunGameStorySites);
 
         api.Logger.Notification(
             "[SwixySkyBlock] Server started (worldType={0}, playstyle={1}, dedicated={2}).",
@@ -55,6 +58,7 @@ public sealed partial class SwixySkyBlockMod
         islandRegistry.Load(serverApi);
         islandResidency.Load(serverApi);
         IslandBlueprint.LoadAll(serverApi);
+        LoadStoryDungeons();
         OnCoOwnersSaveGameLoaded();
         RestoreAllPlayerIslands();
     }

@@ -98,6 +98,22 @@ internal static class IslandBlueprint
             }
         }
 
+        var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (!string.IsNullOrEmpty(assemblyDir))
+        {
+            var loosePath = Path.Combine(assemblyDir, "assets", "swixyskyblock", "schematics", "Spawn.json");
+            if (File.Exists(loosePath))
+            {
+                var templates = new List<IslandTemplate>(1);
+                if (TryAddFromText(api, templates, SpawnTemplateName, File.ReadAllText(loosePath)))
+                {
+                    cachedSpawnTemplate = templates[0];
+                    api.Logger.Notification("[SwixySkyBlock] Spawn schematic loaded from disk: {0}", loosePath);
+                    return cachedSpawnTemplate;
+                }
+            }
+        }
+
         api.Logger.Warning(
             "[SwixySkyBlock] Spawn schematic not loaded (check assets/swixyskyblock/schematics/Spawn.json). Using built-in spawn island.");
         cachedSpawnTemplate = CreateBuiltInCircular(SpawnTemplateName, 10, "game:cobblestone-granite", "game:soil-medium-normal", "game:soil-medium-normal");
@@ -194,6 +210,11 @@ internal static class IslandBlueprint
 
     private static void WarnUnknownSchematicBlocks(ICoreServerAPI api, BlockSchematic schematic, string name)
     {
+        if (api.World == null)
+        {
+            return;
+        }
+
         var missing = new List<string>();
 
         foreach (var code in schematic.BlockCodes.Values)
@@ -203,7 +224,8 @@ internal static class IslandBlueprint
                 continue;
             }
 
-            if (api.World.GetBlock(code).Id == 0)
+            var block = api.World.GetBlock(code);
+            if (block == null || block.Id == 0)
             {
                 missing.Add(code.ToString());
             }

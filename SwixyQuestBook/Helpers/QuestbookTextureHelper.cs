@@ -8,8 +8,10 @@ namespace SwixyQuestBook.Helpers
     {
         private const string ModId = "swixyquestbook";
         private readonly ICoreClientAPI api;
-        private readonly Dictionary<string, ImageSurface> surfaceCache = new(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, ImageSurface> gameSurfaceCache = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, ImageSurface?> surfaceCache = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, ImageSurface?> gameSurfaceCache = new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> loggedMissingAssets = new(StringComparer.OrdinalIgnoreCase);
+        private ImageSurface? generatedMissingIcon;
 
         public QuestbookTextureHelper(ICoreClientAPI api)
         {
@@ -23,7 +25,31 @@ namespace SwixyQuestBook.Helpers
 
         public ImageSurface? GetIcon(string iconFileName)
         {
-            return LoadSurface($"icon/{iconFileName}");
+            if (string.IsNullOrWhiteSpace(iconFileName))
+            {
+                return GetOrCreateMissingIconSurface();
+            }
+
+            // Prefer icon/ domain path, then textures/ fallbacks used by older packs.
+            ImageSurface? surface =
+                LoadSurface($"icon/{iconFileName}")
+                ?? LoadSurface($"textures/{iconFileName}")
+                ?? LoadSurface($"textures/icons/{iconFileName}")
+                ?? LoadSurface($"textures/gui/{iconFileName}");
+
+            if (surface != null)
+            {
+                return surface;
+            }
+
+            // Always return a drawable placeholder so callers never spam missing-asset lookups.
+            if (iconFileName.Contains("missing", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(iconFileName, "icon_missing.png", StringComparison.OrdinalIgnoreCase))
+            {
+                return GetOrCreateMissingIconSurface();
+            }
+
+            return GetOrCreateMissingIconSurface();
         }
 
         public ImageSurface? GetGameTexture(string gameTexturePath)
@@ -39,11 +65,7 @@ namespace SwixyQuestBook.Helpers
             }
 
             ImageSurface? surface = TryLoadGameSurface(gameTexturePath);
-            if (surface != null)
-            {
-                gameSurfaceCache[gameTexturePath] = surface;
-            }
-
+            gameSurfaceCache[gameTexturePath] = surface;
             return surface;
         }
 
@@ -75,7 +97,13 @@ namespace SwixyQuestBook.Helpers
                 }
             }
 
-            api.Logger.Warning($"[SwixyQuestBook] Asset not found: {ModId}:{assetPath}");
+            // Cache miss so we do not re-query / re-log every frame.
+            surfaceCache[assetPath] = null;
+            if (loggedMissingAssets.Add(assetPath))
+            {
+                api.Logger.Warning($"[SwixyQuestBook] Asset not found (once): {ModId}:{assetPath}");
+            }
+
             return null;
         }
 
@@ -83,7 +111,12 @@ namespace SwixyQuestBook.Helpers
         {
             try
             {
-                IAsset asset = api.Assets.Get(new AssetLocation("game", gameTexturePath));
+                IAsset? asset = api.Assets.TryGet(new AssetLocation("game", gameTexturePath));
+                if (asset == null || asset.Data == null || asset.Data.Length == 0)
+                {
+                    return null;
+                }
+
                 using BitmapExternal bitmap = api.Render.BitmapCreateFromPng(asset.Data);
                 RepairAlphaFringe(bitmap);
                 return GuiElement.getImageSurfaceFromAsset(bitmap);
@@ -99,7 +132,19 @@ namespace SwixyQuestBook.Helpers
         {
             try
             {
-                IAsset asset = api.Assets.Get(new AssetLocation(ModId, assetPath));
+                // TryGet avoids exception spam for optional icons.
+                IAsset? asset = api.Assets.TryGet(new AssetLocation(ModId, assetPath));
+                if (asset == null || asset.Data == null || asset.Data.Length == 0)
+                {
+                    // Some installs register assets under a legacy domain.
+                    asset = api.Assets.TryGet(new AssetLocation("questbook", assetPath));
+                }
+
+                if (asset == null || asset.Data == null || asset.Data.Length == 0)
+                {
+                    return null;
+                }
+
                 using BitmapExternal bitmap = api.Render.BitmapCreateFromPng(asset.Data);
                 RepairAlphaFringe(bitmap);
                 return GuiElement.getImageSurfaceFromAsset(bitmap);
@@ -109,6 +154,38 @@ namespace SwixyQuestBook.Helpers
                 api.Logger.Debug($"[SwixyQuestBook] Asset miss {ModId}:{assetPath} ({ex.Message})");
                 return null;
             }
+        }
+
+        private ImageSurface GetOrCreateMissingIconSurface()
+        {
+            if (generatedMissingIcon != null)
+            {
+                return generatedMissingIcon;
+            }
+
+            const int size = 32;
+            generatedMissingIcon = new ImageSurface(Format.Argb32, size, size);
+            using (var ctx = new Context(generatedMissingIcon))
+            {
+                ctx.SetSourceRGBA(0.12, 0.13, 0.15, 0.95);
+                ctx.Rectangle(0, 0, size, size);
+                ctx.Fill();
+
+                ctx.SetSourceRGBA(0.55, 0.58, 0.62, 1.0);
+                ctx.LineWidth = 2;
+                ctx.Rectangle(3, 3, size - 6, size - 6);
+                ctx.Stroke();
+
+                ctx.SetSourceRGBA(0.75, 0.35, 0.32, 1.0);
+                ctx.LineWidth = 2.5;
+                ctx.MoveTo(9, 9);
+                ctx.LineTo(size - 9, size - 9);
+                ctx.MoveTo(size - 9, 9);
+                ctx.LineTo(9, size - 9);
+                ctx.Stroke();
+            }
+
+            return generatedMissingIcon;
         }
 
         /// <summary>
@@ -149,19 +226,23 @@ namespace SwixyQuestBook.Helpers
 
         public void Dispose()
         {
-            foreach (ImageSurface surface in surfaceCache.Values)
+            foreach (ImageSurface? surface in surfaceCache.Values)
             {
-                surface.Dispose();
+                surface?.Dispose();
             }
 
             surfaceCache.Clear();
 
-            foreach (ImageSurface surface in gameSurfaceCache.Values)
+            foreach (ImageSurface? surface in gameSurfaceCache.Values)
             {
-                surface.Dispose();
+                surface?.Dispose();
             }
 
             gameSurfaceCache.Clear();
+            loggedMissingAssets.Clear();
+
+            generatedMissingIcon?.Dispose();
+            generatedMissingIcon = null;
         }
     }
 }

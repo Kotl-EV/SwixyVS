@@ -21,7 +21,17 @@ public sealed partial class SwixyClaimChunkMod
             .SetMessageHandler<ClaimMapStatePacket>(OnMapStatePacket)
             .SetMessageHandler<ClaimListStatePacket>(OnClaimListStatePacket)
             .SetMessageHandler<ClaimShowStatePacket>(OnClaimShowStatePacket)
-            .SetMessageHandler<ClaimOpenGuiPacket>(_ => OpenDialog());
+            .SetMessageHandler<ClaimOpenGuiPacket>(_ => OpenDialog())
+            .SetMessageHandler<ClaimUseFiltersSyncPacket>(OnUseFiltersSyncPacket)
+            .SetMessageHandler<ClaimUseFilterScanResultPacket>(OnUseFilterScanResultPacket);
+
+        // Отдельные client-handlers: иначе prediction открывает GUI костра при deny на сервере.
+        api.Event.OnTestBlockAccess += OnClientTestBlockAccess;
+        api.Event.OnTestBlockAccessClaim += OnClientTestBlockAccessClaim;
+
+        // Запрос whitelist сразу после захода в мир (PlayerNowPlaying на сервере может быть рано).
+        api.Event.LevelFinalize += RequestUseFiltersFromServer;
+        api.Event.RegisterCallback(_ => RequestUseFiltersFromServer(), 1500);
 
         api.Logger.Notification("[SwixyClaimChunk] Client claim channel registered");
 
@@ -120,6 +130,23 @@ public sealed partial class SwixyClaimChunkMod
         }
 
         dialog.ApplyClaimShow(packet);
+    }
+
+    private void RequestUseFiltersFromServer()
+    {
+        try
+        {
+            clientChannel?.SendPacket(new ClaimUseFiltersRequestPacket());
+        }
+        catch (Exception exception)
+        {
+            clientApi?.Logger.Warning("[SwixyClaimChunk] Use filter request failed: {0}", exception.Message);
+        }
+    }
+
+    private void OnUseFilterScanResultPacket(ClaimUseFilterScanResultPacket packet)
+    {
+        dialog?.ApplyUseFilterScanResult(packet);
     }
 
 }

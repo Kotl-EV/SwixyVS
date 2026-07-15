@@ -1,0 +1,24 @@
+﻿{
+	"ingredient": {
+		"type": "item",
+		"code": "game:ingot-*",
+		"name": "metal",
+		"allowedVariants": [ "iron", "meteoriciron", "steel" ]
+	},
+	"pattern": [
+		[
+			"___________",
+			"№######____",
+			"____##_____",
+			"№##########",
+			"___________"
+		]
+	],
+	"name": "wrench-adjustable",
+	"code": "wrench-adjustable-{metal}",
+	"output": {
+		"type": "item",
+		"code": "game:wrench-adjustable",
+		"stacksize": 1
+	}
+}

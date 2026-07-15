@@ -67,9 +67,16 @@ namespace SwixyQuestBook.Gui
         public const double SidebarAdminModeBarHeight = 48;
         public const double SidebarAdminModeBarGap = 6;
         public const double SidebarAdminQuestContentOffsetY = SidebarAdminModeBarHeight + SidebarAdminModeBarGap;
-        public const double SidebarAdminToolbarButtonHeight = 48;
+        // Tools: 2 buttons per row (8 tools → 4 rows).
+        public const double SidebarAdminToolbarButtonHeight = 56;
         public const double SidebarAdminToolbarButtonGap = 6;
-        public const double SidebarAdminToolbarHeight = SidebarAdminToolbarButtonHeight + SidebarAdminToolbarButtonGap + SidebarAdminToolbarButtonHeight;
+        public const int SidebarAdminToolbarColumns = 2;
+        public const int SidebarAdminToolbarButtonCount = 8;
+        public const int SidebarAdminToolbarRows =
+            (SidebarAdminToolbarButtonCount + SidebarAdminToolbarColumns - 1) / SidebarAdminToolbarColumns;
+        public const double SidebarAdminToolbarHeight =
+            (SidebarAdminToolbarButtonHeight * SidebarAdminToolbarRows)
+            + (SidebarAdminToolbarButtonGap * (SidebarAdminToolbarRows - 1));
         public const double SidebarAdminStatusHeight = 22;
         public const double SidebarAdminSelectedHintY = 8;
         public const double SidebarAdminBranchActionsHeight =

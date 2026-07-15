@@ -1,0 +1,15 @@
+﻿{
+  "type": "code",
+  "modid": "electricalprogressivebasics",
+  "name": "Electrical Progressive: Basics",
+  "authors": [
+    "Tehtelev",
+    "Kotl"
+  ],
+  "description": "Basic electrical devices.",
+  "Version": "3.2.4",
+  "dependencies": {
+    "game": "1.22.0",
+    "electricalprogressivecore": "3.2.3"
+  }
+} 

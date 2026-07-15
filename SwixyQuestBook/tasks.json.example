@@ -2,12 +2,14 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build",
+      "label": "build: SwixyQuestBook",
       "command": "dotnet",
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/SwixyViStory.csproj",
+        "${workspaceFolder}/SwixyQuestBook/SwixyQuestBook.csproj",
+        "-c",
+        "Debug",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -16,18 +18,6 @@
         "kind": "build",
         "isDefault": true
       }
-    },
-    {
-      "label": "clean",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "clean",
-        "${workspaceFolder}/SwixyViStory.csproj",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "problemMatcher": "$msCompile"
     }
   ]
 }

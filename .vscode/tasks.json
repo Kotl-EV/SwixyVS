@@ -8,6 +8,8 @@
       "args": [
         "build",
         "${workspaceFolder}/SwixyQuestBook/SwixyQuestBook.csproj",
+        "-c",
+        "Debug",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -24,6 +26,8 @@
       "args": [
         "build",
         "${workspaceFolder}/Swixy.sln",
+        "-c",
+        "Debug",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],

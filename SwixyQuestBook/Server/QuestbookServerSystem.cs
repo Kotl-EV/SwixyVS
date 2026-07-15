@@ -21,6 +21,22 @@ namespace SwixyQuestBook.Server
         private const string PlayersFolderName = "players";
         private const string QuestbookDataFolder = "swixyquestbook";
 
+        /// <summary>Server privilege required for all questbook admin mutations.</summary>
+        private const string AdminPrivilegeCode = "controlserver";
+
+        private const int MaxCategoryTitleLength = 80;
+        private const int MaxNodeDescriptionLength = 2000;
+        /// <summary>
+        /// Max goals/rewards per quest node. Keep in sync with
+        /// <see cref="QuestbookAdminData.MaxItemEntries"/> on the client editor.
+        /// </summary>
+        private const int MaxItemsPerList = 64;
+        private const int MaxItemStackCount = 9999;
+        private const int MaxNodesPerCategory = 500;
+        private const int MaxConnectionsPerCategory = 1000;
+        private const int MaxCollectibleCodeLength = 128;
+        private const int MaxCategories = 64;
+
         public override bool ShouldLoad(EnumAppSide forSide) => forSide == EnumAppSide.Server;
 
         public override void StartServerSide(ICoreServerAPI api)
@@ -82,26 +98,20 @@ namespace SwixyQuestBook.Server
 
         private void LoadQuestData()
         {
-            if (!File.Exists(questsDataPath))
-            {
-                string modQuestsPath = Path.Combine(
-                    Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? AppContext.BaseDirectory,
-                    "swixyquestbook", QuestsFileName);
+            string modQuestsPath = Path.Combine(
+                Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? AppContext.BaseDirectory,
+                "swixyquestbook", QuestsFileName);
 
-                if (File.Exists(modQuestsPath))
-                {
-                    sapi?.Logger.Notification($"[SwixyQuestBook] Copying default quests from mod: {modQuestsPath}");
-                    File.Copy(modQuestsPath, questsDataPath);
-                }
-                else
+            try
+            {
+                EnsureRuntimeQuestsFromMod(modQuestsPath);
+
+                if (!File.Exists(questsDataPath))
                 {
                     sapi?.Logger.Warning($"[SwixyQuestBook] No quests.json found at {questsDataPath} or {modQuestsPath}");
                     return;
                 }
-            }
 
-            try
-            {
                 string json = File.ReadAllText(questsDataPath);
                 questDatabase = JsonSerializer.Deserialize<QuestbookQuestDatabase>(json, new JsonSerializerOptions
                 {
@@ -114,12 +124,82 @@ namespace SwixyQuestBook.Server
                     sapi?.Logger.Warning("[SwixyQuestBook] No categories in quest data");
                 }
 
-                sapi?.Logger.Notification($"[SwixyQuestBook] Loaded {questDatabase?.Categories.Length ?? 0} quest categories");
+                sapi?.Logger.Notification(
+                    $"[SwixyQuestBook] Loaded {questDatabase?.Categories.Length ?? 0} quest categories (version {questDatabase?.Version ?? "?"})");
             }
             catch (Exception ex)
             {
                 sapi?.Logger.Error($"[SwixyQuestBook] Failed to load quest data: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Copies packaged defaults on first run. When the mod ships a new content version,
+        /// backs up the old runtime file and replaces it so progression updates apply.
+        /// </summary>
+        private void EnsureRuntimeQuestsFromMod(string modQuestsPath)
+        {
+            if (!File.Exists(modQuestsPath))
+            {
+                return;
+            }
+
+            if (!File.Exists(questsDataPath))
+            {
+                sapi?.Logger.Notification($"[SwixyQuestBook] Copying default quests from mod: {modQuestsPath}");
+                File.Copy(modQuestsPath, questsDataPath);
+                return;
+            }
+
+            string? runtimeVersion = TryReadQuestVersion(questsDataPath);
+            string? packagedVersion = TryReadQuestVersion(modQuestsPath);
+            if (string.IsNullOrWhiteSpace(packagedVersion) ||
+                string.Equals(runtimeVersion, packagedVersion, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            string backupPath = questsDataPath + $".bak-{SanitizeFileToken(runtimeVersion ?? "unknown")}";
+            try
+            {
+                File.Copy(questsDataPath, backupPath, overwrite: true);
+            }
+            catch (Exception ex)
+            {
+                sapi?.Logger.Warning($"[SwixyQuestBook] Could not backup old quests.json: {ex.Message}");
+            }
+
+            File.Copy(modQuestsPath, questsDataPath, overwrite: true);
+            sapi?.Logger.Notification(
+                $"[SwixyQuestBook] Updated quests.json {runtimeVersion ?? "?"} → {packagedVersion} (backup: {Path.GetFileName(backupPath)})");
+        }
+
+        private static string? TryReadQuestVersion(string path)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(File.ReadAllText(path));
+                if (doc.RootElement.TryGetProperty("version", out var versionProp))
+                {
+                    return versionProp.GetString();
+                }
+            }
+            catch
+            {
+                // ignore parse errors — caller will load full file later
+            }
+
+            return null;
+        }
+
+        private static string SanitizeFileToken(string value)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                value = value.Replace(c, '_');
+            }
+
+            return value.Length > 48 ? value[..48] : value;
         }
 
         private void SaveQuestData()
@@ -194,7 +274,9 @@ namespace SwixyQuestBook.Server
 
             try
             {
-                string filePath = Path.Combine(playersDataPath, $"{progress.PlayerUid}.json");
+                Directory.CreateDirectory(playersDataPath);
+                string fileName = SanitizePlayerUidForFileName(progress.PlayerUid) + ".json";
+                string filePath = Path.Combine(playersDataPath, fileName);
                 string json = JsonSerializer.Serialize(progress, new JsonSerializerOptions
                 {
                     WriteIndented = true,
@@ -206,6 +288,31 @@ namespace SwixyQuestBook.Server
             {
                 sapi?.Logger.Error($"[SwixyQuestBook] Failed to save progress for {progress.PlayerUid}: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Player UIDs may contain '/' or other path-illegal characters (session-style IDs).
+        /// </summary>
+        private static string SanitizePlayerUidForFileName(string playerUid)
+        {
+            if (string.IsNullOrWhiteSpace(playerUid))
+            {
+                return "unknown";
+            }
+
+            char[] invalid = Path.GetInvalidFileNameChars();
+            var chars = playerUid.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                char c = chars[i];
+                if (c == '/' || c == '\\' || Array.IndexOf(invalid, c) >= 0)
+                {
+                    chars[i] = '_';
+                }
+            }
+
+            string sanitized = new string(chars).Trim('.', ' ');
+            return string.IsNullOrEmpty(sanitized) ? "unknown" : sanitized;
         }
 
         private QuestbookPlayerProgressData GetOrCreatePlayerProgress(IServerPlayer player)
@@ -327,13 +434,22 @@ namespace SwixyQuestBook.Server
 
         private void OnQuestSubmitRequest(IServerPlayer fromPlayer, QuestbookSubmitQuestRequest request)
         {
-            if (questDatabase == null)
+            if (questDatabase == null || fromPlayer == null)
             {
                 SendQuestSubmitResponse(fromPlayer, request, false);
                 return;
             }
 
-            var category = questDatabase.Categories.FirstOrDefault(c => c.HeaderTitle == request.CategoryHeaderTitle);
+            // Client payload is untrusted: only category + nodeId are used for lookup.
+            string categoryHeader = request.CategoryHeaderTitle?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(categoryHeader) || request.NodeId < 0)
+            {
+                SendQuestSubmitResponse(fromPlayer, request, false);
+                return;
+            }
+
+            var category = questDatabase.Categories.FirstOrDefault(c =>
+                string.Equals(c.HeaderTitle, categoryHeader, StringComparison.Ordinal));
             if (category == null)
             {
                 SendQuestSubmitResponse(fromPlayer, request, false);
@@ -348,43 +464,75 @@ namespace SwixyQuestBook.Server
             }
 
             var progress = GetOrCreatePlayerProgress(fromPlayer);
-            if (progress.IsQuestCompleted(request.CategoryHeaderTitle, request.NodeId))
+            if (progress.IsQuestCompleted(category.HeaderTitle, node.Id))
             {
                 SendQuestSubmitResponse(fromPlayer, request, false);
                 return;
             }
 
-            var requiredItems = request.RequiredItems
-                .Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode, i.Count))
-                .ToArray();
-            var rewardItems = request.RewardItems
-                .Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode, i.Count))
-                .ToArray();
-
-            bool success = QuestbookInventoryHelper.TryConsumeCollectibles(fromPlayer, requiredItems);
-            if (success)
+            if (!IsNodeUnlockedForPlayer(category, node, progress))
             {
-                success = QuestbookInventoryHelper.TryGiveCollectibles(fromPlayer, rewardItems);
-                fromPlayer.InventoryManager.BroadcastHotbarSlot();
+                sapi?.Logger.Warning(
+                    "[SwixyQuestBook] Rejected submit from {0}: node {1}:{2} locked",
+                    fromPlayer.PlayerName, category.HeaderTitle, node.Id);
+                SendQuestSubmitResponse(fromPlayer, request, false);
+                return;
+            }
 
+            // Authoritative requirements/rewards from server database — never from client packet.
+            var requiredItems = SanitizeItemList(node.RequiredItems, allowWildcards: true);
+            var rewardItems = SanitizeItemList(node.RewardItems, allowWildcards: false);
+
+            string nodeType = (node.NodeType ?? "Quest").Trim();
+            bool isInfoNode = string.Equals(nodeType, "Start", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(nodeType, "Checkpoint", StringComparison.OrdinalIgnoreCase);
+
+            if (!isInfoNode && requiredItems.Length == 0)
+            {
+                // Regular quests must define goals server-side.
+                SendQuestSubmitResponse(fromPlayer, request, false);
+                return;
+            }
+
+            bool success;
+            if (isInfoNode && requiredItems.Length == 0)
+            {
+                success = true;
+            }
+            else
+            {
+                success = QuestbookInventoryHelper.TryConsumeCollectibles(fromPlayer, requiredItems);
                 if (success)
                 {
-                    sapi?.Logger.Debug($"[SwixyQuestBook] Quest completed: {request.CategoryHeaderTitle}:{request.NodeId}");
-                    progress.AddCompletedQuest(request.CategoryHeaderTitle, request.NodeId);
-                    SavePlayerProgress(progress);
-                    SendProgressToPlayer(fromPlayer, progress);
+                    success = QuestbookInventoryHelper.TryGiveCollectibles(fromPlayer, rewardItems);
+                    fromPlayer.InventoryManager.BroadcastHotbarSlot();
                 }
+            }
+
+            if (success)
+            {
+                sapi?.Logger.Debug(
+                    "[SwixyQuestBook] Quest completed by {0}: {1}:{2}",
+                    fromPlayer.PlayerName, category.HeaderTitle, node.Id);
+                progress.AddCompletedQuest(category.HeaderTitle, node.Id);
+                SavePlayerProgress(progress);
+                SendProgressToPlayer(fromPlayer, progress);
             }
 
             SendQuestSubmitResponse(fromPlayer, request, success);
         }
 
-        private void SendQuestSubmitResponse(IServerPlayer player, QuestbookSubmitQuestRequest request, bool success)
+        private void SendQuestSubmitResponse(IServerPlayer? player, QuestbookSubmitQuestRequest request, bool success)
         {
-            serverChannel?.SendPacket(
+            if (player == null || serverChannel == null)
+            {
+                return;
+            }
+
+            serverChannel.SendPacket(
                 new QuestbookSubmitQuestResponse
                 {
-                    CategoryHeaderTitle = request.CategoryHeaderTitle,
+                    CategoryHeaderTitle = request.CategoryHeaderTitle ?? string.Empty,
                     NodeId = request.NodeId,
                     Success = success
                 },
@@ -392,30 +540,106 @@ namespace SwixyQuestBook.Server
             );
         }
 
+        private static bool IsNodeUnlockedForPlayer(
+            QuestbookCategoryData category,
+            QuestbookQuestNodeData node,
+            QuestbookPlayerProgressData progress)
+        {
+            foreach (var connection in category.Connections)
+            {
+                if (connection.EndNodeId != node.Id)
+                {
+                    continue;
+                }
+
+                if (!progress.IsQuestCompleted(category.HeaderTitle, connection.StartNodeId))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region Обработка админ-запросов
 
+        private bool EnsureAdminAuthorized(IServerPlayer fromPlayer, string action)
+        {
+            if (fromPlayer == null)
+            {
+                return false;
+            }
+
+            if (fromPlayer.HasPrivilege(AdminPrivilegeCode) || fromPlayer.HasPrivilege(Privilege.controlserver))
+            {
+                return true;
+            }
+
+            sapi?.Logger.Warning(
+                "[SwixyQuestBook] Unauthorized admin packet '{0}' from {1} ({2})",
+                action, fromPlayer.PlayerName, fromPlayer.PlayerUID);
+            SendAdminResponse(fromPlayer, false, "No permission");
+            return false;
+        }
+
         private void OnAdminCreateNode(IServerPlayer fromPlayer, QuestbookAdminCreateNodeRequest request)
         {
+            if (!EnsureAdminAuthorized(fromPlayer, "CreateNode"))
+            {
+                return;
+            }
+
             if (questDatabase == null)
             {
                 SendAdminResponse(fromPlayer, false, "Quest database not loaded");
                 return;
             }
 
-            var category = questDatabase.Categories.FirstOrDefault(c => c.HeaderTitle == request.CategoryHeaderTitle);
+            var category = questDatabase.Categories.FirstOrDefault(c =>
+                string.Equals(c.HeaderTitle, request.CategoryHeaderTitle?.Trim(), StringComparison.Ordinal));
             if (category == null)
             {
                 SendAdminResponse(fromPlayer, false, "Category not found");
                 return;
             }
 
+            if (category.Nodes.Length >= MaxNodesPerCategory)
+            {
+                SendAdminResponse(fromPlayer, false, "Category node limit reached");
+                return;
+            }
+
+            string nodeType = NormalizeNodeTypeName(request.NodeType);
+            if (nodeType == null)
+            {
+                SendAdminResponse(fromPlayer, false, "Invalid node type");
+                return;
+            }
+
             var parentNode = category.Nodes.FirstOrDefault(n => n.Id == request.ParentNodeId);
-            if (parentNode == null && request.NodeType != "Start")
+            if (parentNode == null && nodeType != "Start")
             {
                 SendAdminResponse(fromPlayer, false, "Parent node not found");
                 return;
+            }
+
+            if (nodeType == "Start" && category.Nodes.Any(n =>
+                    string.Equals(n.NodeType, "Start", StringComparison.OrdinalIgnoreCase)))
+            {
+                SendAdminResponse(fromPlayer, false, "Category already has a Start node");
+                return;
+            }
+
+            string description = SanitizeDescription(request.Description);
+            var requiredItems = SanitizeItemList(request.RequiredItems, allowWildcards: true);
+            var rewardItems = SanitizeItemList(request.RewardItems, allowWildcards: false);
+
+            if (nodeType is "Start" or "Checkpoint")
+            {
+                requiredItems = [];
+                rewardItems = [];
             }
 
             int newId = category.Nodes.Length == 0 ? 0 : category.Nodes.Max(n => n.Id) + 1;
@@ -423,7 +647,8 @@ namespace SwixyQuestBook.Server
             double x = 0, y = 0;
             if (parentNode != null)
             {
-                (x, y) = CalculateNodePosition(parentNode, request.Direction, request.NodeType,
+                string direction = NormalizeDirection(request.Direction);
+                (x, y) = CalculateNodePosition(parentNode, direction, nodeType,
                     request.IsSubQuest, request.SubQuestIndex, request.TotalSubQuests);
             }
 
@@ -432,10 +657,10 @@ namespace SwixyQuestBook.Server
                 Id = newId,
                 X = x,
                 Y = y,
-                NodeType = request.NodeType,
-                Description = request.Description,
-                RequiredItems = request.RequiredItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray(),
-                RewardItems = request.RewardItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray()
+                NodeType = nodeType,
+                Description = description,
+                RequiredItems = requiredItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray(),
+                RewardItems = rewardItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray()
             };
 
             var nodesList = category.Nodes.ToList();
@@ -444,28 +669,43 @@ namespace SwixyQuestBook.Server
 
             if (parentNode != null)
             {
+                if (category.Connections.Length >= MaxConnectionsPerCategory)
+                {
+                    // Roll back node add if connection cannot be stored.
+                    category.Nodes = category.Nodes.Where(n => n.Id != newId).ToArray();
+                    SendAdminResponse(fromPlayer, false, "Category connection limit reached");
+                    return;
+                }
+
                 var connectionsList = category.Connections.ToList();
                 connectionsList.Add(new QuestbookQuestConnectionData(parentNode.Id, newId));
                 category.Connections = connectionsList.ToArray();
             }
 
             SaveQuestData();
-
             BroadcastQuestsToAllPlayers();
 
             SendAdminResponse(fromPlayer, true, $"Node {newId} created");
-            sapi?.Logger.Debug($"[SwixyQuestBook] Admin {fromPlayer.PlayerName} created node {newId} in {request.CategoryHeaderTitle}");
+            sapi?.Logger.Notification(
+                "[SwixyQuestBook] Admin {0} created node {1} in {2}",
+                fromPlayer.PlayerName, newId, category.HeaderTitle);
         }
 
         private void OnAdminDeleteLastNode(IServerPlayer fromPlayer, QuestbookAdminDeleteLastNodeRequest request)
         {
+            if (!EnsureAdminAuthorized(fromPlayer, "DeleteLastNode"))
+            {
+                return;
+            }
+
             if (questDatabase == null)
             {
                 SendAdminResponse(fromPlayer, false, "Quest database not loaded");
                 return;
             }
 
-            var category = questDatabase.Categories.FirstOrDefault(c => c.HeaderTitle == request.CategoryHeaderTitle);
+            var category = questDatabase.Categories.FirstOrDefault(c =>
+                string.Equals(c.HeaderTitle, request.CategoryHeaderTitle?.Trim(), StringComparison.Ordinal));
             if (category == null)
             {
                 SendAdminResponse(fromPlayer, false, "Category not found");
@@ -473,7 +713,7 @@ namespace SwixyQuestBook.Server
             }
 
             var lastNode = category.Nodes
-                .Where(n => n.NodeType != "Start")
+                .Where(n => !string.Equals(n.NodeType, "Start", StringComparison.OrdinalIgnoreCase))
                 .OrderByDescending(n => n.Id)
                 .FirstOrDefault();
 
@@ -492,46 +732,67 @@ namespace SwixyQuestBook.Server
             BroadcastQuestsToAllPlayers();
 
             SendAdminResponse(fromPlayer, true, $"Node {lastNode.Id} deleted");
-            sapi?.Logger.Debug($"[SwixyQuestBook] Admin {fromPlayer.PlayerName} deleted node {lastNode.Id} from {request.CategoryHeaderTitle}");
+            sapi?.Logger.Notification(
+                "[SwixyQuestBook] Admin {0} deleted node {1} from {2}",
+                fromPlayer.PlayerName, lastNode.Id, category.HeaderTitle);
         }
 
         private void OnAdminSaveCategory(IServerPlayer fromPlayer, QuestbookAdminSaveCategoryRequest request)
         {
+            if (!EnsureAdminAuthorized(fromPlayer, "SaveCategory"))
+            {
+                return;
+            }
+
             if (questDatabase == null)
             {
                 SendAdminResponse(fromPlayer, false, "Quest database not loaded");
                 return;
             }
 
+            string categoryHeaderTitle = request.CategoryHeaderTitle?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(categoryHeaderTitle))
+            {
+                SendAdminResponse(fromPlayer, false, "Category not found");
+                return;
+            }
+
+            if (!TrySanitizeCategoryPayload(request.Category, out QuestbookCategoryData? sanitized, out string error)
+                || sanitized == null)
+            {
+                SendAdminResponse(fromPlayer, false, error);
+                sapi?.Logger.Warning(
+                    "[SwixyQuestBook] Rejected save from {0}: {1}",
+                    fromPlayer.PlayerName, error);
+                return;
+            }
+
+            // Keep stable identity of the category being edited.
+            sanitized.HeaderTitle = categoryHeaderTitle;
+
             for (int i = 0; i < questDatabase.Categories.Length; i++)
             {
-                if (questDatabase.Categories[i].HeaderTitle == request.CategoryHeaderTitle)
+                if (!string.Equals(questDatabase.Categories[i].HeaderTitle, categoryHeaderTitle, StringComparison.Ordinal))
                 {
-                    questDatabase.Categories[i] = new QuestbookCategoryData
-                    {
-                        IconItemCode = request.Category.IconItemCode,
-                        Title = request.Category.Title,
-                        HeaderTitle = request.Category.HeaderTitle,
-                        Nodes = request.Category.Nodes.Select(n => new QuestbookQuestNodeData
-                        {
-                            Id = n.Id,
-                            X = n.X,
-                            Y = n.Y,
-                            NodeType = n.NodeType switch { 0 => "Start", 2 => "Checkpoint", _ => "Quest" },
-                            Description = n.Description,
-                            RequiredItems = n.RequiredItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray(),
-                            RewardItems = n.RewardItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray()
-                        }).ToArray(),
-                        Connections = request.Category.Connections.Select(c => new QuestbookQuestConnectionData(c.StartNodeId, c.EndNodeId)).ToArray()
-                    };
-
-                    SaveQuestData();
-                    BroadcastQuestsToAllPlayers();
-
-                    SendAdminResponse(fromPlayer, true, "Category saved");
-                    sapi?.Logger.Debug($"[SwixyQuestBook] Admin {fromPlayer.PlayerName} saved category {request.CategoryHeaderTitle}");
-                    return;
+                    continue;
                 }
+
+                // Preserve original title key if client sent empty title.
+                if (string.IsNullOrWhiteSpace(sanitized.Title))
+                {
+                    sanitized.Title = questDatabase.Categories[i].Title;
+                }
+
+                questDatabase.Categories[i] = sanitized;
+
+                SaveQuestData();
+                BroadcastQuestsToAllPlayers();
+
+                SendAdminResponse(fromPlayer, true, "Category saved");
+                sapi?.Logger.Notification(
+                    "[SwixyQuestBook] Admin {0} saved category {1} ({2} nodes)",
+                    fromPlayer.PlayerName, categoryHeaderTitle, sanitized.Nodes.Length);
+                return;
             }
 
             SendAdminResponse(fromPlayer, false, "Category not found");
@@ -539,9 +800,20 @@ namespace SwixyQuestBook.Server
 
         private void OnAdminAddCategory(IServerPlayer fromPlayer, QuestbookAdminAddCategoryRequest request)
         {
+            if (!EnsureAdminAuthorized(fromPlayer, "AddCategory"))
+            {
+                return;
+            }
+
             if (questDatabase == null)
             {
                 SendAdminResponse(fromPlayer, false, "Quest database not loaded");
+                return;
+            }
+
+            if (questDatabase.Categories.Length >= MaxCategories)
+            {
+                SendAdminResponse(fromPlayer, false, "Category limit reached");
                 return;
             }
 
@@ -552,7 +824,7 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            if (title.Length > 80)
+            if (title.Length > MaxCategoryTitleLength)
             {
                 SendAdminResponse(fromPlayer, false, "Branch title is too long");
                 return;
@@ -562,7 +834,7 @@ namespace SwixyQuestBook.Server
                 ? title.ToUpperInvariant()
                 : request.HeaderTitle.Trim();
 
-            if (headerTitle.Length > 80)
+            if (headerTitle.Length > MaxCategoryTitleLength)
             {
                 SendAdminResponse(fromPlayer, false, "Branch header is too long");
                 return;
@@ -604,11 +876,18 @@ namespace SwixyQuestBook.Server
             BroadcastQuestsToAllPlayers();
 
             SendAdminResponse(fromPlayer, true, "Category created", newCategory.HeaderTitle);
-            sapi?.Logger.Debug($"[SwixyQuestBook] Admin {fromPlayer.PlayerName} created category {newCategory.HeaderTitle}");
+            sapi?.Logger.Notification(
+                "[SwixyQuestBook] Admin {0} created category {1}",
+                fromPlayer.PlayerName, newCategory.HeaderTitle);
         }
 
         private void OnAdminRenameCategory(IServerPlayer fromPlayer, QuestbookAdminRenameCategoryRequest request)
         {
+            if (!EnsureAdminAuthorized(fromPlayer, "RenameCategory"))
+            {
+                return;
+            }
+
             if (questDatabase == null)
             {
                 SendAdminResponse(fromPlayer, false, "Quest database not loaded");
@@ -639,7 +918,7 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            if (title.Length > 80)
+            if (title.Length > MaxCategoryTitleLength)
             {
                 SendAdminResponse(fromPlayer, false, "Branch title is too long");
                 return;
@@ -649,7 +928,7 @@ namespace SwixyQuestBook.Server
                 ? title.ToUpperInvariant()
                 : request.HeaderTitle.Trim();
 
-            if (headerTitle.Length > 80)
+            if (headerTitle.Length > MaxCategoryTitleLength)
             {
                 SendAdminResponse(fromPlayer, false, "Branch header is too long");
                 return;
@@ -691,11 +970,18 @@ namespace SwixyQuestBook.Server
                 BroadcastProgressToAllPlayers();
 
             SendAdminResponse(fromPlayer, true, "Category renamed", headerTitle);
-            sapi?.Logger.Debug($"[SwixyQuestBook] Admin {fromPlayer.PlayerName} renamed category {oldHeaderTitle} -> {headerTitle}");
+            sapi?.Logger.Notification(
+                "[SwixyQuestBook] Admin {0} renamed category {1} -> {2}",
+                fromPlayer.PlayerName, oldHeaderTitle, headerTitle);
         }
 
         private void OnAdminDeleteCategory(IServerPlayer fromPlayer, QuestbookAdminDeleteCategoryRequest request)
         {
+            if (!EnsureAdminAuthorized(fromPlayer, "DeleteCategory"))
+            {
+                return;
+            }
+
             if (questDatabase == null)
             {
                 SendAdminResponse(fromPlayer, false, "Quest database not loaded");
@@ -736,7 +1022,337 @@ namespace SwixyQuestBook.Server
             BroadcastProgressToAllPlayers();
 
             SendAdminResponse(fromPlayer, true, "Category deleted");
-            sapi?.Logger.Debug($"[SwixyQuestBook] Admin {fromPlayer.PlayerName} deleted category {categoryHeaderTitle}");
+            sapi?.Logger.Notification(
+                "[SwixyQuestBook] Admin {0} deleted category {1}",
+                fromPlayer.PlayerName, categoryHeaderTitle);
+        }
+
+        private bool TrySanitizeCategoryPayload(
+            QuestbookSyncCategoryPacket? packet,
+            out QuestbookCategoryData? category,
+            out string error)
+        {
+            category = null;
+            error = string.Empty;
+
+            if (packet == null)
+            {
+                error = "Empty category payload";
+                return false;
+            }
+
+            string title = packet.Title?.Trim() ?? string.Empty;
+            if (title.Length > MaxCategoryTitleLength)
+            {
+                error = "Branch title is too long";
+                return false;
+            }
+
+            string headerTitle = packet.HeaderTitle?.Trim() ?? string.Empty;
+            if (headerTitle.Length > MaxCategoryTitleLength)
+            {
+                error = "Branch header is too long";
+                return false;
+            }
+
+            string iconItemCode = NormalizeIconItemCode(packet.IconItemCode);
+            if (!string.IsNullOrWhiteSpace(iconItemCode) && !IsValidIconItemCode(iconItemCode))
+            {
+                error = "Invalid branch item icon";
+                return false;
+            }
+
+            var rawNodes = packet.Nodes ?? [];
+            if (rawNodes.Length == 0 || rawNodes.Length > MaxNodesPerCategory)
+            {
+                error = "Invalid node count";
+                return false;
+            }
+
+            var rawConnections = packet.Connections ?? [];
+            if (rawConnections.Length > MaxConnectionsPerCategory)
+            {
+                error = "Too many connections";
+                return false;
+            }
+
+            var nodes = new List<QuestbookQuestNodeData>(rawNodes.Length);
+            var seenIds = new HashSet<int>();
+            int startCount = 0;
+
+            foreach (var n in rawNodes)
+            {
+                if (!seenIds.Add(n.Id) || n.Id < 0)
+                {
+                    error = "Duplicate or invalid node id";
+                    return false;
+                }
+
+                if (!IsFiniteCoordinate(n.X) || !IsFiniteCoordinate(n.Y))
+                {
+                    error = "Invalid node coordinates";
+                    return false;
+                }
+
+                string? nodeType = n.NodeType switch
+                {
+                    0 => "Start",
+                    2 => "Checkpoint",
+                    1 => "Quest",
+                    _ => null
+                };
+
+                if (nodeType is null)
+                {
+                    error = "Invalid node type";
+                    return false;
+                }
+
+                if (nodeType == "Start")
+                {
+                    startCount++;
+                }
+
+                var required = SanitizeItemList(n.RequiredItems, allowWildcards: true);
+                var rewards = SanitizeItemList(n.RewardItems, allowWildcards: false);
+                if (nodeType is "Start" or "Checkpoint")
+                {
+                    required = [];
+                    rewards = [];
+                }
+
+                nodes.Add(new QuestbookQuestNodeData
+                {
+                    Id = n.Id,
+                    X = n.X,
+                    Y = n.Y,
+                    NodeType = nodeType,
+                    Description = SanitizeDescription(n.Description),
+                    RequiredItems = required.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray(),
+                    RewardItems = rewards.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray()
+                });
+            }
+
+            if (startCount != 1)
+            {
+                error = "Category must have exactly one Start node";
+                return false;
+            }
+
+            var idSet = seenIds;
+            var connections = new List<QuestbookQuestConnectionData>(rawConnections.Length);
+            var connectionKeys = new HashSet<string>(StringComparer.Ordinal);
+
+            foreach (var c in rawConnections)
+            {
+                if (!idSet.Contains(c.StartNodeId) || !idSet.Contains(c.EndNodeId))
+                {
+                    error = "Connection references missing node";
+                    return false;
+                }
+
+                if (c.StartNodeId == c.EndNodeId)
+                {
+                    error = "Self-connection is not allowed";
+                    return false;
+                }
+
+                string key = $"{c.StartNodeId}->{c.EndNodeId}";
+                if (!connectionKeys.Add(key))
+                {
+                    continue;
+                }
+
+                connections.Add(new QuestbookQuestConnectionData(c.StartNodeId, c.EndNodeId));
+            }
+
+            category = new QuestbookCategoryData
+            {
+                IconItemCode = iconItemCode,
+                Title = title,
+                HeaderTitle = headerTitle,
+                Nodes = nodes.ToArray(),
+                Connections = connections.ToArray()
+            };
+            return true;
+        }
+
+        private static bool IsFiniteCoordinate(double value)
+        {
+            return !double.IsNaN(value) && !double.IsInfinity(value)
+                && value > -100000 && value < 100000;
+        }
+
+        private static string? NormalizeNodeTypeName(string? nodeType)
+        {
+            if (string.IsNullOrWhiteSpace(nodeType))
+            {
+                return "Quest";
+            }
+
+            return nodeType.Trim().ToLowerInvariant() switch
+            {
+                "start" => "Start",
+                "checkpoint" => "Checkpoint",
+                "quest" => "Quest",
+                _ => null
+            };
+        }
+
+        private static string NormalizeDirection(string? direction)
+        {
+            return (direction?.Trim().ToUpperInvariant()) switch
+            {
+                "T" => "T",
+                "B" => "B",
+                "L" => "L",
+                "R" => "R",
+                _ => "R"
+            };
+        }
+
+        private static string SanitizeDescription(string? description)
+        {
+            string text = description?.Trim() ?? string.Empty;
+            if (text.Length > MaxNodeDescriptionLength)
+            {
+                text = text[..MaxNodeDescriptionLength];
+            }
+
+            // Strip control characters except newline/tab.
+            var chars = text.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                char c = chars[i];
+                if (char.IsControl(c) && c != '\n' && c != '\r' && c != '\t')
+                {
+                    chars[i] = ' ';
+                }
+            }
+
+            return new string(chars);
+        }
+
+        private QuestbookQuestItemRequirement[] SanitizeItemList(
+            IEnumerable<QuestbookQuestItemData>? items,
+            bool allowWildcards)
+        {
+            if (items == null)
+            {
+                return [];
+            }
+
+            return SanitizeItemList(
+                items.Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode ?? string.Empty, i.Count)).ToArray(),
+                allowWildcards);
+        }
+
+        private QuestbookQuestItemRequirement[] SanitizeItemList(
+            IEnumerable<QuestbookQuestItemStackPacket>? items,
+            bool allowWildcards)
+        {
+            if (items == null)
+            {
+                return [];
+            }
+
+            return SanitizeItemList(
+                items.Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode ?? string.Empty, i.Count)).ToArray(),
+                allowWildcards);
+        }
+
+        private QuestbookQuestItemRequirement[] SanitizeItemList(
+            IEnumerable<QuestbookSyncItemPacket>? items,
+            bool allowWildcards)
+        {
+            if (items == null)
+            {
+                return [];
+            }
+
+            return SanitizeItemList(
+                items.Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode ?? string.Empty, i.Count)).ToArray(),
+                allowWildcards);
+        }
+
+        private QuestbookQuestItemRequirement[] SanitizeItemList(
+            QuestbookQuestItemRequirement[] items,
+            bool allowWildcards)
+        {
+            var result = new List<QuestbookQuestItemRequirement>(Math.Min(items.Length, MaxItemsPerList));
+            foreach (var item in items)
+            {
+                if (result.Count >= MaxItemsPerList)
+                {
+                    break;
+                }
+
+                string code = NormalizeCollectibleCode(item.CollectibleCode, allowWildcards);
+                if (string.IsNullOrWhiteSpace(code))
+                {
+                    continue;
+                }
+
+                int count = item.Count;
+                if (count < 1)
+                {
+                    count = 1;
+                }
+                else if (count > MaxItemStackCount)
+                {
+                    count = MaxItemStackCount;
+                }
+
+                // Rewards must resolve to a real item/block (no wildcards).
+                if (!allowWildcards && !IsValidIconItemCode(code))
+                {
+                    continue;
+                }
+
+                result.Add(new QuestbookQuestItemRequirement(code, count));
+            }
+
+            return result.ToArray();
+        }
+
+        private static string NormalizeCollectibleCode(string? code, bool allowWildcards)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return string.Empty;
+            }
+
+            string trimmed = code.Trim();
+            if (trimmed.Length > MaxCollectibleCodeLength)
+            {
+                return string.Empty;
+            }
+
+            // Reject path tricks / injection-ish payloads.
+            if (trimmed.Contains("..", StringComparison.Ordinal)
+                || trimmed.Contains('\\', StringComparison.Ordinal)
+                || trimmed.Contains('\0'))
+            {
+                return string.Empty;
+            }
+
+            if (!allowWildcards && trimmed.Contains('*', StringComparison.Ordinal))
+            {
+                return string.Empty;
+            }
+
+            for (int i = 0; i < trimmed.Length; i++)
+            {
+                char c = trimmed[i];
+                bool ok = char.IsLetterOrDigit(c)
+                    || c is ':' or '-' or '_' or '*' or '/' or '.';
+                if (!ok)
+                {
+                    return string.Empty;
+                }
+            }
+
+            return trimmed;
         }
 
         private string EnsureUniqueHeaderTitle(string headerTitle, string? excludeHeaderTitle)

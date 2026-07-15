@@ -1,0 +1,24 @@
+﻿{
+	"ingredient": {
+		"type": "item",
+		"code": "game:ingot-*",
+		"name": "metal",
+		"allowedVariants": [ "iron", "meteoriciron", "steel" ]
+	},
+	"pattern": [
+		[
+			"___________",
+			"_##########",
+			"___###_____",
+			"_##########",
+			"___________"
+		]
+	],
+	"name": "wirecutters",
+	"code": "wirecutters-{metal}",
+	"output": {
+		"type": "item",
+		"code": "electricalprogressivebasics:wirecutters",
+		"stacksize": 1
+	}
+}

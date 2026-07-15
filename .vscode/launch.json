@@ -11,13 +11,14 @@
       "args": [
         "--tracelog",
         "--addModPath",
-        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods",
         "-o",
         "test"
       ],
       "cwd": "${env:VINTAGE_STORY}",
       "console": "externalTerminal",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "justMyCode": true
     },
     {
       "name": "SwixyQuestBook: Client (all Swixy mods)",
@@ -29,7 +30,7 @@
       "args": [
         "--tracelog",
         "--addModPath",
-        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods",
         "--addModPath",
         "${workspaceFolder}/SwixyClaimChunk/bin/Debug/Mods",
         "--addModPath",
@@ -39,7 +40,8 @@
       ],
       "cwd": "${env:VINTAGE_STORY}",
       "console": "externalTerminal",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "justMyCode": true
     },
     {
       "name": "SwixyQuestBook: Server",
@@ -51,11 +53,12 @@
       "args": [
         "--tracelog",
         "--addModPath",
-        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod"
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods"
       ],
       "cwd": "${env:VINTAGE_STORY}",
       "console": "externalTerminal",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "justMyCode": true
     },
     {
       "name": "SwixyQuestBook: Server (all Swixy mods)",
@@ -67,7 +70,7 @@
       "args": [
         "--tracelog",
         "--addModPath",
-        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods/mod",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods",
         "--addModPath",
         "${workspaceFolder}/SwixyClaimChunk/bin/Debug/Mods",
         "--addModPath",
@@ -75,7 +78,14 @@
       ],
       "cwd": "${env:VINTAGE_STORY}",
       "console": "externalTerminal",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "justMyCode": true
+    },
+    {
+      "name": "Attach to process",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
     }
   ],
   "compounds": [
@@ -85,7 +95,8 @@
         "SwixyQuestBook: Server",
         "SwixyQuestBook: Client"
       ],
-      "stopAll": true
+      "stopAll": true,
+      "preLaunchTask": "build: SwixyQuestBook"
     }
   ]
 }

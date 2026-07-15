@@ -662,6 +662,12 @@ public sealed class ClaimMapDialog : GuiDialog
         return true;
     }
 
+    /// <summary>Прокидывает результат скана usable-блоков привата в открытый диалог фильтра.</summary>
+    public void ApplyUseFilterScanResult(ClaimUseFilterScanResultPacket packet)
+    {
+        useFilterDialog?.ApplyScanResult(packet);
+    }
+
     /// <summary>Краткий статус фильтра Use для панели привата.</summary>
     private static string FormatUseFilterStatus(ClaimInfoPacket claim)
     {

@@ -29,6 +29,7 @@ namespace SwixyQuestBook.Gui
             renderSlot = new DummySlot(null, dummyInventory);
         }
 
+        /// <param name="clipX">Optional screen-space clip rect (left). NaN = no external clip.</param>
         public void Render(
             ItemSlot slot,
             double iconX,
@@ -37,23 +38,38 @@ namespace SwixyQuestBook.Gui
             float renderZ,
             float deltaTime,
             int displayCount = 1,
-            bool showStackSize = false)
+            bool showStackSize = false,
+            double clipX = double.NaN,
+            double clipY = double.NaN,
+            double clipWidth = double.NaN,
+            double clipHeight = double.NaN)
         {
             if (slot.Itemstack?.Collectible == null)
             {
                 return;
             }
 
-            renderSlot.Itemstack = slot.Itemstack.Clone();
-
-            int originalCount = renderSlot.Itemstack.StackSize;
-            renderSlot.Itemstack.StackSize = showStackSize ? displayCount : 1;
+            // Reuse stack reference when count already matches — avoids Clone() per icon per frame.
+            ItemStack source = slot.Itemstack;
+            int desiredCount = showStackSize ? System.Math.Max(1, displayCount) : 1;
+            if (renderSlot.Itemstack == null
+                || renderSlot.Itemstack.Collectible != source.Collectible
+                || renderSlot.Itemstack.StackSize != desiredCount)
+            {
+                renderSlot.Itemstack = source.Clone();
+                renderSlot.Itemstack.StackSize = desiredCount;
+            }
 
             double centerX = iconX + (iconSize / 2);
             double centerY = iconY + (iconSize / 2);
             float renderSize = (float)(iconSize * ItemToSlotRatio);
 
-            ElementBounds scissor = BuildScissorBounds(api, iconX, iconY, iconSize);
+            ElementBounds? scissor = BuildScissorBounds(api, iconX, iconY, iconSize, clipX, clipY, clipWidth, clipHeight);
+            if (scissor == null)
+            {
+                return;
+            }
+
             api.Render.PushScissor(scissor, true);
             api.Render.RenderItemstackToGui(
                 renderSlot,
@@ -64,23 +80,54 @@ namespace SwixyQuestBook.Gui
                 ColorUtil.WhiteArgb,
                 deltaTime);
             api.Render.PopScissor();
-
-            renderSlot.Itemstack.StackSize = originalCount;
         }
 
-        private static ElementBounds BuildScissorBounds(ICoreClientAPI api, double iconX, double iconY, float iconSize)
+        private static ElementBounds? BuildScissorBounds(
+            ICoreClientAPI api,
+            double iconX,
+            double iconY,
+            float iconSize,
+            double clipX,
+            double clipY,
+            double clipWidth,
+            double clipHeight)
         {
             double insetX = iconSize * ScissorInsetXRatio;
             double insetY = iconSize * ScissorInsetYRatio;
             double scissorSize = iconSize * ScissorSizeRatio;
 
+            double left = iconX + insetX;
+            double top = iconY + insetY;
+            double right = left + scissorSize;
+            double bottom = top + scissorSize;
+
+            // Intersect with an external viewport (scroll lists / graph) so partially
+            // visible rows do not let the 3D item mesh bleed outside the list.
+            if (!double.IsNaN(clipX) && !double.IsNaN(clipY) && !double.IsNaN(clipWidth) && !double.IsNaN(clipHeight)
+                && clipWidth > 0 && clipHeight > 0)
+            {
+                double clipRight = clipX + clipWidth;
+                double clipBottom = clipY + clipHeight;
+                left = System.Math.Max(left, clipX);
+                top = System.Math.Max(top, clipY);
+                right = System.Math.Min(right, clipRight);
+                bottom = System.Math.Min(bottom, clipBottom);
+            }
+
+            double width = right - left;
+            double height = bottom - top;
+            if (width <= 0.5 || height <= 0.5)
+            {
+                return null;
+            }
+
             ElementBounds scissor = ElementBounds.FixedSize(UnscaledSlotSize - 4, UnscaledSlotSize - 4);
             scissor.ParentBounds = api.Gui.WindowBounds;
             scissor.CalcWorldBounds();
-            scissor.absFixedX = iconX + insetX;
-            scissor.absFixedY = iconY + insetY;
-            scissor.absInnerWidth = scissorSize;
-            scissor.absInnerHeight = scissorSize;
+            scissor.absFixedX = left;
+            scissor.absFixedY = top;
+            scissor.absInnerWidth = width;
+            scissor.absInnerHeight = height;
             return scissor;
         }
     }

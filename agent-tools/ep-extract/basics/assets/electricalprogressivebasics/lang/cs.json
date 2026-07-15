@@ -1,0 +1,398 @@
+﻿{
+  // ==================== Elektrické stroje a zařízení ====================
+
+  // ----- Motory -----
+  "block-emotor-tier1-*": "Motor",
+  "block-emotor-tier1-burned": "Motor (spálený)",
+  "block-handbooktitle-emotor-tier1": "Použití",
+  "block-handbooktext-emotor-tier1": "Motor přeměňuje elektrickou energii na mechanickou. Má nízký výkon a rychlost otáčení.<br> <br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-rotors\">příručce<\/a>.",
+
+  "block-emotor-tier2-*": "Vylepšený motor",
+  "block-emotor-tier2-burned": "Vylepšený motor (spálený)",
+  "block-handbooktitle-emotor-tier2": "Použití",
+  "block-handbooktext-emotor-tier2": "Vylepšený motor přeměňuje elektrickou energii na mechanickou. Má vyšší výstupní výkon a rychlost otáčení ve srovnání s <a href=\"handbooksearch:\/\/Motor\">motorem<\/a>.<br><br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-rotors\">příručce<\/a>.",
+
+  "block-emotor-tier3-*": "Vysoce výkonný motor",
+  "block-emotor-tier3-burned": "Vysoce výkonný motor (spálený)",
+  "block-handbooktitle-emotor-tier3": "Použití",
+  "block-handbooktext-emotor-tier3": "Vysoce výkonný motor přeměňuje elektrickou energii na mechanickou. Díky použití lepších materiálů má vyšší výstupní výkon ve srovnání s <a href=\"handbooksearch:\/\/Vylepšený motor\">vylepšeným motorem<\/a>.<br> <br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-rotors\">příručce<\/a>.",
+
+  // ----- Generátory -----
+  "block-egenerator-tier1-*": "Generátor",
+  "block-egenerator-tier1-burned": "Generátor (spálený)",
+  "block-handbooktitle-egenerator-tier1": "Použití",
+  "block-handbooktext-egenerator-tier1": "Generátor přeměňuje mechanickou energii na elektrickou. Má nízký výkon a rychlost otáčení.<br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-rotors\">příručce<\/a>.",
+
+  "block-egenerator-tier2-*": "Vylepšený generátor",
+  "block-egenerator-tier2-burned": "Vylepšený generátor (spálený)",
+  "block-handbooktitle-egenerator-tier2": "Použití",
+  "block-handbooktext-egenerator-tier2": "Vylepšený generátor přeměňuje mechanickou energii na elektrickou. Má vyšší výkon ve srovnání s <a href=\"handbooksearch:\/\/Generátor\">generátorem<\/a>.<br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-rotors\">příručce<\/a>.",
+
+  "block-egenerator-tier3-*": "Vysoce výkonný generátor",
+  "block-egenerator-tier3-burned": "Vysoce výkonný generátor (spálený)",
+  "block-handbooktitle-egenerator-tier3": "Použití",
+  "block-handbooktext-egenerator-tier3": "Vysoce výkonný generátor přeměňuje mechanickou energii na elektrickou. Díky použití lepších materiálů má vyšší výkon ve srovnání s <a href=\"handbooksearch:\/\/Vylepšený generátor\">vylepšeným generátorem<\/a>.<br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-rotors\">příručce<\/a>.",
+
+  // ----- Transformátor -----
+  "block-transformator-*": "Transformátor",
+  "block-transformator-burned-south": "Transformátor (spálený)",
+  "block-handbooktitle-transformator": "Použití",
+  "block-handbooktext-transformator": "Slouží k přeměně elektrické energie z jednoho napětí na druhé: může snižovat i zvyšovat napětí. Doporučuje se připojovat kabely/zařízení pouze ke dvěma libovolným stranám transformátoru!<br>Transformační poměr: 1:4.",
+
+  // ----- Akumulátory -----
+  "block-accumulator-tier1-*": "Akumulátor (32V)",
+  "block-accumulator-tier1-burned": "Akumulátor (32V) (spálený)",
+  "block-handbooktitle-accumulator-tier1": "Použití",
+  "block-handbooktext-accumulator-tier1": "Umožňuje ukládat elektrickou energii.<br>Nabitý akumulátor lze v případě potřeby nosit s sebou.",
+
+  "block-accumulator-tier2-*": "Akumulátor (128V)",
+  "block-accumulator-tier2-burned": "Akumulátor (128V) (spálený)",
+  "block-handbooktitle-accumulator-tier2": "Použití",
+  "block-handbooktext-accumulator-tier2": "Umožňuje ukládat elektrickou energii. Prostornější verze běžného <a href=\"handbooksearch:\/\/akumulátor\">akumulátoru<\/a>.<br>Nabitý akumulátor lze v případě potřeby nosit s sebou, ale pouze v slotu pro tašku.",
+
+  // ----- Spínač -----
+  "block-switch-*": "Ruční spínač",
+  "block-handbooktitle-switch": "Použití",
+  "block-handbooktext-switch": "Umožňuje přerušit elektrický obvod. Instaluje se na kabel. Kliknutím na něj jej přepnete.",
+
+  // ----- Průchozí konektor -----
+  "block-blockwire": "Průchozí konektor (běžný)",
+  "block-handbooktitle-blockwire": "Použití",
+  "block-handbooktext-blockwire": "Umožňuje přenášet energii skrz zdi, aniž by byla narušena celistvost místností.",
+
+  // ==================== Kabely (běžné) ====================
+
+  // ----- 32V -----
+  // neizolované
+  "block-ecable-32v-copper-*-part": "Měděný kabel (32V)",
+  "block-ecable-32v-silver-*-part": "Stříbrný kabel (32V)",
+  "block-ecable-32v-lead-*-part": "Olověný kabel (32V)",
+  "block-ecable-32v-gold-*-part": "Zlatý kabel (32V)",
+  "block-ecable-32v-steel-*-part": "Ocelový kabel (32V)",
+  "block-ecable-32v-iron-*-part": "Železný kabel (32V)",
+  "block-ecable-32v-tinbronze-*-part": "Bronzový kabel (32V)",
+  "block-ecable-32v-brass-*-part": "Mosazný kabel (32V)",
+  "block-ecable-32v-electrum-*-part": "Kabel z elektrumu (32V)",
+
+  // izolované
+  "block-ecable-32v-copper-*-isolated": "Izolovaný měděný kabel (32V)",
+  "block-ecable-32v-silver-*-isolated": "Izolovaný stříbrný kabel (32V)",
+  "block-ecable-32v-lead-*-isolated": "Izolovaný olověný kabel (32V)",
+  "block-ecable-32v-gold-*-isolated": "Izolovaný zlatý kabel (32V)",
+  "block-ecable-32v-steel-*-isolated": "Izolovaný ocelový kabel (32V)",
+  "block-ecable-32v-iron-*-isolated": "Izolovaný železný kabel (32V)",
+  "block-ecable-32v-tinbronze-*-isolated": "Izolovaný bronzový kabel (32V)",
+  "block-ecable-32v-brass-*-isolated": "Izolovaný mosazný kabel (32V)",
+  "block-ecable-32v-electrum-*-isolated": "Izolovaný kabel z elektrumu (32V)",
+
+  // spálené
+  "block-ecable-32v-copper-*-burned": "Spálený měděný kabel (32V)",
+  "block-ecable-32v-silver-*-burned": "Spálený stříbrný kabel (32V)",
+  "block-ecable-32v-lead-*-burned": "Spálený olověný kabel (32V)",
+  "block-ecable-32v-gold-*-burned": "Spálený zlatý kabel (32V)",
+  "block-ecable-32v-steel-*-burned": "Spálený ocelový kabel (32V)",
+  "block-ecable-32v-iron-*-burned": "Spálený železný kabel (32V)",
+  "block-ecable-32v-tinbronze-*-burned": "Spálený bronzový kabel (32V)",
+  "block-ecable-32v-brass-*-burned": "Spálený mosazný kabel (32V)",
+  "block-ecable-32v-electrum-*-burned": "Spálený kabel z elektrumu (32V)",
+
+  // ----- 128V -----
+  // neizolované
+  "block-ecable-128v-copper-*-part": "Měděný kabel (128V)",
+  "block-ecable-128v-silver-*-part": "Stříbrný kabel (128V)",
+  "block-ecable-128v-lead-*-part": "Olověný kabel (128V)",
+  "block-ecable-128v-gold-*-part": "Zlatý kabel (128V)",
+  "block-ecable-128v-steel-*-part": "Ocelový kabel (128V)",
+  "block-ecable-128v-iron-*-part": "Železný kabel (128V)",
+  "block-ecable-128v-tinbronze-*-part": "Bronzový kabel (128V)",
+  "block-ecable-128v-brass-*-part": "Mosazný kabel (128V)",
+  "block-ecable-128v-electrum-*-part": "Kabel z elektrumu (128V)",
+
+  // izolované
+  "block-ecable-128v-copper-*-isolated": "Izolovaný měděný kabel (128V)",
+  "block-ecable-128v-silver-*-isolated": "Izolovaný stříbrný kabel (128V)",
+  "block-ecable-128v-lead-*-isolated": "Izolovaný olověný kabel (128V)",
+  "block-ecable-128v-gold-*-isolated": "Izolovaný zlatý kabel (128V)",
+  "block-ecable-128v-steel-*-isolated": "Izolovaný ocelový kabel (128V)",
+  "block-ecable-128v-iron-*-isolated": "Izolovaný železný kabel (128V)",
+  "block-ecable-128v-tinbronze-*-isolated": "Izolovaný bronzový kabel (128V)",
+  "block-ecable-128v-brass-*-isolated": "Izolovaný mosazný kabel (128V)",
+  "block-ecable-128v-electrum-*-isolated": "Izolovaný kabel z elektrumu (128V)",
+
+  // spálené
+  "block-ecable-128v-copper-*-burned": "Spálený měděný kabel (128V)",
+  "block-ecable-128v-silver-*-burned": "Spálený stříbrný kabel (128V)",
+  "block-ecable-128v-lead-*-burned": "Spálený olověný kabel (128V)",
+  "block-ecable-128v-gold-*-burned": "Spálený zlatý kabel (128V)",
+  "block-ecable-128v-steel-*-burned": "Spálený ocelový kabel (128V)",
+  "block-ecable-128v-iron-*-burned": "Spálený železný kabel (128V)",
+  "block-ecable-128v-tinbronze-*-burned": "Spálený bronzový kabel (128V)",
+  "block-ecable-128v-brass-*-burned": "Spálený mosazný kabel (128V)",
+  "block-ecable-128v-electrum-*-burned": "Spálený kabel z elektrumu (128V)",
+
+  // společný handbook pro kabely
+  "block-handbooktitle-ecable": "Použití",
+  "block-handbooktext-ecable": "Umožňuje přenášet elektrickou energii na dálku. Lze umístit pouze na plné strany bloků. Izolované varianty kabelu snižují ztráty na polovinu!<br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-princip\">příručce<\/a>.",
+
+  // ==================== Termogenerátor a termodesky ====================
+  "termogen": "Termogenerátor",
+  "block-etermogenerator-*": "Termoelektrický generátor",
+  "block-handbooktitle-etermogenerator": "Použití",
+  "block-handbooktext-etermogenerator": "Přeměňuje tepelnou energii na elektrickou! Funguje na vše, co podporuje hoření. Čím vyšší je teplota hoření paliva, tím větší bude výstupní výkon. Výstupní výkon také mírně závisí na teplotě okolí: čím nižší je teplota okolního vzduchu, tím větší bude výroba energie. Sám o sobě nefunguje - vzadu vyžaduje instalaci <a href=\"handbook:\/\/block-electricalprogressivebasics:termoplastini-south\">termoelektrických desek<\/a>.<br><br>Může být automaticky plněn palivem pomocí žlabů.",
+
+  "termoplastini": "Termoelektrické desky",
+  "block-termoplastini-*": "Termoelektrické desky",
+  "block-handbooktitle-termoplastini": "Použití",
+  "block-handbooktext-termoplastini": "Termoelektrické desky se používají v termoelektrických generátorech k přeměně tepelné energie na elektrickou. Princip činnosti je založen na vzniku termoelektromotorického napětí v místě styku dvou různých kovů. Teplotní rozdíl vzniká díky kouři z hořícího paliva na jedné straně a okolnímu vzduchu na straně druhé.<br><br>Umisťuje se za <a href=\"handbook:\/\/block-electricalprogressivebasics:etermogenerator-south\">termoelektrický generátor<\/a>, až 10 kusů. Lze připojit pouze k měděné plošce tepelného výměníku. Každá další sekce poskytuje menší nárůst výkonu. Celkem 10 termodesek poskytne 100% výkonu termogenerátoru. Na stejné sadě termoelektrických desek lze použít dva generátory.",
+
+  // ==================== Solární generátor ====================
+  "block-esolargenerator-*": "Generátor se solárními panely",
+  "block-handbooktitle-esolargenerator": "Použití",
+  "block-handbooktext-esolargenerator": "Přeměňuje světlo na elektrickou energii! Čím více slunečního světla dopadá na solární panel, tím více energie může vyrobit. Bloky umístěné nad solárním panelem sníží jeho účinnost. Na konci podzimu a v zimě slunečního světla ubývá, což vede ke snížení účinnosti.",
+
+  // ==================== Nabíjecí stanice ====================
+  "block-charger-*": "Nabíjecí stanice",
+  "block-charger-burned-south": "Nabíjecí stanice (spálená)",
+  "block-handbooktitle-charger": "Použití",
+  "block-handbooktext-charger": "Nabíjecí stanice umožňuje nabíjet akumulátory a zařízení s vestavěným akumulátorem.<br>Podporuje automatické nakládání a vykládání pomocí žlabů.",
+
+  // ==================== Imersivní bloky (512V) ====================
+
+  // ----- Dráty 512V -----
+  // neizolované
+  "block-wire-512v-copper-part": "Měděný imersivní drát (512V)",
+  "block-wire-512v-silver-part": "Stříbrný imersivní drát (512V)",
+  "block-wire-512v-lead-part": "Olověný imersivní drát (512V)",
+  "block-wire-512v-gold-part": "Zlatý imersivní drát (512V)",
+  "block-wire-512v-steel-part": "Ocelový imersivní drát (512V)",
+  "block-wire-512v-iron-part": "Železný imersivní drát (512V)",
+  "block-wire-512v-tinbronze-part": "Bronzový imersivní drát (512V)",
+  "block-wire-512v-brass-part": "Mosazný imersivní drát (512V)",
+  "block-wire-512v-electrum-part": "Imersivní drát z elektrumu (512V)",
+
+  // izolované
+  "block-wire-512v-copper-isolated": "Izolovaný měděný imersivní drát (512V)",
+  "block-wire-512v-silver-isolated": "Izolovaný stříbrný imersivní drát (512V)",
+  "block-wire-512v-lead-isolated": "Izolovaný olověný imersivní drát (512V)",
+  "block-wire-512v-gold-isolated": "Izolovaný zlatý imersivní drát (512V)",
+  "block-wire-512v-steel-isolated": "Izolovaný ocelový imersivní drát (512V)",
+  "block-wire-512v-iron-isolated": "Izolovaný železný imersivní drát (512V)",
+  "block-wire-512v-tinbronze-isolated": "Izolovaný bronzový imersivní drát (512V)",
+  "block-wire-512v-brass-isolated": "Izolovaný mosazný imersivní drát (512V)",
+  "block-wire-512v-electrum-isolated": "Izolovaný imersivní drát z elektrumu (512V)",
+
+  // společný handbook pro imersivní dráty
+  "block-handbooktitle-wire": "Použití",
+  "block-handbooktext-wire": "Umožňuje přenášet elektrickou energii na velké vzdálenosti. Lze připevnit pouze na izolátory. Maximální délka pro upevnění: 32 bloků. Izolované varianty kabelu snižují ztráty na polovinu! Práce s dráty je možná pouze společně se sadou elektrikáře.<br>O vlastnostech provozu si přečtěte v <a href=\"handbook:\/\/gamemechanicinfo-electricalprogressive-princip\">příručce<\/a>.",
+
+  // ----- Izolátory a spínání -----
+  "block-cabledotdown": "Izolátor (podlaha)",
+  "block-handbooktitle-cabledotdown": "Použití",
+  "block-handbooktext-cabledotdown": "Varianta izolátoru pro imersivní dráty s upevněním na podlaze.",
+
+  "block-cabledotroof": "Izolátor (strop)",
+  "block-handbooktitle-cabledotroof": "Použití",
+  "block-handbooktext-cabledotroof": "Varianta izolátoru pro imersivní dráty s upevněním na stropě.",
+
+  "block-cabledotwall": "Izolátor (stěna)",
+  "block-handbooktitle-cabledotwall": "Použití",
+  "block-handbooktext-cabledotwall": "Varianta izolátoru pro imersivní dráty s upevněním na stěně.",
+
+  "block-cableswitchwall": "Odpínač (stěna)",
+  "block-handbooktitle-cableswitchwall": "Použití",
+  "block-handbooktext-cableswitchwall": "Odpínač s upevněním na stěně. Může přerušit/spojit obvod mezi dvěma izolátory odpínače.",
+
+  "block-insulatorraw-*": "Surový izolátor",
+  "block-handbooktitle-insulatorraw": "Použití",
+  "block-handbooktext-insulatorraw": "Přípravek pro izolátory imerzních vodičů.",
+
+  "block-insulatorfired": "Izolátor",
+  "block-handbooktitle-insulatorfired": "Použití",
+  "block-handbooktext-insulatorfired": "Izolátor pro imerzní vodiče.",
+
+  // ----- Vysokonapěťové transformátory -----
+  "block-hv2lvtransformator-*": "Vysokonapěťový transformátor (512V->128V)",
+  "block-handbooktitle-hv2lvtransformator": "Použití",
+  "block-handbooktext-hv2lvtransformator": "Umožňuje transformovat napětí z imersivních 512V na 128V běžného systému drátů.",
+
+  "block-lv2hvtransformator-*": "Vysokonapěťový transformátor (128V->512V)",
+  "block-handbooktitle-lv2hvtransformator": "Použití",
+  "block-handbooktext-lv2hvtransformator": "Umožňuje transformovat napětí z běžných 128V na 512V imersivního systému drátů.",
+
+  // ----- Stožár vedení a osvětlení -----
+  "block-hvcabletower-*": "Stožár vedení",
+  "block-handbooktitle-hvcabletower": "Použití",
+  "block-handbooktext-hvcabletower": "Umožňuje upevnit několik nezávislých linek imersivních drátů na jednom stožáru.",
+
+  "block-hvstreetlamp-*": "Pouliční osvětlení",
+  "block-handbooktitle-hvstreetlamp": "Použití",
+  "block-handbooktext-hvstreetlamp": "Varianta venkovního osvětlení s využitím imersivních drátů.",
+
+  // ----- Průchozí spojky -----
+  "block-wallconnectorhor-*": "Průchozí spojka (horizontální)",
+  "block-handbooktitle-wallconnectorhor": "Použití",
+  "block-handbooktext-wallconnectorhor": "Umožňuje přenášet energii skrz zdi, aniž by byla narušena celistvost místností.",
+
+  "block-wallconnectorver": "Průchozí spojka (vertikální)",
+  "block-handbooktitle-wallconnectorver": "Použití",
+  "block-handbooktext-wallconnectorver": "Umožňuje přenášet energii skrz strop/podlahu, aniž by byla narušena celistvost místností.",
+
+  // ==================== Generátor na horké prameny (ve vývoji) ====================
+  "block-ehotspringsgenerator-*": "(Ve vývoji) Generátor na horké prameny",
+  "block-ehotspringsgenerator-burned-south": "(Ve vývoji) Generátor na horké prameny (spálený)",
+  "block-handbooktitle-ehotspringsgenerator": "Použití",
+  "block-handbooktext-ehotspringsgenerator": "Generátor využívající energii horkých pramenů k výrobě elektřiny. Musí být ze všech stran obklopen horkými prameny. Účinnost lze zvýšit umístěním <a href=\"handbook:\/\/block-electricalprogressiveqol:eheatexchanger\">tepelných výměníků<\/a> vedle generátoru. Přítomnost několika generátorů v blízkosti výrazně snižuje účinnost.",
+  "hotsprings-nearby-penalty": "V blízkosti několik generátorů, účinnost snížena",
+  "hotsprings-not-surrounded": "Musí být obklopen horkými prameny",
+
+  "block-eheatexchanger": "(Ve vývoji) Tepelný výměník",
+  "block-handbooktitle-eheatexchanger": "Použití",
+  "block-handbooktext-eheatexchanger": "Tepelný výměník, který musí být umístěn vedle Generátoru na horké prameny (včetně diagonálních buněk). Každý tepelný výměník zvyšuje účinnost generátoru, od 5 % při absenci do 100 % při 7 tepelných výměnících.",
+  "heatexchanger-placement-hint": "Musí být umístěn vedle Generátoru na horké prameny",
+
+  // ==================== Předměty ====================
+  "item-coil": "Měděná cívka",
+  "item-handbooktitle-coil": "Použití",
+  "item-handbooktext-coil": "A kam bychom se v elektrických spotřebičích obešli bez měděných cívek?",
+
+  "item-engineshaft": "Rotor",
+  "item-handbooktitle-engineshaft": "Použití",
+  "item-handbooktext-engineshaft": "Obvykle je rotor potřeba v motorech/generátorech, ale nejen tam.",
+
+  "item-electricsolderingiron": "Elektrická páječka",
+  "item-handbooktitle-electricsolderingiron": "Použití",
+  "item-handbooktext-electricsolderingiron": "Nezbytná v sadě elektrikáře.",
+
+  "item-wirecutters": "Kleště",
+  "item-handbooktitle-wirecutters": "Použití",
+  "item-handbooktext-wirecutters": "Nezbytné v sadě elektrikáře.",
+
+  "item-insulatedgloves": "Dielektrické rukavice",
+  "item-handbooktitle-insulatedgloves": "Použití",
+  "item-handbooktext-insulatedgloves": "Nezbytné v sadě elektrikáře.",
+
+  "item-electricianskitcase": "Pouzdro na nářadí",
+  "item-handbooktitle-electricianskitcase": "Použití",
+  "item-handbooktext-electricianskitcase": "Nezbytné v sadě elektrikáře.",
+
+  "game:item-wrench-adjustable": "Pokročilý nastavitelný klíč",
+  "item-handbooktitle-wrench-adjustable": "Použití",
+  "item-handbooktext-wrench-adjustable": "Nezbytný v sadě elektrikáře.",
+
+  "item-electricianskit": "Sada elektrikáře",
+  "item-handbooktitle-electricianskit": "Použití",
+  "item-handbooktext-electricianskit": "Chrání hráče před úrazem elektrickým proudem při práci s jakýmikoli dráty. Umožňuje zobrazit informace o elektrické síti při najetí na kteroukoli její část. Povinný při práci s imersivními dráty.",
+
+  // ==================== Řetězce rozhraní ====================
+  "Voltage": "Napětí",
+  "Voltage_immersive": "Napětí (imersivní)",
+  "High Voltage": "Vysoké napětí",
+  "Low Voltage": "Nízké napětí",
+  "max_speed": "Jmen. rychlost",
+  "rps": "ot/s",
+  "kpd": "Účinnost",
+  "max_torque": "Max. moment",
+  "WResistance": "Odolnost vůči vlhku",
+  "Yes": "Ano",
+  "No": "Ne",
+  "res_load": "Jmen. odpor při jmen. zátěži",
+  "res_speed": "Jmen. odpor při jmen. rychlosti",
+  "Production": "Výroba",
+  "Power": "Výkon",
+  "gui-word-seconds": "s",
+  "Speed": "Rychlost",
+  "ThickenCables": "Zesílení kabelů",
+  "causeCurrent": "Proudové přetížení",
+  "causeVoltage": "Překročeno napětí",
+  "causeEnvironment": "Působení kapaliny",
+  "Electricity": "--- Elektrická síť (běžná) ---",
+  "Consumers": "Spotřebičů",
+  "Generators": "Generátorů",
+  "Batteries": "Akumulátorů",
+  "Transformers": "Transformátorů",
+  "Blocks": "Bloků",
+  "Generation": "Generace",
+  "Consumption": "Spotřeba",
+  "Request": "Požadavek",
+  "Capacity": "Kapacita",
+  "Block": "Blok",
+  "MaxCurrent": "Max. proud",
+  "Current": "Proud",
+  "Resistivity": "Měr. odpor",
+  "Resistance": "Odpor",
+  "Lines": "Linek",
+  "SectionSize": "Průřez",
+  "MaxVoltage": "Max. napětí",
+  "PressForDetails": "Podrž {0} pro detaily",
+  "ConnectedWires": "Připojených drátů: {0}",
+  "WaitingNetworkInfo": "Čekání na informace o síti...",
+  "NetworkInfo": "--- Elektrická síť (imersivní) ---",
+  "BlockParameters": "Parametry bloku",
+  "NetworkStatus": "--- Zobecněná síť ---",
+  "ConductorOpen": "Stav vodiče: uzly nejsou spojeny",
+  "ConductorClosed": "Stav vodiče: uzly jsou spojeny",
+  "Summary": "--- Shrnutí ---",
+  "TotalBlocks": "Celkem bloků",
+  "TotalGenerators": "Celkem generátorů",
+  "TotalConsumers": "Celkem spotřebičů",
+  "TotalBatteries": "Celkem akumulátorů",
+  "TotalProduction": "Celkem se vyrábí",
+  "TotalConsumption": "Celkem se spotřebovává",
+  "EKitForDetails": "Pro podrobnosti použijte sadu elektrikáře",
+  "UseEKitFor": "Použijte sadu elektrikáře",
+  "W": "W",
+  "J": "J",
+  "A": "A",
+  "V": "V",
+  "Om": "Ω",
+  "OmLine": "Ω/linku",
+  "Units": "j.",
+  "Pcs": "ks",
+  "GeneratorsShort": "Generátorů",
+  "ConsumersShort": "Spotřebičů",
+  "BatteriesShort": "Akumulátorů",
+  "TransformersShort": "Transformátorů",
+  "ConductorsShort": "Vodičů",
+  "Burned": "!!!Spáleno!!!",
+  "CauseCurrent": "Proudové přetížení",
+  "CauseVoltage": "Překročeno napětí",
+  "CauseEnvironment": "Působení kapaliny",
+  "switch": "Přepnout",
+  "buffer": "Buffer",
+  "Prod_potential": "Potenciál výr.",
+
+  // ==================== Zprávy ====================
+  "remove_burned_cable": "Nejprve odstraňte spálený kabel",
+  "cable_same_type": "Kabely musí být stejného typu",
+  "not_enough_cables": "Nedostatek kabelů pro umístění",
+  "enough_lines": "Linek je již dostatek",
+  "too_much_wires": "K tomuto bodu nemůžete připojit více než 8 drátů.",
+  "select_second_point": "Vyberte druhý bod.",
+  "wire_connection_cancelled": "Připojení drátu zrušeno.",
+  "hold_same_cable": "Pro dokončení připojení musíte držet stejný drát.",
+  "same_block_connection": "Nelze připojit drát ke stejnému bloku.",
+  "invalid_connection_point": "Neplatný bod připojení.",
+  "connection_already_exists": "Toto připojení již existuje.",
+  "max_wire_length": "Maximální délka drátu nesmí přesáhnout 32 bloků.",
+  "not_enough_cable": "Nedostatek drátu. Potřeba {0} ks, ale je pouze {1}.",
+  "wire_connected_successfully": "Drát úspěšně připojen. Použito {0} ks drátu.",
+  "wire_disconnected": "Drát odpojen. Vráceno {0} ks drátu.",
+
+  // ==================== Referenční články ====================
+  "game:gamemechanicinfo-electricalprogressive-title": "Elektřina: mod ElectricalProgressive",
+  "game:gamemechanicinfo-electricalprogressive-text": "<strong>Elektřina: mod ElectricalProgressive</strong><br>Mod přidává do hry elektrickou energii, elektrické spotřebiče, zařízení, zbraně a brnění. To vše pomáhá usnadnit (nebo ne) přežití ve světě hry, snížit množství rutiny a také zpestřit herní zážitek.<br><br><strong>Základy</strong><br>Zákon zachování energie říká, že energie nevzniká z ničeho a nikam nemizí. Energie se pouze přeměňuje z jednoho druhu na jiný nebo přechází z jednoho tělesa na druhé. Tak je tomu i ve hře.<br><br>Hlavním zdrojem mechanické energie jsou větrné mlýny. Pomocí generátorů lze přeměnit mechanickou energii na elektrickou. K tomu je třeba pomocí hřídele a/nebo ozubených kol přenést točivý moment z mlýna na hřídel generátoru. Poté generátor začne vyrábět elektřinu.<br><br>Elektrickou energii lze přenášet kabely ke spotřebičům. Jednoduše umístěte kabel na bloky v požadovaném směru. Na každou stranu bloku lze umístit až 4 kabely směřující různými směry. To umožňuje vést kabely libovolným směrem a větvit elektrický obvod. Kabel je třeba připojit k železné desce elektrického spotřebiče, aby začal pracovat. Elektrické spotřebiče, kovové bloky a průchozí konektory mohou být také vodiči proudu.<br><br>Jelikož vítr nefouká vždy a ne plnou silou, může výroba energie generátory nestačit pro provoz všech elektrických spotřebičů. Aby se tomu zabránilo, je nutné váš elektrický obvod připojit k akumulátoru(-ům). Ty budou neustále ukládat elektrickou energii a v případě potřeby ji dodávat do obvodu pro napájení spotřebičů, a to i při bezvětří.<br><br>Pro úsporu energie je třeba některé spotřebiče odpojit od obvodu, když se nepoužívají. K tomu slouží ruční spínač. Nainstalujte jej na úsek obvodu, kde je třeba rychle odpojit napájení.<br><br>Pro některá zařízení, která ke své činnosti stále potřebují mechanickou energii, bude zapotřebí motor. Ten přeměňuje elektrickou energii na mechanickou. Je třeba jej připojit hřídelí k zařízení. Při zapnutí se motor bude snažit podávat na hřídeli maximální výkon, proto se ujistěte, že je v obvodu dostatek energie.",
+
+  "game:gamemechanicinfo-electricalprogressive-rotors-title": "Elektřina: motory a generátory",
+  "game:gamemechanicinfo-electricalprogressive-rotors-text": "<strong>Elektřina: motory a generátory</strong><br>Motory a generátory v modu umožňují přeměňovat elektrickou energii na mechanickou a naopak. K tomu je třeba k nim připojit kabely a připojit je hřídelí. <br><br><strong>Vlastnosti herní mechaniky</strong><br>Motory a generátory co nejvěrněji modelují chování takových zařízení z reálného života. Jako příklad byly vzaty stejnosměrné stroje. Proto, abyste lépe porozuměli, jak je používat a v jakých situacích, musíte pochopit, podle jakých zákonů fungují. <br>Všechny rotující mechanismy ve hře, včetně hřídelí a ozubených kol, mají dva základní parametry: točivý moment a moment odporu. Točivý moment charakterizuje sílu, kterou mechanismem otáčí hřídelí, a moment odporu charakterizuje třecí síly a ztráty, které mohou při jejich činnosti vznikat. Točivý moment hřídelí a ozubených kol je nulový. Herní engine sečte všechny momenty a vypočítá rychlost hřídele a její zrychlení/zpomalení. Pokud je točivý moment větší než moment odporu, rychlost hřídele se bude zvyšovat. Pokud je tomu naopak, bude se snižovat. Při tom všem se oba tyto parametry mění podle určitých zákonů. Obvykle se moment odporu zvyšuje s rostoucí rychlostí.<br><br><strong>Generátory</strong><br>V modu mají generátory následující další parametry: <br><i>I_max</i> – maximální hodnota výroby energie; <br><i>speed_max</i> – maximální jmenovitá rychlost otáčení; <br><i>resistance_factor</i> – násobitel momentu odporu; <br><i>resistance_load</i> – konstantní složka momentu odporu (dosaženo při I_max). <br><br>Výroba energie generátorem závisí pouze na rychlosti na hřídeli a počítá se úměrně rychlosti hřídele. Při překročení hodnoty <i>speed_max</i> je výroba <i>power = I_max</i>. <br>Přitom moment odporu nejprve roste lineárně a po překročení <i>speed_max</i> roste kvadraticky. Moment odporu také přímo úměrně závisí na zatížení elektrického obvodu tímto generátorem. Proto při absenci spotřeby bude generátor vytvářet minimální moment odporu.<br><br><strong>Motory</strong><br>V modu mají motory následující další parametry: <br><i>I_min</i> – minimální hodnota energie potřebná k tomu, aby motor zahájil svou činnost; <br><i>I_max</i> – maximální hodnota spotřeby energie; <br><i>torque_max</i> – maximální točivý moment; <br><i>kpd_max</i> – účinnost;<br><i>speed_max</i> – maximální jmenovitá rychlost otáčení; <br><i>resistance_factor</i> – násobitel momentu odporu. <br><br>Motor vydává točivý moment přímo úměrný dostupné energii. Přitom motor také zohledňuje vlastní účinnost.<br><br>Moment odporu u motoru se počítá analogicky jako u generátoru, jen <i>resistance_load</i> je nulový.",
+
+  "game:gamemechanicinfo-electricalprogressive-princip-title": "Elektřina: chování proudu, napětí",
+  "game:gamemechanicinfo-electricalprogressive-princip-text": "<strong>Elektřina: chování proudu, napětí</strong><br>Elektrický proud nyní protéká vodiči a dodržuje fyzikální zákony. Někdo možná bude muset znovu otevřít učebnici fyziky!<br><br><strong>Vlastnosti nového chování</strong><br>Elektrický proud se ve vodičích pohybuje ve formě energetických paketů, kromě okamžitého režimu. Energetické pakety se pohybují nejkratší cestou od zdrojů proudu ke spotřebičům. Kabely a zařízení nyní také mají své vlastní elektrické parametry vodiče: měrný odpor (závisí na materiálu), plocha průřezu, maximální proud (překročení hrozí spálením), maximální napětí. Hodnota proudu se vypočítá podle Ohmova zákona pro úsek obvodu, pro všechny energetické pakety procházející v daném okamžiku touto stranou/tímto blokem. Zohledňuje se také směr pohybu energie: pokud se energie pohybuje v opačných směrech, pak se odpovídající proudy algebraicky odečítají (důsledek prvního Kirchhoffova zákona). Aby kabely nevyhořely, lze je zesilovat. Vezměte do ruky kabel stejného typu, jaký je již umístěn, a klikněte na něj při stisknuté klávesě Shift. Tímto způsobem lze zvýšit proudovou zatížitelnost obvodu. Ale mějte na paměti, že ztráty ve vodiči se počítají podle Joule-Lenzova zákona. Zvýšení procházejícího proudu výrazně zvyšuje ztráty energie. Pro přenos energie na velké vzdálenosti lze zvýšit napětí nebo použít akumulátory jako vyrovnávací zásobníky.<br><br><strong>Napětí</strong><br>Nyní pro provoz různých zařízení je potřeba nejen různé množství energie, ale také napětí. Překročení napětí pro zařízení/kabel hrozí jeho spálením. Zvyšovat a snižovat napětí lze pomocí transformátoru - funguje v obou směrech. Proto buďte opatrní při připojování vodičů různých napětí! Vyšší napětí umožňuje přenášet vodiči více energie.<br><br><strong>Interakce s okolím</strong><br>Nyní budou neizolované kabely a kovové bloky při kontaktu způsobovat poškození všem entitám. Čím vyšší napětí v obvodu bude, tím větší poškození utrpí. Spálené spotřebiče a kabely budou také způsobovat poškození. Izolované kabely a všechny fungující spotřebiče jsou při kontaktu bezpečné.<br><br>Všechny kabely a zařízení mají parametr odolnosti proti vlhkosti. Pokud odolnost proti vlhkosti není, vaše zařízení/kabel riskuje spálení při kontaktu s deštěm, sněhem, kroupami a rozlitou vodou! Při kontaktu s lávou se spálí, rozbijí a s největší pravděpodobností budou zničeny. Buďte opatrní.",
+
+  "game:gamemechanicinfo-electricalprogressive-immersive-title": "Elektřina: Imersní kabely",
+  "game:gamemechanicinfo-electricalprogressive-immersive-text": "<strong>Elektřina: Imersní kabely</strong><br>Imersní síť je určena k přenosu energie na velké vzdálenosti za vysokého napětí (512V). Princip fungování proudu zde je podobný jako u běžné sítě: energie teče od generátorů ke spotřebitelům, ale průchodová kapacita je výrazně vyšší.<br><br><strong>Bezpečnost a nástroje</strong><br>Práce s imersními kabely bez <a href=\"handbuchssuche://Elektřikářský balík\">električářiho balíku<\/a> je extrémně nebezpečná a nemožná. Nástroj chrání před elektrickým šokem a umožňuje vidět parametry sítě po najetí.<br><br><strong>Vlastnosti montáže</strong><br>Oproti běžným kabelům mohou být imersní kabely umisťovány pouze na speciálních izolačních těles. Kabely také nelze procházet skrz zdi nebo bloky — při dotyku se rozbití a spadnou. Pro tento účel je třeba použít průchodové spoje.<br><br><strong>Odpornost na prostředí</strong><br>Imersní kabely nemají strach ze srážek: déšť nebo sníh nezpůsobí krátké zapnutí ani spálení, i když kabel není izolovaný. Oholené vodiče však stále představují ohrožení pro živé bytosti při přímém kontaktu — dostanou elektrický šok.<br><br><strong>Pozor: požár!</strong><br>Vysoké napětí a proud v neizolovaných imersních kabelech mohou způsobit vznícení. Dotyky s hořlavými bloky může vést k požáru. Používejte izolované verze kabelů nebo udržujte je mimo dosah hořlavých materiálů.",
+  // ==================== Ostatní ====================
+  "game:tabname-electricity": "Elektřina",
+
+  "resistance_moment": "Odpor hřídele: {0} kN",
+  "torque_moment": "Točivý moment: {0} kN"
+}

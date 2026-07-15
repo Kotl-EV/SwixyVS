@@ -8,7 +8,67 @@ namespace SwixyQuestBook.Helpers
     // Используется и клиентом для отображения прогресса, и сервером для авторитетной сдачи квеста.
     public static class QuestbookInventoryHelper
     {
-        private static bool MatchesCollectibleCode(string itemCode, string pattern)
+        /// <summary>
+        /// Snapshot of player quest inventories for O(1) exact lookups and cheap wildcard scans.
+        /// Built once per frame / refresh interval instead of rescanning per quest item.
+        /// </summary>
+        public sealed class InventorySnapshot
+        {
+            private readonly Dictionary<string, int> exactCounts;
+            private readonly List<(string Code, int Count)> stacks;
+
+            public InventorySnapshot(Dictionary<string, int> exactCounts, List<(string Code, int Count)> stacks)
+            {
+                this.exactCounts = exactCounts;
+                this.stacks = stacks;
+            }
+
+            public static InventorySnapshot Empty { get; } = new(
+                new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase),
+                []);
+
+            public int Count(string collectibleCode)
+            {
+                if (string.IsNullOrWhiteSpace(collectibleCode))
+                {
+                    return 0;
+                }
+
+                if (!collectibleCode.Contains('*'))
+                {
+                    return exactCounts.TryGetValue(collectibleCode, out int count) ? count : 0;
+                }
+
+                int total = 0;
+                foreach ((string code, int count) in stacks)
+                {
+                    if (MatchesCollectibleCode(code, collectibleCode))
+                    {
+                        total += count;
+                    }
+                }
+
+                return total;
+            }
+
+            /// <summary>Fast content fingerprint for dirty-checking UI without full dialog rebuilds every frame.</summary>
+            public int ContentHash
+            {
+                get
+                {
+                    int hash = stacks.Count;
+                    foreach ((string code, int count) in stacks)
+                    {
+                        hash = (hash * 397) ^ StringComparer.OrdinalIgnoreCase.GetHashCode(code);
+                        hash = (hash * 397) ^ count;
+                    }
+
+                    return hash;
+                }
+            }
+        }
+
+        public static bool MatchesCollectibleCode(string itemCode, string pattern)
         {
             if (string.IsNullOrEmpty(pattern))
             {
@@ -39,6 +99,7 @@ namespace SwixyQuestBook.Helpers
 
             return string.Equals(itemCode, pattern, StringComparison.OrdinalIgnoreCase);
         }
+
         public static List<InventoryBase> GetPlayerQuestInventories(IPlayer? player)
         {
             List<InventoryBase> inventories = [];
@@ -62,34 +123,50 @@ namespace SwixyQuestBook.Helpers
             return inventories;
         }
 
-        public static int CountCollectibles(IPlayer? player, string collectibleCode)
+        public static InventorySnapshot BuildSnapshot(IPlayer? player)
         {
-            if (string.IsNullOrWhiteSpace(collectibleCode))
+            if (player?.InventoryManager == null)
             {
-                return 0;
+                return InventorySnapshot.Empty;
             }
 
-            int totalCount = 0;
+            var exactCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            var stacks = new List<(string Code, int Count)>(32);
+
             foreach (InventoryBase inventory in GetPlayerQuestInventories(player))
             {
                 foreach (ItemSlot slot in inventory)
                 {
                     ItemStack? stack = slot.Itemstack;
-                    if (stack?.Collectible?.Code == null)
+                    if (stack?.Collectible?.Code == null || stack.StackSize <= 0)
                     {
                         continue;
                     }
 
-                    if (!MatchesCollectibleCode(stack.Collectible.Code.ToString(), collectibleCode))
+                    string code = stack.Collectible.Code.ToString() ?? string.Empty;
+                    if (string.IsNullOrEmpty(code))
                     {
                         continue;
                     }
 
-                    totalCount += stack.StackSize;
+                    stacks.Add((code, stack.StackSize));
+                    exactCounts[code] = exactCounts.TryGetValue(code, out int existing)
+                        ? existing + stack.StackSize
+                        : stack.StackSize;
                 }
             }
 
-            return totalCount;
+            return new InventorySnapshot(exactCounts, stacks);
+        }
+
+        public static int CountCollectibles(IPlayer? player, string collectibleCode)
+        {
+            return BuildSnapshot(player).Count(collectibleCode);
+        }
+
+        public static int CountCollectibles(InventorySnapshot snapshot, string collectibleCode)
+        {
+            return snapshot.Count(collectibleCode);
         }
 
         public static bool HasAllRequiredCollectibles(IPlayer? player, QuestbookQuestItemRequirement[] requiredItems)
@@ -99,9 +176,10 @@ namespace SwixyQuestBook.Helpers
                 return true;
             }
 
+            InventorySnapshot snapshot = BuildSnapshot(player);
             foreach (QuestbookQuestItemRequirement item in requiredItems)
             {
-                if (CountCollectibles(player, item.CollectibleCode) < item.Count)
+                if (snapshot.Count(item.CollectibleCode) < item.Count)
                 {
                     return false;
                 }

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using ProtoBuf;
+using Vintagestory.API.Common;
 using Vintagestory.API.Config;
+using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 
 namespace SwixyClaimChunk;
@@ -73,5 +76,23 @@ public sealed partial class SwixyClaimChunkMod
         public int Mode { get; set; }
 
         public List<string> Codes { get; set; } = [];
+    }
+
+    /// <summary>Фоновый скан блоков привата для UI фильтра Use.</summary>
+    private sealed class UseFilterScanJob
+    {
+        public required IServerPlayer Player { get; init; }
+        public required int ClaimId { get; init; }
+        public required LandClaim Claim { get; init; }
+        public required List<Cuboidi> Areas { get; init; }
+        public int AreaIndex { get; set; }
+        public int NextX { get; set; }
+        public int NextZ { get; set; }
+        public bool StartedArea { get; set; }
+        public int Scanned { get; set; }
+        public HashSet<int> SeenBlockIds { get; } = [];
+        public Dictionary<string, string> InterestingPreferred { get; } = new(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, string> TerrainPreferred { get; } = new(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, string>? CreativeByPrefix { get; set; }
     }
 }

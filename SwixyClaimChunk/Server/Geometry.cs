@@ -385,6 +385,9 @@ public sealed partial class SwixyClaimChunkMod
         {
             claims.Add(claim);
         }
+
+        // Coord-ключ фильтра зависит от minXYZ areas — перепривязываем после expand/merge.
+        RebindUseFilterKeys(claim);
     }
 
     /// <summary>Все LandClaim, принадлежащие игроку по UID.</summary>

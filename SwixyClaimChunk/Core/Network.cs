@@ -18,7 +18,11 @@ public sealed partial class SwixyClaimChunkMod
             .RegisterMessageType<ClaimShowStatePacket>()
             .RegisterMessageType<ClaimAccessActionPacket>()
             .RegisterMessageType<ClaimListStatePacket>()
-            .RegisterMessageType<ClaimOpenGuiPacket>();
+            .RegisterMessageType<ClaimOpenGuiPacket>()
+            .RegisterMessageType<ClaimUseFiltersRequestPacket>()
+            .RegisterMessageType<ClaimUseFiltersSyncPacket>()
+            .RegisterMessageType<ClaimUseFilterScanRequestPacket>()
+            .RegisterMessageType<ClaimUseFilterScanResultPacket>();
 
     private static IServerNetworkChannel RegisterClaimPacketTypes(IServerNetworkChannel channel) =>
         channel
@@ -31,5 +35,9 @@ public sealed partial class SwixyClaimChunkMod
             .RegisterMessageType<ClaimShowStatePacket>()
             .RegisterMessageType<ClaimAccessActionPacket>()
             .RegisterMessageType<ClaimListStatePacket>()
-            .RegisterMessageType<ClaimOpenGuiPacket>();
+            .RegisterMessageType<ClaimOpenGuiPacket>()
+            .RegisterMessageType<ClaimUseFiltersRequestPacket>()
+            .RegisterMessageType<ClaimUseFiltersSyncPacket>()
+            .RegisterMessageType<ClaimUseFilterScanRequestPacket>()
+            .RegisterMessageType<ClaimUseFilterScanResultPacket>();
 }

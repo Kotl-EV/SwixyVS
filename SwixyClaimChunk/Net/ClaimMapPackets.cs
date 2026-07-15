@@ -442,6 +442,72 @@ public class ClaimInfoPacket
     public string UseFilterCodesRaw { get; set; } = "";
 }
 
+/// <summary>Клиент запрашивает снимок фильтров Use (после join / reconnect).</summary>
+[ProtoContract]
+public class ClaimUseFiltersRequestPacket
+{
+    [ProtoMember(1)]
+    public int Unused { get; set; }
+}
+
+/// <summary>Клиент: «какие usable-блоки стоят в этом привате?» (для UI галочек).</summary>
+[ProtoContract]
+public class ClaimUseFilterScanRequestPacket
+{
+    [ProtoMember(1)]
+    public int ClaimId { get; set; }
+}
+
+/// <summary>Сервер: список кодов usable-блоков, найденных в areas привата.</summary>
+[ProtoContract]
+public class ClaimUseFilterScanResultPacket
+{
+    [ProtoMember(1)]
+    public int ClaimId { get; set; }
+
+    /// <summary>Коды через '\n' (уже нормализованные, без ориентации/lit).</summary>
+    [ProtoMember(2)]
+    public string CodesRaw { get; set; } = "";
+
+    /// <summary>Сколько уникальных кодов.</summary>
+    [ProtoMember(3)]
+    public int CodeCount { get; set; }
+
+    /// <summary>Сколько блоков просмотрено (для статуса).</summary>
+    [ProtoMember(4)]
+    public int ScannedBlocks { get; set; }
+
+    [ProtoMember(5)]
+    public string Message { get; set; } = "";
+}
+
+/// <summary>
+/// Полный снимок фильтров Use для клиентов (чтобы client-side prediction не открывала GUI / не двигала предметы).
+/// </summary>
+[ProtoContract]
+public class ClaimUseFiltersSyncPacket
+{
+    [ProtoMember(1)]
+    public List<ClaimUseFilterSyncEntry> Entries { get; set; } = [];
+}
+
+/// <summary>Одна запись whitelist Use, привязанная к storage-ключу привата.</summary>
+[ProtoContract]
+public class ClaimUseFilterSyncEntry
+{
+    /// <summary>Ключ как на сервере (uid:coords / uid:name:…).</summary>
+    [ProtoMember(1)]
+    public string ClaimKey { get; set; } = "";
+
+    /// <summary>См. <see cref="ClaimUseFilterMode"/>.</summary>
+    [ProtoMember(2)]
+    public int Mode { get; set; }
+
+    /// <summary>Коды через '\n'.</summary>
+    [ProtoMember(3)]
+    public string CodesRaw { get; set; } = "";
+}
+
 /// <summary>Хелперы сериализации списка кодов блоков в строку пакета.</summary>
 public static class ClaimUseFilterCodesCodec
 {

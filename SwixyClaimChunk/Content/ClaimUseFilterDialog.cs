@@ -1,8 +1,9 @@
 // =============================================================================
 // ClaimUseFilterDialog.cs
 // -----------------------------------------------------------------------------
-// Модальное окно выбора блоков для фильтра Use: сетка из инвентаря (hotbar +
-// рюкзак), клик = вкл/выкл. Сохранение одним пакетом SetUseFilter.
+// Whitelist Use: список interactable-блоков из скана.
+// Строка = иконка слева + название справа, вертикальный скролл.
+// Без ItemSlotGrid / PassiveItemSlot — нет network-пакетов.
 // =============================================================================
 
 using System;
@@ -12,7 +13,6 @@ using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
-using Vintagestory.API.MathTools;
 
 namespace SwixyClaimChunk.Content;
 
@@ -21,29 +21,35 @@ namespace SwixyClaimChunk.Content;
 /// </summary>
 public sealed class ClaimUseFilterDialog : GuiDialog
 {
-    private const int GridColumns = 8;
-    private const int GridRows = 5;
-    private const int MaxCodes = 64;
-
-    /// <summary>Сдвиг сетки вправо, чтобы визуально центрировать ячейки в окне.</summary>
-    private const double GridOffsetX = 30;
+    private const double ListWidth = 460;
+    private const double ListHeight = 280;
 
     private readonly ICoreClientAPI clientApi;
     private readonly IClientNetworkChannel channel;
     private readonly int claimId;
     private readonly string claimName;
     private readonly Action? onClosed;
-    private readonly DummySlot renderSlot = new(null);
 
     private int draftMode;
     private readonly HashSet<string> draftCodes;
-    private List<SkillItem> skillItems = [];
+    private readonly HashSet<string> scannedCodes = new(StringComparer.OrdinalIgnoreCase);
+
+    private List<(string Code, ItemStack Stack)> entries = [];
+
     private string statusMessage = "";
     private bool syncingModeSwitches;
+    private bool scanPending;
+    private float listScrollValue;
+
+    private ElementBounds? listClipBounds;
+    private ElementBounds? listTableBounds;
+    private ElementBounds? listViewportBounds;
 
     public override string ToggleKeyCombinationCode => null!;
 
     public override bool PrefersUngrabbedMouse => true;
+
+    public int ClaimId => claimId;
 
     public ClaimUseFilterDialog(
         ICoreClientAPI capi,
@@ -76,29 +82,72 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             }
         }
 
+        statusMessage = Lang.Get("swixyclaimchunk:use-filter-scan-loading");
+        scanPending = true;
         ComposeDialog();
+        RequestClaimScan();
     }
 
     public override void OnGuiClosed()
     {
-        DisposeSkillItems();
         base.OnGuiClosed();
         onClosed?.Invoke();
     }
 
-    public override void Dispose()
+    public void ApplyScanResult(ClaimUseFilterScanResultPacket packet)
     {
-        DisposeSkillItems();
-        base.Dispose();
+        if (packet == null || packet.ClaimId != claimId)
+        {
+            return;
+        }
+
+        var savedScroll = listScrollValue;
+        scanPending = false;
+        scannedCodes.Clear();
+        foreach (var code in ClaimUseFilterCodesCodec.Split(packet.CodesRaw))
+        {
+            var normalized = NormalizeCode(code);
+            if (!string.IsNullOrWhiteSpace(normalized))
+            {
+                scannedCodes.Add(normalized);
+            }
+        }
+
+        statusMessage = string.IsNullOrWhiteSpace(packet.Message)
+            ? Lang.Get("swixyclaimchunk:use-filter-scan-ok", scannedCodes.Count)
+            : packet.Message;
+
+        ComposeDialog();
+        RestoreListScroll(savedScroll);
+    }
+
+    private void RequestClaimScan()
+    {
+        try
+        {
+            scanPending = true;
+            statusMessage = Lang.Get("swixyclaimchunk:use-filter-scan-loading");
+            channel.SendPacket(new ClaimUseFilterScanRequestPacket { ClaimId = claimId });
+            SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
+        }
+        catch (Exception exception)
+        {
+            scanPending = false;
+            statusMessage = Lang.Get("swixyclaimchunk:error-send-request-failed");
+            clientApi.Logger.Warning("[SwixyClaimChunk] Use filter scan request failed: {0}", exception.Message);
+            SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
+        }
     }
 
     private void ComposeDialog()
     {
-        DisposeSkillItems();
-        skillItems = BuildSkillItems();
+        entries = CollectPickerEntries();
 
-        // Размер диалога задаётся дочерним mainBounds; иначе bg = 0x0 и краш blur.
-        var mainBounds = ElementBounds.Fixed(0, 0, 500, 530);
+        var scrollW = GuiElementScrollbar.DefaultScrollbarWidth
+            + GuiElementScrollbar.DeafultScrollbarPadding * 2;
+        var contentW = ListWidth + 6 + scrollW;
+
+        var mainBounds = ElementBounds.Fixed(0, 0, Math.Max(500, contentW + 36), 560);
         var bgBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding);
         bgBounds.BothSizing = ElementSizing.FitToChildren;
         bgBounds.WithChildren(mainBounds);
@@ -106,24 +155,29 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         var dialogBounds = ElementStdBounds.AutosizedMainDialog
             .WithAlignment(EnumDialogArea.CenterMiddle);
 
-        var claimBounds = ElementBounds.Fixed(18, 40, 464, 20);
-        var modeLabelBounds = ElementBounds.Fixed(18, 68, 464, 20);
+        var claimBounds = ElementBounds.Fixed(18, 40, contentW, 20);
+        var modeLabelBounds = ElementBounds.Fixed(18, 68, contentW, 20);
 
-        // Флажки режима в одной строке: [switch] надпись | [switch] надпись
         var modeAllSwitchBounds = ElementBounds.Fixed(18, 94, 28, 28);
         var modeAllTextBounds = ElementBounds.Fixed(50, 98, 150, 22);
         var modeWhiteSwitchBounds = ElementBounds.Fixed(210, 94, 28, 28);
         var modeWhiteTextBounds = ElementBounds.Fixed(242, 98, 240, 22);
 
-        var inventoryLabelBounds = ElementBounds.Fixed(18, 132, 464, 20);
-        var gridBounds = ElementBounds.Fixed(18 + GridOffsetX, 156, 464, 270);
-        var selectedBounds = ElementBounds.Fixed(18, 434, 464, 20);
-        var messageBounds = ElementBounds.Fixed(18, 456, 464, 24);
-        var cancelBounds = ElementBounds.Fixed(168, 486, 140, 34);
-        var saveBounds = ElementBounds.Fixed(326, 486, 140, 34);
+        var rescanW = 120;
+        var listLabelBounds = ElementBounds.Fixed(18, 132, contentW - rescanW - 16, 24);
+        var rescanBounds = ElementBounds.Fixed(18 + contentW - rescanW, 128, rescanW, 28);
+
+        listViewportBounds = ElementBounds.Fixed(18, 160, ListWidth + 6, ListHeight + 6);
+        listClipBounds = listViewportBounds.ForkContainingChild(3, 3, 3, 3);
+        listTableBounds = listClipBounds.ForkContainingChild(0, 0, 0, -3).WithFixedPadding(3);
+
+        var selectedBounds = ElementBounds.Fixed(18, 458, contentW, 20);
+        var messageBounds = ElementBounds.Fixed(18, 480, contentW, 28);
+        var cancelBounds = ElementBounds.Fixed(18 + contentW - 300, 520, 140, 34);
+        var saveBounds = ElementBounds.Fixed(18 + contentW - 150, 520, 140, 34);
 
         ClearComposers();
-        SingleComposer = capi.Gui
+        var composer = capi.Gui
             .CreateCompo("swixyclaimchunk-use-filter", dialogBounds)
             .AddShadedDialogBG(bgBounds, true)
             .AddDialogTitleBar(Lang.Get("swixyclaimchunk:use-filter-title"), OnTitleBarClose)
@@ -148,10 +202,20 @@ public sealed class ClaimUseFilterDialog : GuiDialog
                 CairoFont.WhiteSmallText(),
                 modeWhiteTextBounds)
             .AddStaticText(
-                Lang.Get("swixyclaimchunk:use-filter-inventory"),
+                Lang.Get("swixyclaimchunk:use-filter-list-hint"),
                 CairoFont.WhiteSmallText(),
-                inventoryLabelBounds)
-            .AddSkillItemGrid(skillItems, GridColumns, GridRows, OnSkillItemClick, gridBounds, "blockGrid")
+                listLabelBounds)
+            .AddSmallButton(
+                Lang.Get("swixyclaimchunk:use-filter-rescan"),
+                RescanButton,
+                rescanBounds,
+                EnumButtonStyle.Normal,
+                "rescan")
+            .AddInset(listViewportBounds, 3, 0.85f)
+            .AddVerticalScrollbar(OnListScroll, ElementStdBounds.VerticalScrollbar(listViewportBounds), "blockListScroll")
+            .BeginClip(listClipBounds)
+            .AddCellList(listTableBounds, CreateFilterCell, BuildFilterCells(), "blockList")
+            .EndClip()
             .AddDynamicText(BuildSelectedText(), CairoFont.WhiteSmallText(), selectedBounds, "selectedText")
             .AddDynamicText(statusMessage, CairoFont.WhiteDetailText(), messageBounds, "statusText")
             .AddButton(Lang.Get("swixyclaimchunk:use-filter-cancel"), CancelButton, cancelBounds, EnumButtonStyle.Normal, "cancel")
@@ -159,7 +223,172 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             .EndChildElements()
             .Compose();
 
+        SingleComposer = composer;
         SyncModeSwitches();
+        RestoreListScroll(listScrollValue);
+    }
+
+    private IEnumerable<SavegameCellEntry> BuildFilterCells()
+    {
+        foreach (var entry in entries)
+        {
+            var name = GetDisplayName(entry.Stack, entry.Code);
+            yield return new SavegameCellEntry
+            {
+                Title = name,
+                DetailText = entry.Code,
+                HoverText = entry.Code,
+                Selected = draftCodes.Contains(entry.Code),
+                Enabled = true,
+                DrawAsButton = true,
+                LeftOffY = 0
+            };
+        }
+    }
+
+    private IGuiElementCell CreateFilterCell(SavegameCellEntry cell, ElementBounds bounds)
+    {
+        var code = NormalizeCode(cell.DetailText);
+        ItemStack? stack = null;
+        for (var i = 0; i < entries.Count; i++)
+        {
+            if (string.Equals(entries[i].Code, code, StringComparison.OrdinalIgnoreCase))
+            {
+                stack = entries[i].Stack;
+                break;
+            }
+        }
+
+        return new ClaimUseFilterListCell(
+            clientApi,
+            cell,
+            bounds,
+            code,
+            stack,
+            draftCodes.Contains(code))
+        {
+            OnToggle = ToggleCode
+        };
+    }
+
+    private static string GetDisplayName(ItemStack stack, string code)
+    {
+        try
+        {
+            var name = stack?.GetName();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                return name;
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return code;
+    }
+
+    private void OnListScroll(float value)
+    {
+        listScrollValue = value;
+        var cellList = SingleComposer?.GetCellList<SavegameCellEntry>("blockList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        cellList.Bounds.fixedY = -value;
+        cellList.Bounds.CalcWorldBounds();
+    }
+
+    private void RestoreListScroll(float scrollValue)
+    {
+        if (SingleComposer == null || listClipBounds == null)
+        {
+            return;
+        }
+
+        var cellList = SingleComposer.GetCellList<SavegameCellEntry>("blockList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        cellList.CalcTotalHeight();
+        cellList.Bounds.CalcWorldBounds();
+        listClipBounds.CalcWorldBounds();
+
+        var clipHeight = (float)listClipBounds.fixedHeight;
+        var tableHeight = (float)cellList.Bounds.fixedHeight;
+        var maxScroll = Math.Max(0f, tableHeight - clipHeight);
+        listScrollValue = Math.Clamp(scrollValue, 0f, maxScroll);
+
+        var scroll = SingleComposer.GetScrollbar("blockListScroll");
+        if (scroll != null)
+        {
+            scroll.SetHeights(clipHeight, tableHeight);
+            scroll.CurrentYPosition = listScrollValue;
+            scroll.RecomposeHandle();
+        }
+
+        cellList.Bounds.fixedY = -listScrollValue;
+        cellList.Bounds.CalcWorldBounds();
+    }
+
+    private void ToggleCode(string code)
+    {
+        code = NormalizeCode(code);
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return;
+        }
+
+        if (!draftCodes.Add(code))
+        {
+            draftCodes.Remove(code);
+        }
+
+        if (draftMode == ClaimUseFilterMode.AllowAll && draftCodes.Count > 0)
+        {
+            draftMode = ClaimUseFilterMode.Whitelist;
+        }
+
+        if (!scanPending)
+        {
+            statusMessage = "";
+        }
+
+        // Обновляем только визуал строк — без полного ComposeDialog.
+        UpdateWhitelistVisualsInPlace();
+        SyncModeSwitches();
+        SingleComposer?.GetDynamicText("selectedText")?.SetNewText(BuildSelectedText());
+        SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
+    }
+
+    private void UpdateWhitelistVisualsInPlace()
+    {
+        var cellList = SingleComposer?.GetCellList<SavegameCellEntry>("blockList");
+        if (cellList == null)
+        {
+            return;
+        }
+
+        for (var i = 0; i < cellList.elementCells.Count; i++)
+        {
+            if (cellList.elementCells[i] is not ClaimUseFilterListCell row)
+            {
+                continue;
+            }
+
+            row.SetWhitelisted(draftCodes.Contains(row.BlockCode));
+        }
+    }
+
+    private bool RescanButton()
+    {
+        RequestClaimScan();
+        return true;
     }
 
     private void OnModeAllSwitch(bool on)
@@ -169,9 +398,8 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             return;
         }
 
-        // Радио-поведение: всегда один из двух режимов.
         draftMode = ClaimUseFilterMode.AllowAll;
-        statusMessage = "";
+        statusMessage = scanPending ? Lang.Get("swixyclaimchunk:use-filter-scan-loading") : "";
         SyncModeSwitches();
         SingleComposer?.GetDynamicText("selectedText")?.SetNewText(BuildSelectedText());
         SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
@@ -185,7 +413,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         }
 
         draftMode = ClaimUseFilterMode.Whitelist;
-        statusMessage = "";
+        statusMessage = scanPending ? Lang.Get("swixyclaimchunk:use-filter-scan-loading") : "";
         SyncModeSwitches();
         SingleComposer?.GetDynamicText("selectedText")?.SetNewText(BuildSelectedText());
         SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
@@ -210,50 +438,6 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         }
     }
 
-    private void OnSkillItemClick(int index)
-    {
-        if (index < 0 || index >= skillItems.Count)
-        {
-            return;
-        }
-
-        // Description хранит стабильный domain:path; Code.ToString() у AssetLocation может отличаться.
-        var code = NormalizeCode(skillItems[index].Description);
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            code = NormalizeCode(skillItems[index].Code?.ToString());
-        }
-
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            return;
-        }
-
-        if (draftCodes.Contains(code))
-        {
-            draftCodes.Remove(code);
-        }
-        else
-        {
-            if (draftCodes.Count >= MaxCodes)
-            {
-                statusMessage = Lang.Get("swixyclaimchunk:use-filter-error-limit", MaxCodes);
-                SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
-                return;
-            }
-
-            draftCodes.Add(code);
-        }
-
-        if (draftMode == ClaimUseFilterMode.AllowAll && draftCodes.Count > 0)
-        {
-            draftMode = ClaimUseFilterMode.Whitelist;
-        }
-
-        statusMessage = "";
-        ComposeDialog();
-    }
-
     private bool SaveButton()
     {
         if (draftMode == ClaimUseFilterMode.Whitelist && draftCodes.Count == 0)
@@ -270,26 +454,18 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         var codes = mode == ClaimUseFilterMode.Whitelist
             ? draftCodes
                 .Select(NormalizeCode)
-                .Where(static code => !string.IsNullOrWhiteSpace(code))
+                .Where(static c => !string.IsNullOrWhiteSpace(c))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(static code => code, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(static c => c, StringComparer.OrdinalIgnoreCase)
                 .ToList()
             : [];
-
-        var codesRaw = ClaimUseFilterCodesCodec.Join(codes);
-        clientApi.Logger.Notification(
-            "[SwixyClaimChunk] Sending SetUseFilter claimId={0} mode={1} codes={2} rawLen={3}",
-            claimId,
-            mode,
-            codes.Count,
-            codesRaw.Length);
 
         channel.SendPacket(new ClaimAccessActionPacket
         {
             ClaimId = claimId,
             Action = ClaimAccessActionType.SetUseFilter,
             UseFilterMode = mode,
-            UseFilterCodesRaw = codesRaw
+            UseFilterCodesRaw = ClaimUseFilterCodesCodec.Join(codes)
         });
 
         TryClose();
@@ -326,10 +502,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         return true;
     }
 
-    private void OnTitleBarClose()
-    {
-        TryClose();
-    }
+    private void OnTitleBarClose() => TryClose();
 
     private string BuildSelectedText()
     {
@@ -341,131 +514,37 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         return Lang.Get("swixyclaimchunk:use-filter-selected-count", draftCodes.Count);
     }
 
-    private List<SkillItem> BuildSkillItems()
-    {
-        var entries = CollectPickerEntries();
-        var items = new List<SkillItem>(entries.Count);
-
-        foreach (var entry in entries)
-        {
-            var code = NormalizeCode(entry.Code);
-            var stack = entry.Stack;
-            var selected = !string.IsNullOrWhiteSpace(code) && draftCodes.Contains(code);
-            var displayName = stack.GetName();
-            var skillItem = new SkillItem
-            {
-                Code = new AssetLocation(code),
-                Name = displayName,
-                // Стабильный ключ выбора/сохранения (не полагаемся на Code.ToString()).
-                Description = code,
-                Data = stack,
-                Enabled = true,
-                // Не ставим Texture-фон: зелёный fill ломает полупрозрачные предметы (фонари и т.п.).
-                Texture = null
-            };
-
-            var renderStack = stack.Clone();
-            var isSelected = selected;
-            skillItem.RenderHandler = (_, dt, posX, posY) =>
-            {
-                // posX/posY — верхний левый угол ячейки + 1px (как в GuiElementSkillItemGrid).
-                var absSlotSize = GuiElement.scaled(GuiElementPassiveItemSlot.unscaledSlotSize);
-                var absItemSize = (float)GuiElement.scaled(GuiElementPassiveItemSlot.unscaledItemSize);
-                var centerX = posX - 1 + (absSlotSize / 2);
-                var centerY = posY - 1 + (absSlotSize / 2);
-
-                // Сначала предмет как в инвентаре — без зелёного fill под ним.
-                renderSlot.Itemstack = renderStack;
-                clientApi.Render.RenderItemstackToGui(
-                    renderSlot,
-                    centerX,
-                    centerY,
-                    90,
-                    absItemSize,
-                    ColorUtil.WhiteArgb,
-                    dt);
-
-                // Выделение — только рамка поверх, не перекрывает текстуру.
-                if (isSelected)
-                {
-                    DrawSelectedBorder((float)(posX - 1), (float)(posY - 1), (float)absSlotSize);
-                }
-            };
-
-            items.Add(skillItem);
-        }
-
-        return items;
-    }
-
-    /// <summary>Зелёная рамка вокруг выбранной ячейки (4 тонких прямоугольника).</summary>
-    private void DrawSelectedBorder(float x, float y, float slotSize)
-    {
-        // ColorUtil.ToRgba(a, r, g, b)
-        var color = ColorUtil.ToRgba(230, 70, 210, 90);
-        const float thickness = 2.5f;
-        const float z = 50f;
-
-        // top
-        clientApi.Render.RenderRectangle(x, y, z, slotSize, thickness, color);
-        // bottom
-        clientApi.Render.RenderRectangle(x, y + slotSize - thickness, z, slotSize, thickness, color);
-        // left
-        clientApi.Render.RenderRectangle(x, y, z, thickness, slotSize, color);
-        // right
-        clientApi.Render.RenderRectangle(x + slotSize - thickness, y, z, thickness, slotSize, color);
-    }
-
     private List<(string Code, ItemStack Stack)> CollectPickerEntries()
     {
         var result = new List<(string Code, ItemStack Stack)>();
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var code in draftCodes.OrderBy(static value => value, StringComparer.OrdinalIgnoreCase))
+        foreach (var code in draftCodes.OrderBy(static v => v, StringComparer.OrdinalIgnoreCase))
         {
-            var normalized = NormalizeCode(code);
-            var stack = ResolveStack(normalized);
-            if (stack == null || string.IsNullOrWhiteSpace(normalized) || !seen.Add(normalized))
-            {
-                continue;
-            }
-
-            result.Add((normalized, stack));
+            TryAddEntry(result, seen, code);
         }
 
-        var player = clientApi.World.Player;
-        if (player?.InventoryManager == null)
+        foreach (var code in scannedCodes.OrderBy(static v => v, StringComparer.OrdinalIgnoreCase))
         {
-            return result;
-        }
-
-        foreach (var invName in new[] { GlobalConstants.hotBarInvClassName, GlobalConstants.backpackInvClassName })
-        {
-            var inventory = player.InventoryManager.GetOwnInventory(invName);
-            if (inventory == null)
-            {
-                continue;
-            }
-
-            foreach (var slot in inventory)
-            {
-                var stack = slot.Itemstack;
-                if (stack?.Block == null || stack.Block.Code == null)
-                {
-                    continue;
-                }
-
-                var code = NormalizeCode(stack.Block.Code.ToString());
-                if (string.IsNullOrWhiteSpace(code) || !seen.Add(code))
-                {
-                    continue;
-                }
-
-                result.Add((code, stack.Clone()));
-            }
+            TryAddEntry(result, seen, code);
         }
 
         return result;
+    }
+
+    private void TryAddEntry(
+        List<(string Code, ItemStack Stack)> result,
+        HashSet<string> seen,
+        string code)
+    {
+        var normalized = NormalizeCode(code);
+        var stack = ResolveStack(normalized);
+        if (stack == null || string.IsNullOrWhiteSpace(normalized) || !seen.Add(normalized))
+        {
+            return;
+        }
+
+        result.Add((normalized, stack));
     }
 
     private ItemStack? ResolveStack(string code)
@@ -476,33 +555,263 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             return null;
         }
 
-        AssetLocation location;
-        try
+        // Только варианты той же «семьи» (без ориентации): wood ≠ metal у windmillrotor.
+        var groupKey = SwixyClaimChunkMod.StripVariantSuffixes(code);
+        if (string.IsNullOrWhiteSpace(groupKey))
         {
-            location = new AssetLocation(code);
+            groupKey = code;
         }
-        catch
+
+        var family = CollectGroupCollectibles(code, groupKey);
+        if (family.Count == 0)
         {
             return null;
         }
 
-        var block = clientApi.World.GetBlock(location);
-        if (block != null)
+        // 1) CreativeInventoryStacks / handbook — фонари без material в attributes «кривые».
+        //    Сначала ищем лучший handbook-стек в группе (не bare ItemStack от wall-north).
+        ItemStack? bestHandbook = null;
+        var bestHandbookScore = int.MinValue;
+        CollectibleObject? bestCol = null;
+        var bestColScore = int.MinValue;
+
+        foreach (var col in family)
         {
-            return new ItemStack(block);
+            var colCode = NormalizeCode(col.Code?.ToString());
+            if (string.IsNullOrWhiteSpace(colCode))
+            {
+                continue;
+            }
+
+            var score = ScoreDisplayCandidate(colCode, col, code, groupKey);
+            if (score > bestColScore)
+            {
+                bestColScore = score;
+                bestCol = col;
+            }
+
+            if (col.CreativeInventoryStacks is not { Length: > 0 })
+            {
+                continue;
+            }
+
+            try
+            {
+                var handbook = col.GetHandBookStacks(clientApi);
+                if (handbook is not { Count: > 0 })
+                {
+                    continue;
+                }
+
+                // Первый creative-стек обычно copper plain quartz — как в creative menu.
+                var stack = handbook[0].Clone();
+                stack.ResolveBlockOrItem(clientApi.World);
+                stack.StackSize = 1;
+                // Stacks с attributes важнее bare-блока.
+                var stackScore = score + 5000;
+                if (stackScore > bestHandbookScore)
+                {
+                    bestHandbookScore = stackScore;
+                    bestHandbook = stack;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
         }
 
-        var item = clientApi.World.GetItem(location);
-        return item != null ? new ItemStack(item) : null;
+        if (bestHandbook != null)
+        {
+            return bestHandbook;
+        }
+
+        if (bestCol == null)
+        {
+            return null;
+        }
+
+        var result = new ItemStack(bestCol);
+        result.ResolveBlockOrItem(clientApi.World);
+        result.StackSize = 1;
+        EnsureDefaultDisplayAttributes(result);
+        return result;
     }
 
-    private void DisposeSkillItems()
+    /// <summary>
+    /// Lantern и подобные: material/lining/glass живут в attributes.
+    /// Bare ItemStack без них рендерится криво — подставляем vanilla defaults (BELantern).
+    /// </summary>
+    private static void EnsureDefaultDisplayAttributes(ItemStack stack)
     {
-        foreach (var item in skillItems)
+        if (stack?.Collectible?.Code == null)
         {
-            item.Dispose();
+            return;
         }
 
-        skillItems = [];
+        var path = stack.Collectible.Code.Path ?? "";
+        if (!path.StartsWith("lantern", StringComparison.OrdinalIgnoreCase)
+            && !path.Contains("lantern-", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        stack.Attributes ??= new Vintagestory.API.Datastructures.TreeAttribute();
+        if (string.IsNullOrWhiteSpace(stack.Attributes.GetString("material")))
+        {
+            stack.Attributes.SetString("material", "copper");
+        }
+
+        if (string.IsNullOrWhiteSpace(stack.Attributes.GetString("lining")))
+        {
+            stack.Attributes.SetString("lining", "plain");
+        }
+
+        if (string.IsNullOrWhiteSpace(stack.Attributes.GetString("glass")))
+        {
+            stack.Attributes.SetString("glass", "quartz");
+        }
+    }
+
+    /// <summary>
+    /// Собирает collectible той же groupKey (StripVariantSuffixes).
+    /// Не ходит по firstPart-* — иначе wood-ротор тянет metal-иконку.
+    /// </summary>
+    private List<CollectibleObject> CollectGroupCollectibles(string code, string groupKey)
+    {
+        var result = new List<CollectibleObject>();
+        var seen = new HashSet<int>();
+
+        void TryAdd(CollectibleObject? col)
+        {
+            if (col?.Code == null || col.Id <= 0 || !seen.Add(col.Id))
+            {
+                return;
+            }
+
+            var colCode = NormalizeCode(col.Code.ToString());
+            var colGroup = SwixyClaimChunkMod.StripVariantSuffixes(colCode);
+            if (string.IsNullOrWhiteSpace(colGroup))
+            {
+                colGroup = colCode;
+            }
+
+            // В группу: exact, тот же stripped path, или code является префиксом/вариантом group.
+            if (!string.Equals(colGroup, groupKey, StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(colCode, code, StringComparison.OrdinalIgnoreCase)
+                && !colCode.StartsWith(groupKey + "-", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            result.Add(col);
+        }
+
+        AssetLocation location;
+        AssetLocation groupLocation;
+        try
+        {
+            location = new AssetLocation(code);
+            groupLocation = new AssetLocation(groupKey);
+        }
+        catch
+        {
+            return result;
+        }
+
+        TryAdd(clientApi.World.GetBlock(location));
+        TryAdd(clientApi.World.GetItem(location));
+        TryAdd(clientApi.World.GetBlock(groupLocation));
+        TryAdd(clientApi.World.GetItem(groupLocation));
+
+        var domain = groupLocation.Domain ?? "game";
+        var groupPath = groupLocation.Path ?? "";
+
+        // Creative-ориентации: windmillrotor-wood-north, torchholder-*-empty-north и т.п.
+        foreach (var suffix in new[]
+                 {
+                     "", "-south", "-north", "-east", "-west", "-normal",
+                     "-empty-north", "-empty-south", "-empty-east", "-empty-west",
+                     "-empty", "-full", "-closed", "-open"
+                 })
+        {
+            try
+            {
+                TryAdd(clientApi.World.GetBlock(new AssetLocation(domain, groupPath + suffix)));
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        try
+        {
+            foreach (var b in clientApi.World.SearchBlocks(new AssetLocation(domain, groupPath + "-*")))
+            {
+                TryAdd(b);
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return result;
+    }
+
+    private static int ScoreDisplayCandidate(
+        string colCode,
+        CollectibleObject col,
+        string requestedCode,
+        string groupKey)
+    {
+        var score = 0;
+
+        // Stacks (фонарь с material) важнее exact wall-ориентации.
+        if (col.CreativeInventoryStacks is { Length: > 0 })
+        {
+            score += 1500;
+        }
+        else if (col.CreativeInventoryTabs is { Length: > 0 })
+        {
+            score += 1000;
+        }
+
+        if (string.Equals(colCode, requestedCode, StringComparison.OrdinalIgnoreCase))
+        {
+            // Exact без stacks — слабый бонус (стена фонаря без attributes).
+            score += col.CreativeInventoryStacks is { Length: > 0 } ? 500 : 50;
+        }
+
+        var colGroup = SwixyClaimChunkMod.StripVariantSuffixes(colCode);
+        if (string.Equals(colGroup, groupKey, StringComparison.OrdinalIgnoreCase))
+        {
+            score += 200;
+        }
+
+        var lower = colCode.ToLowerInvariant();
+        // Lantern creative = *-up; rotor/EP = *-north / *-south.
+        if (lower.EndsWith("-up") || lower.Contains("-up-"))
+        {
+            score += 120;
+        }
+        else if (lower.EndsWith("-north") || lower.Contains("-north-"))
+        {
+            score += 80;
+        }
+        else if (lower.EndsWith("-south") || lower.Contains("-south-"))
+        {
+            score += 40;
+        }
+
+        if (lower.Contains("-burned") || lower.Contains("-broken") || lower.Contains("-ruined"))
+        {
+            score -= 120;
+        }
+
+        return score;
     }
 }
+
+

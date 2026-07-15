@@ -176,7 +176,9 @@ public sealed partial class SwixyClaimChunkMod
             return ClaimActionResult.Error("swixyclaimchunk:claims-error-empty-name");
         }
 
+        var oldName = (claim.Description ?? "").Trim();
         claim.Description = claimName;
+        MigrateUseFilterAfterRename(claim, oldName);
         TouchClaim(claim);
         return ClaimActionResult.Success("swixyclaimchunk:claims-message-renamed");
     }

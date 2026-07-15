@@ -30,7 +30,9 @@ public sealed partial class SwixyClaimChunkMod
             .SetMessageHandler<ClaimChunksBatchActionPacket>(OnChunksBatchAction)
             .SetMessageHandler<ClaimListRequestPacket>(OnClaimListRequest)
             .SetMessageHandler<ClaimShowRequestPacket>(OnClaimShowRequest)
-            .SetMessageHandler<ClaimAccessActionPacket>(OnClaimAccessAction);
+            .SetMessageHandler<ClaimAccessActionPacket>(OnClaimAccessAction)
+            .SetMessageHandler<ClaimUseFiltersRequestPacket>(OnUseFiltersRequestPacket)
+            .SetMessageHandler<ClaimUseFilterScanRequestPacket>(OnUseFilterScanRequestPacket);
 
         OverrideLandCommand(api.ChatCommands, OpenClaimMapServerCommand);
         api.Event.RegisterCallback(_ => OverrideLandCommand(api.ChatCommands, OpenClaimMapServerCommand), 0);
@@ -39,7 +41,11 @@ public sealed partial class SwixyClaimChunkMod
         api.Event.SaveGameLoaded += OnUseFiltersSaveGameLoaded;
         api.Event.GameWorldSave += OnCoOwnersSaveGameSaving;
         api.Event.GameWorldSave += OnUseFiltersSaveGameSaving;
-        api.Event.OnTestBlockAccessClaim += OnTestBlockAccessClaim;
+        api.Event.OnTestBlockAccess += OnServerTestBlockAccess;
+        api.Event.OnTestBlockAccessClaim += OnServerTestBlockAccessClaim;
+        // После полной загрузки клиента — иначе пакет фильтра может потеряться.
+        api.Event.PlayerNowPlaying += OnPlayerJoinSendUseFilters;
+
         serverPlayerChatHandler = (IServerPlayer byPlayer, int channelId, ref string message, ref string data, BoolRef consumed) =>
         {
             if (!IsLandChatMessage(message))

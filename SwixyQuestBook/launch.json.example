@@ -2,28 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Запустить Vintage Story",
+      "name": "SwixyQuestBook: Client",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build",
-      "program": "${env:APPDATA}\\VintageStorySwixy\\VintageStory\\Vintagestory.exe",
-      "args": [],
-      "cwd": "${env:APPDATA}\\VintageStorySwixy\\VintageStory",
-      "stopAtEntry": false,
-      "serverReadyAction": {
-        "pattern": "Running single player",
-        "uriFormat": "http://localhost:%s",
-        "action": "openExternally"
-      },
-      "env": {
-        "DOTNET_ENVIRONMENT": "Development"
-      }
-    },
-    {
-      "name": "Присоединиться к процессу",
-      "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:pickProcess}"
+      "envFile": "${workspaceFolder}/.vscode/.env",
+      "preLaunchTask": "build: SwixyQuestBook",
+      "program": "${env:VINTAGE_STORY}/Vintagestory.dll",
+      "args": [
+        "--tracelog",
+        "--addModPath",
+        "${workspaceFolder}/SwixyQuestBook/bin/Debug/Mods",
+        "-o",
+        "test"
+      ],
+      "cwd": "${env:VINTAGE_STORY}",
+      "console": "externalTerminal",
+      "stopAtEntry": false
     }
   ]
 }

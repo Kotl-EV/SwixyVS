@@ -114,7 +114,8 @@ namespace SwixyQuestBook.Client
                 n.Description,
                 requiredItems: n.RequiredItems.Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode, i.Count)).ToArray(),
                 rewardItems: n.RewardItems.Select(i => new QuestbookQuestItemRequirement(i.CollectibleCode, i.Count)).ToArray(),
-                nodeType: ConvertIntToNodeType(n.NodeType)
+                nodeType: ConvertIntToNodeType(n.NodeType),
+                descriptionByLang: ToLangMap(n.DescriptionI18n, n.Description)
             )).ToArray();
 
             foreach (var node in nodes)
@@ -131,8 +132,32 @@ namespace SwixyQuestBook.Client
                 packet.HeaderTitle,
                 CalculateProgressPercent(nodes),
                 nodes,
-                connections
+                connections,
+                string.IsNullOrWhiteSpace(packet.HeaderDisplay) ? packet.Title : packet.HeaderDisplay,
+                ToLangMap(packet.TitleI18n, packet.Title),
+                ToLangMap(packet.HeaderI18n, packet.HeaderDisplay)
             );
+        }
+
+        private static Dictionary<string, string> ToLangMap(
+            QuestbookLangTextPacket[]? entries,
+            string fallback)
+        {
+            var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (entries != null)
+            {
+                foreach (QuestbookLangTextPacket entry in entries)
+                {
+                    if (string.IsNullOrWhiteSpace(entry.Lang) || string.IsNullOrWhiteSpace(entry.Text))
+                        continue;
+                    map[entry.Lang.Trim().ToLowerInvariant()] = entry.Text;
+                }
+            }
+
+            if (map.Count == 0 && !string.IsNullOrWhiteSpace(fallback))
+                map["en"] = fallback;
+
+            return map;
         }
 
         private static int CalculateProgressPercent(QuestbookQuestNodeDefinition[] nodes)

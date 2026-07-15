@@ -1,26 +1,95 @@
 {
-  "version": "2.1-emberstar-story",
+  "version": "2.1-emberstar-story\u002Bi18n\u002Balllangs",
   "categories": [
     {
       "iconItemCode": "game:gear-rusty",
-      "title": "category.legend.title",
+      "title": {
+        "ar": "Legend",
+        "be": "\u0421\u043A\u0430\u0437\u0430\u043D\u0438\u0435",
+        "cs": "Legend",
+        "da": "Legend",
+        "de": "Legend",
+        "en": "Legend",
+        "eo": "Legend",
+        "es": "Legend",
+        "fi": "Legend",
+        "fr": "Legend",
+        "hu": "Legend",
+        "is": "Legend",
+        "it": "Legend",
+        "ja": "Legend",
+        "ko": "Legend",
+        "li": "Legend",
+        "lt": "Legend",
+        "nl": "Legend",
+        "no": "Legend",
+        "pl": "Legend",
+        "pt": "Legend",
+        "ro": "Legend",
+        "ru": "\u0421\u043A\u0430\u0437\u0430\u043D\u0438\u0435",
+        "sk": "Legend",
+        "sr": "Legend",
+        "sv": "Legend",
+        "th": "Legend",
+        "tr": "Legend",
+        "uk": "\u0421\u043A\u0430\u0437\u0430\u043D\u0438\u0435",
+        "vi": "Legend",
+        "zh": "Legend"
+      },
       "headerTitle": "category.legend.header",
+      "header": {
+        "ar": "EMBERSTAR PATH",
+        "be": "\u041F\u0423\u0422\u042C \u0423\u0413\u041E\u041B\u042C\u041D\u041E\u0419 \u0417\u0412\u0415\u0417\u0414\u042B",
+        "cs": "EMBERSTAR PATH",
+        "da": "EMBERSTAR PATH",
+        "de": "EMBERSTAR PATH",
+        "en": "EMBERSTAR PATH",
+        "eo": "EMBERSTAR PATH",
+        "es": "EMBERSTAR PATH",
+        "fi": "EMBERSTAR PATH",
+        "fr": "EMBERSTAR PATH",
+        "hu": "EMBERSTAR PATH",
+        "is": "EMBERSTAR PATH",
+        "it": "EMBERSTAR PATH",
+        "ja": "EMBERSTAR PATH",
+        "ko": "EMBERSTAR PATH",
+        "li": "EMBERSTAR PATH",
+        "lt": "EMBERSTAR PATH",
+        "nl": "EMBERSTAR PATH",
+        "no": "EMBERSTAR PATH",
+        "pl": "EMBERSTAR PATH",
+        "pt": "EMBERSTAR PATH",
+        "ro": "EMBERSTAR PATH",
+        "ru": "\u041F\u0423\u0422\u042C \u0423\u0413\u041E\u041B\u042C\u041D\u041E\u0419 \u0417\u0412\u0415\u0417\u0414\u042B",
+        "sk": "EMBERSTAR PATH",
+        "sr": "EMBERSTAR PATH",
+        "sv": "EMBERSTAR PATH",
+        "th": "EMBERSTAR PATH",
+        "tr": "EMBERSTAR PATH",
+        "uk": "\u041F\u0423\u0422\u042C \u0423\u0413\u041E\u041B\u042C\u041D\u041E\u0419 \u0417\u0412\u0415\u0417\u0414\u042B",
+        "vi": "EMBERSTAR PATH",
+        "zh": "EMBERSTAR PATH"
+      },
       "nodes": [
         {
           "id": 0,
-          "x": 0,
-          "y": 0,
+          "x": 114,
+          "y": 114,
           "nodeType": "Start",
-          "description": "quest.legend.0.description",
+          "description": {
+            "en": "The batteries themselves in such a system will also act as current conductors. Although they have zero resistance, the current flowing through them from other batteries could eventually burn them out."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.legend.1.description",
+          "description": {
+            "en": "\u041F\u0435\u0440\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C: \u00AB\u041D\u0430\u0447\u043D\u0438 \u0441 \u0434\u0435\u0440\u0435\u0432\u0430. \u041F\u0430\u043B\u043A\u0438 \u043F\u043E\u043C\u043D\u044F\u0442, \u043E\u0442\u043A\u0443\u0434\u0430 \u0432\u0435\u0442\u0435\u0440\u00BB. \u0421\u043E\u0431\u0435\u0440\u0438 \u043F\u0430\u043B\u043A\u0438 \u2014 \u0431\u0443\u0434\u0442\u043E \u043F\u0435\u0440\u0435\u043B\u0438\u0441\u0442\u044B\u0432\u0430\u0435\u0448\u044C \u043F\u0435\u0440\u0432\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:stick",
@@ -36,10 +105,12 @@
         },
         {
           "id": 2,
-          "x": 340,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.legend.2.description",
+          "description": {
+            "en": "\u00AB\u0422\u0440\u0430\u0432\u0430 \u0441\u0443\u0445\u0430\u044F, \u043A\u0430\u043A \u0441\u0442\u0430\u0440\u044B\u0435 \u043F\u0438\u0441\u044C\u043C\u0430\u00BB. \u0421\u043E\u0431\u0435\u0440\u0438 \u0445\u0432\u043E\u0440\u043E\u0441\u0442 \u0434\u043B\u044F \u043E\u0433\u043D\u044F. \u042D\u0440\u0430 \u043F\u0438\u0441\u0430\u043B\u0430 \u043D\u043E\u0447\u044C\u044E \u043F\u0440\u0438 \u043A\u043E\u0441\u0442\u0440\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:drygrass",
@@ -55,10 +126,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.legend.3.description",
+          "description": {
+            "en": "\u00AB\u041E\u0433\u043E\u043D\u044C \u2014 \u0435\u0434\u0438\u043D\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043B\u044C\u00BB. \u0417\u0430\u043F\u0430\u0441\u0438 \u0434\u0440\u043E\u0432\u0430. \u0412 \u0442\u0435\u043F\u043B\u0435 \u0434\u043D\u0435\u0432\u043D\u0438\u043A \u043D\u0435 \u0434\u0440\u043E\u0436\u0438\u0442 \u043E\u0442 \u0445\u043E\u043B\u043E\u0434\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:firewood",
@@ -74,24 +147,23 @@
         },
         {
           "id": 4,
-          "x": 680,
-          "y": 0,
+          "x": 342,
+          "y": -114,
           "nodeType": "Checkpoint",
-          "description": "quest.legend.4.description",
+          "description": {
+            "en": "\u0422\u044B \u0440\u0430\u0437\u0436\u0451\u0433 \u0441\u0442\u043E\u044F\u043D\u043A\u0443. \u041D\u043E\u0447\u044C \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0445\u043E\u0437\u044F\u0438\u043D. \u041D\u0430 \u043F\u043E\u043B\u044F\u0445 \u0434\u043D\u0435\u0432\u043D\u0438\u043A\u0430 \u043F\u0440\u043E\u0441\u0442\u0443\u043F\u0430\u0435\u0442 \u043A\u0430\u0440\u0442\u0430: \u043A\u0430\u043C\u0435\u043D\u044C \u2192 \u0433\u043B\u0438\u043D\u0430 \u2192 \u043C\u0435\u0434\u044C\u2026"
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:flaxtwine",
-              "count": 2
-            }
-          ]
+          "rewardItems": []
         },
         {
           "id": 5,
-          "x": 850,
+          "x": 342,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.legend.5.description",
+          "description": {
+            "en": "\u00AB\u041A\u0440\u0435\u043C\u0435\u043D\u044C \u0440\u0435\u0436\u0435\u0442 \u0442\u044C\u043C\u0443\u00BB. \u041D\u0430\u0439\u0434\u0438 \u043A\u0440\u0435\u043C\u0435\u043D\u044C \u2014 \u042D\u0440\u0430 \u0442\u043E\u0447\u0438\u043B\u0430 \u0438\u043C \u0438 \u043B\u0435\u0437\u0432\u0438\u044F, \u0438 \u043C\u044B\u0441\u043B\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flint",
@@ -107,10 +179,12 @@
         },
         {
           "id": 6,
-          "x": 1020,
-          "y": 0,
+          "x": 342,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.legend.6.description",
+          "description": {
+            "en": "\u00AB\u0413\u043B\u0438\u043D\u0430 \u0441\u043B\u0443\u0448\u0430\u0435\u0442 \u043E\u0433\u043E\u043D\u044C \u043B\u0443\u0447\u0448\u0435, \u0447\u0435\u043C \u043B\u044E\u0434\u0438\u00BB. \u041F\u0440\u0438\u043D\u0435\u0441\u0438 \u0441\u0438\u043D\u044E\u044E \u0433\u043B\u0438\u043D\u0443. \u0411\u0435\u0437 \u043D\u0435\u0451 \u043C\u0435\u0442\u0430\u043B\u043B \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u0441\u043A\u0430\u0437\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clay-blue",
@@ -126,10 +200,12 @@
         },
         {
           "id": 7,
-          "x": 1190,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.legend.7.description",
+          "description": {
+            "en": "\u00AB\u041C\u0435\u0434\u044C \u2014 \u043A\u0440\u043E\u0432\u044C \u0437\u0435\u043C\u043B\u0438, \u0435\u0441\u043B\u0438 \u0437\u043D\u0430\u0442\u044C, \u0433\u0434\u0435 \u043E\u043D\u0430 \u0441\u043F\u0438\u0442\u00BB. \u041D\u0430\u0439\u0434\u0438 \u0441\u0430\u043C\u043E\u0440\u043E\u0434\u043A\u0438. \u0414\u043D\u0435\u0432\u043D\u0438\u043A \u0442\u0435\u043F\u043B\u0435\u0435\u0442 \u0432 \u0440\u0443\u043A\u0430\u0445."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:nugget-nativecopper",
@@ -145,24 +221,23 @@
         },
         {
           "id": 8,
-          "x": 1360,
-          "y": 0,
+          "x": 228,
+          "y": 228,
           "nodeType": "Checkpoint",
-          "description": "quest.legend.8.description",
+          "description": {
+            "en": "\u0422\u044B \u043F\u0440\u043E\u0448\u0451\u043B \u043F\u0435\u0440\u0432\u044B\u0435 \u0433\u043B\u0430\u0432\u044B \u0421\u043A\u0430\u0437\u0430\u043D\u0438\u044F. \u0414\u0430\u043B\u044C\u0448\u0435 \u043F\u0443\u0442\u044C \u0432\u0435\u0442\u0432\u0438\u0442\u0441\u044F: \u0432\u0435\u043A\u0430 \u043C\u0435\u0442\u0430\u043B\u043B\u0430, \u043E\u0445\u043E\u0442\u0430, \u043F\u043E\u043B\u044F \u0438 \u0440\u0443\u0438\u043D\u044B."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:flaxtwine",
-              "count": 4
-            }
-          ]
+          "rewardItems": []
         },
         {
           "id": 9,
-          "x": 1453.5,
-          "y": -125,
+          "x": 228,
+          "y": 342,
           "nodeType": "Quest",
-          "description": "quest.legend.9.description",
+          "description": {
+            "en": "\u041D\u0430 \u043F\u043E\u043B\u044F\u0445 \u0441\u043C\u043E\u043B\u044B: \u00AB\u0425\u0432\u043E\u0439\u043D\u044B\u0435 \u043F\u043E\u043C\u043D\u044F\u0442 \u0431\u0443\u0440\u044E\u00BB. \u0421\u043E\u0431\u0435\u0440\u0438 \u0441\u043C\u043E\u043B\u0443 \u2014 \u043A\u043B\u0435\u0439 \u0434\u043B\u044F \u0442\u043E\u0433\u043E, \u0447\u0442\u043E \u043D\u0435\u043B\u044C\u0437\u044F \u0441\u043A\u043E\u0432\u0430\u0442\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:resin",
@@ -178,10 +253,12 @@
         },
         {
           "id": 10,
-          "x": 1453.5,
-          "y": 125,
+          "x": 342,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.legend.10.description",
+          "description": {
+            "en": "\u00AB\u041F\u0447\u0451\u043B\u044B \u0445\u0440\u0430\u043D\u044F\u0442 \u043B\u0435\u0442\u043E \u0432 \u0441\u043E\u0442\u0430\u0445\u00BB. \u041C\u0451\u0434 \u0438 \u0432\u043E\u0441\u043A \u2014 \u0441\u0432\u0435\u0442, \u043A\u043E\u0433\u0434\u0430 \u0440\u0443\u0434\u044B \u043C\u0430\u043B\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:honeycomb",
@@ -197,10 +274,12 @@
         },
         {
           "id": 11,
-          "x": 1530,
-          "y": 0,
+          "x": 114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.legend.11.description",
+          "description": {
+            "en": "\u041C\u0435\u0436\u0434\u0443 \u043A\u043E\u0440\u043D\u0435\u0439 \u2014 \u0440\u0436\u0430\u0432\u0430\u044F \u0448\u0435\u0441\u0442\u0435\u0440\u0451\u043D\u043A\u0430. \u042D\u0440\u0430 \u043F\u043E\u043C\u0435\u0442\u0438\u043B\u0430 \u0435\u0451 \u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0439 \u0437\u0432\u0435\u0437\u0434\u043E\u0439: \u00AB\u041E\u0441\u043A\u043E\u043B\u043E\u043A \u0412\u0440\u0435\u043C\u0435\u043D\u0438 \u0414\u043E\u00BB."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:gear-rusty",
@@ -216,10 +295,12 @@
         },
         {
           "id": 12,
-          "x": 1700,
-          "y": 0,
+          "x": 0,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.legend.12.description",
+          "description": {
+            "en": "\u00AB\u0423\u0433\u043E\u043B\u044C \u2014 \u0447\u0451\u0440\u043D\u043E\u0435 \u0441\u043E\u043B\u043D\u0446\u0435 \u043A\u0443\u0437\u043D\u0438\u00BB. \u0417\u0430\u043F\u0430\u0441\u0438 \u0434\u0440\u0435\u0432\u0435\u0441\u043D\u044B\u0439 \u0443\u0433\u043E\u043B\u044C. \u0411\u0435\u0437 \u043D\u0435\u0433\u043E \u0436\u0435\u043B\u0435\u0437\u043E \u043D\u0435 \u043F\u0440\u043E\u0441\u043D\u0451\u0442\u0441\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:charcoal",
@@ -235,24 +316,23 @@
         },
         {
           "id": 13,
-          "x": 1870,
-          "y": 0,
+          "x": -114,
+          "y": 228,
           "nodeType": "Checkpoint",
-          "description": "quest.legend.13.description",
+          "description": {
+            "en": "\u0421\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0433\u0443\u0441\u0442\u0435\u0435\u0442. \u0422\u044B \u0443\u0436\u0435 \u043D\u0435 \u043F\u0440\u043E\u0441\u0442\u043E \u0432\u044B\u0436\u0438\u0432\u0430\u0435\u0448\u044C \u2014 \u0442\u044B \u0438\u0434\u0451\u0448\u044C \u043F\u043E \u0441\u043B\u0435\u0434\u0430\u043C \u042D\u0440\u044B."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:leather-normal-plain",
-              "count": 2
-            }
-          ]
+          "rewardItems": []
         },
         {
           "id": 14,
-          "x": 2040,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.legend.14.description",
+          "description": {
+            "en": "\u00AB\u041A\u043E\u0433\u0434\u0430 \u0436\u0435\u043B\u0435\u0437\u043E \u0437\u0430\u043F\u043E\u0451\u0442 \u043D\u0430 \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u0435 \u2014 \u0432\u0435\u0440\u043D\u0438\u0441\u044C \u043A \u0448\u0435\u0441\u0442\u0435\u0440\u043D\u044F\u043C\u00BB. \u041F\u0440\u0438\u043D\u0435\u0441\u0438 \u0436\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0441\u043B\u0438\u0442\u043E\u043A \u043A\u0430\u043A \u043A\u043B\u044F\u0442\u0432\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-iron",
@@ -268,10 +348,12 @@
         },
         {
           "id": 15,
-          "x": 2210,
+          "x": 0,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.legend.15.description",
+          "description": {
+            "en": "\u0415\u0449\u0451 \u0448\u0435\u0441\u0442\u0435\u0440\u043D\u0438 \u0438\u0437 \u0440\u0443\u0438\u043D. \u042D\u0440\u0430 \u0432\u0435\u0440\u0438\u043B\u0430: \u0441\u043E\u0431\u0440\u0430\u0432 \u0438\u0445, \u0443\u0441\u043B\u044B\u0448\u0438\u0448\u044C \u0433\u0443\u043B \u00AB\u043C\u0430\u0448\u0438\u043D \u043F\u043E\u0434 \u043D\u0435\u0431\u043E\u043C\u00BB."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:gear-rusty",
@@ -287,17 +369,14 @@
         },
         {
           "id": 16,
-          "x": 2380,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Checkpoint",
-          "description": "quest.legend.16.description",
+          "description": {
+            "en": "\u0424\u0438\u043D\u0430\u043B \u0421\u043A\u0430\u0437\u0430\u043D\u0438\u044F \u043E\u0442\u043A\u0440\u044B\u0442. \u0421\u0442\u0430\u043B\u044C, \u0440\u0443\u0438\u043D\u044B \u0438 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u043A\u0443\u0437\u043D\u044F \u0436\u0434\u0443\u0442 \u0442\u043E\u0433\u043E, \u043A\u0442\u043E \u0434\u043E\u0447\u0438\u0442\u0430\u043B \u0434\u043D\u0435\u0432\u043D\u0438\u043A \u0434\u043E \u043A\u043E\u043D\u0446\u0430."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:ingot-steel",
-              "count": 1
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -369,24 +448,93 @@
     },
     {
       "iconItemCode": "game:flint",
-      "title": "category.stone.title",
+      "title": {
+        "ar": "Stone Age",
+        "be": "\u041A\u0430\u043C\u0435\u043D\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "cs": "Stone Age",
+        "da": "Stone Age",
+        "de": "Stone Age",
+        "en": "Stone Age",
+        "eo": "Stone Age",
+        "es": "Stone Age",
+        "fi": "Stone Age",
+        "fr": "Stone Age",
+        "hu": "Stone Age",
+        "is": "Stone Age",
+        "it": "Stone Age",
+        "ja": "Stone Age",
+        "ko": "Stone Age",
+        "li": "Stone Age",
+        "lt": "Stone Age",
+        "nl": "Stone Age",
+        "no": "Stone Age",
+        "pl": "Stone Age",
+        "pt": "Stone Age",
+        "ro": "Stone Age",
+        "ru": "\u041A\u0430\u043C\u0435\u043D\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "sk": "Stone Age",
+        "sr": "Stone Age",
+        "sv": "Stone Age",
+        "th": "Stone Age",
+        "tr": "Stone Age",
+        "uk": "\u041A\u0430\u043C\u0435\u043D\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "vi": "Stone Age",
+        "zh": "Stone Age"
+      },
       "headerTitle": "category.stone.header",
+      "header": {
+        "ar": "STONE AGE",
+        "be": "\u041A\u0410\u041C\u0415\u041D\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "cs": "STONE AGE",
+        "da": "STONE AGE",
+        "de": "STONE AGE",
+        "en": "STONE AGE",
+        "eo": "STONE AGE",
+        "es": "STONE AGE",
+        "fi": "STONE AGE",
+        "fr": "STONE AGE",
+        "hu": "STONE AGE",
+        "is": "STONE AGE",
+        "it": "STONE AGE",
+        "ja": "STONE AGE",
+        "ko": "STONE AGE",
+        "li": "STONE AGE",
+        "lt": "STONE AGE",
+        "nl": "STONE AGE",
+        "no": "STONE AGE",
+        "pl": "STONE AGE",
+        "pt": "STONE AGE",
+        "ro": "STONE AGE",
+        "ru": "\u041A\u0410\u041C\u0415\u041D\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "sk": "STONE AGE",
+        "sr": "STONE AGE",
+        "sv": "STONE AGE",
+        "th": "STONE AGE",
+        "tr": "STONE AGE",
+        "uk": "\u041A\u0410\u041C\u0415\u041D\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "vi": "STONE AGE",
+        "zh": "STONE AGE"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.stone.0.description",
+          "description": {
+            "en": "\u041A\u0430\u043C\u0435\u043D\u043D\u044B\u0439 \u0432\u0435\u043A \u2014 \u043F\u0435\u0440\u0432\u0430\u044F \u0433\u043B\u0430\u0432\u0430 \u042D\u0440\u044B. \u00AB\u041A\u0442\u043E \u043D\u0435 \u0443\u043C\u0435\u0435\u0442 \u0436\u0438\u0442\u044C \u0441 \u043A\u0440\u0435\u043C\u043D\u0435\u043C, \u043D\u0435 \u0434\u043E\u0441\u0442\u043E\u0438\u043D \u0441\u0442\u0430\u043B\u0438\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.stone.1.description",
+          "description": {
+            "en": "\u0421\u043E\u0431\u0435\u0440\u0438 \u043F\u0430\u043B\u043A\u0438. \u0420\u0443\u043A\u043E\u044F\u0442\u0438, \u0444\u0430\u043A\u0435\u043B\u044B \u0438 \u043A\u043E\u043F\u044C\u044F \u0440\u043E\u0436\u0434\u0430\u044E\u0442\u0441\u044F \u0438\u0437 \u043F\u0440\u043E\u0441\u0442\u043E\u0433\u043E \u043B\u0435\u0441\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:stick",
@@ -402,10 +550,12 @@
         },
         {
           "id": 2,
-          "x": 340,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.stone.2.description",
+          "description": {
+            "en": "\u041A\u0430\u043C\u043D\u0438 \u0434\u043B\u044F knapping. \u0423\u0434\u0430\u0440\u044C \u043A\u0430\u043C\u0435\u043D\u044C \u043E \u043A\u0430\u043C\u0435\u043D\u044C \u2014 \u0442\u0430\u043A \u042D\u0440\u0430 \u0443\u0447\u0438\u043B\u0430 \u0443\u0447\u0435\u043D\u0438\u043A\u043E\u0432."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:stone-*",
@@ -421,10 +571,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.stone.3.description",
+          "description": {
+            "en": "\u0421\u0443\u0445\u0430\u044F \u0442\u0440\u0430\u0432\u0430 \u2014 \u0434\u044B\u0445\u0430\u043D\u0438\u0435 \u043A\u043E\u0441\u0442\u0440\u0430. \u0411\u0435\u0437 \u043D\u0435\u0451 \u043E\u0433\u043E\u043D\u044C \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0441\u043D\u043E\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:drygrass",
@@ -440,10 +592,12 @@
         },
         {
           "id": 4,
-          "x": 680,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.stone.4.description",
+          "description": {
+            "en": "\u041A\u0440\u0435\u043C\u0435\u043D\u044C \u2014 \u043A\u043E\u0440\u043E\u043B\u044C \u043A\u0430\u043C\u043D\u0435\u0439. \u0417\u0430\u043F\u0430\u0441\u0438 \u0435\u0433\u043E, \u043F\u043E\u043A\u0430 \u0437\u0435\u043C\u043B\u044F \u0449\u0435\u0434\u0440\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flint",
@@ -459,10 +613,12 @@
         },
         {
           "id": 5,
-          "x": 773.5,
-          "y": -125,
+          "x": -114,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.stone.5.description",
+          "description": {
+            "en": "\u0420\u043E\u0433\u043E\u0437 \u0443 \u0432\u043E\u0434\u044B. \u0412\u0435\u0440\u0445\u0443\u0448\u043A\u0438 \u2014 \u043D\u0430 \u043F\u043B\u0435\u0442\u0451\u043D\u044B\u0435 \u0432\u0435\u0449\u0438; \u043A\u043E\u0440\u043D\u0438 \u2014 \u0435\u0434\u0430 \u0432 \u0433\u043E\u043B\u043E\u0434\u043D\u044B\u0439 \u0434\u0435\u043D\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:cattailtops",
@@ -478,10 +634,12 @@
         },
         {
           "id": 6,
-          "x": 773.5,
-          "y": 125,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.stone.6.description",
+          "description": {
+            "en": "\u041A\u043E\u0440\u043D\u0438 \u0440\u043E\u0433\u043E\u0437\u0430 \u0441\u044A\u0435\u0434\u043E\u0431\u043D\u044B. \u042D\u0440\u0430 \u043F\u0438\u0441\u0430\u043B\u0430: \u00AB\u0411\u043E\u043B\u043E\u0442\u043E \u043A\u043E\u0440\u043C\u0438\u0442 \u0443\u043C\u043D\u044B\u0445\u00BB."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:cattailroot",
@@ -497,10 +655,12 @@
         },
         {
           "id": 7,
-          "x": 850,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.stone.7.description",
+          "description": {
+            "en": "\u0421\u043A\u043E\u043B\u0438 \u043A\u043B\u0438\u043D\u043E\u043A \u043D\u043E\u0436\u0430. \u041F\u0435\u0440\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0446 \u043C\u0438\u0440\u0430 \u2014 \u043E\u0441\u0442\u0440\u044B\u0439 \u0438 \u0447\u0435\u0441\u0442\u043D\u044B\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:knifeblade-flint",
@@ -516,10 +676,12 @@
         },
         {
           "id": 8,
-          "x": 1020,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.stone.8.description",
+          "description": {
+            "en": "\u0421\u043E\u0431\u0435\u0440\u0438 \u043A\u0440\u0435\u043C\u043D\u0451\u0432\u044B\u0439 \u043D\u043E\u0436 \u0446\u0435\u043B\u0438\u043A\u043E\u043C. \u0420\u0435\u0436\u044C \u0442\u0440\u0430\u0432\u0443, \u043C\u044F\u0441\u043E, \u0432\u0435\u0440\u0451\u0432\u043A\u0438 \u2014 \u0438 \u0441\u0442\u0440\u0430\u0445."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:knife-generic-flint",
@@ -535,10 +697,12 @@
         },
         {
           "id": 9,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.stone.9.description",
+          "description": {
+            "en": "\u0422\u043E\u043F\u043E\u0440. \u041B\u0435\u0441 \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043D\u0435\u0442 \u0431\u044B\u0442\u044C \u0441\u0442\u0435\u043D\u043E\u0439 \u0438 \u0441\u0442\u0430\u043D\u0435\u0442 \u0441\u043A\u043B\u0430\u0434\u043E\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:axe-flint",
@@ -554,10 +718,12 @@
         },
         {
           "id": 10,
-          "x": 1360,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.stone.10.description",
+          "description": {
+            "en": "\u041B\u043E\u043F\u0430\u0442\u0430. \u0413\u043B\u0438\u043D\u0430, \u0437\u0435\u043C\u043B\u044F, \u0433\u0440\u044F\u0434\u043A\u0438 \u2014 \u0432\u0441\u0451 \u0436\u0434\u0451\u0442 \u0442\u0432\u043E\u0435\u0433\u043E \u0443\u0434\u0430\u0440\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:shovel-flint",
@@ -573,10 +739,12 @@
         },
         {
           "id": 11,
-          "x": 1530,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.stone.11.description",
+          "description": {
+            "en": "\u041C\u043E\u0442\u044B\u0433\u0430. \u0414\u0430\u0436\u0435 \u0432 \u043A\u0430\u043C\u0435\u043D\u043D\u043E\u043C \u0432\u0435\u043A\u0435 \u043C\u043E\u0436\u043D\u043E \u043F\u043E\u043E\u0431\u0435\u0449\u0430\u0442\u044C \u0437\u0435\u043C\u043B\u0435 \u0443\u0440\u043E\u0436\u0430\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hoe-flint",
@@ -592,10 +760,12 @@
         },
         {
           "id": 12,
-          "x": 1623.5,
-          "y": -125,
+          "x": -114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.stone.12.description",
+          "description": {
+            "en": "\u041A\u043E\u043F\u044C\u0451. \u0414\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u044F \u043C\u0435\u0436\u0434\u0443 \u0442\u043E\u0431\u043E\u0439 \u0438 \u043A\u043B\u044B\u043A\u0430\u043C\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:spear-generic-flint",
@@ -611,10 +781,12 @@
         },
         {
           "id": 13,
-          "x": 1623.5,
-          "y": 125,
+          "x": 0,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.stone.13.description",
+          "description": {
+            "en": "\u0414\u0443\u0431\u0438\u043D\u0430. \u041A\u043E\u0433\u0434\u0430 \u043A\u043E\u043F\u044C\u0451 \u0434\u0430\u043B\u0435\u043A\u043E, \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F \u0442\u0432\u0451\u0440\u0434\u043E\u0435 \u0434\u0435\u0440\u0435\u0432\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:club-generic-wood",
@@ -630,10 +802,12 @@
         },
         {
           "id": 14,
-          "x": 1700,
-          "y": 0,
+          "x": 114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.stone.14.description",
+          "description": {
+            "en": "\u0417\u0430\u043F\u0430\u0441\u0438 \u0434\u0440\u043E\u0432\u0430. \u041D\u043E\u0447\u044C \u043B\u044E\u0431\u0438\u0442 \u0442\u0435\u0445, \u0443 \u043A\u043E\u0433\u043E \u0442\u043B\u0435\u0435\u0442 \u0443\u0433\u043E\u043B\u0451\u043A."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:firewood",
@@ -649,10 +823,12 @@
         },
         {
           "id": 15,
-          "x": 1870,
-          "y": 0,
+          "x": 114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.stone.15.description",
+          "description": {
+            "en": "\u041F\u043B\u0435\u0442\u0451\u043D\u0430\u044F \u043A\u043E\u0440\u0437\u0438\u043D\u0430. \u041A\u0430\u0440\u043C\u0430\u043D\u044B \u043A\u043E\u043D\u0447\u0430\u044E\u0442\u0441\u044F \u0431\u044B\u0441\u0442\u0440\u0435\u0435, \u0447\u0435\u043C \u0434\u043E\u0440\u043E\u0433\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:basket-normal-reed",
@@ -668,10 +844,12 @@
         },
         {
           "id": 16,
-          "x": 2040,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.stone.16.description",
+          "description": {
+            "en": "\u0428\u043F\u0430\u0433\u0430\u0442 \u0441\u0432\u044F\u0437\u044B\u0432\u0430\u0435\u0442 \u043F\u0443\u0442\u044C. \u0411\u0435\u0437 \u043D\u0438\u0442\u0438 \u0432\u0441\u0451 \u0440\u0430\u0437\u0432\u0430\u043B\u0438\u0432\u0430\u0435\u0442\u0441\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flaxtwine",
@@ -687,17 +865,14 @@
         },
         {
           "id": 17,
-          "x": 2210,
+          "x": 228,
           "y": 0,
           "nodeType": "Checkpoint",
-          "description": "quest.stone.17.description",
+          "description": {
+            "en": "\u041A\u0430\u043C\u0435\u043D\u043D\u044B\u0439 \u0432\u0435\u043A \u0437\u0430\u043A\u0440\u044B\u0442. \u042D\u0440\u0430 \u0431\u044B \u043A\u0438\u0432\u043D\u0443\u043B\u0430: \u00AB\u0422\u0435\u043F\u0435\u0440\u044C \u0433\u043B\u0438\u043D\u0430\u00BB."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:flint",
-              "count": 8
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -773,24 +948,93 @@
     },
     {
       "iconItemCode": "game:clay-blue",
-      "title": "category.clay.title",
+      "title": {
+        "ar": "Pottery",
+        "be": "\u0413\u043E\u043D\u0447\u0430\u0440\u043D\u043E\u0435 \u0434\u0435\u043B\u043E",
+        "cs": "Pottery",
+        "da": "Pottery",
+        "de": "Pottery",
+        "en": "Pottery",
+        "eo": "Pottery",
+        "es": "Pottery",
+        "fi": "Pottery",
+        "fr": "Pottery",
+        "hu": "Pottery",
+        "is": "Pottery",
+        "it": "Pottery",
+        "ja": "Pottery",
+        "ko": "Pottery",
+        "li": "Pottery",
+        "lt": "Pottery",
+        "nl": "Pottery",
+        "no": "Pottery",
+        "pl": "Pottery",
+        "pt": "Pottery",
+        "ro": "Pottery",
+        "ru": "\u0413\u043E\u043D\u0447\u0430\u0440\u043D\u043E\u0435 \u0434\u0435\u043B\u043E",
+        "sk": "Pottery",
+        "sr": "Pottery",
+        "sv": "Pottery",
+        "th": "Pottery",
+        "tr": "Pottery",
+        "uk": "\u0413\u043E\u043D\u0447\u0430\u0440\u043D\u043E\u0435 \u0434\u0435\u043B\u043E",
+        "vi": "Pottery",
+        "zh": "Pottery"
+      },
       "headerTitle": "category.clay.header",
+      "header": {
+        "ar": "POTTERY",
+        "be": "\u0413\u041E\u041D\u0427\u0410\u0420\u041D\u041E\u0415 \u0414\u0415\u041B\u041E",
+        "cs": "POTTERY",
+        "da": "POTTERY",
+        "de": "POTTERY",
+        "en": "POTTERY",
+        "eo": "POTTERY",
+        "es": "POTTERY",
+        "fi": "POTTERY",
+        "fr": "POTTERY",
+        "hu": "POTTERY",
+        "is": "POTTERY",
+        "it": "POTTERY",
+        "ja": "POTTERY",
+        "ko": "POTTERY",
+        "li": "POTTERY",
+        "lt": "POTTERY",
+        "nl": "POTTERY",
+        "no": "POTTERY",
+        "pl": "POTTERY",
+        "pt": "POTTERY",
+        "ro": "POTTERY",
+        "ru": "\u0413\u041E\u041D\u0427\u0410\u0420\u041D\u041E\u0415 \u0414\u0415\u041B\u041E",
+        "sk": "POTTERY",
+        "sr": "POTTERY",
+        "sv": "POTTERY",
+        "th": "POTTERY",
+        "tr": "POTTERY",
+        "uk": "\u0413\u041E\u041D\u0427\u0410\u0420\u041D\u041E\u0415 \u0414\u0415\u041B\u041E",
+        "vi": "POTTERY",
+        "zh": "POTTERY"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.clay.0.description",
+          "description": {
+            "en": "\u0413\u043B\u0438\u043D\u0430 \u2014 \u0432\u0442\u043E\u0440\u0430\u044F \u0433\u043B\u0430\u0432\u0430. \u00AB\u041C\u0435\u0442\u0430\u043B\u043B \u0431\u0435\u0437 \u0441\u043E\u0441\u0443\u0434\u0430 \u2014 \u0434\u043E\u0436\u0434\u044C \u0431\u0435\u0437 \u043A\u0443\u0432\u0448\u0438\u043D\u0430\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.clay.1.description",
+          "description": {
+            "en": "\u0421\u0438\u043D\u044F\u044F \u0433\u043B\u0438\u043D\u0430 \u0443 \u0432\u043E\u0434\u044B. \u041A\u043E\u043F\u0430\u0439 \u0442\u0435\u0440\u043F\u0435\u043B\u0438\u0432\u043E \u2014 \u042D\u0440\u0430 \u043D\u0435\u043D\u0430\u0432\u0438\u0434\u0435\u043B\u0430 \u0441\u043F\u0435\u0448\u043A\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clay-blue",
@@ -806,10 +1050,12 @@
         },
         {
           "id": 2,
-          "x": 263.5,
-          "y": -125,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.clay.2.description",
+          "description": {
+            "en": "\u041A\u0440\u0430\u0441\u043D\u0430\u044F \u0433\u043B\u0438\u043D\u0430 \u0442\u043E\u0436\u0435 \u0441\u043B\u0443\u0436\u0438\u0442. \u0420\u0430\u0437\u043D\u044B\u0435 \u0436\u0438\u043B\u044B \u2014 \u0440\u0430\u0437\u043D\u044B\u0435 \u043F\u0435\u0441\u043D\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clay-red",
@@ -825,10 +1071,12 @@
         },
         {
           "id": 3,
-          "x": 263.5,
-          "y": 125,
+          "x": 114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.clay.3.description",
+          "description": {
+            "en": "\u041E\u0433\u043D\u0435\u0443\u043F\u043E\u0440\u043D\u0430\u044F \u0433\u043B\u0438\u043D\u0430. \u0414\u043B\u044F \u0436\u0430\u0440\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043B\u043E\u043C\u0430\u0435\u0442 \u043E\u0431\u044B\u0447\u043D\u0443\u044E \u043F\u043E\u0441\u0443\u0434\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clay-fire",
@@ -844,10 +1092,12 @@
         },
         {
           "id": 4,
-          "x": 340,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.clay.4.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u044B\u0435 \u043C\u0438\u0441\u043A\u0438. \u0424\u043E\u0440\u043C\u0430 \u043F\u0440\u0435\u0436\u0434\u0435 \u043E\u0433\u043D\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bowl-blue-raw",
@@ -863,10 +1113,12 @@
         },
         {
           "id": 5,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.clay.5.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u044B\u0435 \u0433\u043E\u0440\u0448\u043A\u0438. \u0417\u0434\u0435\u0441\u044C \u0431\u0443\u0434\u0443\u0442 \u0441\u0443\u043F\u044B \u0434\u043E\u043B\u0433\u0438\u0445 \u0437\u0438\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:claypot-blue-raw",
@@ -882,10 +1134,12 @@
         },
         {
           "id": 6,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.clay.6.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u044B\u0435 \u043A\u0440\u043E\u043A\u0438. \u0417\u0430\u043F\u0430\u0441\u044B \u0435\u0434\u044B \u2014 \u0442\u0438\u0445\u0430\u044F \u0430\u0440\u043C\u0438\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:crock-blue-raw",
@@ -901,10 +1155,12 @@
         },
         {
           "id": 7,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.clay.7.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u044B\u0435 \u0442\u0438\u0433\u043B\u0438. \u0411\u0435\u0437 \u043D\u0438\u0445 \u043C\u0435\u0434\u044C \u043D\u0435 \u0441\u0442\u0430\u043D\u0435\u0442 \u0441\u043B\u0438\u0442\u043A\u043E\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:crucible-blue-raw",
@@ -920,10 +1176,12 @@
         },
         {
           "id": 8,
-          "x": 943.5,
-          "y": -125,
+          "x": -114,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.clay.8.description",
+          "description": {
+            "en": "\u0426\u0432\u0435\u0442\u043E\u0447\u043D\u044B\u0439 \u0433\u043E\u0440\u0448\u043E\u043A. \u0414\u0430\u0436\u0435 \u043A\u0443\u0437\u043D\u0435\u0446 \u0441\u0430\u0436\u0430\u043B \u0437\u0435\u043B\u0435\u043D\u044C \u0443 \u043F\u043E\u0440\u043E\u0433\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clayplanter-blue-raw",
@@ -939,10 +1197,12 @@
         },
         {
           "id": 9,
-          "x": 1020,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.clay.9.description",
+          "description": {
+            "en": "\u0414\u0440\u043E\u0432\u0430 \u0434\u043B\u044F \u044F\u043C\u043D\u043E\u0439 \u043F\u0435\u0447\u0438. Pit kiln \u2014 \u043F\u0435\u0447\u044C \u0431\u0435\u0434\u043D\u044F\u043A\u0430 \u0438 \u0433\u0435\u043D\u0438\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:firewood",
@@ -958,10 +1218,12 @@
         },
         {
           "id": 10,
-          "x": 1190,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.clay.10.description",
+          "description": {
+            "en": "\u041E\u0431\u043E\u0436\u0436\u0451\u043D\u043D\u044B\u0435 \u043C\u0438\u0441\u043A\u0438. \u041E\u0433\u043E\u043D\u044C \u0434\u0430\u043B \u0438\u043C \u043F\u0440\u0430\u0432\u043E \u0431\u044B\u0442\u044C \u043F\u043E\u0441\u0443\u0434\u043E\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bowl-blue-fired",
@@ -977,10 +1239,12 @@
         },
         {
           "id": 11,
-          "x": 1360,
-          "y": 0,
+          "x": -228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.clay.11.description",
+          "description": {
+            "en": "\u041E\u0431\u043E\u0436\u0436\u0451\u043D\u043D\u044B\u0435 \u0433\u043E\u0440\u0448\u043A\u0438. \u0422\u0435\u043F\u0435\u0440\u044C \u043C\u043E\u0436\u043D\u043E \u0432\u0430\u0440\u0438\u0442\u044C \u043F\u043E-\u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0435\u043C\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:claypot-blue-fired",
@@ -996,10 +1260,12 @@
         },
         {
           "id": 12,
-          "x": 1530,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.clay.12.description",
+          "description": {
+            "en": "\u041E\u0431\u043E\u0436\u0436\u0451\u043D\u043D\u044B\u0435 \u043A\u0440\u043E\u043A\u0438. \u0415\u0434\u0430 \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0451\u0442 \u0434\u043E\u0440\u043E\u0433\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:crock-blue-fired",
@@ -1015,10 +1281,12 @@
         },
         {
           "id": 13,
-          "x": 1700,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.clay.13.description",
+          "description": {
+            "en": "\u041E\u0431\u043E\u0436\u0436\u0451\u043D\u043D\u044B\u0435 \u0442\u0438\u0433\u043B\u0438. \u041E\u0442\u043A\u0440\u043E\u0439 \u0434\u0432\u0435\u0440\u044C \u0432 \u043C\u0435\u0434\u043D\u044B\u0439 \u0432\u0435\u043A."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:crucible-blue-fired",
@@ -1034,10 +1302,12 @@
         },
         {
           "id": 14,
-          "x": 1793.5,
-          "y": 125,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.clay.14.description",
+          "description": {
+            "en": "\u041E\u0431\u043E\u0436\u0436\u0451\u043D\u043D\u044B\u0439 \u0432\u0430\u0437\u043E\u043D. \u041C\u0430\u043B\u0435\u043D\u044C\u043A\u0438\u0439 \u0441\u0430\u0434 \u0443 \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043A\u0443\u0437\u043D\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clayplanter-blue-fired",
@@ -1053,10 +1323,12 @@
         },
         {
           "id": 15,
-          "x": 1870,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.clay.15.description",
+          "description": {
+            "en": "\u0423\u0433\u043E\u043B\u044C \u0434\u043B\u044F \u0441\u0438\u043B\u044C\u043D\u043E\u0433\u043E \u0436\u0430\u0440\u0430. \u041A\u0435\u0440\u0430\u043C\u0438\u043A\u0430 \u043B\u044E\u0431\u0438\u0442 \u0443\u0433\u043E\u043B\u044C, \u043A\u0430\u043A \u043C\u0435\u0442\u0430\u043B\u043B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:charcoal",
@@ -1072,17 +1344,14 @@
         },
         {
           "id": 16,
-          "x": 2040,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.clay.16.description",
+          "description": {
+            "en": "\u0413\u043E\u043D\u0447\u0430\u0440\u043D\u043E\u0435 \u0434\u0435\u043B\u043E \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E. \u042D\u0440\u0430 \u043F\u0438\u0441\u0430\u043B\u0430 \u043D\u0430 \u0433\u043B\u0438\u043D\u044F\u043D\u043E\u043C \u0447\u0435\u0440\u0435\u043F\u043A\u0435: \u00AB\u0414\u0430\u043B\u044C\u0448\u0435 \u2014 \u0431\u043B\u0435\u0441\u043A\u00BB."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:nugget-nativecopper",
-              "count": 12
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -1154,24 +1423,93 @@
     },
     {
       "iconItemCode": "game:nugget-nativecopper",
-      "title": "category.copper.title",
+      "title": {
+        "ar": "Copper Age",
+        "be": "\u041C\u0435\u0434\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "cs": "Copper Age",
+        "da": "Copper Age",
+        "de": "Copper Age",
+        "en": "Copper Age",
+        "eo": "Copper Age",
+        "es": "Copper Age",
+        "fi": "Copper Age",
+        "fr": "Copper Age",
+        "hu": "Copper Age",
+        "is": "Copper Age",
+        "it": "Copper Age",
+        "ja": "Copper Age",
+        "ko": "Copper Age",
+        "li": "Copper Age",
+        "lt": "Copper Age",
+        "nl": "Copper Age",
+        "no": "Copper Age",
+        "pl": "Copper Age",
+        "pt": "Copper Age",
+        "ro": "Copper Age",
+        "ru": "\u041C\u0435\u0434\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "sk": "Copper Age",
+        "sr": "Copper Age",
+        "sv": "Copper Age",
+        "th": "Copper Age",
+        "tr": "Copper Age",
+        "uk": "\u041C\u0435\u0434\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "vi": "Copper Age",
+        "zh": "Copper Age"
+      },
       "headerTitle": "category.copper.header",
+      "header": {
+        "ar": "COPPER AGE",
+        "be": "\u041C\u0415\u0414\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "cs": "COPPER AGE",
+        "da": "COPPER AGE",
+        "de": "COPPER AGE",
+        "en": "COPPER AGE",
+        "eo": "COPPER AGE",
+        "es": "COPPER AGE",
+        "fi": "COPPER AGE",
+        "fr": "COPPER AGE",
+        "hu": "COPPER AGE",
+        "is": "COPPER AGE",
+        "it": "COPPER AGE",
+        "ja": "COPPER AGE",
+        "ko": "COPPER AGE",
+        "li": "COPPER AGE",
+        "lt": "COPPER AGE",
+        "nl": "COPPER AGE",
+        "no": "COPPER AGE",
+        "pl": "COPPER AGE",
+        "pt": "COPPER AGE",
+        "ro": "COPPER AGE",
+        "ru": "\u041C\u0415\u0414\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "sk": "COPPER AGE",
+        "sr": "COPPER AGE",
+        "sv": "COPPER AGE",
+        "th": "COPPER AGE",
+        "tr": "COPPER AGE",
+        "uk": "\u041C\u0415\u0414\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "vi": "COPPER AGE",
+        "zh": "COPPER AGE"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.copper.0.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u044B\u0439 \u0432\u0435\u043A. \u00AB\u041F\u0435\u0440\u0432\u044B\u0439 \u043C\u0435\u0442\u0430\u043B\u043B, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0441\u043B\u0443\u0448\u0430\u0435\u0442\u0441\u044F \u0440\u0443\u043A\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.copper.1.description",
+          "description": {
+            "en": "\u0421\u0430\u043C\u043E\u0440\u043E\u0434\u043D\u0430\u044F \u043C\u0435\u0434\u044C. \u0421\u043E\u0431\u0438\u0440\u0430\u0439 \u043F\u043E \u0436\u0438\u043B\u0430\u043C, \u043A\u0430\u043A \u042D\u0440\u0430 \u2014 \u043F\u043E \u0441\u043D\u0430\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:nugget-nativecopper",
@@ -1187,10 +1525,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.copper.2.description",
+          "description": {
+            "en": "\u0423\u0433\u043E\u043B\u044C \u0434\u043B\u044F \u043F\u043B\u0430\u0432\u043A\u0438. \u0416\u0430\u0440 \u0434\u043E\u043B\u0436\u0435\u043D \u0431\u044B\u0442\u044C \u0434\u043E\u043B\u0433\u0438\u043C \u0438 \u0437\u043B\u044B\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:charcoal",
@@ -1206,10 +1546,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.copper.3.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u044B\u0435 \u0441\u043B\u0438\u0442\u043A\u0438. \u0422\u0432\u0451\u0440\u0434\u0430\u044F \u0432\u0430\u043B\u044E\u0442\u0430 \u0440\u0435\u043C\u0435\u0441\u043B\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-copper",
@@ -1225,10 +1567,12 @@
         },
         {
           "id": 4,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.copper.4.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u044B\u0439 \u043C\u043E\u043B\u043E\u0442. \u0421 \u044D\u0442\u043E\u0433\u043E \u0443\u0434\u0430\u0440\u0430 \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0430\u044F \u043A\u0443\u0437\u043D\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hammer-copper",
@@ -1244,10 +1588,12 @@
         },
         {
           "id": 5,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.copper.5.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u0417\u0435\u043C\u043B\u044F \u043E\u0442\u043A\u0440\u043E\u0435\u0442 \u0442\u043E, \u0447\u0442\u043E \u043F\u0440\u044F\u0442\u0430\u043B\u0430 \u043E\u0442 \u043A\u0440\u0435\u043C\u043D\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:pickaxe-copper",
@@ -1263,10 +1609,12 @@
         },
         {
           "id": 6,
-          "x": 943.5,
-          "y": -125,
+          "x": -114,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.copper.6.description",
+          "description": {
+            "en": "\u041F\u043E\u0438\u0441\u043A\u043E\u0432\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u042D\u0440\u0430 \u0447\u0435\u0440\u0442\u0438\u043B\u0430 \u043A\u0430\u0440\u0442\u044B \u0440\u0443\u0434, \u043A\u0430\u043A \u0437\u0432\u0451\u0437\u0434\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:prospectingpick-copper",
@@ -1282,10 +1630,12 @@
         },
         {
           "id": 7,
-          "x": 1020,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.copper.7.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u044B\u0439 \u0442\u043E\u043F\u043E\u0440. \u041B\u0435\u0441 \u0441\u0434\u0430\u0451\u0442\u0441\u044F \u0431\u044B\u0441\u0442\u0440\u0435\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:axe-felling-copper",
@@ -1301,10 +1651,12 @@
         },
         {
           "id": 8,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.copper.8.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u0430\u044F \u043B\u043E\u043F\u0430\u0442\u0430. \u0413\u043B\u0438\u043D\u0430 \u0438 \u0448\u0430\u0445\u0442\u044B \u0431\u043B\u0430\u0433\u043E\u0434\u0430\u0440\u044F\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:shovel-copper",
@@ -1320,10 +1672,12 @@
         },
         {
           "id": 9,
-          "x": 1283.5,
-          "y": 125,
+          "x": -228,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.copper.9.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u0430\u044F \u043C\u043E\u0442\u044B\u0433\u0430. \u041F\u043E\u043B\u044F \u0440\u044F\u0434\u043E\u043C \u0441 \u043A\u0443\u0437\u043D\u0435\u0439 \u2014 \u043C\u0443\u0434\u0440\u043E\u0441\u0442\u044C, \u043D\u0435 \u0441\u043B\u0430\u0431\u043E\u0441\u0442\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hoe-copper",
@@ -1339,10 +1693,12 @@
         },
         {
           "id": 10,
-          "x": 1360,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.copper.10.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u044B\u0439 \u043D\u043E\u0436. \u041E\u0441\u0442\u0440\u0435\u0435 \u043A\u0430\u043C\u043D\u044F, \u0447\u0435\u0441\u0442\u043D\u0435\u0435 \u0440\u0436\u0430\u0432\u0447\u0438\u043D\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:knife-generic-copper",
@@ -1358,10 +1714,12 @@
         },
         {
           "id": 11,
-          "x": 1530,
-          "y": 0,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.copper.11.description",
+          "description": {
+            "en": "\u0417\u0443\u0431\u0438\u043B\u043E. \u0422\u043E\u043D\u043A\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u2014 \u0442\u043E\u0436\u0435 \u0441\u0438\u043B\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:chisel-copper",
@@ -1377,10 +1735,12 @@
         },
         {
           "id": 12,
-          "x": 1700,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.copper.12.description",
+          "description": {
+            "en": "\u041F\u0438\u043B\u0430. \u0414\u043E\u0441\u043A\u0438 \u0440\u043E\u0432\u043D\u044B\u0435, \u043A\u0430\u043A \u0441\u0442\u0440\u043E\u043A\u0438 \u0434\u043D\u0435\u0432\u043D\u0438\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:saw-copper",
@@ -1396,10 +1756,12 @@
         },
         {
           "id": 13,
-          "x": 1793.5,
-          "y": -125,
+          "x": -114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.copper.13.description",
+          "description": {
+            "en": "\u041A\u043E\u0441\u0430. \u0416\u0430\u0442\u0432\u0430 \u043A\u043E\u0440\u043C\u0438\u0442 \u043A\u0443\u0437\u043D\u0435\u0446\u0430 \u043D\u0435 \u0445\u0443\u0436\u0435 \u0440\u0443\u0434\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:scythe-copper",
@@ -1415,10 +1777,12 @@
         },
         {
           "id": 14,
-          "x": 1793.5,
-          "y": 125,
+          "x": 0,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.copper.14.description",
+          "description": {
+            "en": "\u041D\u043E\u0436\u043D\u0438\u0446\u044B. \u041E\u0432\u0446\u044B \u0438 \u043B\u0451\u043D \u043D\u0435 \u0436\u0434\u0443\u0442, \u043F\u043E\u043A\u0430 \u0442\u044B \u043A\u043E\u043F\u0430\u0435\u0448\u044C \u043C\u0435\u0434\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:shears-copper",
@@ -1434,10 +1798,12 @@
         },
         {
           "id": 15,
-          "x": 1870,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.copper.15.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u0430\u044F \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u044F. \u0421\u0435\u0440\u0434\u0446\u0435 \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439 \u0441\u0442\u0443\u0447\u0438\u0442 \u0440\u043E\u0432\u043D\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:anvil-copper",
@@ -1453,10 +1819,12 @@
         },
         {
           "id": 16,
-          "x": 2040,
-          "y": 0,
+          "x": 114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.copper.16.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u043D\u043E\u0435 \u043A\u043E\u043F\u044C\u0451. \u041C\u0435\u0442\u0430\u043B\u043B \u043D\u0430 \u0434\u0440\u0435\u0432\u043A\u0435 \u2014 \u0443\u0436\u0435 \u043D\u0435 \u043A\u0430\u043C\u0435\u043D\u043D\u044B\u0439 \u0432\u0435\u043A."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:spear-generic-copper",
@@ -1472,17 +1840,14 @@
         },
         {
           "id": 17,
-          "x": 2210,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.copper.17.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u044C \u043F\u043E\u043A\u043E\u0440\u0435\u043D\u0430. \u0412 \u0434\u043D\u0435\u0432\u043D\u0438\u043A\u0435: \u00AB\u0418\u0449\u0438 \u043E\u043B\u043E\u0432\u043E. \u0421\u043F\u043B\u0430\u0432 \u0441\u0438\u043B\u044C\u043D\u0435\u0435 \u0433\u043E\u0440\u0434\u044B\u043D\u0438\u00BB."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:ingot-copper",
-              "count": 3
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -1558,24 +1923,93 @@
     },
     {
       "iconItemCode": "game:ingot-tinbronze",
-      "title": "category.bronze.title",
+      "title": {
+        "ar": "Bronze Age",
+        "be": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u043A",
+        "cs": "Bronze Age",
+        "da": "Bronze Age",
+        "de": "Bronze Age",
+        "en": "Bronze Age",
+        "eo": "Bronze Age",
+        "es": "Bronze Age",
+        "fi": "Bronze Age",
+        "fr": "Bronze Age",
+        "hu": "Bronze Age",
+        "is": "Bronze Age",
+        "it": "Bronze Age",
+        "ja": "Bronze Age",
+        "ko": "Bronze Age",
+        "li": "Bronze Age",
+        "lt": "Bronze Age",
+        "nl": "Bronze Age",
+        "no": "Bronze Age",
+        "pl": "Bronze Age",
+        "pt": "Bronze Age",
+        "ro": "Bronze Age",
+        "ru": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u043A",
+        "sk": "Bronze Age",
+        "sr": "Bronze Age",
+        "sv": "Bronze Age",
+        "th": "Bronze Age",
+        "tr": "Bronze Age",
+        "uk": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u043A",
+        "vi": "Bronze Age",
+        "zh": "Bronze Age"
+      },
       "headerTitle": "category.bronze.header",
+      "header": {
+        "ar": "BRONZE AGE",
+        "be": "\u0411\u0420\u041E\u041D\u0417\u041E\u0412\u042B\u0419 \u0412\u0415\u041A",
+        "cs": "BRONZE AGE",
+        "da": "BRONZE AGE",
+        "de": "BRONZE AGE",
+        "en": "BRONZE AGE",
+        "eo": "BRONZE AGE",
+        "es": "BRONZE AGE",
+        "fi": "BRONZE AGE",
+        "fr": "BRONZE AGE",
+        "hu": "BRONZE AGE",
+        "is": "BRONZE AGE",
+        "it": "BRONZE AGE",
+        "ja": "BRONZE AGE",
+        "ko": "BRONZE AGE",
+        "li": "BRONZE AGE",
+        "lt": "BRONZE AGE",
+        "nl": "BRONZE AGE",
+        "no": "BRONZE AGE",
+        "pl": "BRONZE AGE",
+        "pt": "BRONZE AGE",
+        "ro": "BRONZE AGE",
+        "ru": "\u0411\u0420\u041E\u041D\u0417\u041E\u0412\u042B\u0419 \u0412\u0415\u041A",
+        "sk": "BRONZE AGE",
+        "sr": "BRONZE AGE",
+        "sv": "BRONZE AGE",
+        "th": "BRONZE AGE",
+        "tr": "BRONZE AGE",
+        "uk": "\u0411\u0420\u041E\u041D\u0417\u041E\u0412\u042B\u0419 \u0412\u0415\u041A",
+        "vi": "BRONZE AGE",
+        "zh": "BRONZE AGE"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.bronze.0.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u043A. \u00AB\u0414\u0432\u0430 \u043C\u0435\u0442\u0430\u043B\u043B\u0430, \u043E\u0434\u043D\u0430 \u0432\u043E\u043B\u044F\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.bronze.1.description",
+          "description": {
+            "en": "\u041E\u043B\u043E\u0432\u044F\u043D\u043D\u044B\u0435 \u0441\u043B\u0438\u0442\u043A\u0438. \u0420\u0435\u0434\u043A\u043E\u0441\u0442\u044C, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043C\u0435\u043D\u044F\u0435\u0442 \u044D\u043F\u043E\u0445\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-tin",
@@ -1591,10 +2025,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.bronze.2.description",
+          "description": {
+            "en": "\u041C\u0435\u0434\u044C \u0434\u043B\u044F \u0441\u043F\u043B\u0430\u0432\u0430. \u0411\u0440\u043E\u043D\u0437\u0430 \u043B\u044E\u0431\u0438\u0442 \u0442\u043E\u0447\u043D\u0443\u044E \u0434\u043E\u043B\u044E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-copper",
@@ -1610,10 +2046,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.bronze.3.description",
+          "description": {
+            "en": "\u041E\u043B\u043E\u0432\u044F\u043D\u043D\u0430\u044F \u0431\u0440\u043E\u043D\u0437\u0430. \u0417\u0432\u043E\u043D \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u0438 \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u0432\u044B\u0448\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-tinbronze",
@@ -1629,10 +2067,12 @@
         },
         {
           "id": 4,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.bronze.4.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u043C\u043E\u043B\u043E\u0442. \u0423\u0434\u0430\u0440 \u0433\u043B\u0443\u0431\u0436\u0435, \u0441\u043B\u0435\u0434 \u0447\u0438\u0449\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hammer-tinbronze",
@@ -1648,10 +2088,12 @@
         },
         {
           "id": 5,
-          "x": 850,
-          "y": 0,
+          "x": 228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.bronze.5.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u0416\u0438\u043B\u044B, \u0447\u0442\u043E \u0441\u043C\u0435\u044F\u043B\u0438\u0441\u044C \u043D\u0430\u0434 \u043C\u0435\u0434\u044C\u044E, \u0437\u0430\u043C\u043E\u043B\u043A\u0430\u044E\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:pickaxe-tinbronze",
@@ -1667,10 +2109,12 @@
         },
         {
           "id": 6,
-          "x": 1020,
-          "y": 0,
+          "x": 114,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.bronze.6.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u0442\u043E\u043F\u043E\u0440. \u041B\u0435\u0441 \u043F\u043E\u043C\u043D\u0438\u0442 \u0442\u0432\u043E\u0438 \u0448\u0430\u0433\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:axe-felling-tinbronze",
@@ -1686,10 +2130,12 @@
         },
         {
           "id": 7,
-          "x": 1190,
-          "y": 0,
+          "x": 0,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.bronze.7.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u0430\u044F \u043F\u0438\u043B\u0430. \u0414\u043E\u043C \u0440\u0430\u0441\u0442\u0451\u0442 \u0438\u0437 \u0440\u043E\u0432\u043D\u044B\u0445 \u0434\u043E\u0441\u043E\u043A."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:saw-tinbronze",
@@ -1705,10 +2151,12 @@
         },
         {
           "id": 8,
-          "x": 1283.5,
-          "y": -125,
+          "x": -114,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.bronze.8.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u0430\u044F \u043B\u043E\u043F\u0430\u0442\u0430. \u0413\u043B\u0443\u0431\u0436\u0435 \u0432 \u0433\u043B\u0438\u043D\u0443 \u0438 \u0448\u0430\u0445\u0442\u0443."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:shovel-tinbronze",
@@ -1724,10 +2172,12 @@
         },
         {
           "id": 9,
-          "x": 1283.5,
-          "y": 125,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.bronze.9.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u044B\u0439 \u043D\u043E\u0436. \u0414\u043B\u044F \u043A\u043E\u0436\u0438, \u0435\u0434\u044B \u0438 \u0442\u043E\u043D\u043A\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:knife-generic-tinbronze",
@@ -1743,10 +2193,12 @@
         },
         {
           "id": 10,
-          "x": 1360,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.bronze.10.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u043E\u0435 \u0437\u0443\u0431\u0438\u043B\u043E. \u0423\u0437\u043E\u0440\u044B \u0438 \u0437\u0430\u043C\u043A\u0438 \u043C\u0435\u0445\u0430\u043D\u0438\u0437\u043C\u043E\u0432."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:chisel-tinbronze",
@@ -1762,10 +2214,12 @@
         },
         {
           "id": 11,
-          "x": 1453.5,
-          "y": -125,
+          "x": -228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.bronze.11.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u0430\u044F \u043A\u043E\u0441\u0430. \u041F\u043E\u043B\u044F \u043D\u0435 \u0436\u0434\u0443\u0442, \u043F\u043E\u043A\u0430 \u0442\u044B \u043A\u0443\u0451\u0448\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:scythe-tinbronze",
@@ -1781,10 +2235,12 @@
         },
         {
           "id": 12,
-          "x": 1453.5,
-          "y": 125,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.bronze.12.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u0430\u044F \u043F\u043E\u0438\u0441\u043A\u043E\u0432\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u042D\u0440\u0430: \u00AB\u0421\u043B\u0443\u0448\u0430\u0439 \u043A\u0430\u043C\u0435\u043D\u044C \u2014 \u043E\u043D \u0432\u0440\u0451\u0442 \u0440\u0435\u0434\u043A\u043E\u00BB."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:prospectingpick-tinbronze",
@@ -1800,10 +2256,12 @@
         },
         {
           "id": 13,
-          "x": 1530,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.bronze.13.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u0430\u044F \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u044F. \u0422\u044F\u0436\u0451\u043B\u0430\u044F, \u043A\u0430\u043A \u043E\u0431\u0435\u0449\u0430\u043D\u0438\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:anvil-tinbronze",
@@ -1819,10 +2277,12 @@
         },
         {
           "id": 14,
-          "x": 1700,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.bronze.14.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u043E\u0432\u043E\u0435 \u043A\u043E\u043F\u044C\u0451. \u041E\u0445\u043E\u0442\u0430 \u0438 \u0441\u0442\u0440\u0430\u0436\u0430 \u0433\u0440\u0430\u043D\u0438\u0446."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:spear-generic-tinbronze",
@@ -1838,17 +2298,14 @@
         },
         {
           "id": 15,
-          "x": 1870,
-          "y": 0,
+          "x": -228,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.bronze.15.description",
+          "description": {
+            "en": "\u0411\u0440\u043E\u043D\u0437\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430. \u0414\u0430\u043B\u044C\u0448\u0435 \u2014 \u0447\u0451\u0440\u043D\u044B\u0439 \u0436\u0430\u0440 \u0436\u0435\u043B\u0435\u0437\u0430."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:ingot-tinbronze",
-              "count": 3
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -1916,24 +2373,93 @@
     },
     {
       "iconItemCode": "game:ingot-iron",
-      "title": "category.iron.title",
+      "title": {
+        "ar": "Iron Age",
+        "be": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "cs": "Iron Age",
+        "da": "Iron Age",
+        "de": "Iron Age",
+        "en": "Iron Age",
+        "eo": "Iron Age",
+        "es": "Iron Age",
+        "fi": "Iron Age",
+        "fr": "Iron Age",
+        "hu": "Iron Age",
+        "is": "Iron Age",
+        "it": "Iron Age",
+        "ja": "Iron Age",
+        "ko": "Iron Age",
+        "li": "Iron Age",
+        "lt": "Iron Age",
+        "nl": "Iron Age",
+        "no": "Iron Age",
+        "pl": "Iron Age",
+        "pt": "Iron Age",
+        "ro": "Iron Age",
+        "ru": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "sk": "Iron Age",
+        "sr": "Iron Age",
+        "sv": "Iron Age",
+        "th": "Iron Age",
+        "tr": "Iron Age",
+        "uk": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0432\u0435\u043A",
+        "vi": "Iron Age",
+        "zh": "Iron Age"
+      },
       "headerTitle": "category.iron.header",
+      "header": {
+        "ar": "IRON AGE",
+        "be": "\u0416\u0415\u041B\u0415\u0417\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "cs": "IRON AGE",
+        "da": "IRON AGE",
+        "de": "IRON AGE",
+        "en": "IRON AGE",
+        "eo": "IRON AGE",
+        "es": "IRON AGE",
+        "fi": "IRON AGE",
+        "fr": "IRON AGE",
+        "hu": "IRON AGE",
+        "is": "IRON AGE",
+        "it": "IRON AGE",
+        "ja": "IRON AGE",
+        "ko": "IRON AGE",
+        "li": "IRON AGE",
+        "lt": "IRON AGE",
+        "nl": "IRON AGE",
+        "no": "IRON AGE",
+        "pl": "IRON AGE",
+        "pt": "IRON AGE",
+        "ro": "IRON AGE",
+        "ru": "\u0416\u0415\u041B\u0415\u0417\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "sk": "IRON AGE",
+        "sr": "IRON AGE",
+        "sv": "IRON AGE",
+        "th": "IRON AGE",
+        "tr": "IRON AGE",
+        "uk": "\u0416\u0415\u041B\u0415\u0417\u041D\u042B\u0419 \u0412\u0415\u041A",
+        "vi": "IRON AGE",
+        "zh": "IRON AGE"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.iron.0.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0432\u0435\u043A. \u00AB\u041D\u0435 \u043B\u0435\u0439 \u2014 \u043A\u0443\u0439. \u0416\u0435\u043B\u0435\u0437\u043E \u0440\u043E\u0436\u0434\u0430\u0435\u0442\u0441\u044F \u0432 \u0443\u043F\u043E\u0440\u0441\u0442\u0432\u0435\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.iron.1.description",
+          "description": {
+            "en": "\u041C\u043D\u043E\u0433\u043E \u0443\u0433\u043B\u044F. \u0414\u043E\u043C\u043D\u0430 \u0433\u043E\u043B\u043E\u0434\u043D\u0430 \u0432\u0441\u0435\u0433\u0434\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:charcoal",
@@ -1949,10 +2475,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.iron.2.description",
+          "description": {
+            "en": "\u0415\u0449\u0451 \u0434\u0440\u043E\u0432 \u2014 \u0443\u0433\u043E\u043B\u044C \u043D\u0435 \u043F\u0430\u0434\u0430\u0435\u0442 \u0441 \u043D\u0435\u0431\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:firewood",
@@ -1968,10 +2496,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.iron.3.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0435 \u043A\u0440\u0438\u0446\u044B. \u0421\u044B\u0440\u043E\u0439 \u043C\u0435\u0442\u0430\u043B\u043B \u044D\u043F\u043E\u0445\u0438 \u042D\u0440\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ironbloom",
@@ -1987,10 +2517,12 @@
         },
         {
           "id": 4,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.iron.4.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0435 \u0441\u043B\u0438\u0442\u043A\u0438. \u041F\u0440\u043E\u043A\u0443\u0439 \u043A\u0440\u0438\u0446\u0443 \u0432 \u043F\u043E\u0441\u043B\u0443\u0448\u043D\u0443\u044E \u0441\u0442\u0430\u043B\u044C \u0437\u0430\u0432\u0442\u0440\u0430\u0448\u043D\u0435\u0433\u043E \u0434\u043D\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-iron",
@@ -2006,10 +2538,12 @@
         },
         {
           "id": 5,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.iron.5.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u043C\u043E\u043B\u043E\u0442. \u041A\u0443\u0437\u043D\u044F \u0437\u0432\u0443\u0447\u0438\u0442 \u0438\u043D\u0430\u0447\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hammer-iron",
@@ -2025,10 +2559,12 @@
         },
         {
           "id": 6,
-          "x": 1020,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.iron.6.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u0413\u043B\u0443\u0431\u0438\u043D\u044B \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u044E\u0442 \u0440\u043E\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:pickaxe-iron",
@@ -2044,10 +2580,12 @@
         },
         {
           "id": 7,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.iron.7.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0442\u043E\u043F\u043E\u0440. \u041B\u0435\u0441 \u043A\u043B\u0430\u043D\u044F\u0435\u0442\u0441\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:axe-felling-iron",
@@ -2063,10 +2601,12 @@
         },
         {
           "id": 8,
-          "x": 1360,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.iron.8.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u043F\u0438\u043B\u0430. \u041C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0438\u0435 \u0438 \u0441\u0442\u0435\u043D\u044B \u0440\u0430\u0441\u0442\u0443\u0442 \u0431\u044B\u0441\u0442\u0440\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:saw-iron",
@@ -2082,10 +2622,12 @@
         },
         {
           "id": 9,
-          "x": 1453.5,
-          "y": -125,
+          "x": -114,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.iron.9.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u043B\u043E\u043F\u0430\u0442\u0430. \u0428\u0430\u0445\u0442\u044B \u0438 \u0433\u043B\u0438\u043D\u0430 \u043D\u0435 \u0443\u0441\u043F\u0435\u0432\u0430\u044E\u0442 \u0437\u0430\u043A\u0440\u044B\u0442\u044C\u0441\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:shovel-iron",
@@ -2101,10 +2643,12 @@
         },
         {
           "id": 10,
-          "x": 1453.5,
-          "y": 125,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.iron.10.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u043A\u043E\u0441\u0430. \u0423\u0440\u043E\u0436\u0430\u0439 \u0434\u043B\u044F \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043A\u0443\u0437\u043D\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:scythe-iron",
@@ -2120,10 +2664,12 @@
         },
         {
           "id": 11,
-          "x": 1530,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.iron.11.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u043E\u0435 \u0437\u0443\u0431\u0438\u043B\u043E. \u0422\u043E\u0447\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u0441\u043B\u0435 \u0441\u0438\u043B\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:chisel-iron",
@@ -2139,10 +2685,12 @@
         },
         {
           "id": 12,
-          "x": 1700,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.iron.12.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u043D\u043E\u0436. \u0414\u043E\u043B\u0433\u043E \u0441\u043B\u0443\u0436\u0438\u0442, \u0435\u0441\u043B\u0438 \u0431\u0435\u0440\u0435\u0447\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:knife-generic-iron",
@@ -2158,10 +2706,12 @@
         },
         {
           "id": 13,
-          "x": 1793.5,
-          "y": -125,
+          "x": 0,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.iron.13.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u043F\u043E\u0438\u0441\u043A\u043E\u0432\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u041A\u0430\u0440\u0442\u0430 \u043D\u0435\u0434\u0440 \u043F\u043E\u043B\u043D\u0435\u0435\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:prospectingpick-iron",
@@ -2177,10 +2727,12 @@
         },
         {
           "id": 14,
-          "x": 1793.5,
-          "y": 125,
+          "x": -114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.iron.14.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0435 \u043D\u043E\u0436\u043D\u0438\u0446\u044B. \u0421\u0442\u0430\u0434\u043E \u0438 \u043B\u0451\u043D \u043D\u0430 \u0441\u043B\u0443\u0436\u0431\u0435 \u043F\u043E\u0441\u0435\u043B\u0435\u043D\u0438\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:shears-iron",
@@ -2196,10 +2748,12 @@
         },
         {
           "id": 15,
-          "x": 1870,
-          "y": 0,
+          "x": 114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.iron.15.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u044F. \u0421\u0435\u0440\u0434\u0446\u0435 \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043A\u0443\u0437\u043D\u0438 \u042D\u0440\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:anvil-iron",
@@ -2215,10 +2769,12 @@
         },
         {
           "id": 16,
-          "x": 2040,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.iron.16.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043D\u043E\u0435 \u043A\u043E\u043F\u044C\u0451. \u0421\u0442\u0440\u0430\u0436\u0430 \u043D\u0430 \u043F\u043E\u0440\u043E\u0433\u0435 \u0440\u0443\u0438\u043D."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:spear-generic-iron",
@@ -2234,17 +2790,14 @@
         },
         {
           "id": 17,
-          "x": 2210,
-          "y": 0,
+          "x": 228,
+          "y": 228,
           "nodeType": "Checkpoint",
-          "description": "quest.iron.17.description",
+          "description": {
+            "en": "\u0416\u0435\u043B\u0435\u0437\u043E \u0442\u0432\u043E\u0451. \u0414\u043D\u0435\u0432\u043D\u0438\u043A \u0448\u0435\u043F\u0447\u0435\u0442: \u00AB\u0421\u0442\u0430\u043B\u044C \u2014 \u0443\u0433\u043E\u043B\u044C\u043D\u0430\u044F \u0437\u0432\u0435\u0437\u0434\u0430 \u0432 \u043F\u043E\u043B\u043D\u043E\u0447\u0438\u00BB."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:ingot-iron",
-              "count": 3
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -2320,24 +2873,93 @@
     },
     {
       "iconItemCode": "game:ingot-steel",
-      "title": "category.steel.title",
+      "title": {
+        "ar": "Steel Age",
+        "be": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0432\u0435\u043A",
+        "cs": "Steel Age",
+        "da": "Steel Age",
+        "de": "Steel Age",
+        "en": "Steel Age",
+        "eo": "Steel Age",
+        "es": "Steel Age",
+        "fi": "Steel Age",
+        "fr": "Steel Age",
+        "hu": "Steel Age",
+        "is": "Steel Age",
+        "it": "Steel Age",
+        "ja": "Steel Age",
+        "ko": "Steel Age",
+        "li": "Steel Age",
+        "lt": "Steel Age",
+        "nl": "Steel Age",
+        "no": "Steel Age",
+        "pl": "Steel Age",
+        "pt": "Steel Age",
+        "ro": "Steel Age",
+        "ru": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0432\u0435\u043A",
+        "sk": "Steel Age",
+        "sr": "Steel Age",
+        "sv": "Steel Age",
+        "th": "Steel Age",
+        "tr": "Steel Age",
+        "uk": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0432\u0435\u043A",
+        "vi": "Steel Age",
+        "zh": "Steel Age"
+      },
       "headerTitle": "category.steel.header",
+      "header": {
+        "ar": "STEEL AGE",
+        "be": "\u0421\u0422\u0410\u041B\u042C\u041D\u041E\u0419 \u0412\u0415\u041A",
+        "cs": "STEEL AGE",
+        "da": "STEEL AGE",
+        "de": "STEEL AGE",
+        "en": "STEEL AGE",
+        "eo": "STEEL AGE",
+        "es": "STEEL AGE",
+        "fi": "STEEL AGE",
+        "fr": "STEEL AGE",
+        "hu": "STEEL AGE",
+        "is": "STEEL AGE",
+        "it": "STEEL AGE",
+        "ja": "STEEL AGE",
+        "ko": "STEEL AGE",
+        "li": "STEEL AGE",
+        "lt": "STEEL AGE",
+        "nl": "STEEL AGE",
+        "no": "STEEL AGE",
+        "pl": "STEEL AGE",
+        "pt": "STEEL AGE",
+        "ro": "STEEL AGE",
+        "ru": "\u0421\u0422\u0410\u041B\u042C\u041D\u041E\u0419 \u0412\u0415\u041A",
+        "sk": "STEEL AGE",
+        "sr": "STEEL AGE",
+        "sv": "STEEL AGE",
+        "th": "STEEL AGE",
+        "tr": "STEEL AGE",
+        "uk": "\u0421\u0422\u0410\u041B\u042C\u041D\u041E\u0419 \u0412\u0415\u041A",
+        "vi": "STEEL AGE",
+        "zh": "STEEL AGE"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.steel.0.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0432\u0435\u043A \u2014 \u0444\u0438\u043D\u0430\u043B \u043F\u0443\u0442\u0438 \u042D\u0440\u044B. \u00AB\u041A\u0442\u043E \u0434\u043E\u0448\u0451\u043B \u0441\u044E\u0434\u0430, \u0441\u043B\u044B\u0448\u0438\u0442 \u0433\u0443\u043B \u043A\u0443\u0437\u043D\u0438 \u043F\u043E\u0434 \u043D\u0435\u0431\u043E\u043C\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.steel.1.description",
+          "description": {
+            "en": "\u041A\u043E\u043A\u0441. \u0427\u0438\u0441\u0442\u044B\u0439 \u044F\u0440\u043E\u0441\u0442\u043D\u044B\u0439 \u0436\u0430\u0440."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:coke",
@@ -2353,10 +2975,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.steel.2.description",
+          "description": {
+            "en": "\u0417\u0430\u043F\u0430\u0441 \u0436\u0435\u043B\u0435\u0437\u0430. \u0421\u0442\u0430\u043B\u044C \u0435\u0441\u0442 \u0443\u043F\u043E\u0440\u0441\u0442\u0432\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-iron",
@@ -2372,10 +2996,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.steel.3.description",
+          "description": {
+            "en": "\u0415\u0449\u0451 \u0443\u0433\u043B\u044F. \u041D\u043E\u0447\u044C \u0443 \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u0438 \u0434\u043B\u0438\u043D\u043D\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:charcoal",
@@ -2391,10 +3017,12 @@
         },
         {
           "id": 4,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.steel.4.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u043B\u0438\u0442\u043A\u0438. \u0412\u0435\u0440\u0448\u0438\u043D\u0430 \u043C\u0435\u0442\u0430\u043B\u043B\u0443\u0440\u0433\u0438\u0438 \u0432\u044B\u0436\u0438\u0432\u0430\u043D\u0438\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:ingot-steel",
@@ -2410,10 +3038,12 @@
         },
         {
           "id": 5,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.steel.5.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u043C\u043E\u043B\u043E\u0442. \u0423\u0434\u0430\u0440, \u043F\u043E\u0441\u043B\u0435 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u044D\u0445\u043E \u0436\u0438\u0432\u0451\u0442 \u0432 \u0441\u0442\u0435\u043D\u0430\u0445."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hammer-steel",
@@ -2429,10 +3059,12 @@
         },
         {
           "id": 6,
-          "x": 1020,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.steel.6.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u041B\u043E\u043C\u0430\u0435\u0442 \u0442\u043E, \u0447\u0442\u043E \u043B\u043E\u043C\u0430\u043B\u043E \u0434\u0440\u0443\u0433\u0438\u0445."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:pickaxe-steel",
@@ -2448,10 +3080,12 @@
         },
         {
           "id": 7,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.steel.7.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0442\u043E\u043F\u043E\u0440. \u041B\u0435\u0441 \u2014 \u043B\u0438\u0448\u044C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:axe-felling-steel",
@@ -2467,10 +3101,12 @@
         },
         {
           "id": 8,
-          "x": 1283.5,
-          "y": -125,
+          "x": -342,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.steel.8.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0438\u043B\u0430. \u0418\u0434\u0435\u0430\u043B\u044C\u043D\u044B\u0435 \u0434\u043E\u0441\u043A\u0438 \u0434\u043B\u044F \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0439 \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:saw-steel",
@@ -2486,10 +3122,12 @@
         },
         {
           "id": 9,
-          "x": 1283.5,
-          "y": 125,
+          "x": -342,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.steel.9.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0435 \u0437\u0443\u0431\u0438\u043B\u043E. \u0422\u043E\u043D\u043A\u043E\u0441\u0442\u044C \u043D\u0430 \u043A\u0440\u0430\u044E \u0441\u0438\u043B\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:chisel-steel",
@@ -2505,10 +3143,12 @@
         },
         {
           "id": 10,
-          "x": 1360,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.steel.10.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u043D\u043E\u0436. \u041A\u043B\u0438\u043D\u043E\u043A, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043F\u043E\u043C\u043D\u0438\u0442 \u0432\u0441\u0435 \u043F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:knife-generic-steel",
@@ -2524,10 +3164,12 @@
         },
         {
           "id": 11,
-          "x": 1453.5,
-          "y": -125,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.steel.11.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u043E\u0441\u0430. \u041F\u043E\u043B\u044F \u0434\u043B\u044F \u0446\u0435\u043B\u043E\u0433\u043E \u043F\u043E\u0441\u0435\u043B\u0435\u043D\u0438\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:scythe-steel",
@@ -2543,10 +3185,12 @@
         },
         {
           "id": 12,
-          "x": 1453.5,
-          "y": 125,
+          "x": -342,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.steel.12.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u043E\u0438\u0441\u043A\u043E\u0432\u0430\u044F \u043A\u0438\u0440\u043A\u0430. \u0422\u044B \u0447\u0438\u0442\u0430\u0435\u0448\u044C \u043A\u0430\u043C\u0435\u043D\u044C, \u043A\u0430\u043A \u0434\u043D\u0435\u0432\u043D\u0438\u043A."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:prospectingpick-steel",
@@ -2562,10 +3206,12 @@
         },
         {
           "id": 13,
-          "x": 1530,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.steel.13.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u043D\u0430\u043A\u043E\u0432\u0430\u043B\u044C\u043D\u044F. \u0422\u0440\u043E\u043D, \u043E \u043A\u043E\u0442\u043E\u0440\u043E\u043C \u043F\u0438\u0441\u0430\u043B\u0430 \u042D\u0440\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:anvil-steel",
@@ -2581,10 +3227,12 @@
         },
         {
           "id": 14,
-          "x": 1700,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.steel.14.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\u043F\u044C\u0451. \u0418 \u0432 \u043D\u0451\u043C \u2014 \u043E\u0442\u0431\u043B\u0435\u0441\u043A \u0440\u0436\u0430\u0432\u044B\u0445 \u0448\u0435\u0441\u0442\u0435\u0440\u0451\u043D \u0440\u0443\u0438\u043D."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:spear-generic-steel",
@@ -2600,17 +3248,14 @@
         },
         {
           "id": 15,
-          "x": 1870,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.steel.15.description",
+          "description": {
+            "en": "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0432\u0435\u043A \u043F\u043E\u043A\u043E\u0440\u0451\u043D. \u0423\u0433\u043E\u043B\u044C\u043D\u0430\u044F \u0437\u0432\u0435\u0437\u0434\u0430 \u0433\u043E\u0440\u0438\u0442 \u0432 \u0442\u0432\u043E\u0435\u0439 \u043A\u0443\u0437\u043D\u0435. \u0421\u043A\u0430\u0437\u0430\u043D\u0438\u0435 \u0437\u0430\u043A\u0440\u044B\u0442\u043E \u2014 \u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u043E \u0437\u0430\u043D\u043E\u0432\u043E \u0432 \u0441\u0442\u0440\u0430\u043D\u0441\u0442\u0432\u0438\u044F\u0445."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:ingot-steel",
-              "count": 3
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -2678,24 +3323,93 @@
     },
     {
       "iconItemCode": "game:bow-simple",
-      "title": "category.hunting.title",
+      "title": {
+        "ar": "Hunting",
+        "be": "\u041E\u0445\u043E\u0442\u0430",
+        "cs": "Hunting",
+        "da": "Hunting",
+        "de": "Hunting",
+        "en": "Hunting",
+        "eo": "Hunting",
+        "es": "Hunting",
+        "fi": "Hunting",
+        "fr": "Hunting",
+        "hu": "Hunting",
+        "is": "Hunting",
+        "it": "Hunting",
+        "ja": "Hunting",
+        "ko": "Hunting",
+        "li": "Hunting",
+        "lt": "Hunting",
+        "nl": "Hunting",
+        "no": "Hunting",
+        "pl": "Hunting",
+        "pt": "Hunting",
+        "ro": "Hunting",
+        "ru": "\u041E\u0445\u043E\u0442\u0430",
+        "sk": "Hunting",
+        "sr": "Hunting",
+        "sv": "Hunting",
+        "th": "Hunting",
+        "tr": "Hunting",
+        "uk": "\u041E\u0445\u043E\u0442\u0430",
+        "vi": "Hunting",
+        "zh": "Hunting"
+      },
       "headerTitle": "category.hunting.header",
+      "header": {
+        "ar": "HUNTING",
+        "be": "\u041E\u0425\u041E\u0422\u0410",
+        "cs": "HUNTING",
+        "da": "HUNTING",
+        "de": "HUNTING",
+        "en": "HUNTING",
+        "eo": "HUNTING",
+        "es": "HUNTING",
+        "fi": "HUNTING",
+        "fr": "HUNTING",
+        "hu": "HUNTING",
+        "is": "HUNTING",
+        "it": "HUNTING",
+        "ja": "HUNTING",
+        "ko": "HUNTING",
+        "li": "HUNTING",
+        "lt": "HUNTING",
+        "nl": "HUNTING",
+        "no": "HUNTING",
+        "pl": "HUNTING",
+        "pt": "HUNTING",
+        "ro": "HUNTING",
+        "ru": "\u041E\u0425\u041E\u0422\u0410",
+        "sk": "HUNTING",
+        "sr": "HUNTING",
+        "sv": "HUNTING",
+        "th": "HUNTING",
+        "tr": "HUNTING",
+        "uk": "\u041E\u0425\u041E\u0422\u0410",
+        "vi": "HUNTING",
+        "zh": "HUNTING"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.hunting.0.description",
+          "description": {
+            "en": "\u041E\u0445\u043E\u0442\u0430. \u00AB\u041A\u0443\u0437\u043D\u0435\u0446, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0435 \u0443\u043C\u0435\u0435\u0442 \u0434\u043E\u0431\u044B\u0442\u044C \u0435\u0434\u0443, \u043A\u0443\u0451\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0433\u043E\u043B\u043E\u0434\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.hunting.1.description",
+          "description": {
+            "en": "\u041A\u0440\u0435\u043C\u043D\u0451\u0432\u043E\u0435 \u043A\u043E\u043F\u044C\u0451. \u041F\u0435\u0440\u0432\u044B\u0439 \u0434\u043E\u0433\u043E\u0432\u043E\u0440 \u0441 \u0434\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u0435\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:spear-generic-flint",
@@ -2711,10 +3425,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.hunting.2.description",
+          "description": {
+            "en": "\u041A\u043E\u0441\u0442\u0438. \u0418\u0437 \u043D\u0438\u0445 \u2014 \u043A\u043B\u0435\u0439, \u043D\u0430\u043A\u043E\u043D\u0435\u0447\u043D\u0438\u043A\u0438 \u0438 \u043F\u0430\u043C\u044F\u0442\u044C \u0437\u0432\u0435\u0440\u0435\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bone",
@@ -2730,10 +3446,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.hunting.3.description",
+          "description": {
+            "en": "\u0416\u0438\u0440. \u0421\u0432\u0435\u0442, \u0436\u0430\u0440\u043A\u0430, \u0432\u044B\u0434\u0435\u043B\u043A\u0430 \u2014 \u0431\u0435\u043B\u0430\u044F \u043A\u0440\u043E\u0432\u044C \u0434\u043E\u0431\u044B\u0447\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:fat",
@@ -2749,10 +3467,12 @@
         },
         {
           "id": 4,
-          "x": 603.5,
-          "y": -125,
+          "x": 228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.hunting.4.description",
+          "description": {
+            "en": "\u041F\u0435\u0440\u044C\u044F. \u0421\u0442\u0440\u0435\u043B\u044B \u0431\u0435\u0437 \u043D\u0438\u0445 \u2014 \u043F\u0440\u043E\u0441\u0442\u043E \u043F\u0430\u043B\u043A\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:feather",
@@ -2768,10 +3488,12 @@
         },
         {
           "id": 5,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.hunting.5.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u043E\u0435 \u043C\u044F\u0441\u043E. \u041D\u0435 \u0435\u0448\u044C \u0442\u0430\u043A \u2014 \u043E\u0433\u043E\u043D\u044C \u0436\u0434\u0451\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:redmeat-raw",
@@ -2787,10 +3509,12 @@
         },
         {
           "id": 6,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.hunting.6.description",
+          "description": {
+            "en": "\u0416\u0430\u0440\u0435\u043D\u043E\u0435 \u043C\u044F\u0441\u043E. \u0421\u044B\u0442\u043E\u0441\u0442\u044C \u043F\u0438\u0448\u0435\u0442 \u0440\u043E\u0432\u043D\u044B\u0435 \u0441\u0442\u0440\u043E\u043A\u0438 \u0432 \u0434\u043D\u0435\u0432\u043D\u0438\u043A\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:redmeat-cooked",
@@ -2806,10 +3530,12 @@
         },
         {
           "id": 7,
-          "x": 943.5,
-          "y": 125,
+          "x": 0,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.hunting.7.description",
+          "description": {
+            "en": "\u041C\u044F\u0441\u043E \u0434\u0438\u0447\u0438. \u041B\u0435\u0441 \u0434\u0435\u043B\u0438\u0442\u0441\u044F, \u0435\u0441\u043B\u0438 \u0442\u044B \u043E\u0441\u0442\u043E\u0440\u043E\u0436\u0435\u043D."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bushmeat-raw",
@@ -2825,10 +3551,12 @@
         },
         {
           "id": 8,
-          "x": 1020,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.hunting.8.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u044B\u0435 \u0448\u043A\u0443\u0440\u044B. \u041D\u0430\u0447\u0430\u043B\u043E \u043A\u043E\u0436\u0438 \u0438 \u0442\u0435\u043F\u043B\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hide-raw-*",
@@ -2844,10 +3572,12 @@
         },
         {
           "id": 9,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.hunting.9.description",
+          "description": {
+            "en": "\u0421\u043E\u0441\u043A\u043E\u0431\u043B\u0435\u043D\u043D\u044B\u0435 \u0448\u043A\u0443\u0440\u044B. \u0422\u0435\u0440\u043F\u0435\u043D\u0438\u0435 \u0432\u044B\u0434\u0435\u043B\u043A\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:hide-scraped-*",
@@ -2863,10 +3593,12 @@
         },
         {
           "id": 10,
-          "x": 1360,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.hunting.10.description",
+          "description": {
+            "en": "\u041A\u0440\u0435\u043C\u043D\u0451\u0432\u044B\u0435 \u043D\u0430\u043A\u043E\u043D\u0435\u0447\u043D\u0438\u043A\u0438. \u0417\u0443\u0431\u044C\u044F \u0434\u043B\u044F \u0441\u0442\u0440\u0435\u043B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:arrowhead-flint",
@@ -2882,10 +3614,12 @@
         },
         {
           "id": 11,
-          "x": 1530,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.hunting.11.description",
+          "description": {
+            "en": "\u041F\u0440\u043E\u0441\u0442\u043E\u0439 \u043B\u0443\u043A. \u0422\u0438\u0445\u0430\u044F \u043E\u0445\u043E\u0442\u0430 \u042D\u0440\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bow-simple",
@@ -2901,10 +3635,12 @@
         },
         {
           "id": 12,
-          "x": 1700,
-          "y": 0,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.hunting.12.description",
+          "description": {
+            "en": "\u041A\u043E\u0436\u0430. \u0420\u0435\u043C\u043D\u0438, \u0441\u0443\u043C\u043A\u0438, \u0431\u0440\u043E\u043D\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:leather-normal-plain",
@@ -2920,10 +3656,12 @@
         },
         {
           "id": 13,
-          "x": 1870,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.hunting.13.description",
+          "description": {
+            "en": "\u041A\u043E\u0436\u0430\u043D\u044B\u0439 \u0448\u043B\u0435\u043C. \u0413\u043E\u043B\u043E\u0432\u0430 \u2014 \u0442\u043E\u0436\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:armor-head-sewn-leather",
@@ -2939,10 +3677,12 @@
         },
         {
           "id": 14,
-          "x": 1963.5,
-          "y": -125,
+          "x": -114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.hunting.14.description",
+          "description": {
+            "en": "\u0418\u043C\u043F\u0440\u043E\u0432\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0431\u0440\u043E\u043D\u044F. \u041F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0441\u0442\u0430\u043B\u0438 \u2014 \u0435\u0441\u0442\u044C \u0441\u043C\u0435\u043A\u0430\u043B\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:armor-body-improvised-wood",
@@ -2958,10 +3698,12 @@
         },
         {
           "id": 15,
-          "x": 1963.5,
-          "y": 125,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.hunting.15.description",
+          "description": {
+            "en": "\u0421\u044B\u0440\u0430\u044F \u0440\u044B\u0431\u0430. \u0420\u0435\u043A\u0430 \u0442\u043E\u0436\u0435 \u043A\u043E\u0440\u043C\u0438\u0442 \u0441\u0442\u0440\u0430\u043D\u043D\u0438\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:fishraw-*",
@@ -2977,10 +3719,12 @@
         },
         {
           "id": 16,
-          "x": 2040,
-          "y": 0,
+          "x": 114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.hunting.16.description",
+          "description": {
+            "en": "\u041A\u043E\u043F\u0447\u0451\u043D\u0430\u044F \u0440\u044B\u0431\u0430. \u0414\u043E\u0440\u043E\u0436\u043D\u044B\u0439 \u0437\u0430\u043F\u0430\u0441 \u0431\u0435\u0437 \u0441\u043F\u0435\u0448\u043A\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:fishchunk-*",
@@ -2996,17 +3740,14 @@
         },
         {
           "id": 17,
-          "x": 2210,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.hunting.17.description",
+          "description": {
+            "en": "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u0433\u043E\u0442\u043E\u0432. \u042D\u0440\u0430: \u00AB\u041C\u044F\u0441\u043E \u043D\u0430 \u0441\u0442\u043E\u043B\u0435 \u2014 \u043C\u0435\u0442\u0430\u043B\u043B \u0432 \u0440\u0443\u043A\u0430\u0445 \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0435\u0435\u00BB."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:leather-normal-plain",
-              "count": 4
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -3082,24 +3823,93 @@
     },
     {
       "iconItemCode": "game:seeds-spelt",
-      "title": "category.farming.title",
+      "title": {
+        "ar": "Farming",
+        "be": "\u0417\u0435\u043C\u043B\u0435\u0434\u0435\u043B\u0438\u0435",
+        "cs": "Farming",
+        "da": "Farming",
+        "de": "Farming",
+        "en": "Farming",
+        "eo": "Farming",
+        "es": "Farming",
+        "fi": "Farming",
+        "fr": "Farming",
+        "hu": "Farming",
+        "is": "Farming",
+        "it": "Farming",
+        "ja": "Farming",
+        "ko": "Farming",
+        "li": "Farming",
+        "lt": "Farming",
+        "nl": "Farming",
+        "no": "Farming",
+        "pl": "Farming",
+        "pt": "Farming",
+        "ro": "Farming",
+        "ru": "\u0417\u0435\u043C\u043B\u0435\u0434\u0435\u043B\u0438\u0435",
+        "sk": "Farming",
+        "sr": "Farming",
+        "sv": "Farming",
+        "th": "Farming",
+        "tr": "Farming",
+        "uk": "\u0417\u0435\u043C\u043B\u0435\u0434\u0435\u043B\u0438\u0435",
+        "vi": "Farming",
+        "zh": "Farming"
+      },
       "headerTitle": "category.farming.header",
+      "header": {
+        "ar": "FARMING",
+        "be": "\u0417\u0415\u041C\u041B\u0415\u0414\u0415\u041B\u0418\u0415",
+        "cs": "FARMING",
+        "da": "FARMING",
+        "de": "FARMING",
+        "en": "FARMING",
+        "eo": "FARMING",
+        "es": "FARMING",
+        "fi": "FARMING",
+        "fr": "FARMING",
+        "hu": "FARMING",
+        "is": "FARMING",
+        "it": "FARMING",
+        "ja": "FARMING",
+        "ko": "FARMING",
+        "li": "FARMING",
+        "lt": "FARMING",
+        "nl": "FARMING",
+        "no": "FARMING",
+        "pl": "FARMING",
+        "pt": "FARMING",
+        "ro": "FARMING",
+        "ru": "\u0417\u0415\u041C\u041B\u0415\u0414\u0415\u041B\u0418\u0415",
+        "sk": "FARMING",
+        "sr": "FARMING",
+        "sv": "FARMING",
+        "th": "FARMING",
+        "tr": "FARMING",
+        "uk": "\u0417\u0415\u041C\u041B\u0415\u0414\u0415\u041B\u0418\u0415",
+        "vi": "FARMING",
+        "zh": "FARMING"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.farming.0.description",
+          "description": {
+            "en": "\u0417\u0435\u043C\u043B\u0435\u0434\u0435\u043B\u0438\u0435. \u00AB\u041A\u0442\u043E \u0441\u0435\u0435\u0442, \u0442\u043E\u0442 \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u0435\u0442 \u0437\u0438\u043C\u0443 \u043A\u0443\u0437\u043D\u0438\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.farming.1.description",
+          "description": {
+            "en": "\u0421\u0435\u043C\u0435\u043D\u0430 \u043F\u043E\u043B\u0431\u044B. \u0425\u043B\u0435\u0431 \u0431\u0443\u0434\u0443\u0449\u0435\u0433\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:seeds-spelt",
@@ -3115,10 +3925,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.farming.2.description",
+          "description": {
+            "en": "\u0421\u0435\u043C\u0435\u043D\u0430 \u043B\u044C\u043D\u0430. \u041D\u0438\u0442\u0438, \u0442\u043A\u0430\u043D\u044C, \u0432\u0435\u0440\u0451\u0432\u043A\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:seeds-flax",
@@ -3134,10 +3946,12 @@
         },
         {
           "id": 3,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.farming.3.description",
+          "description": {
+            "en": "\u0421\u0435\u043C\u0435\u043D\u0430 \u043C\u043E\u0440\u043A\u043E\u0432\u0438. \u041F\u0440\u043E\u0441\u0442\u0430\u044F \u0440\u0430\u0434\u043E\u0441\u0442\u044C \u0433\u0440\u044F\u0434\u043A\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:seeds-carrot",
@@ -3153,10 +3967,12 @@
         },
         {
           "id": 4,
-          "x": 603.5,
-          "y": -125,
+          "x": 228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.farming.4.description",
+          "description": {
+            "en": "\u041B\u0443\u043A. \u041E\u0441\u0442\u0440\u044B\u0439 \u0432\u043A\u0443\u0441 \u0434\u043E\u043B\u0433\u0438\u0445 \u0441\u0443\u043F\u043E\u0432."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:seeds-onion",
@@ -3172,10 +3988,12 @@
         },
         {
           "id": 5,
-          "x": 603.5,
-          "y": 125,
+          "x": 342,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.farming.5.description",
+          "description": {
+            "en": "\u0420\u0435\u043F\u0430. \u0421\u043A\u0440\u043E\u043C\u043D\u0430\u044F, \u043D\u043E \u0432\u0435\u0440\u043D\u0430\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:seeds-turnip",
@@ -3191,10 +4009,12 @@
         },
         {
           "id": 6,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.farming.6.description",
+          "description": {
+            "en": "\u0423\u0440\u043E\u0436\u0430\u0439 \u043F\u043E\u043B\u0431\u044B. \u041C\u0435\u043B\u044C\u043D\u0438\u0446\u0430 \u0443\u0436\u0435 \u0437\u043E\u0432\u0451\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:grain-spelt",
@@ -3210,10 +4030,12 @@
         },
         {
           "id": 7,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.farming.7.description",
+          "description": {
+            "en": "\u0423\u0440\u043E\u0436\u0430\u0439 \u0440\u0436\u0438. \u0414\u0440\u0443\u0433\u043E\u0439 \u0445\u043B\u0435\u0431 \u2014 \u0434\u0440\u0443\u0433\u0430\u044F \u0437\u0438\u043C\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:grain-rye",
@@ -3229,10 +4051,12 @@
         },
         {
           "id": 8,
-          "x": 1020,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.farming.8.description",
+          "description": {
+            "en": "\u041B\u044C\u043D\u044F\u043D\u043E\u0435 \u0432\u043E\u043B\u043E\u043A\u043D\u043E. \u041F\u043E\u043B\u044F \u043E\u0434\u0435\u0432\u0430\u044E\u0442 \u043B\u044E\u0434\u0435\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flaxfibers",
@@ -3248,10 +4072,12 @@
         },
         {
           "id": 9,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.farming.9.description",
+          "description": {
+            "en": "\u041C\u043E\u0440\u043A\u043E\u0432\u044C \u0441 \u0433\u0440\u044F\u0434\u043E\u043A. \u0426\u0432\u0435\u0442 \u043D\u0430 \u0441\u0442\u043E\u043B\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:vegetable-carrot",
@@ -3267,10 +4093,12 @@
         },
         {
           "id": 10,
-          "x": 1283.5,
-          "y": -125,
+          "x": -228,
+          "y": -228,
           "nodeType": "Quest",
-          "description": "quest.farming.10.description",
+          "description": {
+            "en": "\u041B\u0443\u043A \u0441 \u0433\u0440\u044F\u0434\u043E\u043A. \u0421\u043B\u0435\u0437\u044B \u2014 \u0442\u043E\u0436\u0435 \u0447\u0430\u0441\u0442\u044C \u0443\u0440\u043E\u0436\u0430\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:vegetable-onion",
@@ -3286,10 +4114,12 @@
         },
         {
           "id": 11,
-          "x": 1283.5,
-          "y": 125,
+          "x": -228,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.farming.11.description",
+          "description": {
+            "en": "\u0420\u0435\u043F\u0430 \u0441 \u0433\u0440\u044F\u0434\u043E\u043A. \u0417\u0435\u043C\u043B\u044F \u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442 \u0437\u0430\u0431\u043E\u0442\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:vegetable-turnip",
@@ -3305,10 +4135,12 @@
         },
         {
           "id": 12,
-          "x": 1360,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.farming.12.description",
+          "description": {
+            "en": "\u041A\u043E\u043C\u043F\u043E\u0441\u0442. \u0422\u043E, \u0447\u0442\u043E \u0441\u0433\u043D\u0438\u043B\u043E, \u0441\u043D\u043E\u0432\u0430 \u043A\u043E\u0440\u043C\u0438\u0442."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:compost",
@@ -3324,10 +4156,12 @@
         },
         {
           "id": 13,
-          "x": 1453.5,
-          "y": -125,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.farming.13.description",
+          "description": {
+            "en": "\u042F\u0439\u0446\u0430. \u0414\u0432\u043E\u0440 \u0436\u0438\u0432\u0451\u0442 \u0440\u044F\u0434\u043E\u043C \u0441 \u043F\u043E\u043B\u0435\u043C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:egg-chicken-raw",
@@ -3343,10 +4177,12 @@
         },
         {
           "id": 14,
-          "x": 1530,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.farming.14.description",
+          "description": {
+            "en": "\u041C\u0443\u043A\u0430. \u0411\u0435\u0437 \u043D\u0435\u0451 \u0445\u043B\u0435\u0431 \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u043C\u0435\u0447\u0442\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flour-spelt",
@@ -3362,10 +4198,12 @@
         },
         {
           "id": 15,
-          "x": 1700,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.farming.15.description",
+          "description": {
+            "en": "\u0416\u0451\u0440\u043D\u043E\u0432. \u041A\u0430\u043C\u0435\u043D\u044C, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043A\u043E\u0440\u043C\u0438\u0442 \u043B\u0443\u0447\u0448\u0435 \u043A\u0438\u0440\u043A\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:quern-*",
@@ -3381,17 +4219,14 @@
         },
         {
           "id": 16,
-          "x": 1870,
-          "y": 0,
+          "x": 228,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.farming.16.description",
+          "description": {
+            "en": "\u041F\u043E\u043B\u044F \u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435. \u042D\u0440\u0430: \u00AB\u0421\u044B\u0442\u044B\u0439 \u043A\u0443\u0437\u043D\u0435\u0446 \u043A\u0443\u0451\u0442 \u0440\u043E\u0432\u043D\u0435\u0435\u00BB."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:seeds-spelt",
-              "count": 12
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -3463,24 +4298,93 @@
     },
     {
       "iconItemCode": "game:cloth-plain",
-      "title": "category.crafts.title",
+      "title": {
+        "ar": "Crafts",
+        "be": "\u0420\u0435\u043C\u0435\u0441\u043B\u043E",
+        "cs": "Crafts",
+        "da": "Crafts",
+        "de": "Crafts",
+        "en": "Crafts",
+        "eo": "Crafts",
+        "es": "Crafts",
+        "fi": "Crafts",
+        "fr": "Crafts",
+        "hu": "Crafts",
+        "is": "Crafts",
+        "it": "Crafts",
+        "ja": "Crafts",
+        "ko": "Crafts",
+        "li": "Crafts",
+        "lt": "Crafts",
+        "nl": "Crafts",
+        "no": "Crafts",
+        "pl": "Crafts",
+        "pt": "Crafts",
+        "ro": "Crafts",
+        "ru": "\u0420\u0435\u043C\u0435\u0441\u043B\u043E",
+        "sk": "Crafts",
+        "sr": "Crafts",
+        "sv": "Crafts",
+        "th": "Crafts",
+        "tr": "Crafts",
+        "uk": "\u0420\u0435\u043C\u0435\u0441\u043B\u043E",
+        "vi": "Crafts",
+        "zh": "Crafts"
+      },
       "headerTitle": "category.crafts.header",
+      "header": {
+        "ar": "CRAFTS",
+        "be": "\u0420\u0415\u041C\u0415\u0421\u041B\u041E",
+        "cs": "CRAFTS",
+        "da": "CRAFTS",
+        "de": "CRAFTS",
+        "en": "CRAFTS",
+        "eo": "CRAFTS",
+        "es": "CRAFTS",
+        "fi": "CRAFTS",
+        "fr": "CRAFTS",
+        "hu": "CRAFTS",
+        "is": "CRAFTS",
+        "it": "CRAFTS",
+        "ja": "CRAFTS",
+        "ko": "CRAFTS",
+        "li": "CRAFTS",
+        "lt": "CRAFTS",
+        "nl": "CRAFTS",
+        "no": "CRAFTS",
+        "pl": "CRAFTS",
+        "pt": "CRAFTS",
+        "ro": "CRAFTS",
+        "ru": "\u0420\u0415\u041C\u0415\u0421\u041B\u041E",
+        "sk": "CRAFTS",
+        "sr": "CRAFTS",
+        "sv": "CRAFTS",
+        "th": "CRAFTS",
+        "tr": "CRAFTS",
+        "uk": "\u0420\u0415\u041C\u0415\u0421\u041B\u041E",
+        "vi": "CRAFTS",
+        "zh": "CRAFTS"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.crafts.0.description",
+          "description": {
+            "en": "\u0420\u0435\u043C\u0435\u0441\u043B\u043E \u0434\u043E\u043C\u0430. \u00AB\u041A\u0443\u0437\u043D\u044F \u0431\u0435\u0437 \u0434\u043E\u043C\u0430 \u2014 \u043A\u043E\u0441\u0442\u0451\u0440 \u0432 \u043F\u043E\u043B\u0435\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.crafts.1.description",
+          "description": {
+            "en": "\u041B\u044C\u043D\u044F\u043D\u043E\u0435 \u0432\u043E\u043B\u043E\u043A\u043D\u043E. \u041F\u0440\u044F\u0436\u0430 \u043F\u0443\u0442\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flaxfibers",
@@ -3496,10 +4400,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.crafts.2.description",
+          "description": {
+            "en": "\u0428\u043F\u0430\u0433\u0430\u0442. \u0421\u0432\u044F\u0437\u0443\u044E\u0449\u0430\u044F \u0441\u0438\u043B\u0430 \u043F\u043E\u0441\u0435\u043B\u0435\u043D\u0438\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flaxtwine",
@@ -3515,10 +4421,12 @@
         },
         {
           "id": 3,
-          "x": 510,
+          "x": 342,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.crafts.3.description",
+          "description": {
+            "en": "\u041F\u043E\u043B\u043E\u0442\u043D\u043E. \u041E\u0434\u0435\u0436\u0434\u0430 \u0438 \u043F\u0430\u0440\u0443\u0441\u0430 \u0443\u044E\u0442\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:cloth-plain",
@@ -3534,10 +4442,12 @@
         },
         {
           "id": 4,
-          "x": 603.5,
-          "y": -125,
+          "x": 342,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.crafts.4.description",
+          "description": {
+            "en": "\u041B\u0451\u043D-\u0442\u043A\u0430\u043D\u044C. \u0422\u043E\u043D\u043A\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0442\u043A\u0430\u0447\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:linensack",
@@ -3553,10 +4463,12 @@
         },
         {
           "id": 5,
-          "x": 680,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.crafts.5.description",
+          "description": {
+            "en": "\u041C\u0443\u043A\u0430. \u0411\u0435\u043B\u0430\u044F \u043F\u044B\u043B\u044C \u0445\u043B\u0435\u0431\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flour-spelt",
@@ -3572,10 +4484,12 @@
         },
         {
           "id": 6,
-          "x": 850,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.crafts.6.description",
+          "description": {
+            "en": "\u0422\u0435\u0441\u0442\u043E. \u0420\u0443\u043A\u0438 \u043F\u043E\u043C\u043D\u044F\u0442 \u0442\u0435\u043F\u043B\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:dough-spelt",
@@ -3591,10 +4505,12 @@
         },
         {
           "id": 7,
-          "x": 1020,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.crafts.7.description",
+          "description": {
+            "en": "\u0425\u043B\u0435\u0431 \u0438\u0437 \u043F\u043E\u043B\u0431\u044B. \u0417\u0430\u043F\u0430\u0445, \u0440\u0430\u0434\u0438 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u0441\u0442\u043E\u0438\u0442 \u0436\u0438\u0442\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bread-spelt-perfect",
@@ -3610,10 +4526,12 @@
         },
         {
           "id": 8,
-          "x": 1113.5,
-          "y": 125,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.crafts.8.description",
+          "description": {
+            "en": "\u0420\u0436\u0430\u043D\u043E\u0439 \u0445\u043B\u0435\u0431. \u0414\u0440\u0443\u0433\u0430\u044F \u043A\u043E\u0440\u043A\u0430, \u0442\u0430 \u0436\u0435 \u0441\u0438\u043B\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:bread-rye-perfect",
@@ -3629,10 +4547,12 @@
         },
         {
           "id": 9,
-          "x": 1190,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.crafts.9.description",
+          "description": {
+            "en": "\u0414\u043E\u0441\u043A\u0438. \u0421\u0442\u0435\u043D\u044B \u0440\u0430\u0441\u0442\u0443\u0442 \u0438\u0437 \u0440\u043E\u0432\u043D\u044B\u0445 \u043B\u0438\u043D\u0438\u0439."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:plank-*",
@@ -3648,10 +4568,12 @@
         },
         {
           "id": 10,
-          "x": 1360,
-          "y": 0,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.crafts.10.description",
+          "description": {
+            "en": "\u0421\u043C\u043E\u043B\u0430. \u041A\u043B\u0435\u0439 \u0438 \u0437\u0430\u0449\u0438\u0442\u0430 \u0434\u0435\u0440\u0435\u0432\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:resin",
@@ -3667,10 +4589,12 @@
         },
         {
           "id": 11,
-          "x": 1530,
+          "x": -114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.crafts.11.description",
+          "description": {
+            "en": "\u0411\u0443\u043B\u044B\u0436\u043D\u0438\u043A. \u041F\u043E\u043B, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0435 \u0431\u043E\u0438\u0442\u0441\u044F \u0441\u0430\u043F\u043E\u0433."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:cobblestone-*",
@@ -3686,10 +4610,12 @@
         },
         {
           "id": 12,
-          "x": 1700,
-          "y": 0,
+          "x": -114,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.crafts.12.description",
+          "description": {
+            "en": "\u041E\u0433\u043D\u0435\u0443\u043F\u043E\u0440\u043D\u044B\u0439 \u043A\u0438\u0440\u043F\u0438\u0447. \u041F\u0435\u0447\u0438 \u0438 \u043A\u0443\u0437\u043D\u0438 \u043B\u044E\u0431\u044F\u0442 \u0435\u0433\u043E."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:burnedbrick-fire",
@@ -3705,10 +4631,12 @@
         },
         {
           "id": 13,
-          "x": 1793.5,
-          "y": -125,
+          "x": -114,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.crafts.13.description",
+          "description": {
+            "en": "\u041A\u0440\u0430\u0441\u043D\u044B\u0439 \u043A\u0438\u0440\u043F\u0438\u0447. \u0426\u0432\u0435\u0442 \u0436\u0438\u043B\u044C\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:burnedbrick-red",
@@ -3724,10 +4652,12 @@
         },
         {
           "id": 14,
-          "x": 1793.5,
-          "y": 125,
+          "x": -228,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.crafts.14.description",
+          "description": {
+            "en": "\u0412\u043E\u0441\u043A. \u0421\u0432\u0435\u0442 \u0431\u0435\u0437 \u043A\u043E\u043F\u043E\u0442\u0438 \u043B\u0435\u0441\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:beeswax",
@@ -3743,10 +4673,12 @@
         },
         {
           "id": 15,
-          "x": 1870,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.crafts.15.description",
+          "description": {
+            "en": "\u0421\u0432\u0435\u0447\u0438. \u041D\u043E\u0447\u043D\u044B\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u0434\u043D\u0435\u0432\u043D\u0438\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:candle",
@@ -3762,10 +4694,12 @@
         },
         {
           "id": 16,
-          "x": 1963.5,
-          "y": -125,
+          "x": 0,
+          "y": 228,
           "nodeType": "Quest",
-          "description": "quest.crafts.16.description",
+          "description": {
+            "en": "\u041C\u0430\u0441\u043B\u043E. \u041A \u0445\u043B\u0435\u0431\u0443 \u0438 \u043A \u0442\u0438\u0448\u0438\u043D\u0435 \u0432\u0435\u0447\u0435\u0440\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:butter",
@@ -3781,17 +4715,14 @@
         },
         {
           "id": 17,
-          "x": 2040,
-          "y": 0,
+          "x": 342,
+          "y": 228,
           "nodeType": "Checkpoint",
-          "description": "quest.crafts.17.description",
+          "description": {
+            "en": "\u0414\u043E\u043C \u0433\u043E\u0442\u043E\u0432. \u042D\u0440\u0430 \u0431\u044B \u0441\u0435\u043B\u0430 \u0443 \u0441\u0442\u043E\u043B\u0430 \u0438 \u0443\u043B\u044B\u0431\u043D\u0443\u043B\u0430\u0441\u044C."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:cloth-plain",
-              "count": 4
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [
@@ -3867,24 +4798,93 @@
     },
     {
       "iconItemCode": "game:gear-temporal",
-      "title": "category.explore.title",
+      "title": {
+        "ar": "Wanderings",
+        "be": "\u0421\u0442\u0440\u0430\u043D\u0441\u0442\u0432\u0438\u044F",
+        "cs": "Wanderings",
+        "da": "Wanderings",
+        "de": "Wanderings",
+        "en": "Wanderings",
+        "eo": "Wanderings",
+        "es": "Wanderings",
+        "fi": "Wanderings",
+        "fr": "Wanderings",
+        "hu": "Wanderings",
+        "is": "Wanderings",
+        "it": "Wanderings",
+        "ja": "Wanderings",
+        "ko": "Wanderings",
+        "li": "Wanderings",
+        "lt": "Wanderings",
+        "nl": "Wanderings",
+        "no": "Wanderings",
+        "pl": "Wanderings",
+        "pt": "Wanderings",
+        "ro": "Wanderings",
+        "ru": "\u0421\u0442\u0440\u0430\u043D\u0441\u0442\u0432\u0438\u044F",
+        "sk": "Wanderings",
+        "sr": "Wanderings",
+        "sv": "Wanderings",
+        "th": "Wanderings",
+        "tr": "Wanderings",
+        "uk": "\u0421\u0442\u0440\u0430\u043D\u0441\u0442\u0432\u0438\u044F",
+        "vi": "Wanderings",
+        "zh": "Wanderings"
+      },
       "headerTitle": "category.explore.header",
+      "header": {
+        "ar": "WANDERINGS",
+        "be": "\u0421\u0422\u0420\u0410\u041D\u0421\u0422\u0412\u0418\u042F",
+        "cs": "WANDERINGS",
+        "da": "WANDERINGS",
+        "de": "WANDERINGS",
+        "en": "WANDERINGS",
+        "eo": "WANDERINGS",
+        "es": "WANDERINGS",
+        "fi": "WANDERINGS",
+        "fr": "WANDERINGS",
+        "hu": "WANDERINGS",
+        "is": "WANDERINGS",
+        "it": "WANDERINGS",
+        "ja": "WANDERINGS",
+        "ko": "WANDERINGS",
+        "li": "WANDERINGS",
+        "lt": "WANDERINGS",
+        "nl": "WANDERINGS",
+        "no": "WANDERINGS",
+        "pl": "WANDERINGS",
+        "pt": "WANDERINGS",
+        "ro": "WANDERINGS",
+        "ru": "\u0421\u0422\u0420\u0410\u041D\u0421\u0422\u0412\u0418\u042F",
+        "sk": "WANDERINGS",
+        "sr": "WANDERINGS",
+        "sv": "WANDERINGS",
+        "th": "WANDERINGS",
+        "tr": "WANDERINGS",
+        "uk": "\u0421\u0422\u0420\u0410\u041D\u0421\u0422\u0412\u0418\u042F",
+        "vi": "WANDERINGS",
+        "zh": "WANDERINGS"
+      },
       "nodes": [
         {
           "id": 0,
           "x": 0,
           "y": 0,
           "nodeType": "Start",
-          "description": "quest.explore.0.description",
+          "description": {
+            "en": "\u0421\u0442\u0440\u0430\u043D\u0441\u0442\u0432\u0438\u044F. \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u0434\u043D\u0435\u0432\u043D\u0438\u043A\u0430 \u2014 \u043F\u0440\u043E \u0440\u0443\u0438\u043D\u044B \u0438 \u00AB\u043C\u0430\u0448\u0438\u043D\u044B \u043F\u043E\u0434 \u043D\u0435\u0431\u043E\u043C\u00BB."
+          },
           "requiredItems": [],
           "rewardItems": []
         },
         {
           "id": 1,
-          "x": 170,
+          "x": 114,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.explore.1.description",
+          "description": {
+            "en": "\u0427\u0435\u0440\u043D\u0438\u043A\u0430 \u0443 \u0442\u0440\u043E\u043F\u044B. \u0421\u043B\u0430\u0434\u043E\u0441\u0442\u044C \u043D\u0430 \u044F\u0437\u044B\u043A\u0435 \u0441\u0442\u0440\u0430\u043D\u043D\u0438\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:fruit-blueberry",
@@ -3900,10 +4900,12 @@
         },
         {
           "id": 2,
-          "x": 340,
+          "x": 228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.explore.2.description",
+          "description": {
+            "en": "\u0420\u0430\u0437\u043D\u044B\u0435 \u044F\u0433\u043E\u0434\u044B. \u041B\u0435\u0441 \u043F\u0438\u0448\u0435\u0442 \u043C\u0435\u043D\u044E \u043A\u0430\u0436\u0434\u044B\u0439 \u0434\u0435\u043D\u044C."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:fruit-*",
@@ -3919,10 +4921,12 @@
         },
         {
           "id": 3,
-          "x": 433.5,
-          "y": -125,
+          "x": 342,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.explore.3.description",
+          "description": {
+            "en": "\u0425\u0432\u043E\u0449. \u041B\u0435\u0447\u0438\u0442 \u0438 \u043D\u0430\u043F\u043E\u043C\u0438\u043D\u0430\u0435\u0442: \u043F\u0440\u0438\u0440\u043E\u0434\u0430 \u0441\u0442\u0430\u0440\u0448\u0435 \u043A\u0443\u0437\u043D\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flower-horsetail-free",
@@ -3938,10 +4942,12 @@
         },
         {
           "id": 4,
-          "x": 433.5,
-          "y": 125,
+          "x": 342,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.explore.4.description",
+          "description": {
+            "en": "\u041A\u043E\u0442\u043E\u0432\u043D\u0438\u043A. \u0417\u0430\u043F\u0430\u0445, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0443\u0441\u043F\u043E\u043A\u0430\u0438\u0432\u0430\u0435\u0442 \u043F\u043E\u0441\u043B\u0435 \u0448\u0430\u0445\u0442\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:flower-catmint-free",
@@ -3957,10 +4963,12 @@
         },
         {
           "id": 5,
-          "x": 510,
-          "y": 0,
+          "x": 228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.explore.5.description",
+          "description": {
+            "en": "\u0421\u043C\u043E\u043B\u0430 \u0432 \u0433\u043B\u0443\u0431\u0438\u043D\u0435 \u043B\u0435\u0441\u0430. \u0414\u0435\u0440\u0435\u0432\u044C\u044F \u043F\u043E\u043C\u043D\u044F\u0442 \u0431\u0443\u0440\u044E \u042D\u0440\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:resin",
@@ -3976,10 +4984,12 @@
         },
         {
           "id": 6,
-          "x": 680,
-          "y": 0,
+          "x": 114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.explore.6.description",
+          "description": {
+            "en": "\u0421\u043E\u0442\u044B. \u0414\u0438\u043A\u0438\u0439 \u043C\u0451\u0434 \u2014 \u0437\u043E\u043B\u043E\u0442\u043E \u0431\u0435\u0437 \u0440\u0443\u0434\u043D\u0438\u043A\u0430."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:honeycomb",
@@ -3995,10 +5005,12 @@
         },
         {
           "id": 7,
-          "x": 850,
-          "y": 0,
+          "x": 0,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.explore.7.description",
+          "description": {
+            "en": "\u0412\u043E\u0441\u043A. \u0421\u0432\u0435\u0442 \u0434\u043B\u044F \u043A\u0430\u0442\u0430\u043A\u043E\u043C\u0431 \u0438 \u0434\u043B\u0438\u043D\u043D\u044B\u0445 \u0434\u043E\u0440\u043E\u0433."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:beeswax",
@@ -4014,10 +5026,12 @@
         },
         {
           "id": 8,
-          "x": 1020,
-          "y": 0,
+          "x": -114,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.explore.8.description",
+          "description": {
+            "en": "\u0420\u0436\u0430\u0432\u044B\u0435 \u0448\u0435\u0441\u0442\u0435\u0440\u043D\u0438. \u041E\u0441\u043A\u043E\u043B\u043A\u0438 \u0412\u0440\u0435\u043C\u0435\u043D\u0438 \u0414\u043E \u2014 \u043A\u0430\u043A \u0432 \u0421\u043A\u0430\u0437\u0430\u043D\u0438\u0438."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:gear-rusty",
@@ -4033,10 +5047,12 @@
         },
         {
           "id": 9,
-          "x": 1190,
-          "y": 0,
+          "x": -228,
+          "y": -114,
           "nodeType": "Quest",
-          "description": "quest.explore.9.description",
+          "description": {
+            "en": "\u0415\u0449\u0451 \u0448\u0435\u0441\u0442\u0435\u0440\u043D\u0438. \u042D\u0440\u0430 \u0441\u043A\u043B\u0430\u0434\u044B\u0432\u0430\u043B\u0430 \u0438\u0445 \u0432 \u043A\u0440\u0443\u0433 \u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0439 \u0437\u0432\u0435\u0437\u0434\u044B."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:gear-rusty",
@@ -4052,10 +5068,12 @@
         },
         {
           "id": 10,
-          "x": 1283.5,
-          "y": -125,
+          "x": -114,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.explore.10.description",
+          "description": {
+            "en": "\u0417\u043E\u043B\u043E\u0442\u044B\u0435 \u0441\u0430\u043C\u043E\u0440\u043E\u0434\u043A\u0438. \u0420\u0435\u0434\u043A\u043E\u0441\u0442\u044C, \u0447\u0442\u043E \u0431\u043B\u0435\u0441\u0442\u0438\u0442 \u0432 \u043F\u044B\u043B\u0438 \u0440\u0443\u0438\u043D."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:nugget-nativegold",
@@ -4071,10 +5089,12 @@
         },
         {
           "id": 11,
-          "x": 1283.5,
-          "y": 125,
+          "x": -342,
+          "y": 0,
           "nodeType": "Quest",
-          "description": "quest.explore.11.description",
+          "description": {
+            "en": "\u0421\u0435\u0440\u0435\u0431\u0440\u043E. \u0425\u043E\u043B\u043E\u0434\u043D\u044B\u0439 \u0431\u043B\u0435\u0441\u043A \u0441\u0442\u0430\u0440\u044B\u0445 \u0437\u0430\u043B\u043E\u0432."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:nugget-nativesilver",
@@ -4090,10 +5110,12 @@
         },
         {
           "id": 12,
-          "x": 1360,
+          "x": -228,
           "y": 0,
           "nodeType": "Quest",
-          "description": "quest.explore.12.description",
+          "description": {
+            "en": "\u041A\u0432\u0430\u0440\u0446. \u041F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0435 \u0441\u043B\u0451\u0437\u044B \u043A\u0430\u043C\u043D\u044F."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:clearquartz",
@@ -4109,10 +5131,12 @@
         },
         {
           "id": 13,
-          "x": 1530,
-          "y": 0,
+          "x": -228,
+          "y": 114,
           "nodeType": "Quest",
-          "description": "quest.explore.13.description",
+          "description": {
+            "en": "\u0412\u0440\u0435\u043C\u0435\u043D\u043D\u0430\u044F \u0448\u0435\u0441\u0442\u0435\u0440\u043D\u044F. \u0421\u0435\u0440\u0434\u0446\u0435 \u043B\u0435\u0433\u0435\u043D\u0434\u044B. \u042D\u0440\u0430 \u0434\u043E\u0448\u043B\u0430 \u0441\u044E\u0434\u0430 \u2014 \u0438 \u0438\u0441\u0447\u0435\u0437\u043B\u0430 \u0432 \u0433\u0443\u043B\u0435."
+          },
           "requiredItems": [
             {
               "collectibleCode": "game:gear-temporal",
@@ -4128,17 +5152,14 @@
         },
         {
           "id": 14,
-          "x": 1700,
-          "y": 0,
+          "x": 0,
+          "y": 114,
           "nodeType": "Checkpoint",
-          "description": "quest.explore.14.description",
+          "description": {
+            "en": "\u0421\u0442\u0440\u0430\u043D\u0441\u0442\u0432\u0438\u044F \u043D\u0435 \u043A\u043E\u043D\u0447\u0430\u044E\u0442\u0441\u044F. \u0423\u0433\u043E\u043B\u044C\u043D\u0430\u044F \u0437\u0432\u0435\u0437\u0434\u0430 \u0433\u043E\u0440\u0438\u0442 \u0432 \u0442\u0435\u0431\u0435: \u043A\u0443\u0439, \u0441\u0435\u0439, \u0438\u0434\u0438 \u0434\u0430\u043B\u044C\u0448\u0435."
+          },
           "requiredItems": [],
-          "rewardItems": [
-            {
-              "collectibleCode": "game:gear-rusty",
-              "count": 2
-            }
-          ]
+          "rewardItems": []
         }
       ],
       "connections": [

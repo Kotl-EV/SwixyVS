@@ -4,6 +4,7 @@ using SwixyQuestBook.Network;
 using SwixyQuestBook.Server;
 using System.Text.Json;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 
 namespace SwixyQuestBook.Server
@@ -122,6 +123,15 @@ namespace SwixyQuestBook.Server
                 if (questDatabase?.Categories == null || questDatabase.Categories.Length == 0)
                 {
                     sapi?.Logger.Warning("[SwixyQuestBook] No categories in quest data");
+                }
+                else
+                {
+                    bool expanded = ExpandLegacyLocalizedContent(questDatabase);
+                    if (expanded)
+                    {
+                        SaveQuestData();
+                        sapi?.Logger.Notification("[SwixyQuestBook] Migrated quest titles/descriptions into multi-language maps");
+                    }
                 }
 
                 sapi?.Logger.Notification(
@@ -359,29 +369,111 @@ namespace SwixyQuestBook.Server
         {
             if (questDatabase == null || serverChannel == null) return;
 
+            string lang = GetPlayerLanguageCode(player);
             var packet = new QuestbookSyncQuestsPacket
             {
-                Categories = questDatabase.Categories.Select(c => new QuestbookSyncCategoryPacket
-                {
-                    IconItemCode = c.IconItemCode,
-                    Title = c.Title,
-                    HeaderTitle = c.HeaderTitle,
-                    Nodes = c.Nodes.Select(n => new QuestbookSyncNodePacket
-                    {
-                        Id = n.Id,
-                        X = n.X,
-                        Y = n.Y,
-                        NodeType = GetNodeTypeInt(n.NodeType),
-                        Description = n.Description,
-                        RequiredItems = n.RequiredItems.Select(i => new QuestbookSyncItemPacket { CollectibleCode = i.CollectibleCode, Count = i.Count }).ToArray(),
-                        RewardItems = n.RewardItems.Select(i => new QuestbookSyncItemPacket { CollectibleCode = i.CollectibleCode, Count = i.Count }).ToArray()
-                    }).ToArray(),
-                    Connections = c.Connections.Select(c => new QuestbookSyncConnectionPacket { StartNodeId = c.StartNodeId, EndNodeId = c.EndNodeId }).ToArray()
-                }).ToArray()
+                Categories = questDatabase.Categories.Select(c => BuildLocalizedCategoryPacket(c, lang)).ToArray()
             };
 
             serverChannel.SendPacket(packet, player);
-            sapi?.Logger.Debug($"[SwixyQuestBook] Sent {questDatabase.Categories.Length} categories to {player.PlayerName}");
+            sapi?.Logger.Debug(
+                $"[SwixyQuestBook] Sent {questDatabase.Categories.Length} categories to {player.PlayerName} (lang={lang})");
+        }
+
+        private static string GetPlayerLanguageCode(IServerPlayer player)
+        {
+            try
+            {
+                // VS exposes the client's UI language on the server player.
+                string? code = player.LanguageCode;
+                if (!string.IsNullOrWhiteSpace(code))
+                {
+                    return QuestbookLocalizedText.NormalizeLang(code);
+                }
+            }
+            catch
+            {
+                // Older API shapes — fall through.
+            }
+
+            return QuestbookLocalizedText.DefaultLang;
+        }
+
+        private static QuestbookSyncCategoryPacket BuildLocalizedCategoryPacket(
+            QuestbookCategoryData category,
+            string lang)
+        {
+            string title = category.Title?.Resolve(lang) ?? string.Empty;
+            string headerDisplay = category.Header?.Resolve(lang) ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(headerDisplay))
+            {
+                headerDisplay = title;
+            }
+
+            return new QuestbookSyncCategoryPacket
+            {
+                IconItemCode = category.IconItemCode,
+                Title = title,
+                HeaderTitle = category.HeaderTitle,
+                HeaderDisplay = headerDisplay,
+                TitleI18n = ToLangPackets(category.Title),
+                HeaderI18n = ToLangPackets(category.Header),
+                Nodes = category.Nodes.Select(n => new QuestbookSyncNodePacket
+                {
+                    Id = n.Id,
+                    X = n.X,
+                    Y = n.Y,
+                    NodeType = GetNodeTypeInt(n.NodeType),
+                    Description = n.Description?.Resolve(lang) ?? string.Empty,
+                    DescriptionI18n = ToLangPackets(n.Description),
+                    RequiredItems = n.RequiredItems.Select(i => new QuestbookSyncItemPacket
+                    {
+                        CollectibleCode = i.CollectibleCode,
+                        Count = i.Count
+                    }).ToArray(),
+                    RewardItems = n.RewardItems.Select(i => new QuestbookSyncItemPacket
+                    {
+                        CollectibleCode = i.CollectibleCode,
+                        Count = i.Count
+                    }).ToArray()
+                }).ToArray(),
+                Connections = category.Connections.Select(conn => new QuestbookSyncConnectionPacket
+                {
+                    StartNodeId = conn.StartNodeId,
+                    EndNodeId = conn.EndNodeId
+                }).ToArray()
+            };
+        }
+
+        private static QuestbookLangTextPacket[] ToLangPackets(QuestbookLocalizedText? text)
+        {
+            if (text == null || text.IsEmpty)
+                return [];
+
+            return text.Entries
+                .Where(static e => !string.IsNullOrWhiteSpace(e.Key) && !string.IsNullOrWhiteSpace(e.Value))
+                .OrderBy(static e => e.Key, StringComparer.Ordinal)
+                .Select(static e => new QuestbookLangTextPacket
+                {
+                    Lang = e.Key,
+                    Text = e.Value
+                })
+                .ToArray();
+        }
+
+        private static QuestbookLocalizedText FromLangPackets(QuestbookLangTextPacket[]? entries)
+        {
+            var text = new QuestbookLocalizedText();
+            if (entries == null)
+                return text;
+
+            foreach (QuestbookLangTextPacket entry in entries)
+            {
+                if (!string.IsNullOrWhiteSpace(entry.Lang) && !string.IsNullOrWhiteSpace(entry.Text))
+                    text.Set(entry.Lang, entry.Text);
+            }
+
+            return text;
         }
 
         private void SendProgressToPlayer(IServerPlayer player, QuestbookPlayerProgressData progress)
@@ -632,6 +724,7 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
+            string lang = GetPlayerLanguageCode(fromPlayer);
             string description = SanitizeDescription(request.Description);
             var requiredItems = SanitizeItemList(request.RequiredItems, allowWildcards: true);
             var rewardItems = SanitizeItemList(request.RewardItems, allowWildcards: false);
@@ -652,13 +745,19 @@ namespace SwixyQuestBook.Server
                     request.IsSubQuest, request.SubQuestIndex, request.TotalSubQuests);
             }
 
+            var descriptionText = new QuestbookLocalizedText();
+            if (!string.IsNullOrWhiteSpace(description))
+            {
+                descriptionText.Set(lang, description);
+            }
+
             var newNode = new QuestbookQuestNodeData
             {
                 Id = newId,
                 X = x,
                 Y = y,
                 NodeType = nodeType,
-                Description = description,
+                Description = descriptionText,
                 RequiredItems = requiredItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray(),
                 RewardItems = rewardItems.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray()
             };
@@ -769,6 +868,7 @@ namespace SwixyQuestBook.Server
 
             // Keep stable identity of the category being edited.
             sanitized.HeaderTitle = categoryHeaderTitle;
+            string lang = GetPlayerLanguageCode(fromPlayer);
 
             for (int i = 0; i < questDatabase.Categories.Length; i++)
             {
@@ -777,25 +877,108 @@ namespace SwixyQuestBook.Server
                     continue;
                 }
 
-                // Preserve original title key if client sent empty title.
-                if (string.IsNullOrWhiteSpace(sanitized.Title))
-                {
-                    sanitized.Title = questDatabase.Categories[i].Title;
-                }
-
-                questDatabase.Categories[i] = sanitized;
+                questDatabase.Categories[i] = MergeCategoryForLanguage(
+                    questDatabase.Categories[i],
+                    sanitized,
+                    lang,
+                    request.Category);
 
                 SaveQuestData();
                 BroadcastQuestsToAllPlayers();
 
                 SendAdminResponse(fromPlayer, true, "Category saved");
                 sapi?.Logger.Notification(
-                    "[SwixyQuestBook] Admin {0} saved category {1} ({2} nodes)",
-                    fromPlayer.PlayerName, categoryHeaderTitle, sanitized.Nodes.Length);
+                    "[SwixyQuestBook] Admin {0} saved category {1} ({2} nodes, lang={3})",
+                    fromPlayer.PlayerName, categoryHeaderTitle, questDatabase.Categories[i].Nodes.Length, lang);
                 return;
             }
 
             SendAdminResponse(fromPlayer, false, "Category not found");
+        }
+
+        /// <summary>
+        /// Prefer full i18n maps from the client when provided; otherwise merge the
+        /// active-language display string into the existing multi-lang maps.
+        /// </summary>
+        private static QuestbookCategoryData MergeCategoryForLanguage(
+            QuestbookCategoryData existing,
+            QuestbookCategoryData incoming,
+            string lang,
+            QuestbookSyncCategoryPacket? rawPacket = null)
+        {
+            QuestbookLocalizedText mergedTitle;
+            if (rawPacket?.TitleI18n is { Length: > 0 })
+            {
+                mergedTitle = FromLangPackets(rawPacket.TitleI18n);
+            }
+            else
+            {
+                mergedTitle = existing.Title?.Clone() ?? new QuestbookLocalizedText();
+                string resolvedTitle = incoming.Title?.Resolve(lang) ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(resolvedTitle))
+                    mergedTitle.Set(lang, resolvedTitle);
+            }
+
+            QuestbookLocalizedText mergedHeader;
+            if (rawPacket?.HeaderI18n is { Length: > 0 })
+            {
+                mergedHeader = FromLangPackets(rawPacket.HeaderI18n);
+            }
+            else
+            {
+                mergedHeader = existing.Header?.Clone() ?? new QuestbookLocalizedText();
+                string resolvedHeader = incoming.Header?.Resolve(lang)
+                    ?? incoming.Title?.Resolve(lang)
+                    ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(resolvedHeader))
+                    mergedHeader.Set(lang, resolvedHeader);
+            }
+
+            var existingById = existing.Nodes.ToDictionary(n => n.Id);
+            var rawNodesById = (rawPacket?.Nodes ?? [])
+                .ToDictionary(n => n.Id);
+
+            var mergedNodes = new List<QuestbookQuestNodeData>(incoming.Nodes.Length);
+            foreach (QuestbookQuestNodeData node in incoming.Nodes)
+            {
+                QuestbookLocalizedText description;
+                if (rawNodesById.TryGetValue(node.Id, out QuestbookSyncNodePacket? rawNode)
+                    && rawNode.DescriptionI18n is { Length: > 0 })
+                {
+                    description = FromLangPackets(rawNode.DescriptionI18n);
+                }
+                else
+                {
+                    description = existingById.TryGetValue(node.Id, out QuestbookQuestNodeData? prev)
+                        ? (prev.Description?.Clone() ?? new QuestbookLocalizedText())
+                        : new QuestbookLocalizedText();
+
+                    string text = node.Description?.Resolve(lang) ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(text))
+                        description.Set(lang, text);
+                }
+
+                mergedNodes.Add(new QuestbookQuestNodeData
+                {
+                    Id = node.Id,
+                    X = node.X,
+                    Y = node.Y,
+                    NodeType = node.NodeType,
+                    Description = description,
+                    RequiredItems = node.RequiredItems,
+                    RewardItems = node.RewardItems
+                });
+            }
+
+            return new QuestbookCategoryData
+            {
+                IconItemCode = incoming.IconItemCode,
+                Title = mergedTitle,
+                HeaderTitle = existing.HeaderTitle,
+                Header = mergedHeader,
+                Nodes = mergedNodes.ToArray(),
+                Connections = incoming.Connections
+            };
         }
 
         private void OnAdminAddCategory(IServerPlayer fromPlayer, QuestbookAdminAddCategoryRequest request)
@@ -830,17 +1013,18 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            string headerTitle = string.IsNullOrWhiteSpace(request.HeaderTitle)
+            string lang = GetPlayerLanguageCode(fromPlayer);
+            string headerKey = string.IsNullOrWhiteSpace(request.HeaderTitle)
                 ? title.ToUpperInvariant()
                 : request.HeaderTitle.Trim();
 
-            if (headerTitle.Length > MaxCategoryTitleLength)
+            if (headerKey.Length > MaxCategoryTitleLength)
             {
                 SendAdminResponse(fromPlayer, false, "Branch header is too long");
                 return;
             }
 
-            headerTitle = EnsureUniqueHeaderTitle(headerTitle, null);
+            headerKey = EnsureUniqueHeaderTitle(headerKey, null);
 
             string iconItemCode = NormalizeIconItemCode(request.IconItemCode);
             if (!string.IsNullOrWhiteSpace(iconItemCode) && !IsValidIconItemCode(iconItemCode))
@@ -852,8 +1036,9 @@ namespace SwixyQuestBook.Server
             var newCategory = new QuestbookCategoryData
             {
                 IconItemCode = iconItemCode,
-                Title = title,
-                HeaderTitle = headerTitle,
+                Title = new QuestbookLocalizedText(title, lang),
+                HeaderTitle = headerKey,
+                Header = new QuestbookLocalizedText(title.ToUpperInvariant(), lang),
                 Nodes =
                 [
                     new QuestbookQuestNodeData
@@ -862,7 +1047,7 @@ namespace SwixyQuestBook.Server
                         X = 0,
                         Y = 0,
                         NodeType = "Start",
-                        Description = string.Empty
+                        Description = new QuestbookLocalizedText()
                     }
                 ],
                 Connections = []
@@ -924,19 +1109,8 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            string headerTitle = string.IsNullOrWhiteSpace(request.HeaderTitle)
-                ? title.ToUpperInvariant()
-                : request.HeaderTitle.Trim();
-
-            if (headerTitle.Length > MaxCategoryTitleLength)
-            {
-                SendAdminResponse(fromPlayer, false, "Branch header is too long");
-                return;
-            }
-
             var existingCategory = questDatabase.Categories[categoryIndex];
-            string oldHeaderTitle = existingCategory.HeaderTitle;
-            headerTitle = EnsureUniqueHeaderTitle(headerTitle, oldHeaderTitle);
+            string lang = GetPlayerLanguageCode(fromPlayer);
 
             string iconItemCode = string.IsNullOrWhiteSpace(request.IconItemCode)
                 ? existingCategory.IconItemCode
@@ -948,31 +1122,37 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
+            // Keep stable HeaderTitle key; only update language-specific display strings.
+            var titleMap = existingCategory.Title?.Clone() ?? new QuestbookLocalizedText();
+            titleMap.Set(lang, title);
+            var headerMap = existingCategory.Header?.Clone() ?? new QuestbookLocalizedText();
+            string headerDisplay = string.IsNullOrWhiteSpace(request.HeaderTitle)
+                ? title.ToUpperInvariant()
+                : request.HeaderTitle.Trim();
+            if (headerDisplay.Length > MaxCategoryTitleLength)
+            {
+                headerDisplay = headerDisplay[..MaxCategoryTitleLength];
+            }
+
+            headerMap.Set(lang, headerDisplay);
+
             questDatabase.Categories[categoryIndex] = new QuestbookCategoryData
             {
                 IconItemCode = iconItemCode,
-                Title = title,
-                HeaderTitle = headerTitle,
+                Title = titleMap,
+                HeaderTitle = existingCategory.HeaderTitle,
+                Header = headerMap,
                 Nodes = existingCategory.Nodes,
                 Connections = existingCategory.Connections
             };
 
-            bool progressMigrated = false;
-            if (!string.Equals(oldHeaderTitle, headerTitle, StringComparison.Ordinal))
-            {
-                MigrateCategoryHeaderInAllProgress(oldHeaderTitle, headerTitle);
-                progressMigrated = true;
-            }
-
             SaveQuestData();
             BroadcastQuestsToAllPlayers();
-            if (progressMigrated)
-                BroadcastProgressToAllPlayers();
 
-            SendAdminResponse(fromPlayer, true, "Category renamed", headerTitle);
+            SendAdminResponse(fromPlayer, true, "Category renamed", existingCategory.HeaderTitle);
             sapi?.Logger.Notification(
-                "[SwixyQuestBook] Admin {0} renamed category {1} -> {2}",
-                fromPlayer.PlayerName, oldHeaderTitle, headerTitle);
+                "[SwixyQuestBook] Admin {0} renamed category display for {1} (lang={2})",
+                fromPlayer.PlayerName, existingCategory.HeaderTitle, lang);
         }
 
         private void OnAdminDeleteCategory(IServerPlayer fromPlayer, QuestbookAdminDeleteCategoryRequest request)
@@ -1041,6 +1221,8 @@ namespace SwixyQuestBook.Server
                 return false;
             }
 
+            // Incoming Title/HeaderDisplay/Description are single-language display strings
+            // for the admin's current language. MergeCategoryForLanguage expands them.
             string title = packet.Title?.Trim() ?? string.Empty;
             if (title.Length > MaxCategoryTitleLength)
             {
@@ -1048,11 +1230,17 @@ namespace SwixyQuestBook.Server
                 return false;
             }
 
-            string headerTitle = packet.HeaderTitle?.Trim() ?? string.Empty;
-            if (headerTitle.Length > MaxCategoryTitleLength)
+            string headerKey = packet.HeaderTitle?.Trim() ?? string.Empty;
+            if (headerKey.Length > MaxCategoryTitleLength)
             {
                 error = "Branch header is too long";
                 return false;
+            }
+
+            string headerDisplay = packet.HeaderDisplay?.Trim() ?? string.Empty;
+            if (headerDisplay.Length > MaxCategoryTitleLength)
+            {
+                headerDisplay = headerDisplay[..MaxCategoryTitleLength];
             }
 
             string iconItemCode = NormalizeIconItemCode(packet.IconItemCode);
@@ -1121,13 +1309,19 @@ namespace SwixyQuestBook.Server
                     rewards = [];
                 }
 
+                string description = SanitizeDescription(n.Description);
+                // Temporary single-lang carrier; MergeCategoryForLanguage maps into the player language.
+                var descriptionText = string.IsNullOrWhiteSpace(description)
+                    ? new QuestbookLocalizedText()
+                    : new QuestbookLocalizedText(description, QuestbookLocalizedText.DefaultLang);
+
                 nodes.Add(new QuestbookQuestNodeData
                 {
                     Id = n.Id,
                     X = n.X,
                     Y = n.Y,
                     NodeType = nodeType,
-                    Description = SanitizeDescription(n.Description),
+                    Description = descriptionText,
                     RequiredItems = required.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray(),
                     RewardItems = rewards.Select(i => new QuestbookQuestItemData(i.CollectibleCode, i.Count)).ToArray()
                 });
@@ -1169,8 +1363,11 @@ namespace SwixyQuestBook.Server
             category = new QuestbookCategoryData
             {
                 IconItemCode = iconItemCode,
-                Title = title,
-                HeaderTitle = headerTitle,
+                Title = new QuestbookLocalizedText(title, QuestbookLocalizedText.DefaultLang),
+                HeaderTitle = headerKey,
+                Header = new QuestbookLocalizedText(
+                    string.IsNullOrWhiteSpace(headerDisplay) ? title : headerDisplay,
+                    QuestbookLocalizedText.DefaultLang),
                 Nodes = nodes.ToArray(),
                 Connections = connections.ToArray()
             };
@@ -1496,6 +1693,213 @@ namespace SwixyQuestBook.Server
                     SendQuestsToPlayer(serverPlayer);
                 }
             }
+        }
+
+        /// <summary>
+        /// Expand legacy lang-key strings (category.x.title / quest.x.n.description) into
+        /// multi-language maps using the game's loaded lang tables + bundled mod lang files.
+        /// Returns true when any field changed (caller should re-save).
+        /// </summary>
+        private bool ExpandLegacyLocalizedContent(QuestbookQuestDatabase database)
+        {
+            Dictionary<string, Dictionary<string, string>>? bundled = null;
+            try
+            {
+                bundled = LoadBundledModLangTables();
+            }
+            catch (Exception ex)
+            {
+                sapi?.Logger.Warning($"[SwixyQuestBook] Could not load bundled lang tables: {ex.Message}");
+            }
+
+            string[] langs = bundled?.Keys.ToArray() ?? ["en", "ru"];
+            bool changed = false;
+
+            foreach (QuestbookCategoryData category in database.Categories)
+            {
+                category.Title ??= new QuestbookLocalizedText();
+                category.Header ??= new QuestbookLocalizedText();
+
+                if (TryExpandLegacyText(category.Title, langs, bundled, ref changed))
+                {
+                    // expanded in place
+                }
+
+                // headerTitle is the stable key; if Header is empty, fill display from that key.
+                if (category.Header.IsEmpty && !string.IsNullOrWhiteSpace(category.HeaderTitle))
+                {
+                    if (LooksLikeLangKey(category.HeaderTitle))
+                    {
+                        foreach (string lang in langs)
+                        {
+                            string resolved = ResolveLangKey(category.HeaderTitle, lang, bundled);
+                            if (!string.IsNullOrWhiteSpace(resolved) &&
+                                !string.Equals(resolved, category.HeaderTitle, StringComparison.Ordinal))
+                            {
+                                category.Header.Set(lang, resolved);
+                                changed = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        category.Header.Set(QuestbookLocalizedText.DefaultLang, category.HeaderTitle);
+                        changed = true;
+                    }
+                }
+
+                foreach (QuestbookQuestNodeData node in category.Nodes)
+                {
+                    node.Description ??= new QuestbookLocalizedText();
+                    TryExpandLegacyText(node.Description, langs, bundled, ref changed);
+                }
+            }
+
+            return changed;
+        }
+
+        private static bool TryExpandLegacyText(
+            QuestbookLocalizedText text,
+            string[] langs,
+            Dictionary<string, Dictionary<string, string>>? bundled,
+            ref bool changed)
+        {
+            if (text.Entries.Count != 1)
+            {
+                return false;
+            }
+
+            string single = text.Entries.Values.First();
+            if (!LooksLikeLangKey(single))
+            {
+                return false;
+            }
+
+            bool any = false;
+            foreach (string lang in langs)
+            {
+                string resolved = ResolveLangKey(single, lang, bundled);
+                if (!string.IsNullOrWhiteSpace(resolved) &&
+                    !string.Equals(resolved, single, StringComparison.Ordinal))
+                {
+                    text.Set(lang, resolved);
+                    any = true;
+                }
+            }
+
+            if (any)
+            {
+                // Drop the raw key if it was stored under a language entry.
+                foreach (string lang in text.Entries.Keys.ToArray())
+                {
+                    if (string.Equals(text.Entries[lang], single, StringComparison.Ordinal))
+                    {
+                        text.Set(lang, null);
+                    }
+                }
+
+                changed = true;
+            }
+
+            return any;
+        }
+
+        private static bool LooksLikeLangKey(string text)
+        {
+            return text.Contains('.') && !text.Contains(' ') && text.Length < 128;
+        }
+
+        private static string ResolveLangKey(
+            string key,
+            string lang,
+            Dictionary<string, Dictionary<string, string>>? bundled)
+        {
+            string domainKey = key.StartsWith("swixyquestbook:", StringComparison.OrdinalIgnoreCase)
+                ? key
+                : $"swixyquestbook:{key}";
+
+            try
+            {
+                string fromGame = Lang.GetL(lang, domainKey);
+                if (!string.IsNullOrWhiteSpace(fromGame)
+                    && !fromGame.StartsWith("swixyquestbook:", StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(fromGame, domainKey, StringComparison.Ordinal)
+                    && !string.Equals(fromGame, key, StringComparison.Ordinal))
+                {
+                    return fromGame;
+                }
+            }
+            catch
+            {
+                // Lang table may be unavailable during early load.
+            }
+
+            if (bundled != null
+                && bundled.TryGetValue(lang, out Dictionary<string, string>? table))
+            {
+                if (table.TryGetValue(key, out string? direct) && !string.IsNullOrWhiteSpace(direct))
+                {
+                    return direct;
+                }
+
+                string bare = key.StartsWith("swixyquestbook:", StringComparison.OrdinalIgnoreCase)
+                    ? key["swixyquestbook:".Length..]
+                    : key;
+                if (table.TryGetValue(bare, out string? bareValue) && !string.IsNullOrWhiteSpace(bareValue))
+                {
+                    return bareValue;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private Dictionary<string, Dictionary<string, string>> LoadBundledModLangTables()
+        {
+            var result = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+            string? baseDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+                ?? AppContext.BaseDirectory;
+
+            // Dev / packaged layouts.
+            string[] candidates =
+            [
+                Path.Combine(baseDir, "assets", "swixyquestbook", "lang"),
+                Path.Combine(baseDir, "swixyquestbook", "assets", "swixyquestbook", "lang"),
+                Path.Combine(AppContext.BaseDirectory, "assets", "swixyquestbook", "lang")
+            ];
+
+            foreach (string dir in candidates)
+            {
+                if (!Directory.Exists(dir))
+                {
+                    continue;
+                }
+
+                foreach (string file in Directory.GetFiles(dir, "*.json"))
+                {
+                    string lang = Path.GetFileNameWithoutExtension(file);
+                    try
+                    {
+                        string json = File.ReadAllText(file);
+                        var map = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                        if (map != null && map.Count > 0)
+                        {
+                            result[QuestbookLocalizedText.NormalizeLang(lang)] = map;
+                        }
+                    }
+                    catch
+                    {
+                        // skip broken lang files
+                    }
+                }
+
+                if (result.Count > 0)
+                {
+                    break;
+                }
+            }
+
+            return result;
         }
 
         private static string NormalizeIconItemCode(string? iconItemCode)

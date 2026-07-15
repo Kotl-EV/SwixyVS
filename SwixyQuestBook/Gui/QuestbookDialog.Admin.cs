@@ -5,6 +5,7 @@ using SwixyQuestBook.Network;
 using SwixyQuestBook.Server;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 
 namespace SwixyQuestBook.Gui
 {
@@ -53,6 +54,15 @@ namespace SwixyQuestBook.Gui
         {
             if (!adminData.HasSelectedNode)
                 return;
+
+            adminData.EditorLanguage = QuestbookLocalizedText.NormalizeLang(Lang.CurrentLocale);
+            // Re-bind description text to the active editor language.
+            if (adminData.HasSelectedNode)
+            {
+                var node = GetSelectedCategory()?.Nodes.FirstOrDefault(n => n.Id == adminData.SelectedNodeId);
+                if (node != null)
+                    adminData.LoadFromNode(node);
+            }
 
             isQuestEditModalOpen = true;
             isQuestEditModalSaveHovered = false;
@@ -125,7 +135,8 @@ namespace SwixyQuestBook.Gui
 
         private string GetEditableCategoryTitle(QuestbookCategoryDefinition category)
         {
-            return GetDisplayCategoryText(category.Title);
+            // Already language-resolved by the server.
+            return category.Title;
         }
 
         private void SubmitBranchModal()
@@ -697,7 +708,10 @@ namespace SwixyQuestBook.Gui
                         serverCategory.HeaderTitle,
                         serverCategory.ProgressPercent,
                         snapshotCategory.Nodes,
-                        snapshotCategory.Connections));
+                        snapshotCategory.Connections,
+                        serverCategory.HeaderDisplay,
+                        serverCategory.TitleByLang,
+                        serverCategory.HeaderByLang));
                 }
                 else
                 {
@@ -1384,7 +1398,15 @@ namespace SwixyQuestBook.Gui
                 listsBottomY = currentY;
             }
 
-            double infoY = listsBottomY;
+            // Language tabs for multi-language description editing (2 rows, larger chips).
+            double langRowHeight = 34 * fitScale;
+            double langRowGap = 6 * fitScale;
+            double langBarHeight = (langRowHeight * 2) + langRowGap;
+            double langBarGap = 12 * fitScale; // push description field a bit lower
+            double langBarY = listsBottomY;
+            DrawQuestEditLanguageBar(ctx, fitScale, contentX, langBarY, contentWidth, langRowHeight, langRowGap);
+
+            double infoY = langBarY + langBarHeight + langBarGap;
             double infoWidth = contentWidth;
             double infoHeight = maxInfoH;
             double maxInfoByButton = closeY - infoGap - infoY;
@@ -1402,7 +1424,8 @@ namespace SwixyQuestBook.Gui
             else
                 FillRectangle(ctx, contentX, infoY, infoWidth, infoHeight, [0.12, 0.13, 0.15, 0.9]);
 
-            string infoPlaceholder = QuestbookLang.GetLocal("admin.information_text");
+            string infoPlaceholder = QuestbookLang.GetLocal("admin.information_text")
+                + $" [{adminData.EditorLanguage.ToUpperInvariant()}]";
             string infoValue = adminData.InformationText;
             string infoDisplay = string.IsNullOrWhiteSpace(infoValue) ? infoPlaceholder : infoValue;
             bool infoFocused = adminData.FocusedField == infoField;
@@ -1446,6 +1469,108 @@ namespace SwixyQuestBook.Gui
             OffsetQuestEditModalHitAreas(screenX, screenY);
         }
 
+        private static string[] GetRegisteredLanguageCodes()
+        {
+            try
+            {
+                if (Lang.AvailableLanguages is { Count: > 0 })
+                {
+                    return Lang.AvailableLanguages.Keys
+                        .Select(static code => QuestbookLocalizedText.NormalizeLang(code))
+                        .Where(static code => !string.IsNullOrWhiteSpace(code))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .OrderBy(static code => code, StringComparer.OrdinalIgnoreCase)
+                        .ToArray();
+                }
+            }
+            catch
+            {
+                // fall through
+            }
+
+            string current = QuestbookLocalizedText.NormalizeLang(Lang.CurrentLocale);
+            return string.IsNullOrWhiteSpace(current)
+                ? ["en", "ru"]
+                : new[] { "en", "ru", current }
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(static c => c, StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+        }
+
+        private void DrawQuestEditLanguageBar(
+            Cairo.Context ctx,
+            double fitScale,
+            double x,
+            double y,
+            double width,
+            double rowHeight,
+            double rowGap)
+        {
+            string[] langs = GetRegisteredLanguageCodes();
+            if (langs.Length == 0)
+                langs = ["en"];
+
+            // Always include languages that already have text, even if not registered right now.
+            foreach (string existing in adminData.InformationByLang.Keys)
+            {
+                string code = QuestbookLocalizedText.NormalizeLang(existing);
+                if (!langs.Contains(code, StringComparer.OrdinalIgnoreCase))
+                    langs = langs.Append(code).OrderBy(static c => c, StringComparer.OrdinalIgnoreCase).ToArray();
+            }
+
+            questEditLangCodes = langs;
+            questEditLangButtonHitAreas = new LayoutRect[langs.Length];
+
+            // Two rows → fewer buttons per row → larger chips.
+            const int rowCount = 2;
+            int columns = System.Math.Max(1, (int)System.Math.Ceiling(langs.Length / (double)rowCount));
+            double gap = 8 * fitScale;
+            double buttonWidth = (width - (gap * System.Math.Max(0, columns - 1))) / columns;
+
+            for (int i = 0; i < langs.Length; i++)
+            {
+                string lang = langs[i];
+                int col = i % columns;
+                int row = i / columns;
+                double bx = x + (col * (buttonWidth + gap));
+                double by = y + (row * (rowHeight + rowGap));
+                LayoutRect rect = new(bx, by, buttonWidth, rowHeight);
+                questEditLangButtonHitAreas[i] = rect;
+
+                bool active = string.Equals(lang, adminData.EditorLanguage, StringComparison.OrdinalIgnoreCase);
+                bool hasText = adminData.InformationByLang.TryGetValue(lang, out string? text)
+                    && !string.IsNullOrWhiteSpace(text);
+
+                double[] bg = active
+                    ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
+                    : QuestbookGuiLayout.AdminTileBackgroundColor;
+                double[] border = active
+                    ? QuestbookGuiLayout.AdminSaveButtonColor
+                    : QuestbookGuiLayout.AdminTileBorderColor;
+
+                FillRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, 6 * fitScale, bg);
+                StrokeRoundedRectangle(
+                    ctx,
+                    rect.X,
+                    rect.Y,
+                    rect.Width,
+                    rect.Height,
+                    6 * fitScale,
+                    active ? 2.0 * fitScale : 1.3 * fitScale,
+                    border);
+
+                string label = lang.ToUpperInvariant();
+                if (hasText && !active)
+                    label += " ·";
+
+                double[] color = active
+                    ? QuestbookGuiLayout.AdminSaveButtonColor
+                    : QuestbookGuiLayout.AdminPanelTextColor;
+                CairoFont labelFont = CreateMontserratFont(14 * fitScale, color);
+                DrawCenteredText(ctx, labelFont, label, rect);
+            }
+        }
+
         private void OffsetQuestEditModalHitAreas(double screenX, double screenY)
         {
             adminTypeStartHitArea = adminTypeStartHitArea.Offset(screenX, screenY);
@@ -1456,6 +1581,8 @@ namespace SwixyQuestBook.Gui
             goalsListViewportHitArea = goalsListViewportHitArea.Offset(screenX, screenY);
             awardsListViewportHitArea = awardsListViewportHitArea.Offset(screenX, screenY);
             questEditModalSaveButtonHitArea = questEditModalSaveButtonHitArea.Offset(screenX, screenY);
+            for (int i = 0; i < questEditLangButtonHitAreas.Length; i++)
+                questEditLangButtonHitAreas[i] = questEditLangButtonHitAreas[i].Offset(screenX, screenY);
 
             for (int i = 0; i < goalsRemoveHitAreas.Length; i++)
                 goalsRemoveHitAreas[i] = goalsRemoveHitAreas[i].Offset(screenX, screenY);
@@ -1967,6 +2094,17 @@ namespace SwixyQuestBook.Gui
                 return true;
             }
 
+            for (int i = 0; i < questEditLangButtonHitAreas.Length && i < questEditLangCodes.Length; i++)
+            {
+                if (!questEditLangButtonHitAreas[i].Contains(mouseX, mouseY))
+                    continue;
+
+                adminData.SwitchEditorLanguage(questEditLangCodes[i]);
+                adminData.FocusedField = new AdminFormFieldRef(AdminFormFieldKind.Information);
+                RequestContentRefresh();
+                return true;
+            }
+
             if (adminTypeStartHitArea.Contains(mouseX, mouseY))
             {
                 TrySetEditedNodeType(QuestbookQuestNodeType.Start);
@@ -2452,6 +2590,7 @@ namespace SwixyQuestBook.Gui
             if (node == null)
                 return;
 
+            adminData.EditorLanguage = QuestbookLocalizedText.NormalizeLang(Lang.CurrentLocale);
             adminData.LoadFromNode(node);
         }
 
@@ -2500,9 +2639,12 @@ namespace SwixyQuestBook.Gui
             if (adminData.EditedNodeType == QuestbookQuestNodeType.Quest)
                 return CreateQuestNodeFromForm(existing.Id, existing.X, existing.Y, existing.State);
 
+            adminData.FlushInformationTextToLangMap();
             return new QuestbookQuestNodeDefinition(
                 existing.Id, existing.X, existing.Y, existing.State,
-                adminData.InformationText, adminData.EditedNodeType);
+                adminData.GetInformationTextForSave(),
+                adminData.EditedNodeType,
+                descriptionByLang: new Dictionary<string, string>(adminData.InformationByLang, StringComparer.OrdinalIgnoreCase));
         }
 
         private QuestbookQuestNodeDefinition CreateQuestNodeFromForm(int id, double x, double y, QuestbookQuestNodeState state)
@@ -2523,10 +2665,12 @@ namespace SwixyQuestBook.Gui
                     rewardItems.Add(new QuestbookQuestItemRequirement(code, award.Count));
             }
 
+            adminData.FlushInformationTextToLangMap();
             return new QuestbookQuestNodeDefinition(
-                id, x, y, state, adminData.InformationText,
+                id, x, y, state, adminData.GetInformationTextForSave(),
                 QuestbookQuestNodeType.Quest,
-                requiredItems.ToArray(), rewardItems.ToArray());
+                requiredItems.ToArray(), rewardItems.ToArray(),
+                descriptionByLang: new Dictionary<string, string>(adminData.InformationByLang, StringComparer.OrdinalIgnoreCase));
         }
 
         private void HandleAddConnection(int startNodeId, int endNodeId)
@@ -2574,8 +2718,15 @@ namespace SwixyQuestBook.Gui
             List<QuestbookQuestConnectionDefinition> connections)
         {
             var updatedCategory = new QuestbookCategoryDefinition(
-                category.IconItemCode, category.Title, category.HeaderTitle,
-                category.ProgressPercent, nodes.ToArray(), connections.ToArray());
+                category.IconItemCode,
+                category.Title,
+                category.HeaderTitle,
+                category.ProgressPercent,
+                nodes.ToArray(),
+                connections.ToArray(),
+                category.HeaderDisplay,
+                category.TitleByLang,
+                category.HeaderByLang);
 
             categories[selectedCategoryIndex] = updatedCategory;
             dataManager.UpdateCategory(selectedCategoryIndex, updatedCategory);
@@ -2716,6 +2867,9 @@ namespace SwixyQuestBook.Gui
                 IconItemCode = category.IconItemCode,
                 Title = category.Title,
                 HeaderTitle = category.HeaderTitle,
+                HeaderDisplay = category.HeaderDisplay,
+                TitleI18n = ToLangPackets(category.TitleByLang),
+                HeaderI18n = ToLangPackets(category.HeaderByLang),
                 Nodes = category.Nodes.Select(n => new QuestbookSyncNodePacket
                 {
                     Id = n.Id,
@@ -2728,6 +2882,7 @@ namespace SwixyQuestBook.Gui
                         _ => 1
                     },
                     Description = n.Description,
+                    DescriptionI18n = ToLangPackets(n.DescriptionByLang),
                     RequiredItems = n.RequiredItems.Select(i => new QuestbookSyncItemPacket
                     {
                         CollectibleCode = i.CollectibleCode,
@@ -2751,6 +2906,22 @@ namespace SwixyQuestBook.Gui
                 CategoryHeaderTitle = category.HeaderTitle,
                 Category = syncCategory
             });
+        }
+
+        private static QuestbookLangTextPacket[] ToLangPackets(IReadOnlyDictionary<string, string>? map)
+        {
+            if (map == null || map.Count == 0)
+                return [];
+
+            return map
+                .Where(static e => !string.IsNullOrWhiteSpace(e.Key) && !string.IsNullOrWhiteSpace(e.Value))
+                .OrderBy(static e => e.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(static e => new QuestbookLangTextPacket
+                {
+                    Lang = e.Key.Trim().ToLowerInvariant(),
+                    Text = e.Value
+                })
+                .ToArray();
         }
 
         public void SyncAdminFieldEdit()

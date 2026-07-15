@@ -233,6 +233,8 @@ namespace SwixyQuestBook.Gui
         private LayoutRect questEditModalOverlayHitArea = new(0, 0, 0, 0);
         private LayoutRect questEditModalPanelHitArea = new(0, 0, 0, 0);
         private LayoutRect questEditModalSaveButtonHitArea = new(0, 0, 0, 0);
+        private LayoutRect[] questEditLangButtonHitAreas = [];
+        private string[] questEditLangCodes = [];
         private LayoutRect goalsListViewportHitArea = new(0, 0, 0, 0);
         private LayoutRect awardsListViewportHitArea = new(0, 0, 0, 0);
         private LayoutRect goalsAddButtonHitArea = new(0, 0, 0, 0);
@@ -1406,9 +1408,14 @@ namespace SwixyQuestBook.Gui
 
         private SidebarQuestEntry CreateSidebarEntry(QuestbookCategoryDefinition category, bool isSelected)
         {
-            return new SidebarQuestEntry(category.IconItemCode, GetDisplayCategoryText(category.Title), GetCategoryProgressPercent(category), isSelected);
+            // Title is already language-resolved by the server.
+            return new SidebarQuestEntry(category.IconItemCode, category.Title, GetCategoryProgressPercent(category), isSelected);
         }
 
+        /// <summary>
+        /// Display helper for texts that may still use legacy branch placeholders.
+        /// Quest/branch content from the server is already language-resolved.
+        /// </summary>
         private static string GetDisplayCategoryText(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -1428,17 +1435,27 @@ namespace SwixyQuestBook.Gui
                 return QuestbookLang.GetLocal("category.new_branch.title", titleNumber);
             }
 
+            // Legacy client-side lang keys (pre multi-lang quest data) — keep as fallback.
             if (text.Contains('.') && !text.Contains(' '))
             {
                 string resolved = QuestbookLang.GetLocal(text);
-                if (resolved.StartsWith("swixyquestbook:"))
+                if (!resolved.StartsWith("swixyquestbook:", StringComparison.Ordinal))
                 {
-                    return text;
+                    return resolved;
                 }
-                return resolved;
             }
 
             return text;
+        }
+
+        private static string GetCategoryHeaderDisplay(QuestbookCategoryDefinition category)
+        {
+            if (!string.IsNullOrWhiteSpace(category.HeaderDisplay))
+            {
+                return category.HeaderDisplay;
+            }
+
+            return GetDisplayCategoryText(category.HeaderTitle);
         }
 
         private static LayoutRect CreateSidebarCardLayout(int index, double scale, double scrollOffset)
@@ -2597,11 +2614,11 @@ namespace SwixyQuestBook.Gui
 
             // Title
             string displayTitle = isStartNode
-                ? GetDisplayCategoryText(GetSelectedCategory().HeaderTitle)
+                ? GetCategoryHeaderDisplay(GetSelectedCategory())
                 : isCheckpointNode
                     ? (string.IsNullOrWhiteSpace(node.Description)
-                        ? GetDisplayCategoryText(GetSelectedCategory().HeaderTitle)
-                        : GetDisplayCategoryText(node.Description))
+                        ? GetCategoryHeaderDisplay(GetSelectedCategory())
+                        : node.Description)
                     : (node.RequiredItems.Length > 0
                         ? (GetQuestItemSlot(node.RequiredItems[0].CollectibleCode)?.Itemstack?.GetName()
                             ?? node.RequiredItems[0].CollectibleCode)
@@ -2651,7 +2668,7 @@ namespace SwixyQuestBook.Gui
                 CairoFont infoFont = CreateMontserratFont(16 * fitScale, QuestbookGuiLayout.ModalStartInfoTextColor);
                 string infoText = string.IsNullOrWhiteSpace(node.Description)
                     ? QuestbookLang.GetLocal("modal.info_placeholder")
-                    : GetDisplayCategoryText(node.Description);
+                    : node.Description;
                 DrawWrappedInfoText(ctx, infoFont, infoText, infoRect, QuestbookGuiLayout.ModalStartDescriptionMaxLength, 24 * fitScale);
             }
             else
@@ -2746,7 +2763,7 @@ namespace SwixyQuestBook.Gui
                 CairoFont infoFont = CreateMontserratFont(15 * fitScale, [1.0, 1.0, 0.3333333333, 1.0]);
                 string infoText = string.IsNullOrWhiteSpace(node.Description)
                     ? QuestbookLang.GetLocal("modal.info_placeholder")
-                    : GetDisplayCategoryText(node.Description);
+                    : node.Description;
                 DrawWrappedInfoText(ctx, infoFont, infoText, infoRect, 220, 22 * fitScale);
             }
 
@@ -3428,7 +3445,7 @@ namespace SwixyQuestBook.Gui
 
                     double titleWidth = MeasureTextWidth(titleFont, TopMenuTitleText);
                     double separatorWidth = MeasureTextWidth(separatorFont, TopMenuSeparatorText);
-                    double sectionWidth = MeasureTextWidth(sectionFont, GetDisplayCategoryText(selectedCategory.HeaderTitle));
+                    double sectionWidth = MeasureTextWidth(sectionFont, GetCategoryHeaderDisplay(selectedCategory));
                     double progressWidth = MeasureTextWidth(progressFont, progressText);
                     double closeWidth = MeasureTextWidth(closeFont, TopMenuCloseText);
                     double closeHotkeyWidth = MeasureTextWidth(closeHotkeyFont, TopMenuCloseHotkeyText);
@@ -3470,7 +3487,7 @@ namespace SwixyQuestBook.Gui
                     leftTextX += titleWidth + topMenuTitleGap;
                     DrawTopMenuText(ctx, separatorFont, TopMenuSeparatorText, leftTextX, topTextBaselineY);
                     leftTextX += separatorWidth + topMenuSectionGap;
-                    DrawTopMenuText(ctx, sectionFont, GetDisplayCategoryText(selectedCategory.HeaderTitle), leftTextX, topTextBaselineY);
+                    DrawTopMenuText(ctx, sectionFont, GetCategoryHeaderDisplay(selectedCategory), leftTextX, topTextBaselineY);
                     leftTextX += sectionWidth + topMenuProgressGap;
                     DrawTopMenuText(ctx, progressFont, progressText, leftTextX, topTextBaselineY);
 

@@ -36,8 +36,9 @@ namespace SwixyQuestBook.Server
         [JsonPropertyName("nodeType")]
         public string NodeType { get; set; } = "Quest";
 
+        /// <summary>Multi-language quest text (en/ru/…).</summary>
         [JsonPropertyName("description")]
-        public string Description { get; set; } = string.Empty;
+        public QuestbookLocalizedText Description { get; set; } = new();
 
         [JsonPropertyName("requiredItems")]
         public QuestbookQuestItemData[] RequiredItems { get; set; } = [];
@@ -70,11 +71,20 @@ namespace SwixyQuestBook.Server
         [JsonPropertyName("iconItemCode")]
         public string IconItemCode { get; set; } = string.Empty;
 
+        /// <summary>Multi-language sidebar branch name.</summary>
         [JsonPropertyName("title")]
-        public string Title { get; set; } = string.Empty;
+        public QuestbookLocalizedText Title { get; set; } = new();
 
+        /// <summary>
+        /// Stable category identity used for progress / network identity.
+        /// Not a display string (display is <see cref="Header"/>).
+        /// </summary>
         [JsonPropertyName("headerTitle")]
         public string HeaderTitle { get; set; } = string.Empty;
+
+        /// <summary>Multi-language top-menu / start-node header display text.</summary>
+        [JsonPropertyName("header")]
+        public QuestbookLocalizedText Header { get; set; } = new();
 
         [JsonPropertyName("nodes")]
         public QuestbookQuestNodeData[] Nodes { get; set; } = [];
@@ -108,8 +118,15 @@ namespace SwixyQuestBook.Server
     public sealed class QuestbookSyncCategoryPacket
     {
         public string IconItemCode = string.Empty;
+        /// <summary>Display title resolved for the receiving client's language.</summary>
         public string Title = string.Empty;
+        /// <summary>Stable category key (progress / identity).</summary>
         public string HeaderTitle = string.Empty;
+        /// <summary>Display header resolved for the receiving client's language.</summary>
+        public string HeaderDisplay = string.Empty;
+        /// <summary>All language variants for admin editing / re-resolve.</summary>
+        public QuestbookLangTextPacket[] TitleI18n = [];
+        public QuestbookLangTextPacket[] HeaderI18n = [];
         public QuestbookSyncNodePacket[] Nodes = [];
         public QuestbookSyncConnectionPacket[] Connections = [];
     }
@@ -121,9 +138,19 @@ namespace SwixyQuestBook.Server
         public double X;
         public double Y;
         public int NodeType; // 0=Start, 1=Quest, 2=Checkpoint
+        /// <summary>Description resolved for the receiving client's language.</summary>
         public string Description = string.Empty;
+        /// <summary>All language variants for admin editing.</summary>
+        public QuestbookLangTextPacket[] DescriptionI18n = [];
         public QuestbookSyncItemPacket[] RequiredItems = [];
         public QuestbookSyncItemPacket[] RewardItems = [];
+    }
+
+    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+    public sealed class QuestbookLangTextPacket
+    {
+        public string Lang = string.Empty;
+        public string Text = string.Empty;
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

@@ -58,6 +58,10 @@ namespace SwixyQuestBook.Gui
         public const int MaxItemEntries = 64;
 
         public string InformationText { get; set; } = string.Empty;
+        /// <summary>Active language tab in the description editor (e.g. en / ru).</summary>
+        public string EditorLanguage { get; set; } = "en";
+        /// <summary>Description text per language code.</summary>
+        public Dictionary<string, string> InformationByLang { get; } = new(StringComparer.OrdinalIgnoreCase);
         public List<QuestbookAdminItemEntry> Goals { get; } = [];
         public List<QuestbookAdminItemEntry> Awards { get; } = [];
 
@@ -112,6 +116,8 @@ namespace SwixyQuestBook.Gui
         public void ClearFormFields()
         {
             InformationText = string.Empty;
+            InformationByLang.Clear();
+            EditorLanguage = "en";
             FocusedField = AdminFormFieldRef.None;
             Goals.Clear();
             Awards.Clear();
@@ -127,10 +133,26 @@ namespace SwixyQuestBook.Gui
         {
             SelectedNodeId = node.Id;
             EditedNodeType = node.NodeType;
-            InformationText = node.Description ?? string.Empty;
             FocusedField = AdminFormFieldRef.None;
             Goals.Clear();
             Awards.Clear();
+            InformationByLang.Clear();
+
+            foreach ((string lang, string text) in node.DescriptionByLang)
+            {
+                if (!string.IsNullOrWhiteSpace(lang) && !string.IsNullOrWhiteSpace(text))
+                    InformationByLang[lang.Trim().ToLowerInvariant()] = text;
+            }
+
+            if (InformationByLang.Count == 0 && !string.IsNullOrWhiteSpace(node.Description))
+                InformationByLang["en"] = node.Description;
+
+            if (string.IsNullOrWhiteSpace(EditorLanguage))
+                EditorLanguage = "en";
+
+            InformationText = InformationByLang.TryGetValue(EditorLanguage, out string? current)
+                ? current
+                : string.Empty;
 
             foreach (QuestbookQuestItemRequirement item in node.RequiredItems)
             {
@@ -141,6 +163,36 @@ namespace SwixyQuestBook.Gui
             {
                 Awards.Add(CreateItemEntryFromSaved(item.CollectibleCode, item.Count));
             }
+        }
+
+        public void FlushInformationTextToLangMap()
+        {
+            string lang = string.IsNullOrWhiteSpace(EditorLanguage) ? "en" : EditorLanguage.Trim().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(InformationText))
+                InformationByLang.Remove(lang);
+            else
+                InformationByLang[lang] = InformationText;
+        }
+
+        public void SwitchEditorLanguage(string lang)
+        {
+            if (string.IsNullOrWhiteSpace(lang))
+                return;
+
+            string next = lang.Trim().ToLowerInvariant();
+            FlushInformationTextToLangMap();
+            EditorLanguage = next;
+            InformationText = InformationByLang.TryGetValue(next, out string? text) ? text : string.Empty;
+        }
+
+        public string GetInformationTextForSave()
+        {
+            FlushInformationTextToLangMap();
+            if (InformationByLang.TryGetValue(EditorLanguage, out string? current) && !string.IsNullOrWhiteSpace(current))
+                return current;
+            if (InformationByLang.TryGetValue("en", out string? en) && !string.IsNullOrWhiteSpace(en))
+                return en;
+            return InformationByLang.Values.FirstOrDefault(static v => !string.IsNullOrWhiteSpace(v)) ?? string.Empty;
         }
 
         public void AddGoal()
@@ -248,6 +300,7 @@ namespace SwixyQuestBook.Gui
                     break;
                 case AdminFormFieldKind.Information:
                     InformationText = value;
+                    FlushInformationTextToLangMap();
                     break;
             }
         }

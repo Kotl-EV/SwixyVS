@@ -84,5 +84,22 @@
   "claims-error-cannot-remove-owner": "Владельца нельзя удалить из привата.",
   "claims-error-coowner-cannot-delete": "Только владелец может удалить приват целиком.",
   "claims-error-member-not-found": "Игрок не добавлен в этот приват.",
-  "claims-error-empty-name": "Название привата пустое."
+  "claims-error-empty-name": "Название привата пустое.",
+  "use-filter-title": "Блоки для использования",
+  "use-filter-claim": "Приват: {0}",
+  "use-filter-mode": "Режим:",
+  "use-filter-mode-all": "Все блоки",
+  "use-filter-mode-whitelist": "Только выбранные блоки",
+  "use-filter-inventory": "Кликни по блоку из инвентаря:",
+  "use-filter-selected-all": "Ограничений нет — можно использовать всё.",
+  "use-filter-selected-count": "Выбрано блоков: {0}",
+  "use-filter-cancel": "Отмена",
+  "use-filter-save": "Сохранить",
+  "use-filter-edit": "Блоки Use",
+  "use-filter-status-all": "Use: все блоки",
+  "use-filter-status-whitelist": "Use: только выбранные ({0})",
+  "use-filter-message-saved": "Ограничение использования сохранено.",
+  "use-filter-error-empty": "Выбери хотя бы один блок или режим «Все блоки».",
+  "use-filter-error-limit": "Можно выбрать не больше {0} блоков.",
+  "use-filter-denied": "В этом привате нельзя использовать этот блок."
 }

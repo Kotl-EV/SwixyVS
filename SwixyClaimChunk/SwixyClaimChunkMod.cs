@@ -15,7 +15,7 @@ using Vintagestory.API.Server;
     "swixyclaimchunk",
     Website = "https://github.com/tehtelev/Swixy",
     Description = "Chunk claim map interface.",
-    Version = "1.0.2",
+    Version = "1.0.3",
     Authors =
     [
         "Tehtelev",
@@ -34,6 +34,8 @@ public sealed partial class SwixyClaimChunkMod : ModSystem
     private const int MaxRadius = 32;
     private const int ProtectionLevel = 1;
     private const string CoOwnersSaveKey = "swixyclaimchunk_coowners";
+    private const string UseFiltersSaveKey = "swixyclaimchunk_use_filters";
+    private const int MaxUseFilterCodes = 64;
 
     private ICoreClientAPI? clientApi;
     private ICoreServerAPI? serverApi;
@@ -42,6 +44,7 @@ public sealed partial class SwixyClaimChunkMod : ModSystem
     private ClaimMapDialog? dialog;
     private PlayerChatDelegate? serverPlayerChatHandler;
     private readonly Dictionary<string, HashSet<string>> coOwnerUidsByClaimKey = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, UseFilterRuleData> useFiltersByClaimKey = new(StringComparer.Ordinal);
 
     public override bool ShouldLoad(EnumAppSide forSide) => true;
 
@@ -51,7 +54,10 @@ public sealed partial class SwixyClaimChunkMod : ModSystem
         if (serverApi != null)
         {
             serverApi.Event.SaveGameLoaded -= OnCoOwnersSaveGameLoaded;
+            serverApi.Event.SaveGameLoaded -= OnUseFiltersSaveGameLoaded;
             serverApi.Event.GameWorldSave -= OnCoOwnersSaveGameSaving;
+            serverApi.Event.GameWorldSave -= OnUseFiltersSaveGameSaving;
+            serverApi.Event.OnTestBlockAccessClaim -= OnTestBlockAccessClaim;
             if (serverPlayerChatHandler != null)
             {
                 serverApi.Event.PlayerChat -= serverPlayerChatHandler;

@@ -81,6 +81,8 @@ public sealed partial class SwixyClaimChunkMod
         if (claim.Areas.Count == 0)
         {
             serverApi!.World.Claims.Remove(claim);
+            ClearCoOwners(claim);
+            ClearUseFilter(claim);
         }
         else
         {

@@ -54,4 +54,24 @@ public sealed partial class SwixyClaimChunkMod
         [ProtoMember(1)]
         public Dictionary<string, List<string>> Entries { get; set; } = [];
     }
+
+    /// <summary>
+    /// Фильтры Use в SaveGame.
+    /// Ключ — BuildClaimStorageKey; значение — [mode, code1, code2, ...]
+    /// (mode: "0" AllowAll, "1" Whitelist). Формат как у co-owners: Dictionary + List string.
+    /// </summary>
+    [ProtoContract]
+    private sealed class UseFilterSaveData
+    {
+        [ProtoMember(1)]
+        public Dictionary<string, List<string>> Entries { get; set; } = [];
+    }
+
+    /// <summary>Правило фильтра Use в памяти (не для protobuf SaveGame).</summary>
+    private sealed class UseFilterRuleData
+    {
+        public int Mode { get; set; }
+
+        public List<string> Codes { get; set; } = [];
+    }
 }

@@ -84,5 +84,22 @@
   "claims-error-cannot-remove-owner": "The claim owner cannot be removed.",
   "claims-error-coowner-cannot-delete": "Only the owner can delete the entire claim.",
   "claims-error-member-not-found": "Player is not added to this claim.",
-  "claims-error-empty-name": "Claim name is empty."
+  "claims-error-empty-name": "Claim name is empty.",
+  "use-filter-title": "Blocks allowed to use",
+  "use-filter-claim": "Claim: {0}",
+  "use-filter-mode": "Mode:",
+  "use-filter-mode-all": "All blocks",
+  "use-filter-mode-whitelist": "Selected blocks only",
+  "use-filter-inventory": "Click blocks from your inventory:",
+  "use-filter-selected-all": "No limits — all blocks can be used.",
+  "use-filter-selected-count": "Selected blocks: {0}",
+  "use-filter-cancel": "Cancel",
+  "use-filter-save": "Save",
+  "use-filter-edit": "Use blocks",
+  "use-filter-status-all": "Use: all blocks",
+  "use-filter-status-whitelist": "Use: selected only ({0})",
+  "use-filter-message-saved": "Use restriction saved.",
+  "use-filter-error-empty": "Select at least one block or choose “All blocks”.",
+  "use-filter-error-limit": "You can select at most {0} blocks.",
+  "use-filter-denied": "You cannot use this block in this claim."
 }

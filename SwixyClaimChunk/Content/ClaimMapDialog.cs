@@ -64,6 +64,9 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>ClaimId выбранного привата на вкладке настроек (0 — нет выбора).</summary>
     private int selectedClaimId;
 
+    /// <summary>Имя выбранного привата — запасной ключ, если ClaimId сменился после TouchClaim.</summary>
+    private string selectedClaimName = "";
+
     /// <summary>Приват, подсвеченный в мире; 0 — подсветка выключена.</summary>
     private int highlightedClaimId;
 
@@ -105,6 +108,9 @@ public sealed class ClaimMapDialog : GuiDialog
 
     /// <summary>Действие для отложенного обновления UI (иконки, выбор без ComposeDialog).</summary>
     private Action? deferredClaimsUiAction;
+
+    /// <summary>Открытое модальное окно фильтра Use; null если закрыто.</summary>
+    private ClaimUseFilterDialog? useFilterDialog;
 
     #endregion
 
@@ -188,12 +194,18 @@ public sealed class ClaimMapDialog : GuiDialog
         if (packet.Claims.Count == 0)
         {
             selectedClaimId = 0;
+            selectedClaimName = "";
             selectedMemberUid = "";
             selectedMemberName = "";
         }
         else if (selectedClaimId == 0 || packet.Claims.All(claim => claim.ClaimId != selectedClaimId))
         {
-            SelectClaim(packet.Claims[0]);
+            // После TouchClaim индекс ClaimId может смениться — ищем по имени.
+            var byName = !string.IsNullOrWhiteSpace(selectedClaimName)
+                ? packet.Claims.FirstOrDefault(claim =>
+                    string.Equals(claim.Name, selectedClaimName, StringComparison.OrdinalIgnoreCase))
+                : null;
+            SelectClaim(byName ?? packet.Claims[0]);
         }
 
         var selectedClaim = GetSelectedClaim();
@@ -251,8 +263,25 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Escape закрывает диалог.</summary>
     public override bool OnEscapePressed()
     {
+        if (useFilterDialog?.IsOpened() == true)
+        {
+            useFilterDialog.TryClose();
+            return true;
+        }
+
         TryClose();
         return true;
+    }
+
+    public override void OnGuiClosed()
+    {
+        if (useFilterDialog?.IsOpened() == true)
+        {
+            useFilterDialog.TryClose();
+        }
+
+        useFilterDialog = null;
+        base.OnGuiClosed();
     }
 
     #endregion
@@ -386,9 +415,21 @@ public sealed class ClaimMapDialog : GuiDialog
             .AddDynamicText(Lang.Get("swixyclaimchunk:claims-player-name"), CairoFont.WhiteSmallText(), ElementBounds.Fixed(detailsX, 158, labelW, 20), "memberNameLabel")
             .AddDynamicCustomDraw(ElementBounds.Fixed(memberInputX, 154, memberInputW, controlH), DrawTextInputBackground, "memberNameInputBg")
             .AddTextInput(ElementBounds.Fixed(memberInputX + 4, 158, memberInputW - 8, 24), text => memberNameInput = text, CairoFont.WhiteDetailText(), "memberNameInput")
-            .AddButton(Lang.Get("swixyclaimchunk:claims-add-player"), AddMemberButton, ElementBounds.Fixed(buttonX, 154, buttonW, controlH), actionButtonFont, EnumButtonStyle.Small, "addMember");
+            .AddButton(Lang.Get("swixyclaimchunk:claims-add-player"), AddMemberButton, ElementBounds.Fixed(buttonX, 154, buttonW, controlH), actionButtonFont, EnumButtonStyle.Small, "addMember")
+            .AddDynamicText(
+                FormatUseFilterStatus(selectedClaim),
+                CairoFont.WhiteDetailText(),
+                ElementBounds.Fixed(detailsX, 192, detailsW - buttonW - buttonGap, 28),
+                "useFilterStatus")
+            .AddButton(
+                Lang.Get("swixyclaimchunk:use-filter-edit"),
+                OpenUseFilterDialog,
+                ElementBounds.Fixed(buttonX, 190, buttonW, controlH),
+                actionButtonFont,
+                EnumButtonStyle.Small,
+                "useFilterEdit");
 
-        var memberListBounds = ElementBounds.Fixed(memberListX, 196, detailsW, 408);
+        var memberListBounds = ElementBounds.Fixed(memberListX, 228, detailsW, 376);
         memberListClipBounds = memberListBounds.ForkContainingChild(3, 3, 3, 3);
         memberListTableBounds = memberListClipBounds.ForkContainingChild(0, 0, 0, -3).WithFixedPadding(3);
 
@@ -508,9 +549,10 @@ public sealed class ClaimMapDialog : GuiDialog
     private void SelectClaim(ClaimInfoPacket claim)
     {
         selectedClaimId = claim.ClaimId;
+        selectedClaimName = claim.Name ?? "";
         selectedMemberUid = "";
         selectedMemberName = "";
-        claimNameInput = claim.Name;
+        claimNameInput = claim.Name ?? "";
     }
 
     /// <summary>Выбирает участника; обновляет правую панель без полной пересборки.</summary>
@@ -591,6 +633,45 @@ public sealed class ClaimMapDialog : GuiDialog
         claimNameInput = SingleComposer?.GetTextInput("claimNameInput")?.GetText() ?? claimNameInput;
         SendClaimAction(ClaimAccessActionType.RenameClaim, "", 0, claimNameInput);
         return true;
+    }
+
+    /// <summary>Открывает модалку выбора блоков для фильтра Use.</summary>
+    private bool OpenUseFilterDialog()
+    {
+        var claim = GetSelectedClaim();
+        if (claim == null)
+        {
+            return true;
+        }
+
+        if (useFilterDialog?.IsOpened() == true)
+        {
+            useFilterDialog.TryClose();
+        }
+
+        var codes = ClaimUseFilterCodesCodec.Split(claim.UseFilterCodesRaw);
+        useFilterDialog = new ClaimUseFilterDialog(
+            clientApi,
+            channel,
+            claim.ClaimId,
+            claim.Name,
+            claim.UseFilterMode,
+            codes,
+            () => useFilterDialog = null);
+        useFilterDialog.TryOpen();
+        return true;
+    }
+
+    /// <summary>Краткий статус фильтра Use для панели привата.</summary>
+    private static string FormatUseFilterStatus(ClaimInfoPacket claim)
+    {
+        var codes = ClaimUseFilterCodesCodec.Split(claim.UseFilterCodesRaw);
+        if (claim.UseFilterMode == ClaimUseFilterMode.Whitelist && codes.Count > 0)
+        {
+            return Lang.Get("swixyclaimchunk:use-filter-status-whitelist", codes.Count);
+        }
+
+        return Lang.Get("swixyclaimchunk:use-filter-status-all");
     }
 
     /// <summary>Отправляет ClaimAccessActionPacket для выбранного привата.</summary>
@@ -1173,6 +1254,7 @@ public sealed class ClaimMapDialog : GuiDialog
             selectedClaim.ViewerIsCoOwner
                 ? Lang.Get("swixyclaimchunk:claims-stats-coowner", selectedClaim.OwnerName, selectedClaim.AreaCount, selectedClaim.ChunkCount)
                 : Lang.Get("swixyclaimchunk:claims-stats", selectedClaim.AreaCount, selectedClaim.ChunkCount));
+        SingleComposer.GetDynamicText("useFilterStatus")?.SetNewText(FormatUseFilterStatus(selectedClaim));
 
         var memberList = SingleComposer.GetCellList<SavegameCellEntry>("memberList");
         if (memberList != null)

@@ -36,7 +36,10 @@ public sealed partial class SwixyClaimChunkMod
         api.Event.RegisterCallback(_ => OverrideLandCommand(api.ChatCommands, OpenClaimMapServerCommand), 0);
 
         api.Event.SaveGameLoaded += OnCoOwnersSaveGameLoaded;
+        api.Event.SaveGameLoaded += OnUseFiltersSaveGameLoaded;
         api.Event.GameWorldSave += OnCoOwnersSaveGameSaving;
+        api.Event.GameWorldSave += OnUseFiltersSaveGameSaving;
+        api.Event.OnTestBlockAccessClaim += OnTestBlockAccessClaim;
         serverPlayerChatHandler = (IServerPlayer byPlayer, int channelId, ref string message, ref string data, BoolRef consumed) =>
         {
             if (!IsLandChatMessage(message))

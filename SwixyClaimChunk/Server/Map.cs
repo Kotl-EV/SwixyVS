@@ -288,6 +288,8 @@ public sealed partial class SwixyClaimChunkMod
                 serverApi.WorldManager.MapSizeY)
         };
 
+        FillClaimUseFilterInfo(info, claim);
+
         info.Members.Add(new ClaimMemberPacket
         {
             PlayerUid = claim.OwnedByPlayerUid,

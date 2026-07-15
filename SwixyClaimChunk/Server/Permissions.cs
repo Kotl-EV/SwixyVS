@@ -98,21 +98,64 @@ public sealed partial class SwixyClaimChunkMod
     }
 
     /// <summary>Игрок — официальный владелец привата.</summary>
-    private static bool IsClaimOwner(LandClaim claim, string playerUid)
+    private static bool IsClaimOwner(LandClaim? claim, string? playerUid)
     {
-        return claim.OwnedByPlayerUid == playerUid;
+        return claim != null
+            && !string.IsNullOrWhiteSpace(playerUid)
+            && claim.OwnedByPlayerUid == playerUid;
     }
 
     /// <summary>Игрок — со-владелец (назначен короной, не зависит от Use/Build).</summary>
-    private bool IsCoOwner(LandClaim claim, string playerUid)
+    private bool IsCoOwner(LandClaim? claim, string? playerUid)
     {
-        if (string.IsNullOrWhiteSpace(playerUid) || IsClaimOwner(claim, playerUid))
+        if (claim == null || string.IsNullOrWhiteSpace(playerUid) || IsClaimOwner(claim, playerUid))
         {
             return false;
         }
 
         var key = BuildClaimStorageKey(claim);
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return false;
+        }
+
         return coOwnerUidsByClaimKey.TryGetValue(key, out var set) && set.Contains(playerUid);
+    }
+
+    /// <summary>
+    /// Полный доступ к блокам: есть Build (обычно вместе с Use).
+    /// Для таких игроков фильтр whitelist Use не применяется.
+    /// </summary>
+    private static bool HasBuildAccess(LandClaim? claim, string? playerUid)
+    {
+        if (claim?.PermittedPlayerUids == null || string.IsNullOrWhiteSpace(playerUid))
+        {
+            return false;
+        }
+
+        return claim.PermittedPlayerUids.TryGetValue(playerUid, out var flags)
+            && flags.HasFlag(EnumBlockAccessFlags.BuildOrBreak);
+    }
+
+    /// <summary>
+    /// Только Use без Build — единственный случай, когда действует фильтр блоков.
+    /// </summary>
+    private static bool HasUseOnlyAccess(LandClaim? claim, string? playerUid)
+    {
+        if (claim?.PermittedPlayerUids == null || string.IsNullOrWhiteSpace(playerUid))
+        {
+            // Не в списке участников (AllowUseEveryone и т.п.) — считаем «только use».
+            return true;
+        }
+
+        if (!claim.PermittedPlayerUids.TryGetValue(playerUid, out var flags))
+        {
+            return true;
+        }
+
+        var hasUse = flags.HasFlag(EnumBlockAccessFlags.Use);
+        var hasBuild = flags.HasFlag(EnumBlockAccessFlags.BuildOrBreak);
+        return hasUse && !hasBuild;
     }
 
     /// <summary>Владелец или со-владелец может управлять приватом в GUI.</summary>

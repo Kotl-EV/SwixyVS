@@ -48,6 +48,7 @@ public sealed partial class SwixyClaimChunkMod
 
                 serverApi.World.Claims.Remove(claim);
                 ClearCoOwners(claim);
+                ClearUseFilter(claim);
                 return ClaimActionResult.Success("swixyclaimchunk:claims-message-deleted");
             case ClaimAccessActionType.UpdateMemberAccess:
                 return TryUpdateClaimMemberAccess(claim, packet.PlayerName, packet.PlayerUid, (EnumBlockAccessFlags)packet.AccessFlags);
@@ -58,6 +59,18 @@ public sealed partial class SwixyClaimChunkMod
                 }
 
                 return TryToggleCoOwnership(claim, packet.PlayerName, packet.PlayerUid);
+            case ClaimAccessActionType.SetUseFilter:
+            {
+                // Коды идут строкой UseFilterCodesRaw (protobuf List мог не доходить).
+                var codes = ClaimUseFilterCodesCodec.Split(packet.UseFilterCodesRaw);
+                serverApi.Logger.Notification(
+                    "[SwixyClaimChunk] SetUseFilter request claimId={0} mode={1} codesRawLen={2} codes={3}",
+                    packet.ClaimId,
+                    packet.UseFilterMode,
+                    packet.UseFilterCodesRaw?.Length ?? 0,
+                    codes.Count);
+                return TrySetUseFilter(claim, packet.UseFilterMode, codes);
+            }
             default:
                 return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }

@@ -7,7 +7,9 @@
 // Все типы сериализуются через ProtoContract/ProtoMember с фиксированными номерами полей.
 // =============================================================================
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using ProtoBuf;
 
 namespace SwixyClaimChunk.Net;
@@ -224,6 +226,21 @@ public static class ClaimAccessActionType
 
     /// <summary>Выдать участнику полные права со-владельца, не снимая текущего владельца.</summary>
     public const int GrantCoOwnership = 6;
+
+    /// <summary>Установить фильтр блоков для права Use.</summary>
+    public const int SetUseFilter = 7;
+}
+
+/// <summary>
+/// Режим фильтра блоков для Use в привате.
+/// </summary>
+public static class ClaimUseFilterMode
+{
+    /// <summary>Без ограничений: Use разрешает все блоки (как ваниль).</summary>
+    public const int AllowAll = 0;
+
+    /// <summary>Use только для выбранных кодов блоков.</summary>
+    public const int Whitelist = 1;
 }
 
 /// <summary>
@@ -344,6 +361,17 @@ public class ClaimAccessActionPacket
     /// <summary>UID целевого игрока (надёжнее ника для офлайн-участников).</summary>
     [ProtoMember(6)]
     public string PlayerUid { get; set; } = "";
+
+    /// <summary>Режим фильтра Use; см. <see cref="ClaimUseFilterMode"/>.</summary>
+    [ProtoMember(7)]
+    public int UseFilterMode { get; set; }
+
+    /// <summary>
+    /// Коды блоков whitelist, через перевод строки (надёжнее List для protobuf-net).
+    /// Пример: "game:door-oak\ngame:chest-east"
+    /// </summary>
+    [ProtoMember(8)]
+    public string UseFilterCodesRaw { get; set; } = "";
 }
 
 /// <summary>
@@ -402,6 +430,45 @@ public class ClaimInfoPacket
     /// <summary>Текущий игрок видит приват как со-владелец, а не официальный владелец.</summary>
     [ProtoMember(8)]
     public bool ViewerIsCoOwner { get; set; }
+
+    /// <summary>Режим фильтра Use; см. <see cref="ClaimUseFilterMode"/>.</summary>
+    [ProtoMember(9)]
+    public int UseFilterMode { get; set; }
+
+    /// <summary>
+    /// Коды блоков whitelist через '\n' (см. <see cref="ClaimAccessActionPacket.UseFilterCodesRaw"/>).
+    /// </summary>
+    [ProtoMember(10)]
+    public string UseFilterCodesRaw { get; set; } = "";
+}
+
+/// <summary>Хелперы сериализации списка кодов блоков в строку пакета.</summary>
+public static class ClaimUseFilterCodesCodec
+{
+    public const char Separator = '\n';
+
+    public static string Join(IEnumerable<string>? codes)
+    {
+        if (codes == null)
+        {
+            return "";
+        }
+
+        return string.Join(Separator, codes.Where(static code => !string.IsNullOrWhiteSpace(code)));
+    }
+
+    public static List<string> Split(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return [];
+        }
+
+        return raw
+            .Split(['\n', '\r', '|', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(static code => !string.IsNullOrWhiteSpace(code))
+            .ToList();
+    }
 }
 
 /// <summary>

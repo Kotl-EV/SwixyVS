@@ -1,0 +1,1667 @@
+{
+  "iconItemCode": "game:stone-granite",
+  "title": {
+    "ar": "Stone Age",
+    "be": "Каменный век",
+    "cs": "Stone Age",
+    "da": "Stone Age",
+    "de": "Steinzeit",
+    "en": "Stone Age",
+    "eo": "Stone Age",
+    "es": "Edad de piedra",
+    "fi": "Stone Age",
+    "fr": "Âge de pierre",
+    "hu": "Stone Age",
+    "is": "Stone Age",
+    "it": "Età della pietra",
+    "ja": "石器時代",
+    "ko": "석기 시대",
+    "li": "Stone Age",
+    "lt": "Stone Age",
+    "nl": "Stone Age",
+    "no": "Stone Age",
+    "pl": "Epoka kamienia",
+    "pt": "Idade da Pedra",
+    "ro": "Stone Age",
+    "ru": "Каменный век",
+    "sk": "Stone Age",
+    "sr": "Stone Age",
+    "sv": "Stone Age",
+    "th": "Stone Age",
+    "tr": "Taş Devri",
+    "uk": "Каменный век",
+    "vi": "Stone Age",
+    "zh": "石器时代"
+  },
+  "headerTitle": "category.stone.header",
+  "header": {
+    "ar": "STONE AGE",
+    "be": "КАМЕННЫЙ ВЕК",
+    "cs": "STONE AGE",
+    "da": "STONE AGE",
+    "de": "STONE AGE",
+    "en": "STONE AGE",
+    "eo": "STONE AGE",
+    "es": "STONE AGE",
+    "fi": "STONE AGE",
+    "fr": "STONE AGE",
+    "hu": "STONE AGE",
+    "is": "STONE AGE",
+    "it": "STONE AGE",
+    "ja": "STONE AGE",
+    "ko": "STONE AGE",
+    "li": "STONE AGE",
+    "lt": "STONE AGE",
+    "nl": "STONE AGE",
+    "no": "STONE AGE",
+    "pl": "STONE AGE",
+    "pt": "STONE AGE",
+    "ro": "STONE AGE",
+    "ru": "КАМЕННЫЙ ВЕК",
+    "sk": "STONE AGE",
+    "sr": "STONE AGE",
+    "sv": "STONE AGE",
+    "th": "STONE AGE",
+    "tr": "STONE AGE",
+    "uk": "КАМЕННЫЙ ВЕК",
+    "vi": "STONE AGE",
+    "zh": "STONE AGE"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "be": "Каменный век — первая глава Эры. «Кто не умеет жить с кремнем, не достоин стали».",
+        "cs": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "da": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "de": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "en": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "eo": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "es": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "fi": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "fr": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "hu": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "is": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "it": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "ja": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "ko": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "li": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "lt": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "nl": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "no": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "pl": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "pt": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "ro": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "ru": "Каменный век — первая глава Эры. «Кто не умеет жить с кремнем, не достоин стали».",
+        "sk": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "sr": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "sv": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "th": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "tr": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "uk": "Каменный век — первая глава Эры. «Кто не умеет жить с кремнем, не достоин стали».",
+        "vi": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”",
+        "zh": "Stone Age — Era’s first chapter. “Who cannot live by flint does not deserve steel.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "be": "Собери палки. Рукояти, факелы и копья рождаются из леса.",
+        "cs": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "da": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "de": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "en": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "eo": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "es": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "fi": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "fr": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "hu": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "is": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "it": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "ja": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "ko": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "li": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "lt": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "nl": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "no": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "pl": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "pt": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "ro": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "ru": "Собери палки. Рукояти, факелы и копья рождаются из леса.",
+        "sk": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "sr": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "sv": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "th": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "tr": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "uk": "Собери палки. Рукояти, факелы и копья рождаются из леса.",
+        "vi": "Gather sticks. Handles, torches and spears begin in the woods.",
+        "zh": "Gather sticks. Handles, torches and spears begin in the woods."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stone-granite",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "be": "Камни для оббивки. Ударь камень о камень — так учила Эра.",
+        "cs": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "da": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "de": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "en": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "eo": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "es": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "fi": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "fr": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "hu": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "is": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "it": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "ja": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "ko": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "li": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "lt": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "nl": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "no": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "pl": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "pt": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "ro": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "ru": "Камни для оббивки. Ударь камень о камень — так учила Эра.",
+        "sk": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "sr": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "sv": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "th": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "tr": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "uk": "Камни для оббивки. Ударь камень о камень — так учила Эра.",
+        "vi": "Loose stones for knapping. Strike stone on stone — Era’s first lesson.",
+        "zh": "Loose stones for knapping. Strike stone on stone — Era’s first lesson."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:stone-*",
+          "count": 28,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "be": "Сухая трава — дыхание огня. Без неё пламя остаётся сном.",
+        "cs": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "da": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "de": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "en": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "eo": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "es": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "fi": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "fr": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "hu": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "is": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "it": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "ja": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "ko": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "li": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "lt": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "nl": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "no": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "pl": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "pt": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "ro": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "ru": "Сухая трава — дыхание огня. Без неё пламя остаётся сном.",
+        "sk": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "sr": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "sv": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "th": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "tr": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "uk": "Сухая трава — дыхание огня. Без неё пламя остаётся сном.",
+        "vi": "Dry grass is the fire’s breath. Without it, flame stays a dream.",
+        "zh": "Dry grass is the fire’s breath. Without it, flame stays a dream."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:drygrass",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flint is king among stones. Stock it while the land is kind.",
+        "be": "Кремень — король камней. Запаси, пока земля добра.",
+        "cs": "Flint is king among stones. Stock it while the land is kind.",
+        "da": "Flint is king among stones. Stock it while the land is kind.",
+        "de": "Flint is king among stones. Stock it while the land is kind.",
+        "en": "Flint is king among stones. Stock it while the land is kind.",
+        "eo": "Flint is king among stones. Stock it while the land is kind.",
+        "es": "Flint is king among stones. Stock it while the land is kind.",
+        "fi": "Flint is king among stones. Stock it while the land is kind.",
+        "fr": "Flint is king among stones. Stock it while the land is kind.",
+        "hu": "Flint is king among stones. Stock it while the land is kind.",
+        "is": "Flint is king among stones. Stock it while the land is kind.",
+        "it": "Flint is king among stones. Stock it while the land is kind.",
+        "ja": "Flint is king among stones. Stock it while the land is kind.",
+        "ko": "Flint is king among stones. Stock it while the land is kind.",
+        "li": "Flint is king among stones. Stock it while the land is kind.",
+        "lt": "Flint is king among stones. Stock it while the land is kind.",
+        "nl": "Flint is king among stones. Stock it while the land is kind.",
+        "no": "Flint is king among stones. Stock it while the land is kind.",
+        "pl": "Flint is king among stones. Stock it while the land is kind.",
+        "pt": "Flint is king among stones. Stock it while the land is kind.",
+        "ro": "Flint is king among stones. Stock it while the land is kind.",
+        "ru": "Кремень — король камней. Запаси, пока земля добра.",
+        "sk": "Flint is king among stones. Stock it while the land is kind.",
+        "sr": "Flint is king among stones. Stock it while the land is kind.",
+        "sv": "Flint is king among stones. Stock it while the land is kind.",
+        "th": "Flint is king among stones. Stock it while the land is kind.",
+        "tr": "Flint is king among stones. Stock it while the land is kind.",
+        "uk": "Кремень — король камней. Запаси, пока земля добра.",
+        "vi": "Flint is king among stones. Stock it while the land is kind.",
+        "zh": "Flint is king among stones. Stock it while the land is kind."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft a flint knife blade — the world’s first honest edge.",
+        "be": "Скрафти лезвие кремнёвого ножа — первый честный край мира.",
+        "cs": "Craft a flint knife blade — the world’s first honest edge.",
+        "da": "Craft a flint knife blade — the world’s first honest edge.",
+        "de": "Craft a flint knife blade — the world’s first honest edge.",
+        "en": "Craft a flint knife blade — the world’s first honest edge.",
+        "eo": "Craft a flint knife blade — the world’s first honest edge.",
+        "es": "Craft a flint knife blade — the world’s first honest edge.",
+        "fi": "Craft a flint knife blade — the world’s first honest edge.",
+        "fr": "Craft a flint knife blade — the world’s first honest edge.",
+        "hu": "Craft a flint knife blade — the world’s first honest edge.",
+        "is": "Craft a flint knife blade — the world’s first honest edge.",
+        "it": "Craft a flint knife blade — the world’s first honest edge.",
+        "ja": "Craft a flint knife blade — the world’s first honest edge.",
+        "ko": "Craft a flint knife blade — the world’s first honest edge.",
+        "li": "Craft a flint knife blade — the world’s first honest edge.",
+        "lt": "Craft a flint knife blade — the world’s first honest edge.",
+        "nl": "Craft a flint knife blade — the world’s first honest edge.",
+        "no": "Craft a flint knife blade — the world’s first honest edge.",
+        "pl": "Craft a flint knife blade — the world’s first honest edge.",
+        "pt": "Craft a flint knife blade — the world’s first honest edge.",
+        "ro": "Craft a flint knife blade — the world’s first honest edge.",
+        "ru": "Скрафти лезвие кремнёвого ножа — первый честный край мира.",
+        "sk": "Craft a flint knife blade — the world’s first honest edge.",
+        "sr": "Craft a flint knife blade — the world’s first honest edge.",
+        "sv": "Craft a flint knife blade — the world’s first honest edge.",
+        "th": "Craft a flint knife blade — the world’s first honest edge.",
+        "tr": "Craft a flint knife blade — the world’s first honest edge.",
+        "uk": "Скрафти лезвие кремнёвого ножа — первый честный край мира.",
+        "vi": "Craft a flint knife blade — the world’s first honest edge.",
+        "zh": "Craft a flint knife blade — the world’s first honest edge."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:knifeblade-flint",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "be": "Собери кремнёвый нож. Режь траву, мясо, верёвку — и страх.",
+        "cs": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "da": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "de": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "en": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "eo": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "es": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "fi": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "fr": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "hu": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "is": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "it": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "ja": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "ko": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "li": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "lt": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "nl": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "no": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "pl": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "pt": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "ro": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "ru": "Собери кремнёвый нож. Режь траву, мясо, верёвку — и страх.",
+        "sk": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "sr": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "sv": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "th": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "tr": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "uk": "Собери кремнёвый нож. Режь траву, мясо, верёвку — и страх.",
+        "vi": "Finish a flint knife. Cut grass, meat, cord — and fear.",
+        "zh": "Finish a flint knife. Cut grass, meat, cord — and fear."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:knife-generic-flint",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:drygrass",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "be": "Скрафти кремнёвый топор. Лес станет складом, а не стеной.",
+        "cs": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "da": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "de": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "en": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "eo": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "es": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "fi": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "fr": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "hu": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "is": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "it": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "ja": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "ko": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "li": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "lt": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "nl": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "no": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "pl": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "pt": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "ro": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "ru": "Скрафти кремнёвый топор. Лес станет складом, а не стеной.",
+        "sk": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "sr": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "sv": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "th": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "tr": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "uk": "Скрафти кремнёвый топор. Лес станет складом, а не стеной.",
+        "vi": "Craft a flint axe. The forest becomes supply, not a wall.",
+        "zh": "Craft a flint axe. The forest becomes supply, not a wall."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:axe-flint",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 8,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Stock firewood after the first cuts. Night loves an ember.",
+        "be": "Запаси дрова после первых порубок. Ночь любит уголёк.",
+        "cs": "Stock firewood after the first cuts. Night loves an ember.",
+        "da": "Stock firewood after the first cuts. Night loves an ember.",
+        "de": "Stock firewood after the first cuts. Night loves an ember.",
+        "en": "Stock firewood after the first cuts. Night loves an ember.",
+        "eo": "Stock firewood after the first cuts. Night loves an ember.",
+        "es": "Stock firewood after the first cuts. Night loves an ember.",
+        "fi": "Stock firewood after the first cuts. Night loves an ember.",
+        "fr": "Stock firewood after the first cuts. Night loves an ember.",
+        "hu": "Stock firewood after the first cuts. Night loves an ember.",
+        "is": "Stock firewood after the first cuts. Night loves an ember.",
+        "it": "Stock firewood after the first cuts. Night loves an ember.",
+        "ja": "Stock firewood after the first cuts. Night loves an ember.",
+        "ko": "Stock firewood after the first cuts. Night loves an ember.",
+        "li": "Stock firewood after the first cuts. Night loves an ember.",
+        "lt": "Stock firewood after the first cuts. Night loves an ember.",
+        "nl": "Stock firewood after the first cuts. Night loves an ember.",
+        "no": "Stock firewood after the first cuts. Night loves an ember.",
+        "pl": "Stock firewood after the first cuts. Night loves an ember.",
+        "pt": "Stock firewood after the first cuts. Night loves an ember.",
+        "ro": "Stock firewood after the first cuts. Night loves an ember.",
+        "ru": "Запаси дрова после первых порубок. Ночь любит уголёк.",
+        "sk": "Stock firewood after the first cuts. Night loves an ember.",
+        "sr": "Stock firewood after the first cuts. Night loves an ember.",
+        "sv": "Stock firewood after the first cuts. Night loves an ember.",
+        "th": "Stock firewood after the first cuts. Night loves an ember.",
+        "tr": "Stock firewood after the first cuts. Night loves an ember.",
+        "uk": "Запаси дрова после первых порубок. Ночь любит уголёк.",
+        "vi": "Stock firewood after the first cuts. Night loves an ember.",
+        "zh": "Stock firewood after the first cuts. Night loves an ember."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 40,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 9,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "be": "Лопата. Глина, земля, грядки — всё ждёт твоего удара.",
+        "cs": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "da": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "de": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "en": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "eo": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "es": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "fi": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "fr": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "hu": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "is": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "it": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "ja": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "ko": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "li": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "lt": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "nl": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "no": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "pl": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "pt": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "ro": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "ru": "Лопата. Глина, земля, грядки — всё ждёт твоего удара.",
+        "sk": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "sr": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "sv": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "th": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "tr": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "uk": "Лопата. Глина, земля, грядки — всё ждёт твоего удара.",
+        "vi": "A shovel. Clay, soil, beds — all wait for your strike.",
+        "zh": "A shovel. Clay, soil, beds — all wait for your strike."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:shovel-flint",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 10,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A hoe. Even stone can promise a harvest.",
+        "be": "Мотыга. Даже камень может обещать урожай.",
+        "cs": "A hoe. Even stone can promise a harvest.",
+        "da": "A hoe. Even stone can promise a harvest.",
+        "de": "A hoe. Even stone can promise a harvest.",
+        "en": "A hoe. Even stone can promise a harvest.",
+        "eo": "A hoe. Even stone can promise a harvest.",
+        "es": "A hoe. Even stone can promise a harvest.",
+        "fi": "A hoe. Even stone can promise a harvest.",
+        "fr": "A hoe. Even stone can promise a harvest.",
+        "hu": "A hoe. Even stone can promise a harvest.",
+        "is": "A hoe. Even stone can promise a harvest.",
+        "it": "A hoe. Even stone can promise a harvest.",
+        "ja": "A hoe. Even stone can promise a harvest.",
+        "ko": "A hoe. Even stone can promise a harvest.",
+        "li": "A hoe. Even stone can promise a harvest.",
+        "lt": "A hoe. Even stone can promise a harvest.",
+        "nl": "A hoe. Even stone can promise a harvest.",
+        "no": "A hoe. Even stone can promise a harvest.",
+        "pl": "A hoe. Even stone can promise a harvest.",
+        "pt": "A hoe. Even stone can promise a harvest.",
+        "ro": "A hoe. Even stone can promise a harvest.",
+        "ru": "Мотыга. Даже камень может обещать урожай.",
+        "sk": "A hoe. Even stone can promise a harvest.",
+        "sr": "A hoe. Even stone can promise a harvest.",
+        "sv": "A hoe. Even stone can promise a harvest.",
+        "th": "A hoe. Even stone can promise a harvest.",
+        "tr": "A hoe. Even stone can promise a harvest.",
+        "uk": "Мотыга. Даже камень может обещать урожай.",
+        "vi": "A hoe. Even stone can promise a harvest.",
+        "zh": "A hoe. Even stone can promise a harvest."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hoe-flint",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:cattailtops",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 11,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A spear. Distance between you and teeth.",
+        "be": "Копьё. Дистанция между тобой и клыками.",
+        "cs": "A spear. Distance between you and teeth.",
+        "da": "A spear. Distance between you and teeth.",
+        "de": "A spear. Distance between you and teeth.",
+        "en": "A spear. Distance between you and teeth.",
+        "eo": "A spear. Distance between you and teeth.",
+        "es": "A spear. Distance between you and teeth.",
+        "fi": "A spear. Distance between you and teeth.",
+        "fr": "A spear. Distance between you and teeth.",
+        "hu": "A spear. Distance between you and teeth.",
+        "is": "A spear. Distance between you and teeth.",
+        "it": "A spear. Distance between you and teeth.",
+        "ja": "A spear. Distance between you and teeth.",
+        "ko": "A spear. Distance between you and teeth.",
+        "li": "A spear. Distance between you and teeth.",
+        "lt": "A spear. Distance between you and teeth.",
+        "nl": "A spear. Distance between you and teeth.",
+        "no": "A spear. Distance between you and teeth.",
+        "pl": "A spear. Distance between you and teeth.",
+        "pt": "A spear. Distance between you and teeth.",
+        "ro": "A spear. Distance between you and teeth.",
+        "ru": "Копьё. Дистанция между тобой и клыками.",
+        "sk": "A spear. Distance between you and teeth.",
+        "sr": "A spear. Distance between you and teeth.",
+        "sv": "A spear. Distance between you and teeth.",
+        "th": "A spear. Distance between you and teeth.",
+        "tr": "A spear. Distance between you and teeth.",
+        "uk": "Копьё. Дистанция между тобой и клыками.",
+        "vi": "A spear. Distance between you and teeth.",
+        "zh": "A spear. Distance between you and teeth."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:spear-generic-flint",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft torches. Carry light into the dark.",
+        "be": "Скрафти факелы. Неси свет во тьму.",
+        "cs": "Craft torches. Carry light into the dark.",
+        "da": "Craft torches. Carry light into the dark.",
+        "de": "Craft torches. Carry light into the dark.",
+        "en": "Craft torches. Carry light into the dark.",
+        "eo": "Craft torches. Carry light into the dark.",
+        "es": "Craft torches. Carry light into the dark.",
+        "fi": "Craft torches. Carry light into the dark.",
+        "fr": "Craft torches. Carry light into the dark.",
+        "hu": "Craft torches. Carry light into the dark.",
+        "is": "Craft torches. Carry light into the dark.",
+        "it": "Craft torches. Carry light into the dark.",
+        "ja": "Craft torches. Carry light into the dark.",
+        "ko": "Craft torches. Carry light into the dark.",
+        "li": "Craft torches. Carry light into the dark.",
+        "lt": "Craft torches. Carry light into the dark.",
+        "nl": "Craft torches. Carry light into the dark.",
+        "no": "Craft torches. Carry light into the dark.",
+        "pl": "Craft torches. Carry light into the dark.",
+        "pt": "Craft torches. Carry light into the dark.",
+        "ro": "Craft torches. Carry light into the dark.",
+        "ru": "Скрафти факелы. Неси свет во тьму.",
+        "sk": "Craft torches. Carry light into the dark.",
+        "sr": "Craft torches. Carry light into the dark.",
+        "sv": "Craft torches. Carry light into the dark.",
+        "th": "Craft torches. Carry light into the dark.",
+        "tr": "Craft torches. Carry light into the dark.",
+        "uk": "Скрафти факелы. Неси свет во тьму.",
+        "vi": "Craft torches. Carry light into the dark.",
+        "zh": "Craft torches. Carry light into the dark."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 10,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 13,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Twine binds the path. Without thread, all unravels.",
+        "be": "Бечёвка связывает путь. Без нити всё распадается.",
+        "cs": "Twine binds the path. Without thread, all unravels.",
+        "da": "Twine binds the path. Without thread, all unravels.",
+        "de": "Twine binds the path. Without thread, all unravels.",
+        "en": "Twine binds the path. Without thread, all unravels.",
+        "eo": "Twine binds the path. Without thread, all unravels.",
+        "es": "Twine binds the path. Without thread, all unravels.",
+        "fi": "Twine binds the path. Without thread, all unravels.",
+        "fr": "Twine binds the path. Without thread, all unravels.",
+        "hu": "Twine binds the path. Without thread, all unravels.",
+        "is": "Twine binds the path. Without thread, all unravels.",
+        "it": "Twine binds the path. Without thread, all unravels.",
+        "ja": "Twine binds the path. Without thread, all unravels.",
+        "ko": "Twine binds the path. Without thread, all unravels.",
+        "li": "Twine binds the path. Without thread, all unravels.",
+        "lt": "Twine binds the path. Without thread, all unravels.",
+        "nl": "Twine binds the path. Without thread, all unravels.",
+        "no": "Twine binds the path. Without thread, all unravels.",
+        "pl": "Twine binds the path. Without thread, all unravels.",
+        "pt": "Twine binds the path. Without thread, all unravels.",
+        "ro": "Twine binds the path. Without thread, all unravels.",
+        "ru": "Бечёвка связывает путь. Без нити всё распадается.",
+        "sk": "Twine binds the path. Without thread, all unravels.",
+        "sr": "Twine binds the path. Without thread, all unravels.",
+        "sv": "Twine binds the path. Without thread, all unravels.",
+        "th": "Twine binds the path. Without thread, all unravels.",
+        "tr": "Twine binds the path. Without thread, all unravels.",
+        "uk": "Бечёвка связывает путь. Без нити всё распадается.",
+        "vi": "Twine binds the path. Without thread, all unravels.",
+        "zh": "Twine binds the path. Without thread, all unravels."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A reed hand basket. Pockets end before the road does.",
+        "be": "Плетёная корзина. Карманы кончаются раньше, чем дорога.",
+        "cs": "A reed hand basket. Pockets end before the road does.",
+        "da": "A reed hand basket. Pockets end before the road does.",
+        "de": "A reed hand basket. Pockets end before the road does.",
+        "en": "A reed hand basket. Pockets end before the road does.",
+        "eo": "A reed hand basket. Pockets end before the road does.",
+        "es": "A reed hand basket. Pockets end before the road does.",
+        "fi": "A reed hand basket. Pockets end before the road does.",
+        "fr": "A reed hand basket. Pockets end before the road does.",
+        "hu": "A reed hand basket. Pockets end before the road does.",
+        "is": "A reed hand basket. Pockets end before the road does.",
+        "it": "A reed hand basket. Pockets end before the road does.",
+        "ja": "A reed hand basket. Pockets end before the road does.",
+        "ko": "A reed hand basket. Pockets end before the road does.",
+        "li": "A reed hand basket. Pockets end before the road does.",
+        "lt": "A reed hand basket. Pockets end before the road does.",
+        "nl": "A reed hand basket. Pockets end before the road does.",
+        "no": "A reed hand basket. Pockets end before the road does.",
+        "pl": "A reed hand basket. Pockets end before the road does.",
+        "pt": "A reed hand basket. Pockets end before the road does.",
+        "ro": "A reed hand basket. Pockets end before the road does.",
+        "ru": "Плетёная корзина. Карманы кончаются раньше, чем дорога.",
+        "sk": "A reed hand basket. Pockets end before the road does.",
+        "sr": "A reed hand basket. Pockets end before the road does.",
+        "sv": "A reed hand basket. Pockets end before the road does.",
+        "th": "A reed hand basket. Pockets end before the road does.",
+        "tr": "A reed hand basket. Pockets end before the road does.",
+        "uk": "Плетёная корзина. Карманы кончаются раньше, чем дорога.",
+        "vi": "A reed hand basket. Pockets end before the road does.",
+        "zh": "A reed hand basket. Pockets end before the road does."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:basket-normal-reed",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 15,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Cattail tops for weaving. The marsh feeds those who look.",
+        "be": "Верхушки рогоза для плетения. Болото кормит внимательных.",
+        "cs": "Cattail tops for weaving. The marsh feeds those who look.",
+        "da": "Cattail tops for weaving. The marsh feeds those who look.",
+        "de": "Cattail tops for weaving. The marsh feeds those who look.",
+        "en": "Cattail tops for weaving. The marsh feeds those who look.",
+        "eo": "Cattail tops for weaving. The marsh feeds those who look.",
+        "es": "Cattail tops for weaving. The marsh feeds those who look.",
+        "fi": "Cattail tops for weaving. The marsh feeds those who look.",
+        "fr": "Cattail tops for weaving. The marsh feeds those who look.",
+        "hu": "Cattail tops for weaving. The marsh feeds those who look.",
+        "is": "Cattail tops for weaving. The marsh feeds those who look.",
+        "it": "Cattail tops for weaving. The marsh feeds those who look.",
+        "ja": "Cattail tops for weaving. The marsh feeds those who look.",
+        "ko": "Cattail tops for weaving. The marsh feeds those who look.",
+        "li": "Cattail tops for weaving. The marsh feeds those who look.",
+        "lt": "Cattail tops for weaving. The marsh feeds those who look.",
+        "nl": "Cattail tops for weaving. The marsh feeds those who look.",
+        "no": "Cattail tops for weaving. The marsh feeds those who look.",
+        "pl": "Cattail tops for weaving. The marsh feeds those who look.",
+        "pt": "Cattail tops for weaving. The marsh feeds those who look.",
+        "ro": "Cattail tops for weaving. The marsh feeds those who look.",
+        "ru": "Верхушки рогоза для плетения. Болото кормит внимательных.",
+        "sk": "Cattail tops for weaving. The marsh feeds those who look.",
+        "sr": "Cattail tops for weaving. The marsh feeds those who look.",
+        "sv": "Cattail tops for weaving. The marsh feeds those who look.",
+        "th": "Cattail tops for weaving. The marsh feeds those who look.",
+        "tr": "Cattail tops for weaving. The marsh feeds those who look.",
+        "uk": "Верхушки рогоза для плетения. Болото кормит внимательных.",
+        "vi": "Cattail tops for weaving. The marsh feeds those who look.",
+        "zh": "Cattail tops for weaving. The marsh feeds those who look."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:cattailtops",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:cattailroot",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 16,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Cattail roots — food and fiber from the water’s edge.",
+        "be": "Корни рогоза — еда и волокно с кромки воды.",
+        "cs": "Cattail roots — food and fiber from the water’s edge.",
+        "da": "Cattail roots — food and fiber from the water’s edge.",
+        "de": "Cattail roots — food and fiber from the water’s edge.",
+        "en": "Cattail roots — food and fiber from the water’s edge.",
+        "eo": "Cattail roots — food and fiber from the water’s edge.",
+        "es": "Cattail roots — food and fiber from the water’s edge.",
+        "fi": "Cattail roots — food and fiber from the water’s edge.",
+        "fr": "Cattail roots — food and fiber from the water’s edge.",
+        "hu": "Cattail roots — food and fiber from the water’s edge.",
+        "is": "Cattail roots — food and fiber from the water’s edge.",
+        "it": "Cattail roots — food and fiber from the water’s edge.",
+        "ja": "Cattail roots — food and fiber from the water’s edge.",
+        "ko": "Cattail roots — food and fiber from the water’s edge.",
+        "li": "Cattail roots — food and fiber from the water’s edge.",
+        "lt": "Cattail roots — food and fiber from the water’s edge.",
+        "nl": "Cattail roots — food and fiber from the water’s edge.",
+        "no": "Cattail roots — food and fiber from the water’s edge.",
+        "pl": "Cattail roots — food and fiber from the water’s edge.",
+        "pt": "Cattail roots — food and fiber from the water’s edge.",
+        "ro": "Cattail roots — food and fiber from the water’s edge.",
+        "ru": "Корни рогоза — еда и волокно с кромки воды.",
+        "sk": "Cattail roots — food and fiber from the water’s edge.",
+        "sr": "Cattail roots — food and fiber from the water’s edge.",
+        "sv": "Cattail roots — food and fiber from the water’s edge.",
+        "th": "Cattail roots — food and fiber from the water’s edge.",
+        "tr": "Cattail roots — food and fiber from the water’s edge.",
+        "uk": "Корни рогоза — еда и волокно с кромки воды.",
+        "vi": "Cattail roots — food and fiber from the water’s edge.",
+        "zh": "Cattail roots — food and fiber from the water’s edge."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:cattailroot",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:cattailtops",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "be": "Ещё кремень на запасные лезвия. Инструменты ломаются — запасы не спорят.",
+        "cs": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "da": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "de": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "en": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "eo": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "es": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "fi": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "fr": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "hu": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "is": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "it": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "ja": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "ko": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "li": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "lt": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "nl": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "no": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "pl": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "pt": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "ro": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "ru": "Ещё кремень на запасные лезвия. Инструменты ломаются — запасы не спорят.",
+        "sk": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "sr": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "sv": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "th": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "tr": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "uk": "Ещё кремень на запасные лезвия. Инструменты ломаются — запасы не спорят.",
+        "vi": "More flint for spare blades. Tools break — stockpiles don’t argue.",
+        "zh": "More flint for spare blades. Tools break — stockpiles don’t argue."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 480,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft a second flint knife. Redundancy is wisdom.",
+        "be": "Скрафти второй кремнёвый нож. Запас — это мудрость.",
+        "cs": "Craft a second flint knife. Redundancy is wisdom.",
+        "da": "Craft a second flint knife. Redundancy is wisdom.",
+        "de": "Craft a second flint knife. Redundancy is wisdom.",
+        "en": "Craft a second flint knife. Redundancy is wisdom.",
+        "eo": "Craft a second flint knife. Redundancy is wisdom.",
+        "es": "Craft a second flint knife. Redundancy is wisdom.",
+        "fi": "Craft a second flint knife. Redundancy is wisdom.",
+        "fr": "Craft a second flint knife. Redundancy is wisdom.",
+        "hu": "Craft a second flint knife. Redundancy is wisdom.",
+        "is": "Craft a second flint knife. Redundancy is wisdom.",
+        "it": "Craft a second flint knife. Redundancy is wisdom.",
+        "ja": "Craft a second flint knife. Redundancy is wisdom.",
+        "ko": "Craft a second flint knife. Redundancy is wisdom.",
+        "li": "Craft a second flint knife. Redundancy is wisdom.",
+        "lt": "Craft a second flint knife. Redundancy is wisdom.",
+        "nl": "Craft a second flint knife. Redundancy is wisdom.",
+        "no": "Craft a second flint knife. Redundancy is wisdom.",
+        "pl": "Craft a second flint knife. Redundancy is wisdom.",
+        "pt": "Craft a second flint knife. Redundancy is wisdom.",
+        "ro": "Craft a second flint knife. Redundancy is wisdom.",
+        "ru": "Скрафти второй кремнёвый нож. Запас — это мудрость.",
+        "sk": "Craft a second flint knife. Redundancy is wisdom.",
+        "sr": "Craft a second flint knife. Redundancy is wisdom.",
+        "sv": "Craft a second flint knife. Redundancy is wisdom.",
+        "th": "Craft a second flint knife. Redundancy is wisdom.",
+        "tr": "Craft a second flint knife. Redundancy is wisdom.",
+        "uk": "Скрафти второй кремнёвый нож. Запас — это мудрость.",
+        "vi": "Craft a second flint knife. Redundancy is wisdom.",
+        "zh": "Craft a second flint knife. Redundancy is wisdom."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:knife-generic-flint",
+          "count": 2,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 19,
+      "x": 360,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Resin from the pines. Glue for what stone cannot hold.",
+        "be": "Смола с сосен. Клей для того, что камень не удержит.",
+        "cs": "Resin from the pines. Glue for what stone cannot hold.",
+        "da": "Resin from the pines. Glue for what stone cannot hold.",
+        "de": "Resin from the pines. Glue for what stone cannot hold.",
+        "en": "Resin from the pines. Glue for what stone cannot hold.",
+        "eo": "Resin from the pines. Glue for what stone cannot hold.",
+        "es": "Resin from the pines. Glue for what stone cannot hold.",
+        "fi": "Resin from the pines. Glue for what stone cannot hold.",
+        "fr": "Resin from the pines. Glue for what stone cannot hold.",
+        "hu": "Resin from the pines. Glue for what stone cannot hold.",
+        "is": "Resin from the pines. Glue for what stone cannot hold.",
+        "it": "Resin from the pines. Glue for what stone cannot hold.",
+        "ja": "Resin from the pines. Glue for what stone cannot hold.",
+        "ko": "Resin from the pines. Glue for what stone cannot hold.",
+        "li": "Resin from the pines. Glue for what stone cannot hold.",
+        "lt": "Resin from the pines. Glue for what stone cannot hold.",
+        "nl": "Resin from the pines. Glue for what stone cannot hold.",
+        "no": "Resin from the pines. Glue for what stone cannot hold.",
+        "pl": "Resin from the pines. Glue for what stone cannot hold.",
+        "pt": "Resin from the pines. Glue for what stone cannot hold.",
+        "ro": "Resin from the pines. Glue for what stone cannot hold.",
+        "ru": "Смола с сосен. Клей для того, что камень не удержит.",
+        "sk": "Resin from the pines. Glue for what stone cannot hold.",
+        "sr": "Resin from the pines. Glue for what stone cannot hold.",
+        "sv": "Resin from the pines. Glue for what stone cannot hold.",
+        "th": "Resin from the pines. Glue for what stone cannot hold.",
+        "tr": "Resin from the pines. Glue for what stone cannot hold.",
+        "uk": "Смола с сосен. Клей для того, что камень не удержит.",
+        "vi": "Resin from the pines. Glue for what stone cannot hold.",
+        "zh": "Resin from the pines. Glue for what stone cannot hold."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:resin",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 240,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Bones from small game. Tips, glue, and memory.",
+        "be": "Кости с мелкой дичи. Наконечники, клей и память.",
+        "cs": "Bones from small game. Tips, glue, and memory.",
+        "da": "Bones from small game. Tips, glue, and memory.",
+        "de": "Bones from small game. Tips, glue, and memory.",
+        "en": "Bones from small game. Tips, glue, and memory.",
+        "eo": "Bones from small game. Tips, glue, and memory.",
+        "es": "Bones from small game. Tips, glue, and memory.",
+        "fi": "Bones from small game. Tips, glue, and memory.",
+        "fr": "Bones from small game. Tips, glue, and memory.",
+        "hu": "Bones from small game. Tips, glue, and memory.",
+        "is": "Bones from small game. Tips, glue, and memory.",
+        "it": "Bones from small game. Tips, glue, and memory.",
+        "ja": "Bones from small game. Tips, glue, and memory.",
+        "ko": "Bones from small game. Tips, glue, and memory.",
+        "li": "Bones from small game. Tips, glue, and memory.",
+        "lt": "Bones from small game. Tips, glue, and memory.",
+        "nl": "Bones from small game. Tips, glue, and memory.",
+        "no": "Bones from small game. Tips, glue, and memory.",
+        "pl": "Bones from small game. Tips, glue, and memory.",
+        "pt": "Bones from small game. Tips, glue, and memory.",
+        "ro": "Bones from small game. Tips, glue, and memory.",
+        "ru": "Кости с мелкой дичи. Наконечники, клей и память.",
+        "sk": "Bones from small game. Tips, glue, and memory.",
+        "sr": "Bones from small game. Tips, glue, and memory.",
+        "sv": "Bones from small game. Tips, glue, and memory.",
+        "th": "Bones from small game. Tips, glue, and memory.",
+        "tr": "Bones from small game. Tips, glue, and memory.",
+        "uk": "Кости с мелкой дичи. Наконечники, клей и память.",
+        "vi": "Bones from small game. Tips, glue, and memory.",
+        "zh": "Bones from small game. Tips, glue, and memory."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 21,
+      "x": 120,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Dry grass again — winter will take what you leave unburned.",
+        "be": "Снова сухая трава — зима заберёт то, что не сожжёшь.",
+        "cs": "Dry grass again — winter will take what you leave unburned.",
+        "da": "Dry grass again — winter will take what you leave unburned.",
+        "de": "Dry grass again — winter will take what you leave unburned.",
+        "en": "Dry grass again — winter will take what you leave unburned.",
+        "eo": "Dry grass again — winter will take what you leave unburned.",
+        "es": "Dry grass again — winter will take what you leave unburned.",
+        "fi": "Dry grass again — winter will take what you leave unburned.",
+        "fr": "Dry grass again — winter will take what you leave unburned.",
+        "hu": "Dry grass again — winter will take what you leave unburned.",
+        "is": "Dry grass again — winter will take what you leave unburned.",
+        "it": "Dry grass again — winter will take what you leave unburned.",
+        "ja": "Dry grass again — winter will take what you leave unburned.",
+        "ko": "Dry grass again — winter will take what you leave unburned.",
+        "li": "Dry grass again — winter will take what you leave unburned.",
+        "lt": "Dry grass again — winter will take what you leave unburned.",
+        "nl": "Dry grass again — winter will take what you leave unburned.",
+        "no": "Dry grass again — winter will take what you leave unburned.",
+        "pl": "Dry grass again — winter will take what you leave unburned.",
+        "pt": "Dry grass again — winter will take what you leave unburned.",
+        "ro": "Dry grass again — winter will take what you leave unburned.",
+        "ru": "Снова сухая трава — зима заберёт то, что не сожжёшь.",
+        "sk": "Dry grass again — winter will take what you leave unburned.",
+        "sr": "Dry grass again — winter will take what you leave unburned.",
+        "sv": "Dry grass again — winter will take what you leave unburned.",
+        "th": "Dry grass again — winter will take what you leave unburned.",
+        "tr": "Dry grass again — winter will take what you leave unburned.",
+        "uk": "Снова сухая трава — зима заберёт то, что не сожжёшь.",
+        "vi": "Dry grass again — winter will take what you leave unburned.",
+        "zh": "Dry grass again — winter will take what you leave unburned."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:drygrass",
+          "count": 32,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 22,
+      "x": 0,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "be": "Тростник/сено, если есть — или ещё сухая трава. Крыши начинаются мягко.",
+        "cs": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "da": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "de": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "en": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "eo": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "es": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "fi": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "fr": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "hu": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "is": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "it": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "ja": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "ko": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "li": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "lt": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "nl": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "no": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "pl": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "pt": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "ro": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "ru": "Тростник/сено, если есть — или ещё сухая трава. Крыши начинаются мягко.",
+        "sk": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "sr": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "sv": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "th": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "tr": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "uk": "Тростник/сено, если есть — или ещё сухая трава. Крыши начинаются мягко.",
+        "vi": "Thatch if you can, or more dry grass. Roofs begin soft.",
+        "zh": "Thatch if you can, or more dry grass. Roofs begin soft."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:thatch",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 23,
+      "x": 0,
+      "y": -840,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Stone Age sealed. Era would nod: “Now clay.”",
+        "be": "Каменный век закрыт. Эра кивнула бы: «Теперь глина».",
+        "cs": "Stone Age sealed. Era would nod: “Now clay.”",
+        "da": "Stone Age sealed. Era would nod: “Now clay.”",
+        "de": "Stone Age sealed. Era would nod: “Now clay.”",
+        "en": "Stone Age sealed. Era would nod: “Now clay.”",
+        "eo": "Stone Age sealed. Era would nod: “Now clay.”",
+        "es": "Stone Age sealed. Era would nod: “Now clay.”",
+        "fi": "Stone Age sealed. Era would nod: “Now clay.”",
+        "fr": "Stone Age sealed. Era would nod: “Now clay.”",
+        "hu": "Stone Age sealed. Era would nod: “Now clay.”",
+        "is": "Stone Age sealed. Era would nod: “Now clay.”",
+        "it": "Stone Age sealed. Era would nod: “Now clay.”",
+        "ja": "Stone Age sealed. Era would nod: “Now clay.”",
+        "ko": "Stone Age sealed. Era would nod: “Now clay.”",
+        "li": "Stone Age sealed. Era would nod: “Now clay.”",
+        "lt": "Stone Age sealed. Era would nod: “Now clay.”",
+        "nl": "Stone Age sealed. Era would nod: “Now clay.”",
+        "no": "Stone Age sealed. Era would nod: “Now clay.”",
+        "pl": "Stone Age sealed. Era would nod: “Now clay.”",
+        "pt": "Stone Age sealed. Era would nod: “Now clay.”",
+        "ro": "Stone Age sealed. Era would nod: “Now clay.”",
+        "ru": "Каменный век закрыт. Эра кивнула бы: «Теперь глина».",
+        "sk": "Stone Age sealed. Era would nod: “Now clay.”",
+        "sr": "Stone Age sealed. Era would nod: “Now clay.”",
+        "sv": "Stone Age sealed. Era would nod: “Now clay.”",
+        "th": "Stone Age sealed. Era would nod: “Now clay.”",
+        "tr": "Stone Age sealed. Era would nod: “Now clay.”",
+        "uk": "Каменный век закрыт. Эра кивнула бы: «Теперь глина».",
+        "vi": "Stone Age sealed. Era would nod: “Now clay.”",
+        "zh": "Stone Age sealed. Era would nod: “Now clay.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 24,
+      "x": 600,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Feathers for arrows. Flight needs soft wings.",
+        "be": "Перья для стрел. Полёту нужны мягкие крылья.",
+        "cs": "Feathers for arrows. Flight needs soft wings.",
+        "da": "Feathers for arrows. Flight needs soft wings.",
+        "de": "Feathers for arrows. Flight needs soft wings.",
+        "en": "Feathers for arrows. Flight needs soft wings.",
+        "eo": "Feathers for arrows. Flight needs soft wings.",
+        "es": "Feathers for arrows. Flight needs soft wings.",
+        "fi": "Feathers for arrows. Flight needs soft wings.",
+        "fr": "Feathers for arrows. Flight needs soft wings.",
+        "hu": "Feathers for arrows. Flight needs soft wings.",
+        "is": "Feathers for arrows. Flight needs soft wings.",
+        "it": "Feathers for arrows. Flight needs soft wings.",
+        "ja": "Feathers for arrows. Flight needs soft wings.",
+        "ko": "Feathers for arrows. Flight needs soft wings.",
+        "li": "Feathers for arrows. Flight needs soft wings.",
+        "lt": "Feathers for arrows. Flight needs soft wings.",
+        "nl": "Feathers for arrows. Flight needs soft wings.",
+        "no": "Feathers for arrows. Flight needs soft wings.",
+        "pl": "Feathers for arrows. Flight needs soft wings.",
+        "pt": "Feathers for arrows. Flight needs soft wings.",
+        "ro": "Feathers for arrows. Flight needs soft wings.",
+        "ru": "Перья для стрел. Полёту нужны мягкие крылья.",
+        "sk": "Feathers for arrows. Flight needs soft wings.",
+        "sr": "Feathers for arrows. Flight needs soft wings.",
+        "sv": "Feathers for arrows. Flight needs soft wings.",
+        "th": "Feathers for arrows. Flight needs soft wings.",
+        "tr": "Feathers for arrows. Flight needs soft wings.",
+        "uk": "Перья для стрел. Полёту нужны мягкие крылья.",
+        "vi": "Feathers for arrows. Flight needs soft wings.",
+        "zh": "Feathers for arrows. Flight needs soft wings."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 25,
+      "x": 600,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft flint arrowheads. Teeth for silent flight.",
+        "be": "Скрафти кремнёвые наконечники. Зубья для тихого полёта.",
+        "cs": "Craft flint arrowheads. Teeth for silent flight.",
+        "da": "Craft flint arrowheads. Teeth for silent flight.",
+        "de": "Craft flint arrowheads. Teeth for silent flight.",
+        "en": "Craft flint arrowheads. Teeth for silent flight.",
+        "eo": "Craft flint arrowheads. Teeth for silent flight.",
+        "es": "Craft flint arrowheads. Teeth for silent flight.",
+        "fi": "Craft flint arrowheads. Teeth for silent flight.",
+        "fr": "Craft flint arrowheads. Teeth for silent flight.",
+        "hu": "Craft flint arrowheads. Teeth for silent flight.",
+        "is": "Craft flint arrowheads. Teeth for silent flight.",
+        "it": "Craft flint arrowheads. Teeth for silent flight.",
+        "ja": "Craft flint arrowheads. Teeth for silent flight.",
+        "ko": "Craft flint arrowheads. Teeth for silent flight.",
+        "li": "Craft flint arrowheads. Teeth for silent flight.",
+        "lt": "Craft flint arrowheads. Teeth for silent flight.",
+        "nl": "Craft flint arrowheads. Teeth for silent flight.",
+        "no": "Craft flint arrowheads. Teeth for silent flight.",
+        "pl": "Craft flint arrowheads. Teeth for silent flight.",
+        "pt": "Craft flint arrowheads. Teeth for silent flight.",
+        "ro": "Craft flint arrowheads. Teeth for silent flight.",
+        "ru": "Скрафти кремнёвые наконечники. Зубья для тихого полёта.",
+        "sk": "Craft flint arrowheads. Teeth for silent flight.",
+        "sr": "Craft flint arrowheads. Teeth for silent flight.",
+        "sv": "Craft flint arrowheads. Teeth for silent flight.",
+        "th": "Craft flint arrowheads. Teeth for silent flight.",
+        "tr": "Craft flint arrowheads. Teeth for silent flight.",
+        "uk": "Скрафти кремнёвые наконечники. Зубья для тихого полёта.",
+        "vi": "Craft flint arrowheads. Teeth for silent flight.",
+        "zh": "Craft flint arrowheads. Teeth for silent flight."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:arrowhead-flint",
+          "count": 12,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 26,
+      "x": 600,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A simple bow. Era’s quiet hunt begins here.",
+        "be": "Простой лук. Тихая охота Эры начинается здесь.",
+        "cs": "A simple bow. Era’s quiet hunt begins here.",
+        "da": "A simple bow. Era’s quiet hunt begins here.",
+        "de": "A simple bow. Era’s quiet hunt begins here.",
+        "en": "A simple bow. Era’s quiet hunt begins here.",
+        "eo": "A simple bow. Era’s quiet hunt begins here.",
+        "es": "A simple bow. Era’s quiet hunt begins here.",
+        "fi": "A simple bow. Era’s quiet hunt begins here.",
+        "fr": "A simple bow. Era’s quiet hunt begins here.",
+        "hu": "A simple bow. Era’s quiet hunt begins here.",
+        "is": "A simple bow. Era’s quiet hunt begins here.",
+        "it": "A simple bow. Era’s quiet hunt begins here.",
+        "ja": "A simple bow. Era’s quiet hunt begins here.",
+        "ko": "A simple bow. Era’s quiet hunt begins here.",
+        "li": "A simple bow. Era’s quiet hunt begins here.",
+        "lt": "A simple bow. Era’s quiet hunt begins here.",
+        "nl": "A simple bow. Era’s quiet hunt begins here.",
+        "no": "A simple bow. Era’s quiet hunt begins here.",
+        "pl": "A simple bow. Era’s quiet hunt begins here.",
+        "pt": "A simple bow. Era’s quiet hunt begins here.",
+        "ro": "A simple bow. Era’s quiet hunt begins here.",
+        "ru": "Простой лук. Тихая охота Эры начинается здесь.",
+        "sk": "A simple bow. Era’s quiet hunt begins here.",
+        "sr": "A simple bow. Era’s quiet hunt begins here.",
+        "sv": "A simple bow. Era’s quiet hunt begins here.",
+        "th": "A simple bow. Era’s quiet hunt begins here.",
+        "tr": "A simple bow. Era’s quiet hunt begins here.",
+        "uk": "Простой лук. Тихая охота Эры начинается здесь.",
+        "vi": "A simple bow. Era’s quiet hunt begins here.",
+        "zh": "A simple bow. Era’s quiet hunt begins here."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bow-simple",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:arrowhead-flint",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 21,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 23
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 24
+    },
+    {
+      "startNodeId": 24,
+      "endNodeId": 25
+    },
+    {
+      "startNodeId": 25,
+      "endNodeId": 26
+    },
+    {
+      "startNodeId": 26,
+      "endNodeId": 15
+    }
+  ],
+  "nextNodeId": 27
+}

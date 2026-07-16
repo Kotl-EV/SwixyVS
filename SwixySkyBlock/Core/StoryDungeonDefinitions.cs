@@ -137,7 +137,7 @@ internal static class StoryDungeonDefinitions
         var mapX = api.WorldManager.MapSizeX;
         var mapZ = api.WorldManager.MapSizeZ;
         var surfaceY = Math.Clamp(
-            SwixySkyBlockMod.Config.IslandSurfaceY,
+            SkyBlockRuntime.Config.IslandSurfaceY,
             1,
             Math.Max(1, api.WorldManager.MapSizeY - 4));
         var inset = Math.Max(64, definition.CornerInset);

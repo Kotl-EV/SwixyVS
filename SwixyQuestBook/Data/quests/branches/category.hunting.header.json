@@ -1,0 +1,1487 @@
+{
+  "iconItemCode": "game:bow-simple",
+  "title": {
+    "ar": "Hunting",
+    "be": "Охота",
+    "cs": "Hunting",
+    "da": "Hunting",
+    "de": "Jagd",
+    "en": "Hunting",
+    "eo": "Hunting",
+    "es": "Caza",
+    "fi": "Hunting",
+    "fr": "Chasse",
+    "hu": "Hunting",
+    "is": "Hunting",
+    "it": "Caccia",
+    "ja": "狩り",
+    "ko": "사냥",
+    "li": "Hunting",
+    "lt": "Hunting",
+    "nl": "Hunting",
+    "no": "Hunting",
+    "pl": "Polowanie",
+    "pt": "Caça",
+    "ro": "Hunting",
+    "ru": "Охота",
+    "sk": "Hunting",
+    "sr": "Hunting",
+    "sv": "Hunting",
+    "th": "Hunting",
+    "tr": "Avcılık",
+    "uk": "Охота",
+    "vi": "Hunting",
+    "zh": "狩猎"
+  },
+  "headerTitle": "category.hunting.header",
+  "header": {
+    "ar": "HUNTING",
+    "be": "ОХОТА",
+    "cs": "HUNTING",
+    "da": "HUNTING",
+    "de": "HUNTING",
+    "en": "HUNTING",
+    "eo": "HUNTING",
+    "es": "HUNTING",
+    "fi": "HUNTING",
+    "fr": "HUNTING",
+    "hu": "HUNTING",
+    "is": "HUNTING",
+    "it": "HUNTING",
+    "ja": "HUNTING",
+    "ko": "HUNTING",
+    "li": "HUNTING",
+    "lt": "HUNTING",
+    "nl": "HUNTING",
+    "no": "HUNTING",
+    "pl": "HUNTING",
+    "pt": "HUNTING",
+    "ro": "HUNTING",
+    "ru": "ОХОТА",
+    "sk": "HUNTING",
+    "sr": "HUNTING",
+    "sv": "HUNTING",
+    "th": "HUNTING",
+    "tr": "HUNTİNG",
+    "uk": "ОХОТА",
+    "vi": "HUNTING",
+    "zh": "HUNTING"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "be": "Охота. «Кузнец, который не умеет добыть еду, куёт только голод».",
+        "cs": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "da": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "de": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "en": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "eo": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "es": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "fi": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "fr": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "hu": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "is": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "it": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "ja": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "ko": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "li": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "lt": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "nl": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "no": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "pl": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "pt": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "ro": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "ru": "Охота. «Кузнец, который не умеет добыть еду, куёт только голод».",
+        "sk": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "sr": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "sv": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "th": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "tr": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "uk": "Охота. «Кузнец, который не умеет добыть еду, куёт только голод».",
+        "vi": "Hunting. “A smith who cannot feed themselves only forges hunger.”",
+        "zh": "Hunting. “A smith who cannot feed themselves only forges hunger.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft a flint spear. First contract with distance.",
+        "be": "Скрафти кремнёвое копьё. Первый договор с дистанцией.",
+        "cs": "Craft a flint spear. First contract with distance.",
+        "da": "Craft a flint spear. First contract with distance.",
+        "de": "Craft a flint spear. First contract with distance.",
+        "en": "Craft a flint spear. First contract with distance.",
+        "eo": "Craft a flint spear. First contract with distance.",
+        "es": "Craft a flint spear. First contract with distance.",
+        "fi": "Craft a flint spear. First contract with distance.",
+        "fr": "Craft a flint spear. First contract with distance.",
+        "hu": "Craft a flint spear. First contract with distance.",
+        "is": "Craft a flint spear. First contract with distance.",
+        "it": "Craft a flint spear. First contract with distance.",
+        "ja": "Craft a flint spear. First contract with distance.",
+        "ko": "Craft a flint spear. First contract with distance.",
+        "li": "Craft a flint spear. First contract with distance.",
+        "lt": "Craft a flint spear. First contract with distance.",
+        "nl": "Craft a flint spear. First contract with distance.",
+        "no": "Craft a flint spear. First contract with distance.",
+        "pl": "Craft a flint spear. First contract with distance.",
+        "pt": "Craft a flint spear. First contract with distance.",
+        "ro": "Craft a flint spear. First contract with distance.",
+        "ru": "Скрафти кремнёвое копьё. Первый договор с дистанцией.",
+        "sk": "Craft a flint spear. First contract with distance.",
+        "sr": "Craft a flint spear. First contract with distance.",
+        "sv": "Craft a flint spear. First contract with distance.",
+        "th": "Craft a flint spear. First contract with distance.",
+        "tr": "Craft a flint spear. First contract with distance.",
+        "uk": "Скрафти кремнёвое копьё. Первый договор с дистанцией.",
+        "vi": "Craft a flint spear. First contract with distance.",
+        "zh": "Craft a flint spear. First contract with distance."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:spear-generic-flint",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Hunt hares. Soft game teaches timing and silence.",
+        "be": "Охоться на зайцев. Мягкая дичь учит таймингу и тишине.",
+        "cs": "Hunt hares. Soft game teaches timing and silence.",
+        "da": "Hunt hares. Soft game teaches timing and silence.",
+        "de": "Hunt hares. Soft game teaches timing and silence.",
+        "en": "Hunt hares. Soft game teaches timing and silence.",
+        "eo": "Hunt hares. Soft game teaches timing and silence.",
+        "es": "Hunt hares. Soft game teaches timing and silence.",
+        "fi": "Hunt hares. Soft game teaches timing and silence.",
+        "fr": "Hunt hares. Soft game teaches timing and silence.",
+        "hu": "Hunt hares. Soft game teaches timing and silence.",
+        "is": "Hunt hares. Soft game teaches timing and silence.",
+        "it": "Hunt hares. Soft game teaches timing and silence.",
+        "ja": "Hunt hares. Soft game teaches timing and silence.",
+        "ko": "Hunt hares. Soft game teaches timing and silence.",
+        "li": "Hunt hares. Soft game teaches timing and silence.",
+        "lt": "Hunt hares. Soft game teaches timing and silence.",
+        "nl": "Hunt hares. Soft game teaches timing and silence.",
+        "no": "Hunt hares. Soft game teaches timing and silence.",
+        "pl": "Hunt hares. Soft game teaches timing and silence.",
+        "pt": "Hunt hares. Soft game teaches timing and silence.",
+        "ro": "Hunt hares. Soft game teaches timing and silence.",
+        "ru": "Охоться на зайцев. Мягкая дичь учит таймингу и тишине.",
+        "sk": "Hunt hares. Soft game teaches timing and silence.",
+        "sr": "Hunt hares. Soft game teaches timing and silence.",
+        "sv": "Hunt hares. Soft game teaches timing and silence.",
+        "th": "Hunt hares. Soft game teaches timing and silence.",
+        "tr": "Hunt hares. Soft game teaches timing and silence.",
+        "uk": "Охоться на зайцев. Мягкая дичь учит таймингу и тишине.",
+        "vi": "Hunt hares. Soft game teaches timing and silence.",
+        "zh": "Hunt hares. Soft game teaches timing and silence."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hare-*",
+          "count": 6,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Bones. Glue, tips, and memory of beasts.",
+        "be": "Кости. Клей, наконечники и память зверей.",
+        "cs": "Bones. Glue, tips, and memory of beasts.",
+        "da": "Bones. Glue, tips, and memory of beasts.",
+        "de": "Bones. Glue, tips, and memory of beasts.",
+        "en": "Bones. Glue, tips, and memory of beasts.",
+        "eo": "Bones. Glue, tips, and memory of beasts.",
+        "es": "Bones. Glue, tips, and memory of beasts.",
+        "fi": "Bones. Glue, tips, and memory of beasts.",
+        "fr": "Bones. Glue, tips, and memory of beasts.",
+        "hu": "Bones. Glue, tips, and memory of beasts.",
+        "is": "Bones. Glue, tips, and memory of beasts.",
+        "it": "Bones. Glue, tips, and memory of beasts.",
+        "ja": "Bones. Glue, tips, and memory of beasts.",
+        "ko": "Bones. Glue, tips, and memory of beasts.",
+        "li": "Bones. Glue, tips, and memory of beasts.",
+        "lt": "Bones. Glue, tips, and memory of beasts.",
+        "nl": "Bones. Glue, tips, and memory of beasts.",
+        "no": "Bones. Glue, tips, and memory of beasts.",
+        "pl": "Bones. Glue, tips, and memory of beasts.",
+        "pt": "Bones. Glue, tips, and memory of beasts.",
+        "ro": "Bones. Glue, tips, and memory of beasts.",
+        "ru": "Кости. Клей, наконечники и память зверей.",
+        "sk": "Bones. Glue, tips, and memory of beasts.",
+        "sr": "Bones. Glue, tips, and memory of beasts.",
+        "sv": "Bones. Glue, tips, and memory of beasts.",
+        "th": "Bones. Glue, tips, and memory of beasts.",
+        "tr": "Bones. Glue, tips, and memory of beasts.",
+        "uk": "Кости. Клей, наконечники и память зверей.",
+        "vi": "Bones. Glue, tips, and memory of beasts.",
+        "zh": "Bones. Glue, tips, and memory of beasts."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fat. Light, frying, tanning — white blood of the kill.",
+        "be": "Жир. Свет, жарка, выделка — белая кровь добычи.",
+        "cs": "Fat. Light, frying, tanning — white blood of the kill.",
+        "da": "Fat. Light, frying, tanning — white blood of the kill.",
+        "de": "Fat. Light, frying, tanning — white blood of the kill.",
+        "en": "Fat. Light, frying, tanning — white blood of the kill.",
+        "eo": "Fat. Light, frying, tanning — white blood of the kill.",
+        "es": "Fat. Light, frying, tanning — white blood of the kill.",
+        "fi": "Fat. Light, frying, tanning — white blood of the kill.",
+        "fr": "Fat. Light, frying, tanning — white blood of the kill.",
+        "hu": "Fat. Light, frying, tanning — white blood of the kill.",
+        "is": "Fat. Light, frying, tanning — white blood of the kill.",
+        "it": "Fat. Light, frying, tanning — white blood of the kill.",
+        "ja": "Fat. Light, frying, tanning — white blood of the kill.",
+        "ko": "Fat. Light, frying, tanning — white blood of the kill.",
+        "li": "Fat. Light, frying, tanning — white blood of the kill.",
+        "lt": "Fat. Light, frying, tanning — white blood of the kill.",
+        "nl": "Fat. Light, frying, tanning — white blood of the kill.",
+        "no": "Fat. Light, frying, tanning — white blood of the kill.",
+        "pl": "Fat. Light, frying, tanning — white blood of the kill.",
+        "pt": "Fat. Light, frying, tanning — white blood of the kill.",
+        "ro": "Fat. Light, frying, tanning — white blood of the kill.",
+        "ru": "Жир. Свет, жарка, выделка — белая кровь добычи.",
+        "sk": "Fat. Light, frying, tanning — white blood of the kill.",
+        "sr": "Fat. Light, frying, tanning — white blood of the kill.",
+        "sv": "Fat. Light, frying, tanning — white blood of the kill.",
+        "th": "Fat. Light, frying, tanning — white blood of the kill.",
+        "tr": "Fat. Light, frying, tanning — white blood of the kill.",
+        "uk": "Жир. Свет, жарка, выделка — белая кровь добычи.",
+        "vi": "Fat. Light, frying, tanning — white blood of the kill.",
+        "zh": "Fat. Light, frying, tanning — white blood of the kill."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Feathers. Arrows without them are only sticks.",
+        "be": "Перья. Стрелы без них — просто палки.",
+        "cs": "Feathers. Arrows without them are only sticks.",
+        "da": "Feathers. Arrows without them are only sticks.",
+        "de": "Feathers. Arrows without them are only sticks.",
+        "en": "Feathers. Arrows without them are only sticks.",
+        "eo": "Feathers. Arrows without them are only sticks.",
+        "es": "Feathers. Arrows without them are only sticks.",
+        "fi": "Feathers. Arrows without them are only sticks.",
+        "fr": "Feathers. Arrows without them are only sticks.",
+        "hu": "Feathers. Arrows without them are only sticks.",
+        "is": "Feathers. Arrows without them are only sticks.",
+        "it": "Feathers. Arrows without them are only sticks.",
+        "ja": "Feathers. Arrows without them are only sticks.",
+        "ko": "Feathers. Arrows without them are only sticks.",
+        "li": "Feathers. Arrows without them are only sticks.",
+        "lt": "Feathers. Arrows without them are only sticks.",
+        "nl": "Feathers. Arrows without them are only sticks.",
+        "no": "Feathers. Arrows without them are only sticks.",
+        "pl": "Feathers. Arrows without them are only sticks.",
+        "pt": "Feathers. Arrows without them are only sticks.",
+        "ro": "Feathers. Arrows without them are only sticks.",
+        "ru": "Перья. Стрелы без них — просто палки.",
+        "sk": "Feathers. Arrows without them are only sticks.",
+        "sr": "Feathers. Arrows without them are only sticks.",
+        "sv": "Feathers. Arrows without them are only sticks.",
+        "th": "Feathers. Arrows without them are only sticks.",
+        "tr": "Feathers. Arrows without them are only sticks.",
+        "uk": "Перья. Стрелы без них — просто палки.",
+        "vi": "Feathers. Arrows without them are only sticks.",
+        "zh": "Feathers. Arrows without them are only sticks."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft flint arrowheads. Teeth for silent flight.",
+        "be": "Скрафти кремнёвые наконечники. Зубья для тихого полёта.",
+        "cs": "Craft flint arrowheads. Teeth for silent flight.",
+        "da": "Craft flint arrowheads. Teeth for silent flight.",
+        "de": "Craft flint arrowheads. Teeth for silent flight.",
+        "en": "Craft flint arrowheads. Teeth for silent flight.",
+        "eo": "Craft flint arrowheads. Teeth for silent flight.",
+        "es": "Craft flint arrowheads. Teeth for silent flight.",
+        "fi": "Craft flint arrowheads. Teeth for silent flight.",
+        "fr": "Craft flint arrowheads. Teeth for silent flight.",
+        "hu": "Craft flint arrowheads. Teeth for silent flight.",
+        "is": "Craft flint arrowheads. Teeth for silent flight.",
+        "it": "Craft flint arrowheads. Teeth for silent flight.",
+        "ja": "Craft flint arrowheads. Teeth for silent flight.",
+        "ko": "Craft flint arrowheads. Teeth for silent flight.",
+        "li": "Craft flint arrowheads. Teeth for silent flight.",
+        "lt": "Craft flint arrowheads. Teeth for silent flight.",
+        "nl": "Craft flint arrowheads. Teeth for silent flight.",
+        "no": "Craft flint arrowheads. Teeth for silent flight.",
+        "pl": "Craft flint arrowheads. Teeth for silent flight.",
+        "pt": "Craft flint arrowheads. Teeth for silent flight.",
+        "ro": "Craft flint arrowheads. Teeth for silent flight.",
+        "ru": "Скрафти кремнёвые наконечники. Зубья для тихого полёта.",
+        "sk": "Craft flint arrowheads. Teeth for silent flight.",
+        "sr": "Craft flint arrowheads. Teeth for silent flight.",
+        "sv": "Craft flint arrowheads. Teeth for silent flight.",
+        "th": "Craft flint arrowheads. Teeth for silent flight.",
+        "tr": "Craft flint arrowheads. Teeth for silent flight.",
+        "uk": "Скрафти кремнёвые наконечники. Зубья для тихого полёта.",
+        "vi": "Craft flint arrowheads. Teeth for silent flight.",
+        "zh": "Craft flint arrowheads. Teeth for silent flight."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:arrowhead-flint",
+          "count": 20,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft a simple bow. Era’s quiet hunt.",
+        "be": "Скрафти простой лук. Тихая охота Эры.",
+        "cs": "Craft a simple bow. Era’s quiet hunt.",
+        "da": "Craft a simple bow. Era’s quiet hunt.",
+        "de": "Craft a simple bow. Era’s quiet hunt.",
+        "en": "Craft a simple bow. Era’s quiet hunt.",
+        "eo": "Craft a simple bow. Era’s quiet hunt.",
+        "es": "Craft a simple bow. Era’s quiet hunt.",
+        "fi": "Craft a simple bow. Era’s quiet hunt.",
+        "fr": "Craft a simple bow. Era’s quiet hunt.",
+        "hu": "Craft a simple bow. Era’s quiet hunt.",
+        "is": "Craft a simple bow. Era’s quiet hunt.",
+        "it": "Craft a simple bow. Era’s quiet hunt.",
+        "ja": "Craft a simple bow. Era’s quiet hunt.",
+        "ko": "Craft a simple bow. Era’s quiet hunt.",
+        "li": "Craft a simple bow. Era’s quiet hunt.",
+        "lt": "Craft a simple bow. Era’s quiet hunt.",
+        "nl": "Craft a simple bow. Era’s quiet hunt.",
+        "no": "Craft a simple bow. Era’s quiet hunt.",
+        "pl": "Craft a simple bow. Era’s quiet hunt.",
+        "pt": "Craft a simple bow. Era’s quiet hunt.",
+        "ro": "Craft a simple bow. Era’s quiet hunt.",
+        "ru": "Скрафти простой лук. Тихая охота Эры.",
+        "sk": "Craft a simple bow. Era’s quiet hunt.",
+        "sr": "Craft a simple bow. Era’s quiet hunt.",
+        "sv": "Craft a simple bow. Era’s quiet hunt.",
+        "th": "Craft a simple bow. Era’s quiet hunt.",
+        "tr": "Craft a simple bow. Era’s quiet hunt.",
+        "uk": "Скрафти простой лук. Тихая охота Эры.",
+        "vi": "Craft a simple bow. Era’s quiet hunt.",
+        "zh": "Craft a simple bow. Era’s quiet hunt."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bow-simple",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:arrowhead-flint",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "be": "Охоться на кур или дичь — мягкие перья, мягкие уроки.",
+        "cs": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "da": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "de": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "en": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "eo": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "es": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "fi": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "fr": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "hu": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "is": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "it": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "ja": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "ko": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "li": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "lt": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "nl": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "no": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "pl": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "pt": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "ro": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "ru": "Охоться на кур или дичь — мягкие перья, мягкие уроки.",
+        "sk": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "sr": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "sv": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "th": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "tr": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "uk": "Охоться на кур или дичь — мягкие перья, мягкие уроки.",
+        "vi": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons.",
+        "zh": "Hunt chickens or wild fowl if nearby — soft feathers, soft lessons."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:chicken-*",
+          "count": 4,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Hunt deer. The forest shares if you are careful.",
+        "be": "Охоться на оленей. Лес делится, если ты осторожен.",
+        "cs": "Hunt deer. The forest shares if you are careful.",
+        "da": "Hunt deer. The forest shares if you are careful.",
+        "de": "Hunt deer. The forest shares if you are careful.",
+        "en": "Hunt deer. The forest shares if you are careful.",
+        "eo": "Hunt deer. The forest shares if you are careful.",
+        "es": "Hunt deer. The forest shares if you are careful.",
+        "fi": "Hunt deer. The forest shares if you are careful.",
+        "fr": "Hunt deer. The forest shares if you are careful.",
+        "hu": "Hunt deer. The forest shares if you are careful.",
+        "is": "Hunt deer. The forest shares if you are careful.",
+        "it": "Hunt deer. The forest shares if you are careful.",
+        "ja": "Hunt deer. The forest shares if you are careful.",
+        "ko": "Hunt deer. The forest shares if you are careful.",
+        "li": "Hunt deer. The forest shares if you are careful.",
+        "lt": "Hunt deer. The forest shares if you are careful.",
+        "nl": "Hunt deer. The forest shares if you are careful.",
+        "no": "Hunt deer. The forest shares if you are careful.",
+        "pl": "Hunt deer. The forest shares if you are careful.",
+        "pt": "Hunt deer. The forest shares if you are careful.",
+        "ro": "Hunt deer. The forest shares if you are careful.",
+        "ru": "Охоться на оленей. Лес делится, если ты осторожен.",
+        "sk": "Hunt deer. The forest shares if you are careful.",
+        "sr": "Hunt deer. The forest shares if you are careful.",
+        "sv": "Hunt deer. The forest shares if you are careful.",
+        "th": "Hunt deer. The forest shares if you are careful.",
+        "tr": "Hunt deer. The forest shares if you are careful.",
+        "uk": "Охоться на оленей. Лес делится, если ты осторожен.",
+        "vi": "Hunt deer. The forest shares if you are careful.",
+        "zh": "Hunt deer. The forest shares if you are careful."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:deer-*",
+          "count": 4,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:hide-raw-medium",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Raw hides. Beginning of leather and warmth.",
+        "be": "Сырые шкуры. Начало кожи и тепла.",
+        "cs": "Raw hides. Beginning of leather and warmth.",
+        "da": "Raw hides. Beginning of leather and warmth.",
+        "de": "Raw hides. Beginning of leather and warmth.",
+        "en": "Raw hides. Beginning of leather and warmth.",
+        "eo": "Raw hides. Beginning of leather and warmth.",
+        "es": "Raw hides. Beginning of leather and warmth.",
+        "fi": "Raw hides. Beginning of leather and warmth.",
+        "fr": "Raw hides. Beginning of leather and warmth.",
+        "hu": "Raw hides. Beginning of leather and warmth.",
+        "is": "Raw hides. Beginning of leather and warmth.",
+        "it": "Raw hides. Beginning of leather and warmth.",
+        "ja": "Raw hides. Beginning of leather and warmth.",
+        "ko": "Raw hides. Beginning of leather and warmth.",
+        "li": "Raw hides. Beginning of leather and warmth.",
+        "lt": "Raw hides. Beginning of leather and warmth.",
+        "nl": "Raw hides. Beginning of leather and warmth.",
+        "no": "Raw hides. Beginning of leather and warmth.",
+        "pl": "Raw hides. Beginning of leather and warmth.",
+        "pt": "Raw hides. Beginning of leather and warmth.",
+        "ro": "Raw hides. Beginning of leather and warmth.",
+        "ru": "Сырые шкуры. Начало кожи и тепла.",
+        "sk": "Raw hides. Beginning of leather and warmth.",
+        "sr": "Raw hides. Beginning of leather and warmth.",
+        "sv": "Raw hides. Beginning of leather and warmth.",
+        "th": "Raw hides. Beginning of leather and warmth.",
+        "tr": "Raw hides. Beginning of leather and warmth.",
+        "uk": "Сырые шкуры. Начало кожи и тепла.",
+        "vi": "Raw hides. Beginning of leather and warmth.",
+        "zh": "Raw hides. Beginning of leather and warmth."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hide-raw-*",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Soaked hides. Water is the first step of patience.",
+        "be": "Замоченные шкуры. Вода — первый шаг терпения.",
+        "cs": "Soaked hides. Water is the first step of patience.",
+        "da": "Soaked hides. Water is the first step of patience.",
+        "de": "Soaked hides. Water is the first step of patience.",
+        "en": "Soaked hides. Water is the first step of patience.",
+        "eo": "Soaked hides. Water is the first step of patience.",
+        "es": "Soaked hides. Water is the first step of patience.",
+        "fi": "Soaked hides. Water is the first step of patience.",
+        "fr": "Soaked hides. Water is the first step of patience.",
+        "hu": "Soaked hides. Water is the first step of patience.",
+        "is": "Soaked hides. Water is the first step of patience.",
+        "it": "Soaked hides. Water is the first step of patience.",
+        "ja": "Soaked hides. Water is the first step of patience.",
+        "ko": "Soaked hides. Water is the first step of patience.",
+        "li": "Soaked hides. Water is the first step of patience.",
+        "lt": "Soaked hides. Water is the first step of patience.",
+        "nl": "Soaked hides. Water is the first step of patience.",
+        "no": "Soaked hides. Water is the first step of patience.",
+        "pl": "Soaked hides. Water is the first step of patience.",
+        "pt": "Soaked hides. Water is the first step of patience.",
+        "ro": "Soaked hides. Water is the first step of patience.",
+        "ru": "Замоченные шкуры. Вода — первый шаг терпения.",
+        "sk": "Soaked hides. Water is the first step of patience.",
+        "sr": "Soaked hides. Water is the first step of patience.",
+        "sv": "Soaked hides. Water is the first step of patience.",
+        "th": "Soaked hides. Water is the first step of patience.",
+        "tr": "Soaked hides. Water is the first step of patience.",
+        "uk": "Замоченные шкуры. Вода — первый шаг терпения.",
+        "vi": "Soaked hides. Water is the first step of patience.",
+        "zh": "Soaked hides. Water is the first step of patience."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hide-soaked-*",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Scraped hides. Patience of the tannery.",
+        "be": "Соскобленные шкуры. Терпение выделки.",
+        "cs": "Scraped hides. Patience of the tannery.",
+        "da": "Scraped hides. Patience of the tannery.",
+        "de": "Scraped hides. Patience of the tannery.",
+        "en": "Scraped hides. Patience of the tannery.",
+        "eo": "Scraped hides. Patience of the tannery.",
+        "es": "Scraped hides. Patience of the tannery.",
+        "fi": "Scraped hides. Patience of the tannery.",
+        "fr": "Scraped hides. Patience of the tannery.",
+        "hu": "Scraped hides. Patience of the tannery.",
+        "is": "Scraped hides. Patience of the tannery.",
+        "it": "Scraped hides. Patience of the tannery.",
+        "ja": "Scraped hides. Patience of the tannery.",
+        "ko": "Scraped hides. Patience of the tannery.",
+        "li": "Scraped hides. Patience of the tannery.",
+        "lt": "Scraped hides. Patience of the tannery.",
+        "nl": "Scraped hides. Patience of the tannery.",
+        "no": "Scraped hides. Patience of the tannery.",
+        "pl": "Scraped hides. Patience of the tannery.",
+        "pt": "Scraped hides. Patience of the tannery.",
+        "ro": "Scraped hides. Patience of the tannery.",
+        "ru": "Соскобленные шкуры. Терпение выделки.",
+        "sk": "Scraped hides. Patience of the tannery.",
+        "sr": "Scraped hides. Patience of the tannery.",
+        "sv": "Scraped hides. Patience of the tannery.",
+        "th": "Scraped hides. Patience of the tannery.",
+        "tr": "Scraped hides. Patience of the tannery.",
+        "uk": "Соскобленные шкуры. Терпение выделки.",
+        "vi": "Scraped hides. Patience of the tannery.",
+        "zh": "Scraped hides. Patience of the tannery."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hide-scraped-*",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Leather. Belts, bags, armor.",
+        "be": "Кожа. Ремни, сумки, броня.",
+        "cs": "Leather. Belts, bags, armor.",
+        "da": "Leather. Belts, bags, armor.",
+        "de": "Leather. Belts, bags, armor.",
+        "en": "Leather. Belts, bags, armor.",
+        "eo": "Leather. Belts, bags, armor.",
+        "es": "Leather. Belts, bags, armor.",
+        "fi": "Leather. Belts, bags, armor.",
+        "fr": "Leather. Belts, bags, armor.",
+        "hu": "Leather. Belts, bags, armor.",
+        "is": "Leather. Belts, bags, armor.",
+        "it": "Leather. Belts, bags, armor.",
+        "ja": "Leather. Belts, bags, armor.",
+        "ko": "Leather. Belts, bags, armor.",
+        "li": "Leather. Belts, bags, armor.",
+        "lt": "Leather. Belts, bags, armor.",
+        "nl": "Leather. Belts, bags, armor.",
+        "no": "Leather. Belts, bags, armor.",
+        "pl": "Leather. Belts, bags, armor.",
+        "pt": "Leather. Belts, bags, armor.",
+        "ro": "Leather. Belts, bags, armor.",
+        "ru": "Кожа. Ремни, сумки, броня.",
+        "sk": "Leather. Belts, bags, armor.",
+        "sr": "Leather. Belts, bags, armor.",
+        "sv": "Leather. Belts, bags, armor.",
+        "th": "Leather. Belts, bags, armor.",
+        "tr": "Leather. Belts, bags, armor.",
+        "uk": "Кожа. Ремни, сумки, броня.",
+        "vi": "Leather. Belts, bags, armor.",
+        "zh": "Leather. Belts, bags, armor."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:leather-normal-*",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Hunt wolves. Respect the pack — and the night.",
+        "be": "Охоться на волков. Уважай стаю — и ночь.",
+        "cs": "Hunt wolves. Respect the pack — and the night.",
+        "da": "Hunt wolves. Respect the pack — and the night.",
+        "de": "Hunt wolves. Respect the pack — and the night.",
+        "en": "Hunt wolves. Respect the pack — and the night.",
+        "eo": "Hunt wolves. Respect the pack — and the night.",
+        "es": "Hunt wolves. Respect the pack — and the night.",
+        "fi": "Hunt wolves. Respect the pack — and the night.",
+        "fr": "Hunt wolves. Respect the pack — and the night.",
+        "hu": "Hunt wolves. Respect the pack — and the night.",
+        "is": "Hunt wolves. Respect the pack — and the night.",
+        "it": "Hunt wolves. Respect the pack — and the night.",
+        "ja": "Hunt wolves. Respect the pack — and the night.",
+        "ko": "Hunt wolves. Respect the pack — and the night.",
+        "li": "Hunt wolves. Respect the pack — and the night.",
+        "lt": "Hunt wolves. Respect the pack — and the night.",
+        "nl": "Hunt wolves. Respect the pack — and the night.",
+        "no": "Hunt wolves. Respect the pack — and the night.",
+        "pl": "Hunt wolves. Respect the pack — and the night.",
+        "pt": "Hunt wolves. Respect the pack — and the night.",
+        "ro": "Hunt wolves. Respect the pack — and the night.",
+        "ru": "Охоться на волков. Уважай стаю — и ночь.",
+        "sk": "Hunt wolves. Respect the pack — and the night.",
+        "sr": "Hunt wolves. Respect the pack — and the night.",
+        "sv": "Hunt wolves. Respect the pack — and the night.",
+        "th": "Hunt wolves. Respect the pack — and the night.",
+        "tr": "Hunt wolves. Respect the pack — and the night.",
+        "uk": "Охоться на волков. Уважай стаю — и ночь.",
+        "vi": "Hunt wolves. Respect the pack — and the night.",
+        "zh": "Hunt wolves. Respect the pack — and the night."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:wolf-*",
+          "count": 4,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Hunt foxes. Quick prey for quick hands.",
+        "be": "Охоться на лис. Быстрая добыча для быстрых рук.",
+        "cs": "Hunt foxes. Quick prey for quick hands.",
+        "da": "Hunt foxes. Quick prey for quick hands.",
+        "de": "Hunt foxes. Quick prey for quick hands.",
+        "en": "Hunt foxes. Quick prey for quick hands.",
+        "eo": "Hunt foxes. Quick prey for quick hands.",
+        "es": "Hunt foxes. Quick prey for quick hands.",
+        "fi": "Hunt foxes. Quick prey for quick hands.",
+        "fr": "Hunt foxes. Quick prey for quick hands.",
+        "hu": "Hunt foxes. Quick prey for quick hands.",
+        "is": "Hunt foxes. Quick prey for quick hands.",
+        "it": "Hunt foxes. Quick prey for quick hands.",
+        "ja": "Hunt foxes. Quick prey for quick hands.",
+        "ko": "Hunt foxes. Quick prey for quick hands.",
+        "li": "Hunt foxes. Quick prey for quick hands.",
+        "lt": "Hunt foxes. Quick prey for quick hands.",
+        "nl": "Hunt foxes. Quick prey for quick hands.",
+        "no": "Hunt foxes. Quick prey for quick hands.",
+        "pl": "Hunt foxes. Quick prey for quick hands.",
+        "pt": "Hunt foxes. Quick prey for quick hands.",
+        "ro": "Hunt foxes. Quick prey for quick hands.",
+        "ru": "Охоться на лис. Быстрая добыча для быстрых рук.",
+        "sk": "Hunt foxes. Quick prey for quick hands.",
+        "sr": "Hunt foxes. Quick prey for quick hands.",
+        "sv": "Hunt foxes. Quick prey for quick hands.",
+        "th": "Hunt foxes. Quick prey for quick hands.",
+        "tr": "Hunt foxes. Quick prey for quick hands.",
+        "uk": "Охоться на лис. Быстрая добыча для быстрых рук.",
+        "vi": "Hunt foxes. Quick prey for quick hands.",
+        "zh": "Hunt foxes. Quick prey for quick hands."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:fox-*",
+          "count": 3,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:hide-raw-medium",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "be": "Охоться на кабанов. Опасно, но жирно и шкурно.",
+        "cs": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "da": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "de": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "en": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "eo": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "es": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "fi": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "fr": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "hu": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "is": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "it": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "ja": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "ko": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "li": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "lt": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "nl": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "no": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "pl": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "pt": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "ro": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "ru": "Охоться на кабанов. Опасно, но жирно и шкурно.",
+        "sk": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "sr": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "sv": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "th": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "tr": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "uk": "Охоться на кабанов. Опасно, но жирно и шкурно.",
+        "vi": "Hunt wild pigs. Dangerous, but rich in fat and hide.",
+        "zh": "Hunt wild pigs. Dangerous, but rich in fat and hide."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:pig-*",
+          "count": 3,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Raw red meat. The forest’s full plate.",
+        "be": "Сырое красное мясо. Полная тарелка леса.",
+        "cs": "Raw red meat. The forest’s full plate.",
+        "da": "Raw red meat. The forest’s full plate.",
+        "de": "Raw red meat. The forest’s full plate.",
+        "en": "Raw red meat. The forest’s full plate.",
+        "eo": "Raw red meat. The forest’s full plate.",
+        "es": "Raw red meat. The forest’s full plate.",
+        "fi": "Raw red meat. The forest’s full plate.",
+        "fr": "Raw red meat. The forest’s full plate.",
+        "hu": "Raw red meat. The forest’s full plate.",
+        "is": "Raw red meat. The forest’s full plate.",
+        "it": "Raw red meat. The forest’s full plate.",
+        "ja": "Raw red meat. The forest’s full plate.",
+        "ko": "Raw red meat. The forest’s full plate.",
+        "li": "Raw red meat. The forest’s full plate.",
+        "lt": "Raw red meat. The forest’s full plate.",
+        "nl": "Raw red meat. The forest’s full plate.",
+        "no": "Raw red meat. The forest’s full plate.",
+        "pl": "Raw red meat. The forest’s full plate.",
+        "pt": "Raw red meat. The forest’s full plate.",
+        "ro": "Raw red meat. The forest’s full plate.",
+        "ru": "Сырое красное мясо. Полная тарелка леса.",
+        "sk": "Raw red meat. The forest’s full plate.",
+        "sr": "Raw red meat. The forest’s full plate.",
+        "sv": "Raw red meat. The forest’s full plate.",
+        "th": "Raw red meat. The forest’s full plate.",
+        "tr": "Raw red meat. The forest’s full plate.",
+        "uk": "Сырое красное мясо. Полная тарелка леса.",
+        "vi": "Raw red meat. The forest’s full plate.",
+        "zh": "Raw red meat. The forest’s full plate."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:redmeat-raw",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Cooked red meat. Fullness writes even lines in the journal.",
+        "be": "Жареное мясо. Сытость пишет ровные строки в дневнике.",
+        "cs": "Cooked red meat. Fullness writes even lines in the journal.",
+        "da": "Cooked red meat. Fullness writes even lines in the journal.",
+        "de": "Cooked red meat. Fullness writes even lines in the journal.",
+        "en": "Cooked red meat. Fullness writes even lines in the journal.",
+        "eo": "Cooked red meat. Fullness writes even lines in the journal.",
+        "es": "Cooked red meat. Fullness writes even lines in the journal.",
+        "fi": "Cooked red meat. Fullness writes even lines in the journal.",
+        "fr": "Cooked red meat. Fullness writes even lines in the journal.",
+        "hu": "Cooked red meat. Fullness writes even lines in the journal.",
+        "is": "Cooked red meat. Fullness writes even lines in the journal.",
+        "it": "Cooked red meat. Fullness writes even lines in the journal.",
+        "ja": "Cooked red meat. Fullness writes even lines in the journal.",
+        "ko": "Cooked red meat. Fullness writes even lines in the journal.",
+        "li": "Cooked red meat. Fullness writes even lines in the journal.",
+        "lt": "Cooked red meat. Fullness writes even lines in the journal.",
+        "nl": "Cooked red meat. Fullness writes even lines in the journal.",
+        "no": "Cooked red meat. Fullness writes even lines in the journal.",
+        "pl": "Cooked red meat. Fullness writes even lines in the journal.",
+        "pt": "Cooked red meat. Fullness writes even lines in the journal.",
+        "ro": "Cooked red meat. Fullness writes even lines in the journal.",
+        "ru": "Жареное мясо. Сытость пишет ровные строки в дневнике.",
+        "sk": "Cooked red meat. Fullness writes even lines in the journal.",
+        "sr": "Cooked red meat. Fullness writes even lines in the journal.",
+        "sv": "Cooked red meat. Fullness writes even lines in the journal.",
+        "th": "Cooked red meat. Fullness writes even lines in the journal.",
+        "tr": "Cooked red meat. Fullness writes even lines in the journal.",
+        "uk": "Жареное мясо. Сытость пишет ровные строки в дневнике.",
+        "vi": "Cooked red meat. Fullness writes even lines in the journal.",
+        "zh": "Cooked red meat. Fullness writes even lines in the journal."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:redmeat-cooked",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 19,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More leather for packs and straps of the long road.",
+        "be": "Ещё кожи для сумок и ремней дальней дороги.",
+        "cs": "More leather for packs and straps of the long road.",
+        "da": "More leather for packs and straps of the long road.",
+        "de": "More leather for packs and straps of the long road.",
+        "en": "More leather for packs and straps of the long road.",
+        "eo": "More leather for packs and straps of the long road.",
+        "es": "More leather for packs and straps of the long road.",
+        "fi": "More leather for packs and straps of the long road.",
+        "fr": "More leather for packs and straps of the long road.",
+        "hu": "More leather for packs and straps of the long road.",
+        "is": "More leather for packs and straps of the long road.",
+        "it": "More leather for packs and straps of the long road.",
+        "ja": "More leather for packs and straps of the long road.",
+        "ko": "More leather for packs and straps of the long road.",
+        "li": "More leather for packs and straps of the long road.",
+        "lt": "More leather for packs and straps of the long road.",
+        "nl": "More leather for packs and straps of the long road.",
+        "no": "More leather for packs and straps of the long road.",
+        "pl": "More leather for packs and straps of the long road.",
+        "pt": "More leather for packs and straps of the long road.",
+        "ro": "More leather for packs and straps of the long road.",
+        "ru": "Ещё кожи для сумок и ремней дальней дороги.",
+        "sk": "More leather for packs and straps of the long road.",
+        "sr": "More leather for packs and straps of the long road.",
+        "sv": "More leather for packs and straps of the long road.",
+        "th": "More leather for packs and straps of the long road.",
+        "tr": "More leather for packs and straps of the long road.",
+        "uk": "Ещё кожи для сумок и ремней дальней дороги.",
+        "vi": "More leather for packs and straps of the long road.",
+        "zh": "More leather for packs and straps of the long road."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:leather-normal-plain",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "be": "Медные наконечники, когда придёт металл. Охота растёт вместе с веком.",
+        "cs": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "da": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "de": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "en": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "eo": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "es": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "fi": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "fr": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "hu": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "is": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "it": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "ja": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "ko": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "li": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "lt": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "nl": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "no": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "pl": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "pt": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "ro": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "ru": "Медные наконечники, когда придёт металл. Охота растёт вместе с веком.",
+        "sk": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "sr": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "sv": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "th": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "tr": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "uk": "Медные наконечники, когда придёт металл. Охота растёт вместе с веком.",
+        "vi": "Copper arrowheads when metal arrives. Hunt upgrades with the age.",
+        "zh": "Copper arrowheads when metal arrives. Hunt upgrades with the age."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:arrowhead-copper",
+          "count": 12,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 21,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "be": "По желанию: медведь, если есть в краю — или ещё волки.",
+        "cs": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "da": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "de": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "en": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "eo": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "es": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "fi": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "fr": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "hu": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "is": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "it": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "ja": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "ko": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "li": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "lt": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "nl": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "no": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "pl": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "pt": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "ro": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "ru": "По желанию: медведь, если есть в краю — или ещё волки.",
+        "sk": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "sr": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "sv": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "th": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "tr": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "uk": "По желанию: медведь, если есть в краю — или ещё волки.",
+        "vi": "Optional: face a bear if your land holds them — or skip with more wolves.",
+        "zh": "Optional: face a bear if your land holds them — or skip with more wolves."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bear-*",
+          "count": 1,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:hide-raw-medium",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 22,
+      "x": 0,
+      "y": -720,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Hunting path complete. The forest knows your name now.",
+        "be": "Путь охоты завершён. Лес теперь знает твоё имя.",
+        "cs": "Hunting path complete. The forest knows your name now.",
+        "da": "Hunting path complete. The forest knows your name now.",
+        "de": "Hunting path complete. The forest knows your name now.",
+        "en": "Hunting path complete. The forest knows your name now.",
+        "eo": "Hunting path complete. The forest knows your name now.",
+        "es": "Hunting path complete. The forest knows your name now.",
+        "fi": "Hunting path complete. The forest knows your name now.",
+        "fr": "Hunting path complete. The forest knows your name now.",
+        "hu": "Hunting path complete. The forest knows your name now.",
+        "is": "Hunting path complete. The forest knows your name now.",
+        "it": "Hunting path complete. The forest knows your name now.",
+        "ja": "Hunting path complete. The forest knows your name now.",
+        "ko": "Hunting path complete. The forest knows your name now.",
+        "li": "Hunting path complete. The forest knows your name now.",
+        "lt": "Hunting path complete. The forest knows your name now.",
+        "nl": "Hunting path complete. The forest knows your name now.",
+        "no": "Hunting path complete. The forest knows your name now.",
+        "pl": "Hunting path complete. The forest knows your name now.",
+        "pt": "Hunting path complete. The forest knows your name now.",
+        "ro": "Hunting path complete. The forest knows your name now.",
+        "ru": "Путь охоты завершён. Лес теперь знает твоё имя.",
+        "sk": "Hunting path complete. The forest knows your name now.",
+        "sr": "Hunting path complete. The forest knows your name now.",
+        "sv": "Hunting path complete. The forest knows your name now.",
+        "th": "Hunting path complete. The forest knows your name now.",
+        "tr": "Hunting path complete. The forest knows your name now.",
+        "uk": "Путь охоты завершён. Лес теперь знает твоё имя.",
+        "vi": "Hunting path complete. The forest knows your name now.",
+        "zh": "Hunting path complete. The forest knows your name now."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 23,
+      "x": 600,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Honeycomb from wild hives. Sweetness after blood.",
+        "be": "Соты с диких ульев. Сладость после крови.",
+        "cs": "Honeycomb from wild hives. Sweetness after blood.",
+        "da": "Honeycomb from wild hives. Sweetness after blood.",
+        "de": "Honeycomb from wild hives. Sweetness after blood.",
+        "en": "Honeycomb from wild hives. Sweetness after blood.",
+        "eo": "Honeycomb from wild hives. Sweetness after blood.",
+        "es": "Honeycomb from wild hives. Sweetness after blood.",
+        "fi": "Honeycomb from wild hives. Sweetness after blood.",
+        "fr": "Honeycomb from wild hives. Sweetness after blood.",
+        "hu": "Honeycomb from wild hives. Sweetness after blood.",
+        "is": "Honeycomb from wild hives. Sweetness after blood.",
+        "it": "Honeycomb from wild hives. Sweetness after blood.",
+        "ja": "Honeycomb from wild hives. Sweetness after blood.",
+        "ko": "Honeycomb from wild hives. Sweetness after blood.",
+        "li": "Honeycomb from wild hives. Sweetness after blood.",
+        "lt": "Honeycomb from wild hives. Sweetness after blood.",
+        "nl": "Honeycomb from wild hives. Sweetness after blood.",
+        "no": "Honeycomb from wild hives. Sweetness after blood.",
+        "pl": "Honeycomb from wild hives. Sweetness after blood.",
+        "pt": "Honeycomb from wild hives. Sweetness after blood.",
+        "ro": "Honeycomb from wild hives. Sweetness after blood.",
+        "ru": "Соты с диких ульев. Сладость после крови.",
+        "sk": "Honeycomb from wild hives. Sweetness after blood.",
+        "sr": "Honeycomb from wild hives. Sweetness after blood.",
+        "sv": "Honeycomb from wild hives. Sweetness after blood.",
+        "th": "Honeycomb from wild hives. Sweetness after blood.",
+        "tr": "Honeycomb from wild hives. Sweetness after blood.",
+        "uk": "Соты с диких ульев. Сладость после крови.",
+        "vi": "Honeycomb from wild hives. Sweetness after blood.",
+        "zh": "Honeycomb from wild hives. Sweetness after blood."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:honeycomb",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:beeswax",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 21,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 23
+    },
+    {
+      "startNodeId": 23,
+      "endNodeId": 6
+    }
+  ],
+  "nextNodeId": 24
+}

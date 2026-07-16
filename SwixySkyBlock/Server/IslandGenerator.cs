@@ -9,7 +9,7 @@ using Vintagestory.API.Server;
 
 namespace SwixySkyBlock;
 
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     private const int MinGeneratorLevel = 1;
     private const int GeneratorRestoreIntervalMs = 1000;
@@ -376,7 +376,7 @@ public sealed partial class SwixySkyBlockMod
         }
 
         return IslandGeneratorStateBuilder.Build(
-            GeneratorConfig,
+            SkyBlockRuntime.GeneratorConfig,
             record != null,
             record?.GeneratorLevel ?? MinGeneratorLevel,
             countPlayerItems ? CountItems(player, GeneratorUpgradeCostItemCode) : 0,
@@ -656,13 +656,13 @@ public sealed partial class SwixySkyBlockMod
     }
 
     private static IReadOnlyList<SkyBlockGeneratorEntryConfig> GetGeneratorEntries(int level) =>
-        IslandGeneratorStateBuilder.GetEntriesForLevel(GeneratorConfig, level);
+        IslandGeneratorStateBuilder.GetEntriesForLevel(SkyBlockRuntime.GeneratorConfig, level);
 
     private static bool IsGeneratorBlock(Block block)
     {
         var code = block.Code?.ToString();
         return code != null
-            && GeneratorConfig.Levels.Any(level =>
+            && SkyBlockRuntime.GeneratorConfig.Levels.Any(level =>
                 level.Entries.Any(entry => MatchesGeneratorBlockCode(code, entry.BlockCode)));
     }
 
@@ -697,7 +697,7 @@ public sealed partial class SwixySkyBlockMod
 
     private void WarnUnknownGeneratorBlocks(ICoreServerAPI api)
     {
-        foreach (var blockCode in GeneratorConfig.Levels
+        foreach (var blockCode in SkyBlockRuntime.GeneratorConfig.Levels
             .SelectMany(static level => level.Entries)
             .Select(static entry => entry.BlockCode)
             .Where(static code => !string.IsNullOrWhiteSpace(code))
@@ -724,7 +724,7 @@ public sealed partial class SwixySkyBlockMod
         record.GeneratorLevel = Math.Clamp(record.GeneratorLevel, MinGeneratorLevel, GetMaxGeneratorLevel());
 
     private static int GetMaxGeneratorLevel() =>
-        Math.Max(MinGeneratorLevel, IslandGeneratorStateBuilder.GetMaxLevel(GeneratorConfig));
+        Math.Max(MinGeneratorLevel, IslandGeneratorStateBuilder.GetMaxLevel(SkyBlockRuntime.GeneratorConfig));
 
     private readonly record struct ResolvedGeneratorEntry(IReadOnlyList<Block> Blocks, double Chance)
     {

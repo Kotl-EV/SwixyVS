@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using ProtoBuf;
-using static SwixyClaimChunk.Content.ClaimVolumeUtil;
+using static SwixyClaimChunk.Core.ClaimVolumeUtil;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
@@ -14,8 +14,8 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — сервер: клейм и слияние.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: клейм и слияние.</summary>
+public sealed partial class SwixyClaimChunkServerMod
 {
     /// <summary>Переключает клейм чанка: добавить или снять с собственного привата.</summary>
     private ClaimActionResult ToggleChunkClaim(IServerPlayer player, int chunkX, int chunkZ)
@@ -113,7 +113,7 @@ public sealed partial class SwixyClaimChunkMod
 
         // Новый отдельный приват с именем «Claim {ник} {индекс}»
         var claimIndex = GetNextClaimIndex(player, ownClaims);
-        var newClaim = LandClaim.CreateClaim(player, ProtectionLevel);
+        var newClaim = LandClaim.CreateClaim(player, ClaimConstants.ProtectionLevel);
         newClaim.Description = BuildClaimName(player, claimIndex);
         var addError = newClaim.AddArea(area);
         if (addError != EnumClaimError.NoError)

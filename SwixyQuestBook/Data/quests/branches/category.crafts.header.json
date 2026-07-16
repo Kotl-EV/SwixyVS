@@ -1,0 +1,1427 @@
+{
+  "iconItemCode": "game:flaxtwine",
+  "title": {
+    "ar": "Crafts",
+    "be": "Ремесло",
+    "cs": "Crafts",
+    "da": "Crafts",
+    "de": "Handwerk",
+    "en": "Crafts",
+    "eo": "Crafts",
+    "es": "Oficios",
+    "fi": "Crafts",
+    "fr": "Artisanat",
+    "hu": "Crafts",
+    "is": "Crafts",
+    "it": "Artigianato",
+    "ja": "工芸",
+    "ko": "공예",
+    "li": "Crafts",
+    "lt": "Crafts",
+    "nl": "Crafts",
+    "no": "Crafts",
+    "pl": "Rzemiosło",
+    "pt": "Ofícios",
+    "ro": "Crafts",
+    "ru": "Ремесло",
+    "sk": "Crafts",
+    "sr": "Crafts",
+    "sv": "Crafts",
+    "th": "Crafts",
+    "tr": "Zanaat",
+    "uk": "Ремесло",
+    "vi": "Crafts",
+    "zh": "工艺"
+  },
+  "headerTitle": "category.crafts.header",
+  "header": {
+    "ar": "CRAFTS",
+    "be": "РЕМЕСЛО",
+    "cs": "CRAFTS",
+    "da": "CRAFTS",
+    "de": "CRAFTS",
+    "en": "CRAFTS",
+    "eo": "CRAFTS",
+    "es": "CRAFTS",
+    "fi": "CRAFTS",
+    "fr": "CRAFTS",
+    "hu": "CRAFTS",
+    "is": "CRAFTS",
+    "it": "CRAFTS",
+    "ja": "CRAFTS",
+    "ko": "CRAFTS",
+    "li": "CRAFTS",
+    "lt": "CRAFTS",
+    "nl": "CRAFTS",
+    "no": "CRAFTS",
+    "pl": "CRAFTS",
+    "pt": "CRAFTS",
+    "ro": "CRAFTS",
+    "ru": "РЕМЕСЛО",
+    "sk": "CRAFTS",
+    "sr": "CRAFTS",
+    "sv": "CRAFTS",
+    "th": "CRAFTS",
+    "tr": "CRAFTS",
+    "uk": "РЕМЕСЛО",
+    "vi": "CRAFTS",
+    "zh": "CRAFTS"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Crafts. Hands that only mine never build a home.",
+        "be": "Ремесло. Руки, что только копают, не построят дом.",
+        "cs": "Crafts. Hands that only mine never build a home.",
+        "da": "Crafts. Hands that only mine never build a home.",
+        "de": "Crafts. Hands that only mine never build a home.",
+        "en": "Crafts. Hands that only mine never build a home.",
+        "eo": "Crafts. Hands that only mine never build a home.",
+        "es": "Crafts. Hands that only mine never build a home.",
+        "fi": "Crafts. Hands that only mine never build a home.",
+        "fr": "Crafts. Hands that only mine never build a home.",
+        "hu": "Crafts. Hands that only mine never build a home.",
+        "is": "Crafts. Hands that only mine never build a home.",
+        "it": "Crafts. Hands that only mine never build a home.",
+        "ja": "Crafts. Hands that only mine never build a home.",
+        "ko": "Crafts. Hands that only mine never build a home.",
+        "li": "Crafts. Hands that only mine never build a home.",
+        "lt": "Crafts. Hands that only mine never build a home.",
+        "nl": "Crafts. Hands that only mine never build a home.",
+        "no": "Crafts. Hands that only mine never build a home.",
+        "pl": "Crafts. Hands that only mine never build a home.",
+        "pt": "Crafts. Hands that only mine never build a home.",
+        "ro": "Crafts. Hands that only mine never build a home.",
+        "ru": "Ремесло. Руки, что только копают, не построят дом.",
+        "sk": "Crafts. Hands that only mine never build a home.",
+        "sr": "Crafts. Hands that only mine never build a home.",
+        "sv": "Crafts. Hands that only mine never build a home.",
+        "th": "Crafts. Hands that only mine never build a home.",
+        "tr": "Crafts. Hands that only mine never build a home.",
+        "uk": "Ремесло. Руки, что только копают, не построят дом.",
+        "vi": "Crafts. Hands that only mine never build a home.",
+        "zh": "Crafts. Hands that only mine never build a home."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Twine. Everything soft begins with a knot.",
+        "be": "Бечёвка. Всё мягкое начинается с узла.",
+        "cs": "Twine. Everything soft begins with a knot.",
+        "da": "Twine. Everything soft begins with a knot.",
+        "de": "Twine. Everything soft begins with a knot.",
+        "en": "Twine. Everything soft begins with a knot.",
+        "eo": "Twine. Everything soft begins with a knot.",
+        "es": "Twine. Everything soft begins with a knot.",
+        "fi": "Twine. Everything soft begins with a knot.",
+        "fr": "Twine. Everything soft begins with a knot.",
+        "hu": "Twine. Everything soft begins with a knot.",
+        "is": "Twine. Everything soft begins with a knot.",
+        "it": "Twine. Everything soft begins with a knot.",
+        "ja": "Twine. Everything soft begins with a knot.",
+        "ko": "Twine. Everything soft begins with a knot.",
+        "li": "Twine. Everything soft begins with a knot.",
+        "lt": "Twine. Everything soft begins with a knot.",
+        "nl": "Twine. Everything soft begins with a knot.",
+        "no": "Twine. Everything soft begins with a knot.",
+        "pl": "Twine. Everything soft begins with a knot.",
+        "pt": "Twine. Everything soft begins with a knot.",
+        "ro": "Twine. Everything soft begins with a knot.",
+        "ru": "Бечёвка. Всё мягкое начинается с узла.",
+        "sk": "Twine. Everything soft begins with a knot.",
+        "sr": "Twine. Everything soft begins with a knot.",
+        "sv": "Twine. Everything soft begins with a knot.",
+        "th": "Twine. Everything soft begins with a knot.",
+        "tr": "Twine. Everything soft begins with a knot.",
+        "uk": "Бечёвка. Всё мягкое начинается с узла.",
+        "vi": "Twine. Everything soft begins with a knot.",
+        "zh": "Twine. Everything soft begins with a knot."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 16,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Torch. Light is a tool you carry.",
+        "be": "Факел. Свет — инструмент, который носят.",
+        "cs": "Torch. Light is a tool you carry.",
+        "da": "Torch. Light is a tool you carry.",
+        "de": "Torch. Light is a tool you carry.",
+        "en": "Torch. Light is a tool you carry.",
+        "eo": "Torch. Light is a tool you carry.",
+        "es": "Torch. Light is a tool you carry.",
+        "fi": "Torch. Light is a tool you carry.",
+        "fr": "Torch. Light is a tool you carry.",
+        "hu": "Torch. Light is a tool you carry.",
+        "is": "Torch. Light is a tool you carry.",
+        "it": "Torch. Light is a tool you carry.",
+        "ja": "Torch. Light is a tool you carry.",
+        "ko": "Torch. Light is a tool you carry.",
+        "li": "Torch. Light is a tool you carry.",
+        "lt": "Torch. Light is a tool you carry.",
+        "nl": "Torch. Light is a tool you carry.",
+        "no": "Torch. Light is a tool you carry.",
+        "pl": "Torch. Light is a tool you carry.",
+        "pt": "Torch. Light is a tool you carry.",
+        "ro": "Torch. Light is a tool you carry.",
+        "ru": "Факел. Свет — инструмент, который носят.",
+        "sk": "Torch. Light is a tool you carry.",
+        "sr": "Torch. Light is a tool you carry.",
+        "sv": "Torch. Light is a tool you carry.",
+        "th": "Torch. Light is a tool you carry.",
+        "tr": "Torch. Light is a tool you carry.",
+        "uk": "Факел. Свет — инструмент, который носят.",
+        "vi": "Torch. Light is a tool you carry.",
+        "zh": "Torch. Light is a tool you carry."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 12,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A reed basket. Volume is freedom.",
+        "be": "Плетёная корзина. Объём — это свобода.",
+        "cs": "A reed basket. Volume is freedom.",
+        "da": "A reed basket. Volume is freedom.",
+        "de": "A reed basket. Volume is freedom.",
+        "en": "A reed basket. Volume is freedom.",
+        "eo": "A reed basket. Volume is freedom.",
+        "es": "A reed basket. Volume is freedom.",
+        "fi": "A reed basket. Volume is freedom.",
+        "fr": "A reed basket. Volume is freedom.",
+        "hu": "A reed basket. Volume is freedom.",
+        "is": "A reed basket. Volume is freedom.",
+        "it": "A reed basket. Volume is freedom.",
+        "ja": "A reed basket. Volume is freedom.",
+        "ko": "A reed basket. Volume is freedom.",
+        "li": "A reed basket. Volume is freedom.",
+        "lt": "A reed basket. Volume is freedom.",
+        "nl": "A reed basket. Volume is freedom.",
+        "no": "A reed basket. Volume is freedom.",
+        "pl": "A reed basket. Volume is freedom.",
+        "pt": "A reed basket. Volume is freedom.",
+        "ro": "A reed basket. Volume is freedom.",
+        "ru": "Плетёная корзина. Объём — это свобода.",
+        "sk": "A reed basket. Volume is freedom.",
+        "sr": "A reed basket. Volume is freedom.",
+        "sv": "A reed basket. Volume is freedom.",
+        "th": "A reed basket. Volume is freedom.",
+        "tr": "A reed basket. Volume is freedom.",
+        "uk": "Плетёная корзина. Объём — это свобода.",
+        "vi": "A reed basket. Volume is freedom.",
+        "zh": "A reed basket. Volume is freedom."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:basket-normal-reed",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flax fibers stock for more cordage.",
+        "be": "Запас льняного волокна для новых верёвок.",
+        "cs": "Flax fibers stock for more cordage.",
+        "da": "Flax fibers stock for more cordage.",
+        "de": "Flax fibers stock for more cordage.",
+        "en": "Flax fibers stock for more cordage.",
+        "eo": "Flax fibers stock for more cordage.",
+        "es": "Flax fibers stock for more cordage.",
+        "fi": "Flax fibers stock for more cordage.",
+        "fr": "Flax fibers stock for more cordage.",
+        "hu": "Flax fibers stock for more cordage.",
+        "is": "Flax fibers stock for more cordage.",
+        "it": "Flax fibers stock for more cordage.",
+        "ja": "Flax fibers stock for more cordage.",
+        "ko": "Flax fibers stock for more cordage.",
+        "li": "Flax fibers stock for more cordage.",
+        "lt": "Flax fibers stock for more cordage.",
+        "nl": "Flax fibers stock for more cordage.",
+        "no": "Flax fibers stock for more cordage.",
+        "pl": "Flax fibers stock for more cordage.",
+        "pt": "Flax fibers stock for more cordage.",
+        "ro": "Flax fibers stock for more cordage.",
+        "ru": "Запас льняного волокна для новых верёвок.",
+        "sk": "Flax fibers stock for more cordage.",
+        "sr": "Flax fibers stock for more cordage.",
+        "sv": "Flax fibers stock for more cordage.",
+        "th": "Flax fibers stock for more cordage.",
+        "tr": "Flax fibers stock for more cordage.",
+        "uk": "Запас льняного волокна для новых верёвок.",
+        "vi": "Flax fibers stock for more cordage.",
+        "zh": "Flax fibers stock for more cordage."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flaxfibers",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Rope. Stronger than twine for wells and lifts.",
+        "be": "Верёвка. Сильнее бечёвки для колодцев и подъёма.",
+        "cs": "Rope. Stronger than twine for wells and lifts.",
+        "da": "Rope. Stronger than twine for wells and lifts.",
+        "de": "Rope. Stronger than twine for wells and lifts.",
+        "en": "Rope. Stronger than twine for wells and lifts.",
+        "eo": "Rope. Stronger than twine for wells and lifts.",
+        "es": "Rope. Stronger than twine for wells and lifts.",
+        "fi": "Rope. Stronger than twine for wells and lifts.",
+        "fr": "Rope. Stronger than twine for wells and lifts.",
+        "hu": "Rope. Stronger than twine for wells and lifts.",
+        "is": "Rope. Stronger than twine for wells and lifts.",
+        "it": "Rope. Stronger than twine for wells and lifts.",
+        "ja": "Rope. Stronger than twine for wells and lifts.",
+        "ko": "Rope. Stronger than twine for wells and lifts.",
+        "li": "Rope. Stronger than twine for wells and lifts.",
+        "lt": "Rope. Stronger than twine for wells and lifts.",
+        "nl": "Rope. Stronger than twine for wells and lifts.",
+        "no": "Rope. Stronger than twine for wells and lifts.",
+        "pl": "Rope. Stronger than twine for wells and lifts.",
+        "pt": "Rope. Stronger than twine for wells and lifts.",
+        "ro": "Rope. Stronger than twine for wells and lifts.",
+        "ru": "Верёвка. Сильнее бечёвки для колодцев и подъёма.",
+        "sk": "Rope. Stronger than twine for wells and lifts.",
+        "sr": "Rope. Stronger than twine for wells and lifts.",
+        "sv": "Rope. Stronger than twine for wells and lifts.",
+        "th": "Rope. Stronger than twine for wells and lifts.",
+        "tr": "Rope. Stronger than twine for wells and lifts.",
+        "uk": "Верёвка. Сильнее бечёвки для колодцев и подъёма.",
+        "vi": "Rope. Stronger than twine for wells and lifts.",
+        "zh": "Rope. Stronger than twine for wells and lifts."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:rope",
+          "count": 6,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Oak planks. Walls wait in every trunk.",
+        "be": "Дубовые доски. Стены ждут в каждом стволе.",
+        "cs": "Oak planks. Walls wait in every trunk.",
+        "da": "Oak planks. Walls wait in every trunk.",
+        "de": "Oak planks. Walls wait in every trunk.",
+        "en": "Oak planks. Walls wait in every trunk.",
+        "eo": "Oak planks. Walls wait in every trunk.",
+        "es": "Oak planks. Walls wait in every trunk.",
+        "fi": "Oak planks. Walls wait in every trunk.",
+        "fr": "Oak planks. Walls wait in every trunk.",
+        "hu": "Oak planks. Walls wait in every trunk.",
+        "is": "Oak planks. Walls wait in every trunk.",
+        "it": "Oak planks. Walls wait in every trunk.",
+        "ja": "Oak planks. Walls wait in every trunk.",
+        "ko": "Oak planks. Walls wait in every trunk.",
+        "li": "Oak planks. Walls wait in every trunk.",
+        "lt": "Oak planks. Walls wait in every trunk.",
+        "nl": "Oak planks. Walls wait in every trunk.",
+        "no": "Oak planks. Walls wait in every trunk.",
+        "pl": "Oak planks. Walls wait in every trunk.",
+        "pt": "Oak planks. Walls wait in every trunk.",
+        "ro": "Oak planks. Walls wait in every trunk.",
+        "ru": "Дубовые доски. Стены ждут в каждом стволе.",
+        "sk": "Oak planks. Walls wait in every trunk.",
+        "sr": "Oak planks. Walls wait in every trunk.",
+        "sv": "Oak planks. Walls wait in every trunk.",
+        "th": "Oak planks. Walls wait in every trunk.",
+        "tr": "Oak planks. Walls wait in every trunk.",
+        "uk": "Дубовые доски. Стены ждут в каждом стволе.",
+        "vi": "Oak planks. Walls wait in every trunk.",
+        "zh": "Oak planks. Walls wait in every trunk."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 40,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More planks of any wood. Roofs need volume.",
+        "be": "Ещё досок любой древесины. Крышам нужен объём.",
+        "cs": "More planks of any wood. Roofs need volume.",
+        "da": "More planks of any wood. Roofs need volume.",
+        "de": "More planks of any wood. Roofs need volume.",
+        "en": "More planks of any wood. Roofs need volume.",
+        "eo": "More planks of any wood. Roofs need volume.",
+        "es": "More planks of any wood. Roofs need volume.",
+        "fi": "More planks of any wood. Roofs need volume.",
+        "fr": "More planks of any wood. Roofs need volume.",
+        "hu": "More planks of any wood. Roofs need volume.",
+        "is": "More planks of any wood. Roofs need volume.",
+        "it": "More planks of any wood. Roofs need volume.",
+        "ja": "More planks of any wood. Roofs need volume.",
+        "ko": "More planks of any wood. Roofs need volume.",
+        "li": "More planks of any wood. Roofs need volume.",
+        "lt": "More planks of any wood. Roofs need volume.",
+        "nl": "More planks of any wood. Roofs need volume.",
+        "no": "More planks of any wood. Roofs need volume.",
+        "pl": "More planks of any wood. Roofs need volume.",
+        "pt": "More planks of any wood. Roofs need volume.",
+        "ro": "More planks of any wood. Roofs need volume.",
+        "ru": "Ещё досок любой древесины. Крышам нужен объём.",
+        "sk": "More planks of any wood. Roofs need volume.",
+        "sr": "More planks of any wood. Roofs need volume.",
+        "sv": "More planks of any wood. Roofs need volume.",
+        "th": "More planks of any wood. Roofs need volume.",
+        "tr": "More planks of any wood. Roofs need volume.",
+        "uk": "Ещё досок любой древесины. Крышам нужен объём.",
+        "vi": "More planks of any wood. Roofs need volume.",
+        "zh": "More planks of any wood. Roofs need volume."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:plank-*",
+          "count": 64,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:metalnailsandstrips-copper",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A wooden chest. Secrets and grain need lids.",
+        "be": "Деревянный сундук. Секретам и зерну нужны крышки.",
+        "cs": "A wooden chest. Secrets and grain need lids.",
+        "da": "A wooden chest. Secrets and grain need lids.",
+        "de": "A wooden chest. Secrets and grain need lids.",
+        "en": "A wooden chest. Secrets and grain need lids.",
+        "eo": "A wooden chest. Secrets and grain need lids.",
+        "es": "A wooden chest. Secrets and grain need lids.",
+        "fi": "A wooden chest. Secrets and grain need lids.",
+        "fr": "A wooden chest. Secrets and grain need lids.",
+        "hu": "A wooden chest. Secrets and grain need lids.",
+        "is": "A wooden chest. Secrets and grain need lids.",
+        "it": "A wooden chest. Secrets and grain need lids.",
+        "ja": "A wooden chest. Secrets and grain need lids.",
+        "ko": "A wooden chest. Secrets and grain need lids.",
+        "li": "A wooden chest. Secrets and grain need lids.",
+        "lt": "A wooden chest. Secrets and grain need lids.",
+        "nl": "A wooden chest. Secrets and grain need lids.",
+        "no": "A wooden chest. Secrets and grain need lids.",
+        "pl": "A wooden chest. Secrets and grain need lids.",
+        "pt": "A wooden chest. Secrets and grain need lids.",
+        "ro": "A wooden chest. Secrets and grain need lids.",
+        "ru": "Деревянный сундук. Секретам и зерну нужны крышки.",
+        "sk": "A wooden chest. Secrets and grain need lids.",
+        "sr": "A wooden chest. Secrets and grain need lids.",
+        "sv": "A wooden chest. Secrets and grain need lids.",
+        "th": "A wooden chest. Secrets and grain need lids.",
+        "tr": "A wooden chest. Secrets and grain need lids.",
+        "uk": "Деревянный сундук. Секретам и зерну нужны крышки.",
+        "vi": "A wooden chest. Secrets and grain need lids.",
+        "zh": "A wooden chest. Secrets and grain need lids."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:chest-east",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A bed. Sleep is craft for the mind.",
+        "be": "Кровать. Сон — ремесло для ума.",
+        "cs": "A bed. Sleep is craft for the mind.",
+        "da": "A bed. Sleep is craft for the mind.",
+        "de": "A bed. Sleep is craft for the mind.",
+        "en": "A bed. Sleep is craft for the mind.",
+        "eo": "A bed. Sleep is craft for the mind.",
+        "es": "A bed. Sleep is craft for the mind.",
+        "fi": "A bed. Sleep is craft for the mind.",
+        "fr": "A bed. Sleep is craft for the mind.",
+        "hu": "A bed. Sleep is craft for the mind.",
+        "is": "A bed. Sleep is craft for the mind.",
+        "it": "A bed. Sleep is craft for the mind.",
+        "ja": "A bed. Sleep is craft for the mind.",
+        "ko": "A bed. Sleep is craft for the mind.",
+        "li": "A bed. Sleep is craft for the mind.",
+        "lt": "A bed. Sleep is craft for the mind.",
+        "nl": "A bed. Sleep is craft for the mind.",
+        "no": "A bed. Sleep is craft for the mind.",
+        "pl": "A bed. Sleep is craft for the mind.",
+        "pt": "A bed. Sleep is craft for the mind.",
+        "ro": "A bed. Sleep is craft for the mind.",
+        "ru": "Кровать. Сон — ремесло для ума.",
+        "sk": "A bed. Sleep is craft for the mind.",
+        "sr": "A bed. Sleep is craft for the mind.",
+        "sv": "A bed. Sleep is craft for the mind.",
+        "th": "A bed. Sleep is craft for the mind.",
+        "tr": "A bed. Sleep is craft for the mind.",
+        "uk": "Кровать. Сон — ремесло для ума.",
+        "vi": "A bed. Sleep is craft for the mind.",
+        "zh": "A bed. Sleep is craft for the mind."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bed-wood-head-north",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A wooden ladder. Height is also a resource.",
+        "be": "Деревянная лестница. Высота — тоже ресурс.",
+        "cs": "A wooden ladder. Height is also a resource.",
+        "da": "A wooden ladder. Height is also a resource.",
+        "de": "A wooden ladder. Height is also a resource.",
+        "en": "A wooden ladder. Height is also a resource.",
+        "eo": "A wooden ladder. Height is also a resource.",
+        "es": "A wooden ladder. Height is also a resource.",
+        "fi": "A wooden ladder. Height is also a resource.",
+        "fr": "A wooden ladder. Height is also a resource.",
+        "hu": "A wooden ladder. Height is also a resource.",
+        "is": "A wooden ladder. Height is also a resource.",
+        "it": "A wooden ladder. Height is also a resource.",
+        "ja": "A wooden ladder. Height is also a resource.",
+        "ko": "A wooden ladder. Height is also a resource.",
+        "li": "A wooden ladder. Height is also a resource.",
+        "lt": "A wooden ladder. Height is also a resource.",
+        "nl": "A wooden ladder. Height is also a resource.",
+        "no": "A wooden ladder. Height is also a resource.",
+        "pl": "A wooden ladder. Height is also a resource.",
+        "pt": "A wooden ladder. Height is also a resource.",
+        "ro": "A wooden ladder. Height is also a resource.",
+        "ru": "Деревянная лестница. Высота — тоже ресурс.",
+        "sk": "A wooden ladder. Height is also a resource.",
+        "sr": "A wooden ladder. Height is also a resource.",
+        "sv": "A wooden ladder. Height is also a resource.",
+        "th": "A wooden ladder. Height is also a resource.",
+        "tr": "A wooden ladder. Height is also a resource.",
+        "uk": "Деревянная лестница. Высота — тоже ресурс.",
+        "vi": "A wooden ladder. Height is also a resource.",
+        "zh": "A wooden ladder. Height is also a resource."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ladder-wood-oak-north",
+          "count": 4,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A wooden door. Thresholds make a house.",
+        "be": "Деревянная дверь. Пороги делают дом.",
+        "cs": "A wooden door. Thresholds make a house.",
+        "da": "A wooden door. Thresholds make a house.",
+        "de": "A wooden door. Thresholds make a house.",
+        "en": "A wooden door. Thresholds make a house.",
+        "eo": "A wooden door. Thresholds make a house.",
+        "es": "A wooden door. Thresholds make a house.",
+        "fi": "A wooden door. Thresholds make a house.",
+        "fr": "A wooden door. Thresholds make a house.",
+        "hu": "A wooden door. Thresholds make a house.",
+        "is": "A wooden door. Thresholds make a house.",
+        "it": "A wooden door. Thresholds make a house.",
+        "ja": "A wooden door. Thresholds make a house.",
+        "ko": "A wooden door. Thresholds make a house.",
+        "li": "A wooden door. Thresholds make a house.",
+        "lt": "A wooden door. Thresholds make a house.",
+        "nl": "A wooden door. Thresholds make a house.",
+        "no": "A wooden door. Thresholds make a house.",
+        "pl": "A wooden door. Thresholds make a house.",
+        "pt": "A wooden door. Thresholds make a house.",
+        "ro": "A wooden door. Thresholds make a house.",
+        "ru": "Деревянная дверь. Пороги делают дом.",
+        "sk": "A wooden door. Thresholds make a house.",
+        "sr": "A wooden door. Thresholds make a house.",
+        "sv": "A wooden door. Thresholds make a house.",
+        "th": "A wooden door. Thresholds make a house.",
+        "tr": "A wooden door. Thresholds make a house.",
+        "uk": "Деревянная дверь. Пороги делают дом.",
+        "vi": "A wooden door. Thresholds make a house.",
+        "zh": "A wooden door. Thresholds make a house."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:door-sleek-windowed-oak",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fire bricks. Walls that remember heat.",
+        "be": "Огнеупорный кирпич. Стены, что помнят жар.",
+        "cs": "Fire bricks. Walls that remember heat.",
+        "da": "Fire bricks. Walls that remember heat.",
+        "de": "Fire bricks. Walls that remember heat.",
+        "en": "Fire bricks. Walls that remember heat.",
+        "eo": "Fire bricks. Walls that remember heat.",
+        "es": "Fire bricks. Walls that remember heat.",
+        "fi": "Fire bricks. Walls that remember heat.",
+        "fr": "Fire bricks. Walls that remember heat.",
+        "hu": "Fire bricks. Walls that remember heat.",
+        "is": "Fire bricks. Walls that remember heat.",
+        "it": "Fire bricks. Walls that remember heat.",
+        "ja": "Fire bricks. Walls that remember heat.",
+        "ko": "Fire bricks. Walls that remember heat.",
+        "li": "Fire bricks. Walls that remember heat.",
+        "lt": "Fire bricks. Walls that remember heat.",
+        "nl": "Fire bricks. Walls that remember heat.",
+        "no": "Fire bricks. Walls that remember heat.",
+        "pl": "Fire bricks. Walls that remember heat.",
+        "pt": "Fire bricks. Walls that remember heat.",
+        "ro": "Fire bricks. Walls that remember heat.",
+        "ru": "Огнеупорный кирпич. Стены, что помнят жар.",
+        "sk": "Fire bricks. Walls that remember heat.",
+        "sr": "Fire bricks. Walls that remember heat.",
+        "sv": "Fire bricks. Walls that remember heat.",
+        "th": "Fire bricks. Walls that remember heat.",
+        "tr": "Fire bricks. Walls that remember heat.",
+        "uk": "Огнеупорный кирпич. Стены, что помнят жар.",
+        "vi": "Fire bricks. Walls that remember heat.",
+        "zh": "Fire bricks. Walls that remember heat."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:refractorybrick-raw-tier1",
+          "count": 12,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Beeswax. Candles and polish from the hive.",
+        "be": "Пчелиный воск. Свечи и полировка из улья.",
+        "cs": "Beeswax. Candles and polish from the hive.",
+        "da": "Beeswax. Candles and polish from the hive.",
+        "de": "Beeswax. Candles and polish from the hive.",
+        "en": "Beeswax. Candles and polish from the hive.",
+        "eo": "Beeswax. Candles and polish from the hive.",
+        "es": "Beeswax. Candles and polish from the hive.",
+        "fi": "Beeswax. Candles and polish from the hive.",
+        "fr": "Beeswax. Candles and polish from the hive.",
+        "hu": "Beeswax. Candles and polish from the hive.",
+        "is": "Beeswax. Candles and polish from the hive.",
+        "it": "Beeswax. Candles and polish from the hive.",
+        "ja": "Beeswax. Candles and polish from the hive.",
+        "ko": "Beeswax. Candles and polish from the hive.",
+        "li": "Beeswax. Candles and polish from the hive.",
+        "lt": "Beeswax. Candles and polish from the hive.",
+        "nl": "Beeswax. Candles and polish from the hive.",
+        "no": "Beeswax. Candles and polish from the hive.",
+        "pl": "Beeswax. Candles and polish from the hive.",
+        "pt": "Beeswax. Candles and polish from the hive.",
+        "ro": "Beeswax. Candles and polish from the hive.",
+        "ru": "Пчелиный воск. Свечи и полировка из улья.",
+        "sk": "Beeswax. Candles and polish from the hive.",
+        "sr": "Beeswax. Candles and polish from the hive.",
+        "sv": "Beeswax. Candles and polish from the hive.",
+        "th": "Beeswax. Candles and polish from the hive.",
+        "tr": "Beeswax. Candles and polish from the hive.",
+        "uk": "Пчелиный воск. Свечи и полировка из улья.",
+        "vi": "Beeswax. Candles and polish from the hive.",
+        "zh": "Beeswax. Candles and polish from the hive."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:beeswax",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:honeycomb",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Candles. Soft light when torches are too loud.",
+        "be": "Свечи. Мягкий свет, когда факелы слишком громки.",
+        "cs": "Candles. Soft light when torches are too loud.",
+        "da": "Candles. Soft light when torches are too loud.",
+        "de": "Candles. Soft light when torches are too loud.",
+        "en": "Candles. Soft light when torches are too loud.",
+        "eo": "Candles. Soft light when torches are too loud.",
+        "es": "Candles. Soft light when torches are too loud.",
+        "fi": "Candles. Soft light when torches are too loud.",
+        "fr": "Candles. Soft light when torches are too loud.",
+        "hu": "Candles. Soft light when torches are too loud.",
+        "is": "Candles. Soft light when torches are too loud.",
+        "it": "Candles. Soft light when torches are too loud.",
+        "ja": "Candles. Soft light when torches are too loud.",
+        "ko": "Candles. Soft light when torches are too loud.",
+        "li": "Candles. Soft light when torches are too loud.",
+        "lt": "Candles. Soft light when torches are too loud.",
+        "nl": "Candles. Soft light when torches are too loud.",
+        "no": "Candles. Soft light when torches are too loud.",
+        "pl": "Candles. Soft light when torches are too loud.",
+        "pt": "Candles. Soft light when torches are too loud.",
+        "ro": "Candles. Soft light when torches are too loud.",
+        "ru": "Свечи. Мягкий свет, когда факелы слишком громки.",
+        "sk": "Candles. Soft light when torches are too loud.",
+        "sr": "Candles. Soft light when torches are too loud.",
+        "sv": "Candles. Soft light when torches are too loud.",
+        "th": "Candles. Soft light when torches are too loud.",
+        "tr": "Candles. Soft light when torches are too loud.",
+        "uk": "Свечи. Мягкий свет, когда факелы слишком громки.",
+        "vi": "Candles. Soft light when torches are too loud.",
+        "zh": "Candles. Soft light when torches are too loud."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:candle",
+          "count": 8,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:beeswax",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Resin for glue and seals.",
+        "be": "Смола для клея и уплотнений.",
+        "cs": "Resin for glue and seals.",
+        "da": "Resin for glue and seals.",
+        "de": "Resin for glue and seals.",
+        "en": "Resin for glue and seals.",
+        "eo": "Resin for glue and seals.",
+        "es": "Resin for glue and seals.",
+        "fi": "Resin for glue and seals.",
+        "fr": "Resin for glue and seals.",
+        "hu": "Resin for glue and seals.",
+        "is": "Resin for glue and seals.",
+        "it": "Resin for glue and seals.",
+        "ja": "Resin for glue and seals.",
+        "ko": "Resin for glue and seals.",
+        "li": "Resin for glue and seals.",
+        "lt": "Resin for glue and seals.",
+        "nl": "Resin for glue and seals.",
+        "no": "Resin for glue and seals.",
+        "pl": "Resin for glue and seals.",
+        "pt": "Resin for glue and seals.",
+        "ro": "Resin for glue and seals.",
+        "ru": "Смола для клея и уплотнений.",
+        "sk": "Resin for glue and seals.",
+        "sr": "Resin for glue and seals.",
+        "sv": "Resin for glue and seals.",
+        "th": "Resin for glue and seals.",
+        "tr": "Resin for glue and seals.",
+        "uk": "Смола для клея и уплотнений.",
+        "vi": "Resin for glue and seals.",
+        "zh": "Resin for glue and seals."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:resin",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Leather plain. Soft armor of craft and travel.",
+        "be": "Обычная кожа. Мягкая броня ремесла и дороги.",
+        "cs": "Leather plain. Soft armor of craft and travel.",
+        "da": "Leather plain. Soft armor of craft and travel.",
+        "de": "Leather plain. Soft armor of craft and travel.",
+        "en": "Leather plain. Soft armor of craft and travel.",
+        "eo": "Leather plain. Soft armor of craft and travel.",
+        "es": "Leather plain. Soft armor of craft and travel.",
+        "fi": "Leather plain. Soft armor of craft and travel.",
+        "fr": "Leather plain. Soft armor of craft and travel.",
+        "hu": "Leather plain. Soft armor of craft and travel.",
+        "is": "Leather plain. Soft armor of craft and travel.",
+        "it": "Leather plain. Soft armor of craft and travel.",
+        "ja": "Leather plain. Soft armor of craft and travel.",
+        "ko": "Leather plain. Soft armor of craft and travel.",
+        "li": "Leather plain. Soft armor of craft and travel.",
+        "lt": "Leather plain. Soft armor of craft and travel.",
+        "nl": "Leather plain. Soft armor of craft and travel.",
+        "no": "Leather plain. Soft armor of craft and travel.",
+        "pl": "Leather plain. Soft armor of craft and travel.",
+        "pt": "Leather plain. Soft armor of craft and travel.",
+        "ro": "Leather plain. Soft armor of craft and travel.",
+        "ru": "Обычная кожа. Мягкая броня ремесла и дороги.",
+        "sk": "Leather plain. Soft armor of craft and travel.",
+        "sr": "Leather plain. Soft armor of craft and travel.",
+        "sv": "Leather plain. Soft armor of craft and travel.",
+        "th": "Leather plain. Soft armor of craft and travel.",
+        "tr": "Leather plain. Soft armor of craft and travel.",
+        "uk": "Обычная кожа. Мягкая броня ремесла и дороги.",
+        "vi": "Leather plain. Soft armor of craft and travel.",
+        "zh": "Leather plain. Soft armor of craft and travel."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:leather-normal-plain",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A brass torch holder. Mark what you built with light.",
+        "be": "Латунная подставка под факел. Отметь постройку светом.",
+        "cs": "A brass torch holder. Mark what you built with light.",
+        "da": "A brass torch holder. Mark what you built with light.",
+        "de": "A brass torch holder. Mark what you built with light.",
+        "en": "A brass torch holder. Mark what you built with light.",
+        "eo": "A brass torch holder. Mark what you built with light.",
+        "es": "A brass torch holder. Mark what you built with light.",
+        "fi": "A brass torch holder. Mark what you built with light.",
+        "fr": "A brass torch holder. Mark what you built with light.",
+        "hu": "A brass torch holder. Mark what you built with light.",
+        "is": "A brass torch holder. Mark what you built with light.",
+        "it": "A brass torch holder. Mark what you built with light.",
+        "ja": "A brass torch holder. Mark what you built with light.",
+        "ko": "A brass torch holder. Mark what you built with light.",
+        "li": "A brass torch holder. Mark what you built with light.",
+        "lt": "A brass torch holder. Mark what you built with light.",
+        "nl": "A brass torch holder. Mark what you built with light.",
+        "no": "A brass torch holder. Mark what you built with light.",
+        "pl": "A brass torch holder. Mark what you built with light.",
+        "pt": "A brass torch holder. Mark what you built with light.",
+        "ro": "A brass torch holder. Mark what you built with light.",
+        "ru": "Латунная подставка под факел. Отметь постройку светом.",
+        "sk": "A brass torch holder. Mark what you built with light.",
+        "sr": "A brass torch holder. Mark what you built with light.",
+        "sv": "A brass torch holder. Mark what you built with light.",
+        "th": "A brass torch holder. Mark what you built with light.",
+        "tr": "A brass torch holder. Mark what you built with light.",
+        "uk": "Латунная подставка под факел. Отметь постройку светом.",
+        "vi": "A brass torch holder. Mark what you built with light.",
+        "zh": "A brass torch holder. Mark what you built with light."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:torchholder-brass-empty-north",
+          "count": 1,
+          "objective": "detect",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper nails for strong joints.",
+        "be": "Медные гвозди для крепких стыков.",
+        "cs": "Copper nails for strong joints.",
+        "da": "Copper nails for strong joints.",
+        "de": "Copper nails for strong joints.",
+        "en": "Copper nails for strong joints.",
+        "eo": "Copper nails for strong joints.",
+        "es": "Copper nails for strong joints.",
+        "fi": "Copper nails for strong joints.",
+        "fr": "Copper nails for strong joints.",
+        "hu": "Copper nails for strong joints.",
+        "is": "Copper nails for strong joints.",
+        "it": "Copper nails for strong joints.",
+        "ja": "Copper nails for strong joints.",
+        "ko": "Copper nails for strong joints.",
+        "li": "Copper nails for strong joints.",
+        "lt": "Copper nails for strong joints.",
+        "nl": "Copper nails for strong joints.",
+        "no": "Copper nails for strong joints.",
+        "pl": "Copper nails for strong joints.",
+        "pt": "Copper nails for strong joints.",
+        "ro": "Copper nails for strong joints.",
+        "ru": "Медные гвозди для крепких стыков.",
+        "sk": "Copper nails for strong joints.",
+        "sr": "Copper nails for strong joints.",
+        "sv": "Copper nails for strong joints.",
+        "th": "Copper nails for strong joints.",
+        "tr": "Copper nails for strong joints.",
+        "uk": "Медные гвозди для крепких стыков.",
+        "vi": "Copper nails for strong joints.",
+        "zh": "Copper nails for strong joints."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalnailsandstrips-copper",
+          "count": 32,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 19,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Second chest for the growing household.",
+        "be": "Второй сундук для растущего хозяйства.",
+        "cs": "Second chest for the growing household.",
+        "da": "Second chest for the growing household.",
+        "de": "Second chest for the growing household.",
+        "en": "Second chest for the growing household.",
+        "eo": "Second chest for the growing household.",
+        "es": "Second chest for the growing household.",
+        "fi": "Second chest for the growing household.",
+        "fr": "Second chest for the growing household.",
+        "hu": "Second chest for the growing household.",
+        "is": "Second chest for the growing household.",
+        "it": "Second chest for the growing household.",
+        "ja": "Second chest for the growing household.",
+        "ko": "Second chest for the growing household.",
+        "li": "Second chest for the growing household.",
+        "lt": "Second chest for the growing household.",
+        "nl": "Second chest for the growing household.",
+        "no": "Second chest for the growing household.",
+        "pl": "Second chest for the growing household.",
+        "pt": "Second chest for the growing household.",
+        "ro": "Second chest for the growing household.",
+        "ru": "Второй сундук для растущего хозяйства.",
+        "sk": "Second chest for the growing household.",
+        "sr": "Second chest for the growing household.",
+        "sv": "Second chest for the growing household.",
+        "th": "Second chest for the growing household.",
+        "tr": "Second chest for the growing household.",
+        "uk": "Второй сундук для растущего хозяйства.",
+        "vi": "Second chest for the growing household.",
+        "zh": "Second chest for the growing household."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:chest-east",
+          "count": 2,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Thatch for soft roofs over workshops.",
+        "be": "Солома/тростник для мягких крыш над мастерскими.",
+        "cs": "Thatch for soft roofs over workshops.",
+        "da": "Thatch for soft roofs over workshops.",
+        "de": "Thatch for soft roofs over workshops.",
+        "en": "Thatch for soft roofs over workshops.",
+        "eo": "Thatch for soft roofs over workshops.",
+        "es": "Thatch for soft roofs over workshops.",
+        "fi": "Thatch for soft roofs over workshops.",
+        "fr": "Thatch for soft roofs over workshops.",
+        "hu": "Thatch for soft roofs over workshops.",
+        "is": "Thatch for soft roofs over workshops.",
+        "it": "Thatch for soft roofs over workshops.",
+        "ja": "Thatch for soft roofs over workshops.",
+        "ko": "Thatch for soft roofs over workshops.",
+        "li": "Thatch for soft roofs over workshops.",
+        "lt": "Thatch for soft roofs over workshops.",
+        "nl": "Thatch for soft roofs over workshops.",
+        "no": "Thatch for soft roofs over workshops.",
+        "pl": "Thatch for soft roofs over workshops.",
+        "pt": "Thatch for soft roofs over workshops.",
+        "ro": "Thatch for soft roofs over workshops.",
+        "ru": "Солома/тростник для мягких крыш над мастерскими.",
+        "sk": "Thatch for soft roofs over workshops.",
+        "sr": "Thatch for soft roofs over workshops.",
+        "sv": "Thatch for soft roofs over workshops.",
+        "th": "Thatch for soft roofs over workshops.",
+        "tr": "Thatch for soft roofs over workshops.",
+        "uk": "Солома/тростник для мягких крыш над мастерскими.",
+        "vi": "Thatch for soft roofs over workshops.",
+        "zh": "Thatch for soft roofs over workshops."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:thatch",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 21,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Crafts path complete. Tools and shelter now share one roof.",
+        "be": "Путь ремесла завершён. Инструменты и кров делят одну крышу.",
+        "cs": "Crafts path complete. Tools and shelter now share one roof.",
+        "da": "Crafts path complete. Tools and shelter now share one roof.",
+        "de": "Crafts path complete. Tools and shelter now share one roof.",
+        "en": "Crafts path complete. Tools and shelter now share one roof.",
+        "eo": "Crafts path complete. Tools and shelter now share one roof.",
+        "es": "Crafts path complete. Tools and shelter now share one roof.",
+        "fi": "Crafts path complete. Tools and shelter now share one roof.",
+        "fr": "Crafts path complete. Tools and shelter now share one roof.",
+        "hu": "Crafts path complete. Tools and shelter now share one roof.",
+        "is": "Crafts path complete. Tools and shelter now share one roof.",
+        "it": "Crafts path complete. Tools and shelter now share one roof.",
+        "ja": "Crafts path complete. Tools and shelter now share one roof.",
+        "ko": "Crafts path complete. Tools and shelter now share one roof.",
+        "li": "Crafts path complete. Tools and shelter now share one roof.",
+        "lt": "Crafts path complete. Tools and shelter now share one roof.",
+        "nl": "Crafts path complete. Tools and shelter now share one roof.",
+        "no": "Crafts path complete. Tools and shelter now share one roof.",
+        "pl": "Crafts path complete. Tools and shelter now share one roof.",
+        "pt": "Crafts path complete. Tools and shelter now share one roof.",
+        "ro": "Crafts path complete. Tools and shelter now share one roof.",
+        "ru": "Путь ремесла завершён. Инструменты и кров делят одну крышу.",
+        "sk": "Crafts path complete. Tools and shelter now share one roof.",
+        "sr": "Crafts path complete. Tools and shelter now share one roof.",
+        "sv": "Crafts path complete. Tools and shelter now share one roof.",
+        "th": "Crafts path complete. Tools and shelter now share one roof.",
+        "tr": "Crafts path complete. Tools and shelter now share one roof.",
+        "uk": "Путь ремесла завершён. Инструменты и кров делят одну крышу.",
+        "vi": "Crafts path complete. Tools and shelter now share one roof.",
+        "zh": "Crafts path complete. Tools and shelter now share one roof."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 22,
+      "x": -120,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Papyrus tops if marshes allow — another weave for baskets.",
+        "be": "Верхушки папируса, если есть болота — другое плетение для корзин.",
+        "cs": "Papyrus tops if marshes allow — another weave for baskets.",
+        "da": "Papyrus tops if marshes allow — another weave for baskets.",
+        "de": "Papyrus tops if marshes allow — another weave for baskets.",
+        "en": "Papyrus tops if marshes allow — another weave for baskets.",
+        "eo": "Papyrus tops if marshes allow — another weave for baskets.",
+        "es": "Papyrus tops if marshes allow — another weave for baskets.",
+        "fi": "Papyrus tops if marshes allow — another weave for baskets.",
+        "fr": "Papyrus tops if marshes allow — another weave for baskets.",
+        "hu": "Papyrus tops if marshes allow — another weave for baskets.",
+        "is": "Papyrus tops if marshes allow — another weave for baskets.",
+        "it": "Papyrus tops if marshes allow — another weave for baskets.",
+        "ja": "Papyrus tops if marshes allow — another weave for baskets.",
+        "ko": "Papyrus tops if marshes allow — another weave for baskets.",
+        "li": "Papyrus tops if marshes allow — another weave for baskets.",
+        "lt": "Papyrus tops if marshes allow — another weave for baskets.",
+        "nl": "Papyrus tops if marshes allow — another weave for baskets.",
+        "no": "Papyrus tops if marshes allow — another weave for baskets.",
+        "pl": "Papyrus tops if marshes allow — another weave for baskets.",
+        "pt": "Papyrus tops if marshes allow — another weave for baskets.",
+        "ro": "Papyrus tops if marshes allow — another weave for baskets.",
+        "ru": "Верхушки папируса, если есть болота — другое плетение для корзин.",
+        "sk": "Papyrus tops if marshes allow — another weave for baskets.",
+        "sr": "Papyrus tops if marshes allow — another weave for baskets.",
+        "sv": "Papyrus tops if marshes allow — another weave for baskets.",
+        "th": "Papyrus tops if marshes allow — another weave for baskets.",
+        "tr": "Papyrus tops if marshes allow — another weave for baskets.",
+        "uk": "Верхушки папируса, если есть болота — другое плетение для корзин.",
+        "vi": "Papyrus tops if marshes allow — another weave for baskets.",
+        "zh": "Papyrus tops if marshes allow — another weave for baskets."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:papyrustops",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:cattailtops",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 5
+    }
+  ],
+  "nextNodeId": 23
+}

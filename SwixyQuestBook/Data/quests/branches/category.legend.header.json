@@ -1,0 +1,1639 @@
+{
+  "iconItemCode": "game:gear-rusty",
+  "title": {
+    "ar": "Legend",
+    "be": "Сказание",
+    "cs": "Legenda",
+    "da": "Legende",
+    "de": "Legende",
+    "en": "Legend",
+    "eo": "Legend",
+    "es": "Leyenda",
+    "fi": "Legenda",
+    "fr": "Légende",
+    "hu": "Legenda",
+    "is": "Legend",
+    "it": "Leggenda",
+    "ja": "伝説",
+    "ko": "전설",
+    "li": "Legend",
+    "lt": "Legenda",
+    "nl": "Legende",
+    "no": "Legende",
+    "pl": "Legenda",
+    "pt": "Lenda",
+    "ro": "Legendă",
+    "ru": "Сказание",
+    "sk": "Legenda",
+    "sr": "Legend",
+    "sv": "Legend",
+    "th": "Legend",
+    "tr": "Efsane",
+    "uk": "Сказание",
+    "vi": "Huyền thoại",
+    "zh": "传说"
+  },
+  "headerTitle": "category.legend.header",
+  "header": {
+    "ar": "EMBERSTAR PATH",
+    "be": "ПУТЬ УГОЛЬНОЙ ЗВЕЗДЫ",
+    "cs": "EMBERSTAR PATH",
+    "da": "EMBERSTAR PATH",
+    "de": "PFAD DER GLUTSTERN",
+    "en": "EMBERSTAR PATH",
+    "eo": "EMBERSTAR PATH",
+    "es": "SENDA DE LA ESTRELLA DE BRASA",
+    "fi": "EMBERSTAR PATH",
+    "fr": "VOIE DE L'ÉTOILE DE BRAISE",
+    "hu": "EMBERSTAR PATH",
+    "is": "EMBERSTAR PATH",
+    "it": "EMBERSTAR PATH",
+    "ja": "EMBERSターの道",
+    "ko": "EMBERSTAR PATH",
+    "li": "EMBERSTAR PATH",
+    "lt": "EMBERSTAR PATH",
+    "nl": "EMBERSTAR PATH",
+    "no": "EMBERSTAR PATH",
+    "pl": "ŚCIEŻKA WĘGLOWEJ GWIAZDY",
+    "pt": "EMBERSTAR PATH",
+    "ro": "EMBERSTAR PATH",
+    "ru": "ПУТЬ УГОЛЬНОЙ ЗВЕЗДЫ",
+    "sk": "EMBERSTAR PATH",
+    "sr": "EMBERSTAR PATH",
+    "sv": "EMBERSTAR PATH",
+    "th": "EMBERSTAR PATH",
+    "tr": "EMBERSTAR PATH",
+    "uk": "ПУТЬ УГОЛЬНОЙ ЗВЕЗДЫ",
+    "vi": "EMBERSTAR PATH",
+    "zh": "余烬星之路"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "be": "В кармане — обгоревший дневник кузнеца Эры. На обложке уголёк в форме звезды. «Кто найдёт мой путь — найдёт последнюю кузню».",
+        "cs": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "da": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "de": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "en": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "eo": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "es": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "fi": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "fr": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "hu": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "is": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "it": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "ja": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "ko": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "li": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "lt": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "nl": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "no": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "pl": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "pt": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "ro": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "ru": "В кармане — обгоревший дневник кузнеца Эры. На обложке уголёк в форме звезды. «Кто найдёт мой путь — найдёт последнюю кузню».",
+        "sk": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "sr": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "sv": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "th": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "tr": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "uk": "В кармане — обгоревший дневник кузнеца Эры. На обложке уголёк в форме звезды. «Кто найдёт мой путь — найдёт последнюю кузню».",
+        "vi": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”",
+        "zh": "In your pocket: a scorched journal by a smith named Era. On the cover, a coal shaped like a star. “Find my path — find the last forge.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 0,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "be": "Первая запись: «Начни с дерева. Палки помнят, откуда ветер». Собери палки.",
+        "cs": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "da": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "de": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "en": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "eo": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "es": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "fi": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "fr": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "hu": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "is": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "it": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "ja": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "ko": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "li": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "lt": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "nl": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "no": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "pl": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "pt": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "ro": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "ru": "Первая запись: «Начни с дерева. Палки помнят, откуда ветер». Собери палки.",
+        "sk": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "sr": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "sv": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "th": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "tr": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "uk": "Первая запись: «Начни с дерева. Палки помнят, откуда ветер». Собери палки.",
+        "vi": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks.",
+        "zh": "First note: “Begin with wood. Sticks remember the wind.” Gather sticks."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 0,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "be": "«Трава сухая, как старые письма». Собери сухую траву. Эра писала при костре.",
+        "cs": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "da": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "de": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "en": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "eo": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "es": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "fi": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "fr": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "hu": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "is": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "it": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "ja": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "ko": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "li": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "lt": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "nl": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "no": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "pl": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "pt": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "ro": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "ru": "«Трава сухая, как старые письма». Собери сухую траву. Эра писала при костре.",
+        "sk": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "sr": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "sv": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "th": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "tr": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "uk": "«Трава сухая, как старые письма». Собери сухую траву. Эра писала при костре.",
+        "vi": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight.",
+        "zh": "“Grass dry as old letters.” Collect tinder. Era wrote by firelight."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:drygrass",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "be": "«Огонь — единственный свидетель». Запаси дрова.",
+        "cs": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "da": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "de": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "en": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "eo": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "es": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "fi": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "fr": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "hu": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "is": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "it": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "ja": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "ko": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "li": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "lt": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "nl": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "no": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "pl": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "pt": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "ro": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "ru": "«Огонь — единственный свидетель». Запаси дрова.",
+        "sk": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "sr": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "sv": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "th": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "tr": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "uk": "«Огонь — единственный свидетель». Запаси дрова.",
+        "vi": "“Fire is the only witness.” Stock firewood so the journal won’t shiver.",
+        "zh": "“Fire is the only witness.” Stock firewood so the journal won’t shiver."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 4,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Craft basic torches. Night is a room without a door.",
+        "be": "Скрафти факелы. Ночь — комната без двери.",
+        "cs": "Craft basic torches. Night is a room without a door.",
+        "da": "Craft basic torches. Night is a room without a door.",
+        "de": "Craft basic torches. Night is a room without a door.",
+        "en": "Craft basic torches. Night is a room without a door.",
+        "eo": "Craft basic torches. Night is a room without a door.",
+        "es": "Craft basic torches. Night is a room without a door.",
+        "fi": "Craft basic torches. Night is a room without a door.",
+        "fr": "Craft basic torches. Night is a room without a door.",
+        "hu": "Craft basic torches. Night is a room without a door.",
+        "is": "Craft basic torches. Night is a room without a door.",
+        "it": "Craft basic torches. Night is a room without a door.",
+        "ja": "Craft basic torches. Night is a room without a door.",
+        "ko": "Craft basic torches. Night is a room without a door.",
+        "li": "Craft basic torches. Night is a room without a door.",
+        "lt": "Craft basic torches. Night is a room without a door.",
+        "nl": "Craft basic torches. Night is a room without a door.",
+        "no": "Craft basic torches. Night is a room without a door.",
+        "pl": "Craft basic torches. Night is a room without a door.",
+        "pt": "Craft basic torches. Night is a room without a door.",
+        "ro": "Craft basic torches. Night is a room without a door.",
+        "ru": "Скрафти факелы. Ночь — комната без двери.",
+        "sk": "Craft basic torches. Night is a room without a door.",
+        "sr": "Craft basic torches. Night is a room without a door.",
+        "sv": "Craft basic torches. Night is a room without a door.",
+        "th": "Craft basic torches. Night is a room without a door.",
+        "tr": "Craft basic torches. Night is a room without a door.",
+        "uk": "Скрафти факелы. Ночь — комната без двери.",
+        "vi": "Craft basic torches. Night is a room without a door.",
+        "zh": "Craft basic torches. Night is a room without a door."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 8,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "be": "Стоянка держится. На полях дневника: камень → глина → медь…",
+        "cs": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "da": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "de": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "en": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "eo": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "es": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "fi": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "fr": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "hu": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "is": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "it": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "ja": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "ko": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "li": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "lt": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "nl": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "no": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "pl": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "pt": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "ro": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "ru": "Стоянка держится. На полях дневника: камень → глина → медь…",
+        "sk": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "sr": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "sv": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "th": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "tr": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "uk": "Стоянка держится. На полях дневника: камень → глина → медь…",
+        "vi": "Your camp holds. A map bleeds through the page: stone → clay → copper…",
+        "zh": "Your camp holds. A map bleeds through the page: stone → clay → copper…"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 6,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "be": "«Кремень режет тьму». Найди кремень.",
+        "cs": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "da": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "de": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "en": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "eo": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "es": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "fi": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "fr": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "hu": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "is": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "it": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "ja": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "ko": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "li": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "lt": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "nl": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "no": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "pl": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "pt": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "ro": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "ru": "«Кремень режет тьму». Найди кремень.",
+        "sk": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "sr": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "sv": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "th": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "tr": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "uk": "«Кремень режет тьму». Найди кремень.",
+        "vi": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike.",
+        "zh": "“Flint cuts the dark.” Find flint — Era sharpened blades and thoughts alike."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 7,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Loose stones for knapping. Strike stone on stone.",
+        "be": "Камни для оббивки. Ударь камень о камень.",
+        "cs": "Loose stones for knapping. Strike stone on stone.",
+        "da": "Loose stones for knapping. Strike stone on stone.",
+        "de": "Loose stones for knapping. Strike stone on stone.",
+        "en": "Loose stones for knapping. Strike stone on stone.",
+        "eo": "Loose stones for knapping. Strike stone on stone.",
+        "es": "Loose stones for knapping. Strike stone on stone.",
+        "fi": "Loose stones for knapping. Strike stone on stone.",
+        "fr": "Loose stones for knapping. Strike stone on stone.",
+        "hu": "Loose stones for knapping. Strike stone on stone.",
+        "is": "Loose stones for knapping. Strike stone on stone.",
+        "it": "Loose stones for knapping. Strike stone on stone.",
+        "ja": "Loose stones for knapping. Strike stone on stone.",
+        "ko": "Loose stones for knapping. Strike stone on stone.",
+        "li": "Loose stones for knapping. Strike stone on stone.",
+        "lt": "Loose stones for knapping. Strike stone on stone.",
+        "nl": "Loose stones for knapping. Strike stone on stone.",
+        "no": "Loose stones for knapping. Strike stone on stone.",
+        "pl": "Loose stones for knapping. Strike stone on stone.",
+        "pt": "Loose stones for knapping. Strike stone on stone.",
+        "ro": "Loose stones for knapping. Strike stone on stone.",
+        "ru": "Камни для оббивки. Ударь камень о камень.",
+        "sk": "Loose stones for knapping. Strike stone on stone.",
+        "sr": "Loose stones for knapping. Strike stone on stone.",
+        "sv": "Loose stones for knapping. Strike stone on stone.",
+        "th": "Loose stones for knapping. Strike stone on stone.",
+        "tr": "Loose stones for knapping. Strike stone on stone.",
+        "uk": "Камни для оббивки. Ударь камень о камень.",
+        "vi": "Loose stones for knapping. Strike stone on stone.",
+        "zh": "Loose stones for knapping. Strike stone on stone."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:stone-*",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 240,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Clay listens to fire better than people.” Bring blue clay.",
+        "be": "«Глина слушает огонь лучше, чем люди». Принеси синюю глину.",
+        "cs": "“Clay listens to fire better than people.” Bring blue clay.",
+        "da": "“Clay listens to fire better than people.” Bring blue clay.",
+        "de": "“Clay listens to fire better than people.” Bring blue clay.",
+        "en": "“Clay listens to fire better than people.” Bring blue clay.",
+        "eo": "“Clay listens to fire better than people.” Bring blue clay.",
+        "es": "“Clay listens to fire better than people.” Bring blue clay.",
+        "fi": "“Clay listens to fire better than people.” Bring blue clay.",
+        "fr": "“Clay listens to fire better than people.” Bring blue clay.",
+        "hu": "“Clay listens to fire better than people.” Bring blue clay.",
+        "is": "“Clay listens to fire better than people.” Bring blue clay.",
+        "it": "“Clay listens to fire better than people.” Bring blue clay.",
+        "ja": "“Clay listens to fire better than people.” Bring blue clay.",
+        "ko": "“Clay listens to fire better than people.” Bring blue clay.",
+        "li": "“Clay listens to fire better than people.” Bring blue clay.",
+        "lt": "“Clay listens to fire better than people.” Bring blue clay.",
+        "nl": "“Clay listens to fire better than people.” Bring blue clay.",
+        "no": "“Clay listens to fire better than people.” Bring blue clay.",
+        "pl": "“Clay listens to fire better than people.” Bring blue clay.",
+        "pt": "“Clay listens to fire better than people.” Bring blue clay.",
+        "ro": "“Clay listens to fire better than people.” Bring blue clay.",
+        "ru": "«Глина слушает огонь лучше, чем люди». Принеси синюю глину.",
+        "sk": "“Clay listens to fire better than people.” Bring blue clay.",
+        "sr": "“Clay listens to fire better than people.” Bring blue clay.",
+        "sv": "“Clay listens to fire better than people.” Bring blue clay.",
+        "th": "“Clay listens to fire better than people.” Bring blue clay.",
+        "tr": "“Clay listens to fire better than people.” Bring blue clay.",
+        "uk": "«Глина слушает огонь лучше, чем люди». Принеси синюю глину.",
+        "vi": "“Clay listens to fire better than people.” Bring blue clay.",
+        "zh": "“Clay listens to fire better than people.” Bring blue clay."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -840,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fire clay for heat that shatters ordinary pots.",
+        "be": "Огнеупорная глина — для жара, что ломает простые горшки.",
+        "cs": "Fire clay for heat that shatters ordinary pots.",
+        "da": "Fire clay for heat that shatters ordinary pots.",
+        "de": "Fire clay for heat that shatters ordinary pots.",
+        "en": "Fire clay for heat that shatters ordinary pots.",
+        "eo": "Fire clay for heat that shatters ordinary pots.",
+        "es": "Fire clay for heat that shatters ordinary pots.",
+        "fi": "Fire clay for heat that shatters ordinary pots.",
+        "fr": "Fire clay for heat that shatters ordinary pots.",
+        "hu": "Fire clay for heat that shatters ordinary pots.",
+        "is": "Fire clay for heat that shatters ordinary pots.",
+        "it": "Fire clay for heat that shatters ordinary pots.",
+        "ja": "Fire clay for heat that shatters ordinary pots.",
+        "ko": "Fire clay for heat that shatters ordinary pots.",
+        "li": "Fire clay for heat that shatters ordinary pots.",
+        "lt": "Fire clay for heat that shatters ordinary pots.",
+        "nl": "Fire clay for heat that shatters ordinary pots.",
+        "no": "Fire clay for heat that shatters ordinary pots.",
+        "pl": "Fire clay for heat that shatters ordinary pots.",
+        "pt": "Fire clay for heat that shatters ordinary pots.",
+        "ro": "Fire clay for heat that shatters ordinary pots.",
+        "ru": "Огнеупорная глина — для жара, что ломает простые горшки.",
+        "sk": "Fire clay for heat that shatters ordinary pots.",
+        "sr": "Fire clay for heat that shatters ordinary pots.",
+        "sv": "Fire clay for heat that shatters ordinary pots.",
+        "th": "Fire clay for heat that shatters ordinary pots.",
+        "tr": "Fire clay for heat that shatters ordinary pots.",
+        "uk": "Огнеупорная глина — для жара, что ломает простые горшки.",
+        "vi": "Fire clay for heat that shatters ordinary pots.",
+        "zh": "Fire clay for heat that shatters ordinary pots."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 10,
+      "x": 360,
+      "y": -840,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "be": "«Медь — кровь земли». Найди медные самородки.",
+        "cs": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "da": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "de": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "en": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "eo": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "es": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "fi": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "fr": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "hu": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "is": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "it": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "ja": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "ko": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "li": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "lt": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "nl": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "no": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "pl": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "pt": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "ro": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "ru": "«Медь — кровь земли». Найди медные самородки.",
+        "sk": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "sr": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "sv": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "th": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "tr": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "uk": "«Медь — кровь земли». Найди медные самородки.",
+        "vi": "“Copper is the earth’s blood.” Gather native copper nuggets.",
+        "zh": "“Copper is the earth’s blood.” Gather native copper nuggets."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:nugget-nativecopper",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 11,
+      "x": 360,
+      "y": -960,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "be": "На полях смолы: «Хвойные помнят бурю». Собери смолу.",
+        "cs": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "da": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "de": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "en": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "eo": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "es": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "fi": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "fr": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "hu": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "is": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "it": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "ja": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "ko": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "li": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "lt": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "nl": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "no": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "pl": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "pt": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "ro": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "ru": "На полях смолы: «Хвойные помнят бурю». Собери смолу.",
+        "sk": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "sr": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "sv": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "th": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "tr": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "uk": "На полях смолы: «Хвойные помнят бурю». Собери смолу.",
+        "vi": "Resin notes: “Conifers remember the storm.” Collect resin.",
+        "zh": "Resin notes: “Conifers remember the storm.” Collect resin."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:resin",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 480,
+      "y": -960,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "be": "«Пчёлы хранят лето в сотах». Соты — свет, когда руды мало.",
+        "cs": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "da": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "de": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "en": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "eo": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "es": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "fi": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "fr": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "hu": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "is": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "it": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "ja": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "ko": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "li": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "lt": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "nl": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "no": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "pl": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "pt": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "ro": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "ru": "«Пчёлы хранят лето в сотах». Соты — свет, когда руды мало.",
+        "sk": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "sr": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "sv": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "th": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "tr": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "uk": "«Пчёлы хранят лето в сотах». Соты — свет, когда руды мало.",
+        "vi": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce.",
+        "zh": "“Bees keep summer in comb.” Honeycomb — light when ore is scarce."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:honeycomb",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:beeswax",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 480,
+      "y": -1080,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Twine binds the path. Without thread, all unravels.",
+        "be": "Бечёвка связывает путь. Без нити всё распадается.",
+        "cs": "Twine binds the path. Without thread, all unravels.",
+        "da": "Twine binds the path. Without thread, all unravels.",
+        "de": "Twine binds the path. Without thread, all unravels.",
+        "en": "Twine binds the path. Without thread, all unravels.",
+        "eo": "Twine binds the path. Without thread, all unravels.",
+        "es": "Twine binds the path. Without thread, all unravels.",
+        "fi": "Twine binds the path. Without thread, all unravels.",
+        "fr": "Twine binds the path. Without thread, all unravels.",
+        "hu": "Twine binds the path. Without thread, all unravels.",
+        "is": "Twine binds the path. Without thread, all unravels.",
+        "it": "Twine binds the path. Without thread, all unravels.",
+        "ja": "Twine binds the path. Without thread, all unravels.",
+        "ko": "Twine binds the path. Without thread, all unravels.",
+        "li": "Twine binds the path. Without thread, all unravels.",
+        "lt": "Twine binds the path. Without thread, all unravels.",
+        "nl": "Twine binds the path. Without thread, all unravels.",
+        "no": "Twine binds the path. Without thread, all unravels.",
+        "pl": "Twine binds the path. Without thread, all unravels.",
+        "pt": "Twine binds the path. Without thread, all unravels.",
+        "ro": "Twine binds the path. Without thread, all unravels.",
+        "ru": "Бечёвка связывает путь. Без нити всё распадается.",
+        "sk": "Twine binds the path. Without thread, all unravels.",
+        "sr": "Twine binds the path. Without thread, all unravels.",
+        "sv": "Twine binds the path. Without thread, all unravels.",
+        "th": "Twine binds the path. Without thread, all unravels.",
+        "tr": "Twine binds the path. Without thread, all unravels.",
+        "uk": "Бечёвка связывает путь. Без нити всё распадается.",
+        "vi": "Twine binds the path. Without thread, all unravels.",
+        "zh": "Twine binds the path. Without thread, all unravels."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 480,
+      "y": -1200,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "be": "Между корней — ржавая шестерёнка. Эра пометила её угольной звездой.",
+        "cs": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "da": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "de": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "en": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "eo": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "es": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "fi": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "fr": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "hu": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "is": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "it": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "ja": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "ko": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "li": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "lt": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "nl": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "no": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "pl": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "pt": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "ro": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "ru": "Между корней — ржавая шестерёнка. Эра пометила её угольной звездой.",
+        "sk": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "sr": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "sv": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "th": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "tr": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "uk": "Между корней — ржавая шестерёнка. Эра пометила её угольной звездой.",
+        "vi": "Among roots: a rusty gear. Era marked it with an ember star.",
+        "zh": "Among roots: a rusty gear. Era marked it with an ember star."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 1,
+          "objective": "detect",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 15,
+      "x": 480,
+      "y": -1320,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "be": "«Уголь — чёрное солнце кузни». Скрафти древесный уголь.",
+        "cs": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "da": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "de": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "en": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "eo": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "es": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "fi": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "fr": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "hu": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "is": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "it": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "ja": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "ko": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "li": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "lt": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "nl": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "no": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "pl": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "pt": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "ro": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "ru": "«Уголь — чёрное солнце кузни». Скрафти древесный уголь.",
+        "sk": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "sr": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "sv": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "th": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "tr": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "uk": "«Уголь — чёрное солнце кузни». Скрафти древесный уголь.",
+        "vi": "“Charcoal is the forge’s black sun.” Craft charcoal.",
+        "zh": "“Charcoal is the forge’s black sun.” Craft charcoal."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 32,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -1440,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "The legend thickens. You are following Era, not only surviving.",
+        "be": "Сказание густеет. Ты идёшь по следам Эры, а не просто выживаешь.",
+        "cs": "The legend thickens. You are following Era, not only surviving.",
+        "da": "The legend thickens. You are following Era, not only surviving.",
+        "de": "The legend thickens. You are following Era, not only surviving.",
+        "en": "The legend thickens. You are following Era, not only surviving.",
+        "eo": "The legend thickens. You are following Era, not only surviving.",
+        "es": "The legend thickens. You are following Era, not only surviving.",
+        "fi": "The legend thickens. You are following Era, not only surviving.",
+        "fr": "The legend thickens. You are following Era, not only surviving.",
+        "hu": "The legend thickens. You are following Era, not only surviving.",
+        "is": "The legend thickens. You are following Era, not only surviving.",
+        "it": "The legend thickens. You are following Era, not only surviving.",
+        "ja": "The legend thickens. You are following Era, not only surviving.",
+        "ko": "The legend thickens. You are following Era, not only surviving.",
+        "li": "The legend thickens. You are following Era, not only surviving.",
+        "lt": "The legend thickens. You are following Era, not only surviving.",
+        "nl": "The legend thickens. You are following Era, not only surviving.",
+        "no": "The legend thickens. You are following Era, not only surviving.",
+        "pl": "The legend thickens. You are following Era, not only surviving.",
+        "pt": "The legend thickens. You are following Era, not only surviving.",
+        "ro": "The legend thickens. You are following Era, not only surviving.",
+        "ru": "Сказание густеет. Ты идёшь по следам Эры, а не просто выживаешь.",
+        "sk": "The legend thickens. You are following Era, not only surviving.",
+        "sr": "The legend thickens. You are following Era, not only surviving.",
+        "sv": "The legend thickens. You are following Era, not only surviving.",
+        "th": "The legend thickens. You are following Era, not only surviving.",
+        "tr": "The legend thickens. You are following Era, not only surviving.",
+        "uk": "Сказание густеет. Ты идёшь по следам Эры, а не просто выживаешь.",
+        "vi": "The legend thickens. You are following Era, not only surviving.",
+        "zh": "The legend thickens. You are following Era, not only surviving."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 17,
+      "x": 600,
+      "y": -1440,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More charcoal — iron will not wake without heat.",
+        "be": "Ещё уголь — без него железо не проснётся.",
+        "cs": "More charcoal — iron will not wake without heat.",
+        "da": "More charcoal — iron will not wake without heat.",
+        "de": "More charcoal — iron will not wake without heat.",
+        "en": "More charcoal — iron will not wake without heat.",
+        "eo": "More charcoal — iron will not wake without heat.",
+        "es": "More charcoal — iron will not wake without heat.",
+        "fi": "More charcoal — iron will not wake without heat.",
+        "fr": "More charcoal — iron will not wake without heat.",
+        "hu": "More charcoal — iron will not wake without heat.",
+        "is": "More charcoal — iron will not wake without heat.",
+        "it": "More charcoal — iron will not wake without heat.",
+        "ja": "More charcoal — iron will not wake without heat.",
+        "ko": "More charcoal — iron will not wake without heat.",
+        "li": "More charcoal — iron will not wake without heat.",
+        "lt": "More charcoal — iron will not wake without heat.",
+        "nl": "More charcoal — iron will not wake without heat.",
+        "no": "More charcoal — iron will not wake without heat.",
+        "pl": "More charcoal — iron will not wake without heat.",
+        "pt": "More charcoal — iron will not wake without heat.",
+        "ro": "More charcoal — iron will not wake without heat.",
+        "ru": "Ещё уголь — без него железо не проснётся.",
+        "sk": "More charcoal — iron will not wake without heat.",
+        "sr": "More charcoal — iron will not wake without heat.",
+        "sv": "More charcoal — iron will not wake without heat.",
+        "th": "More charcoal — iron will not wake without heat.",
+        "tr": "More charcoal — iron will not wake without heat.",
+        "uk": "Ещё уголь — без него железо не проснётся.",
+        "vi": "More charcoal — iron will not wake without heat.",
+        "zh": "More charcoal — iron will not wake without heat."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 48,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 600,
+      "y": -1560,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Find iron ore. Dig where the stone is heavy and red.",
+        "be": "Найди железную руду. Копай, где камень тяжёл и красен.",
+        "cs": "Find iron ore. Dig where the stone is heavy and red.",
+        "da": "Find iron ore. Dig where the stone is heavy and red.",
+        "de": "Find iron ore. Dig where the stone is heavy and red.",
+        "en": "Find iron ore. Dig where the stone is heavy and red.",
+        "eo": "Find iron ore. Dig where the stone is heavy and red.",
+        "es": "Find iron ore. Dig where the stone is heavy and red.",
+        "fi": "Find iron ore. Dig where the stone is heavy and red.",
+        "fr": "Find iron ore. Dig where the stone is heavy and red.",
+        "hu": "Find iron ore. Dig where the stone is heavy and red.",
+        "is": "Find iron ore. Dig where the stone is heavy and red.",
+        "it": "Find iron ore. Dig where the stone is heavy and red.",
+        "ja": "Find iron ore. Dig where the stone is heavy and red.",
+        "ko": "Find iron ore. Dig where the stone is heavy and red.",
+        "li": "Find iron ore. Dig where the stone is heavy and red.",
+        "lt": "Find iron ore. Dig where the stone is heavy and red.",
+        "nl": "Find iron ore. Dig where the stone is heavy and red.",
+        "no": "Find iron ore. Dig where the stone is heavy and red.",
+        "pl": "Find iron ore. Dig where the stone is heavy and red.",
+        "pt": "Find iron ore. Dig where the stone is heavy and red.",
+        "ro": "Find iron ore. Dig where the stone is heavy and red.",
+        "ru": "Найди железную руду. Копай, где камень тяжёл и красен.",
+        "sk": "Find iron ore. Dig where the stone is heavy and red.",
+        "sr": "Find iron ore. Dig where the stone is heavy and red.",
+        "sv": "Find iron ore. Dig where the stone is heavy and red.",
+        "th": "Find iron ore. Dig where the stone is heavy and red.",
+        "tr": "Find iron ore. Dig where the stone is heavy and red.",
+        "uk": "Найди железную руду. Копай, где камень тяжёл и красен.",
+        "vi": "Find iron ore. Dig where the stone is heavy and red.",
+        "zh": "Find iron ore. Dig where the stone is heavy and red."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-limonite-*",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 19,
+      "x": 600,
+      "y": -1680,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "be": "Сыродутная крица. Уродливый металл, что станет честным.",
+        "cs": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "da": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "de": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "en": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "eo": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "es": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "fi": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "fr": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "hu": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "is": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "it": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "ja": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "ko": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "li": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "lt": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "nl": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "no": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "pl": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "pt": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "ro": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "ru": "Сыродутная крица. Уродливый металл, что станет честным.",
+        "sk": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "sr": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "sv": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "th": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "tr": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "uk": "Сыродутная крица. Уродливый металл, что станет честным.",
+        "vi": "Iron bloom from the bloomery. Ugly metal that will become honest.",
+        "zh": "Iron bloom from the bloomery. Ugly metal that will become honest."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ironbloom",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 600,
+      "y": -1800,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "be": "«Когда железо запоёт на наковальне — вернись к шестерням». Принеси железный слиток.",
+        "cs": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "da": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "de": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "en": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "eo": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "es": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "fi": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "fr": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "hu": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "is": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "it": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "ja": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "ko": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "li": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "lt": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "nl": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "no": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "pl": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "pt": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "ro": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "ru": "«Когда железо запоёт на наковальне — вернись к шестерням». Принеси железный слиток.",
+        "sk": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "sr": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "sv": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "th": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "tr": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "uk": "«Когда железо запоёт на наковальне — вернись к шестерням». Принеси железный слиток.",
+        "vi": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot.",
+        "zh": "“When iron sings on the anvil, return to the gears.” Bring an iron ingot."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 21,
+      "x": 600,
+      "y": -1920,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "be": "Ещё шестерни из руин. Эра верила: собрав их, услышишь гул под небом.",
+        "cs": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "da": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "de": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "en": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "eo": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "es": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "fi": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "fr": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "hu": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "is": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "it": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "ja": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "ko": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "li": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "lt": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "nl": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "no": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "pl": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "pt": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "ro": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "ru": "Ещё шестерни из руин. Эра верила: собрав их, услышишь гул под небом.",
+        "sk": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "sr": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "sv": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "th": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "tr": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "uk": "Ещё шестерни из руин. Эра верила: собрав их, услышишь гул под небом.",
+        "vi": "More gears from the ruins. Era believed: gather them and hear the hum under the sky.",
+        "zh": "More gears from the ruins. Era believed: gather them and hear the hum under the sky."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 22,
+      "x": 720,
+      "y": -1920,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "be": "Временная шестерня, если судьба позволит — доказательство, что старые машины ещё дышат.",
+        "cs": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "da": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "de": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "en": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "eo": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "es": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "fi": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "fr": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "hu": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "is": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "it": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "ja": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "ko": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "li": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "lt": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "nl": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "no": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "pl": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "pt": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "ro": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "ru": "Временная шестерня, если судьба позволит — доказательство, что старые машины ещё дышат.",
+        "sk": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "sr": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "sv": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "th": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "tr": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "uk": "Временная шестерня, если судьба позволит — доказательство, что старые машины ещё дышат.",
+        "vi": "A temporal gear if fate allows — proof the old machines still breathe.",
+        "zh": "A temporal gear if fate allows — proof the old machines still breathe."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-temporal",
+          "count": 1,
+          "objective": "detect",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 23,
+      "x": 720,
+      "y": -2040,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "be": "Сталь, если сумеешь — или ещё железо. Последняя кузня просит твёрдый металл.",
+        "cs": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "da": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "de": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "en": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "eo": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "es": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "fi": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "fr": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "hu": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "is": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "it": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "ja": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "ko": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "li": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "lt": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "nl": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "no": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "pl": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "pt": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "ro": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "ru": "Сталь, если сумеешь — или ещё железо. Последняя кузня просит твёрдый металл.",
+        "sk": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "sr": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "sv": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "th": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "tr": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "uk": "Сталь, если сумеешь — или ещё железо. Последняя кузня просит твёрдый металл.",
+        "vi": "Steel if you can — or more iron. The last forge asks for the hard metal.",
+        "zh": "Steel if you can — or more iron. The last forge asks for the hard metal."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-steel",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 24,
+      "x": 720,
+      "y": -2160,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "be": "Финал Сказания открыт. Угольная звезда горит для того, кто дочитал дневник.",
+        "cs": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "da": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "de": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "en": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "eo": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "es": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "fi": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "fr": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "hu": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "is": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "it": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "ja": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "ko": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "li": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "lt": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "nl": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "no": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "pl": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "pt": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "ro": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "ru": "Финал Сказания открыт. Угольная звезда горит для того, кто дочитал дневник.",
+        "sk": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "sr": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "sv": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "th": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "tr": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "uk": "Финал Сказания открыт. Угольная звезда горит для того, кто дочитал дневник.",
+        "vi": "The legend’s end is open. The ember star burns for whoever finished the journal.",
+        "zh": "The legend’s end is open. The ember star burns for whoever finished the journal."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 25,
+      "x": -120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "be": "На полях: «Кости учат лучше книг». Принеси кости с охоты.",
+        "cs": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "da": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "de": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "en": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "eo": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "es": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "fi": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "fr": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "hu": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "is": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "it": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "ja": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "ko": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "li": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "lt": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "nl": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "no": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "pl": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "pt": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "ro": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "ru": "На полях: «Кости учат лучше книг». Принеси кости с охоты.",
+        "sk": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "sr": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "sv": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "th": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "tr": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "uk": "На полях: «Кости учат лучше книг». Принеси кости с охоты.",
+        "vi": "Margin note: “Bones teach more than books.” Bring bones from the hunt.",
+        "zh": "Margin note: “Bones teach more than books.” Bring bones from the hunt."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 26,
+      "x": -120,
+      "y": -720,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fat for light and tanning. Soft strength of the wild.",
+        "be": "Жир для света и выделки. Мягкая сила дикой природы.",
+        "cs": "Fat for light and tanning. Soft strength of the wild.",
+        "da": "Fat for light and tanning. Soft strength of the wild.",
+        "de": "Fat for light and tanning. Soft strength of the wild.",
+        "en": "Fat for light and tanning. Soft strength of the wild.",
+        "eo": "Fat for light and tanning. Soft strength of the wild.",
+        "es": "Fat for light and tanning. Soft strength of the wild.",
+        "fi": "Fat for light and tanning. Soft strength of the wild.",
+        "fr": "Fat for light and tanning. Soft strength of the wild.",
+        "hu": "Fat for light and tanning. Soft strength of the wild.",
+        "is": "Fat for light and tanning. Soft strength of the wild.",
+        "it": "Fat for light and tanning. Soft strength of the wild.",
+        "ja": "Fat for light and tanning. Soft strength of the wild.",
+        "ko": "Fat for light and tanning. Soft strength of the wild.",
+        "li": "Fat for light and tanning. Soft strength of the wild.",
+        "lt": "Fat for light and tanning. Soft strength of the wild.",
+        "nl": "Fat for light and tanning. Soft strength of the wild.",
+        "no": "Fat for light and tanning. Soft strength of the wild.",
+        "pl": "Fat for light and tanning. Soft strength of the wild.",
+        "pt": "Fat for light and tanning. Soft strength of the wild.",
+        "ro": "Fat for light and tanning. Soft strength of the wild.",
+        "ru": "Жир для света и выделки. Мягкая сила дикой природы.",
+        "sk": "Fat for light and tanning. Soft strength of the wild.",
+        "sr": "Fat for light and tanning. Soft strength of the wild.",
+        "sv": "Fat for light and tanning. Soft strength of the wild.",
+        "th": "Fat for light and tanning. Soft strength of the wild.",
+        "tr": "Fat for light and tanning. Soft strength of the wild.",
+        "uk": "Жир для света и выделки. Мягкая сила дикой природы.",
+        "vi": "Fat for light and tanning. Soft strength of the wild.",
+        "zh": "Fat for light and tanning. Soft strength of the wild."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 21,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 23
+    },
+    {
+      "startNodeId": 23,
+      "endNodeId": 24
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 25
+    },
+    {
+      "startNodeId": 25,
+      "endNodeId": 26
+    },
+    {
+      "startNodeId": 26,
+      "endNodeId": 8
+    }
+  ],
+  "nextNodeId": 27
+}

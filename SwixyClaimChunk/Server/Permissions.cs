@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using ProtoBuf;
-using static SwixyClaimChunk.Content.ClaimVolumeUtil;
+using static SwixyClaimChunk.Core.ClaimVolumeUtil;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
@@ -14,8 +14,8 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — сервер: права и со-владельцы.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: права и со-владельцы.</summary>
+public sealed partial class SwixyClaimChunkServerMod
 {
     /// <summary>Стабильный ключ привата для хранения со-владельцев между сохранениями.</summary>
     private static string BuildClaimStorageKey(LandClaim claim)

@@ -8,7 +8,7 @@ using Vintagestory.API.Server;
 
 namespace SwixySkyBlock;
 
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     private readonly StoryDungeonRegistry storyDungeonRegistry = new();
     private bool storySitesQueued;
@@ -126,7 +126,7 @@ public sealed partial class SwixySkyBlockMod
 
     private void OnRunGameStorySites()
     {
-        if (storySitesQueued || !Config.AutoGenerateStorySites)
+        if (storySitesQueued || !SkyBlockRuntime.Config.AutoGenerateStorySites)
         {
             return;
         }

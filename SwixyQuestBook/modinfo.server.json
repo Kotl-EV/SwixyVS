@@ -1,0 +1,15 @@
+{
+  "type": "code",
+  "modid": "swixyquestbook",
+  "name": "SwixyQuestBook",
+  "authors": [ "Mengel" ],
+  "description": "[SwixyQuestBook] SERVER package — put on dedicated server only",
+  "version": "1.0.0",
+  "gameversions": [ "1.22.3" ],
+  "side": "Server",
+  "requiredOnClient": true,
+  "requiredOnServer": true,
+  "dependencies": {
+    "game": "1.22.3"
+  }
+}

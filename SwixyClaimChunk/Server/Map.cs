@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using ProtoBuf;
-using static SwixyClaimChunk.Content.ClaimVolumeUtil;
+using static SwixyClaimChunk.Core.ClaimVolumeUtil;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -15,8 +15,8 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — сервер: карта, пакеты и подсветка.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: карта, пакеты и подсветка.</summary>
+public sealed partial class SwixyClaimChunkServerMod
 {
     /// <summary>Отправляет ClaimMapStatePacket после клейма или запроса карты.</summary>
     private void SendState(IServerPlayer player, int centerChunkX, int centerChunkZ, int radius, ClaimActionResult result)
@@ -32,7 +32,7 @@ public sealed partial class SwixyClaimChunkMod
             return;
         }
 
-        radius = Math.Clamp(radius <= 0 ? DefaultRadius : radius, 1, MaxRadius);
+        radius = Math.Clamp(radius <= 0 ? ClaimConstants.DefaultRadius : radius, 1, ClaimConstants.MaxRadius);
         var packet = BuildStatePacket(player, centerChunkX, centerChunkZ, radius, message, messageType);
         if (packet.Chunks.Count == 0)
         {

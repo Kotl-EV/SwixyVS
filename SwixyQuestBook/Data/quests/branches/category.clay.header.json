@@ -1,0 +1,1427 @@
+{
+  "iconItemCode": "game:clay-blue",
+  "title": {
+    "ar": "Pottery",
+    "be": "Гончарное дело",
+    "cs": "Pottery",
+    "da": "Pottery",
+    "de": "Töpferei",
+    "en": "Pottery",
+    "eo": "Pottery",
+    "es": "Alfarería",
+    "fi": "Pottery",
+    "fr": "Poterie",
+    "hu": "Pottery",
+    "is": "Pottery",
+    "it": "Ceramica",
+    "ja": "土器",
+    "ko": "도기",
+    "li": "Pottery",
+    "lt": "Pottery",
+    "nl": "Pottery",
+    "no": "Pottery",
+    "pl": "Garncarstwo",
+    "pt": "Cerâmica",
+    "ro": "Pottery",
+    "ru": "Гончарное дело",
+    "sk": "Pottery",
+    "sr": "Pottery",
+    "sv": "Pottery",
+    "th": "Pottery",
+    "tr": "Çömlekçilik",
+    "uk": "Гончарное дело",
+    "vi": "Pottery",
+    "zh": "制陶"
+  },
+  "headerTitle": "category.clay.header",
+  "header": {
+    "ar": "POTTERY",
+    "be": "ГОНЧАРНОЕ ДЕЛО",
+    "cs": "POTTERY",
+    "da": "POTTERY",
+    "de": "POTTERY",
+    "en": "POTTERY",
+    "eo": "POTTERY",
+    "es": "POTTERY",
+    "fi": "POTTERY",
+    "fr": "POTTERY",
+    "hu": "POTTERY",
+    "is": "POTTERY",
+    "it": "POTTERY",
+    "ja": "POTTERY",
+    "ko": "POTTERY",
+    "li": "POTTERY",
+    "lt": "POTTERY",
+    "nl": "POTTERY",
+    "no": "POTTERY",
+    "pl": "POTTERY",
+    "pt": "POTTERY",
+    "ro": "POTTERY",
+    "ru": "ГОНЧАРНОЕ ДЕЛО",
+    "sk": "POTTERY",
+    "sr": "POTTERY",
+    "sv": "POTTERY",
+    "th": "POTTERY",
+    "tr": "POTTERY",
+    "uk": "ГОНЧАРНОЕ ДЕЛО",
+    "vi": "POTTERY",
+    "zh": "POTTERY"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "be": "Глина — вторая глава. «Металл без сосуда — дождь без кувшина».",
+        "cs": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "da": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "de": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "en": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "eo": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "es": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "fi": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "fr": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "hu": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "is": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "it": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "ja": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "ko": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "li": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "lt": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "nl": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "no": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "pl": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "pt": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "ro": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "ru": "Глина — вторая глава. «Металл без сосуда — дождь без кувшина».",
+        "sk": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "sr": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "sv": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "th": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "tr": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "uk": "Глина — вторая глава. «Металл без сосуда — дождь без кувшина».",
+        "vi": "Clay is chapter two. “Metal without a vessel is rain without a jug.”",
+        "zh": "Clay is chapter two. “Metal without a vessel is rain without a jug.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Blue clay by water. Dig with patience — Era hated haste.",
+        "be": "Синяя глина у воды. Копай терпеливо — Эра ненавидела спешку.",
+        "cs": "Blue clay by water. Dig with patience — Era hated haste.",
+        "da": "Blue clay by water. Dig with patience — Era hated haste.",
+        "de": "Blue clay by water. Dig with patience — Era hated haste.",
+        "en": "Blue clay by water. Dig with patience — Era hated haste.",
+        "eo": "Blue clay by water. Dig with patience — Era hated haste.",
+        "es": "Blue clay by water. Dig with patience — Era hated haste.",
+        "fi": "Blue clay by water. Dig with patience — Era hated haste.",
+        "fr": "Blue clay by water. Dig with patience — Era hated haste.",
+        "hu": "Blue clay by water. Dig with patience — Era hated haste.",
+        "is": "Blue clay by water. Dig with patience — Era hated haste.",
+        "it": "Blue clay by water. Dig with patience — Era hated haste.",
+        "ja": "Blue clay by water. Dig with patience — Era hated haste.",
+        "ko": "Blue clay by water. Dig with patience — Era hated haste.",
+        "li": "Blue clay by water. Dig with patience — Era hated haste.",
+        "lt": "Blue clay by water. Dig with patience — Era hated haste.",
+        "nl": "Blue clay by water. Dig with patience — Era hated haste.",
+        "no": "Blue clay by water. Dig with patience — Era hated haste.",
+        "pl": "Blue clay by water. Dig with patience — Era hated haste.",
+        "pt": "Blue clay by water. Dig with patience — Era hated haste.",
+        "ro": "Blue clay by water. Dig with patience — Era hated haste.",
+        "ru": "Синяя глина у воды. Копай терпеливо — Эра ненавидела спешку.",
+        "sk": "Blue clay by water. Dig with patience — Era hated haste.",
+        "sr": "Blue clay by water. Dig with patience — Era hated haste.",
+        "sv": "Blue clay by water. Dig with patience — Era hated haste.",
+        "th": "Blue clay by water. Dig with patience — Era hated haste.",
+        "tr": "Blue clay by water. Dig with patience — Era hated haste.",
+        "uk": "Синяя глина у воды. Копай терпеливо — Эра ненавидела спешку.",
+        "vi": "Blue clay by water. Dig with patience — Era hated haste.",
+        "zh": "Blue clay by water. Dig with patience — Era hated haste."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 32,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fire clay for heat that shatters ordinary pots.",
+        "be": "Огнеупорная глина — для жара, что ломает простые горшки.",
+        "cs": "Fire clay for heat that shatters ordinary pots.",
+        "da": "Fire clay for heat that shatters ordinary pots.",
+        "de": "Fire clay for heat that shatters ordinary pots.",
+        "en": "Fire clay for heat that shatters ordinary pots.",
+        "eo": "Fire clay for heat that shatters ordinary pots.",
+        "es": "Fire clay for heat that shatters ordinary pots.",
+        "fi": "Fire clay for heat that shatters ordinary pots.",
+        "fr": "Fire clay for heat that shatters ordinary pots.",
+        "hu": "Fire clay for heat that shatters ordinary pots.",
+        "is": "Fire clay for heat that shatters ordinary pots.",
+        "it": "Fire clay for heat that shatters ordinary pots.",
+        "ja": "Fire clay for heat that shatters ordinary pots.",
+        "ko": "Fire clay for heat that shatters ordinary pots.",
+        "li": "Fire clay for heat that shatters ordinary pots.",
+        "lt": "Fire clay for heat that shatters ordinary pots.",
+        "nl": "Fire clay for heat that shatters ordinary pots.",
+        "no": "Fire clay for heat that shatters ordinary pots.",
+        "pl": "Fire clay for heat that shatters ordinary pots.",
+        "pt": "Fire clay for heat that shatters ordinary pots.",
+        "ro": "Fire clay for heat that shatters ordinary pots.",
+        "ru": "Огнеупорная глина — для жара, что ломает простые горшки.",
+        "sk": "Fire clay for heat that shatters ordinary pots.",
+        "sr": "Fire clay for heat that shatters ordinary pots.",
+        "sv": "Fire clay for heat that shatters ordinary pots.",
+        "th": "Fire clay for heat that shatters ordinary pots.",
+        "tr": "Fire clay for heat that shatters ordinary pots.",
+        "uk": "Огнеупорная глина — для жара, что ломает простые горшки.",
+        "vi": "Fire clay for heat that shatters ordinary pots.",
+        "zh": "Fire clay for heat that shatters ordinary pots."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Shape raw bowls before the fire claims them.",
+        "be": "Сформируй сырые миски, пока огонь не забрал их.",
+        "cs": "Shape raw bowls before the fire claims them.",
+        "da": "Shape raw bowls before the fire claims them.",
+        "de": "Shape raw bowls before the fire claims them.",
+        "en": "Shape raw bowls before the fire claims them.",
+        "eo": "Shape raw bowls before the fire claims them.",
+        "es": "Shape raw bowls before the fire claims them.",
+        "fi": "Shape raw bowls before the fire claims them.",
+        "fr": "Shape raw bowls before the fire claims them.",
+        "hu": "Shape raw bowls before the fire claims them.",
+        "is": "Shape raw bowls before the fire claims them.",
+        "it": "Shape raw bowls before the fire claims them.",
+        "ja": "Shape raw bowls before the fire claims them.",
+        "ko": "Shape raw bowls before the fire claims them.",
+        "li": "Shape raw bowls before the fire claims them.",
+        "lt": "Shape raw bowls before the fire claims them.",
+        "nl": "Shape raw bowls before the fire claims them.",
+        "no": "Shape raw bowls before the fire claims them.",
+        "pl": "Shape raw bowls before the fire claims them.",
+        "pt": "Shape raw bowls before the fire claims them.",
+        "ro": "Shape raw bowls before the fire claims them.",
+        "ru": "Сформируй сырые миски, пока огонь не забрал их.",
+        "sk": "Shape raw bowls before the fire claims them.",
+        "sr": "Shape raw bowls before the fire claims them.",
+        "sv": "Shape raw bowls before the fire claims them.",
+        "th": "Shape raw bowls before the fire claims them.",
+        "tr": "Shape raw bowls before the fire claims them.",
+        "uk": "Сформируй сырые миски, пока огонь не забрал их.",
+        "vi": "Shape raw bowls before the fire claims them.",
+        "zh": "Shape raw bowls before the fire claims them."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bowl-blue-raw",
+          "count": 4,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Raw cooking pots. Winter soups begin here.",
+        "be": "Сырые котлы. Зимние похлёбки начинаются здесь.",
+        "cs": "Raw cooking pots. Winter soups begin here.",
+        "da": "Raw cooking pots. Winter soups begin here.",
+        "de": "Raw cooking pots. Winter soups begin here.",
+        "en": "Raw cooking pots. Winter soups begin here.",
+        "eo": "Raw cooking pots. Winter soups begin here.",
+        "es": "Raw cooking pots. Winter soups begin here.",
+        "fi": "Raw cooking pots. Winter soups begin here.",
+        "fr": "Raw cooking pots. Winter soups begin here.",
+        "hu": "Raw cooking pots. Winter soups begin here.",
+        "is": "Raw cooking pots. Winter soups begin here.",
+        "it": "Raw cooking pots. Winter soups begin here.",
+        "ja": "Raw cooking pots. Winter soups begin here.",
+        "ko": "Raw cooking pots. Winter soups begin here.",
+        "li": "Raw cooking pots. Winter soups begin here.",
+        "lt": "Raw cooking pots. Winter soups begin here.",
+        "nl": "Raw cooking pots. Winter soups begin here.",
+        "no": "Raw cooking pots. Winter soups begin here.",
+        "pl": "Raw cooking pots. Winter soups begin here.",
+        "pt": "Raw cooking pots. Winter soups begin here.",
+        "ro": "Raw cooking pots. Winter soups begin here.",
+        "ru": "Сырые котлы. Зимние похлёбки начинаются здесь.",
+        "sk": "Raw cooking pots. Winter soups begin here.",
+        "sr": "Raw cooking pots. Winter soups begin here.",
+        "sv": "Raw cooking pots. Winter soups begin here.",
+        "th": "Raw cooking pots. Winter soups begin here.",
+        "tr": "Raw cooking pots. Winter soups begin here.",
+        "uk": "Сырые котлы. Зимние похлёбки начинаются здесь.",
+        "vi": "Raw cooking pots. Winter soups begin here.",
+        "zh": "Raw cooking pots. Winter soups begin here."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:claypot-blue-raw",
+          "count": 2,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Raw crocks. Stored food is a quiet army.",
+        "be": "Сырые крынки. Запасы еды — тихая армия.",
+        "cs": "Raw crocks. Stored food is a quiet army.",
+        "da": "Raw crocks. Stored food is a quiet army.",
+        "de": "Raw crocks. Stored food is a quiet army.",
+        "en": "Raw crocks. Stored food is a quiet army.",
+        "eo": "Raw crocks. Stored food is a quiet army.",
+        "es": "Raw crocks. Stored food is a quiet army.",
+        "fi": "Raw crocks. Stored food is a quiet army.",
+        "fr": "Raw crocks. Stored food is a quiet army.",
+        "hu": "Raw crocks. Stored food is a quiet army.",
+        "is": "Raw crocks. Stored food is a quiet army.",
+        "it": "Raw crocks. Stored food is a quiet army.",
+        "ja": "Raw crocks. Stored food is a quiet army.",
+        "ko": "Raw crocks. Stored food is a quiet army.",
+        "li": "Raw crocks. Stored food is a quiet army.",
+        "lt": "Raw crocks. Stored food is a quiet army.",
+        "nl": "Raw crocks. Stored food is a quiet army.",
+        "no": "Raw crocks. Stored food is a quiet army.",
+        "pl": "Raw crocks. Stored food is a quiet army.",
+        "pt": "Raw crocks. Stored food is a quiet army.",
+        "ro": "Raw crocks. Stored food is a quiet army.",
+        "ru": "Сырые крынки. Запасы еды — тихая армия.",
+        "sk": "Raw crocks. Stored food is a quiet army.",
+        "sr": "Raw crocks. Stored food is a quiet army.",
+        "sv": "Raw crocks. Stored food is a quiet army.",
+        "th": "Raw crocks. Stored food is a quiet army.",
+        "tr": "Raw crocks. Stored food is a quiet army.",
+        "uk": "Сырые крынки. Запасы еды — тихая армия.",
+        "vi": "Raw crocks. Stored food is a quiet army.",
+        "zh": "Raw crocks. Stored food is a quiet army."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crock-blue-raw",
+          "count": 2,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "be": "Сырые тигли из огнеупорной глины. Без них медь не станет слитком.",
+        "cs": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "da": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "de": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "en": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "eo": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "es": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "fi": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "fr": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "hu": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "is": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "it": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "ja": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "ko": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "li": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "lt": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "nl": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "no": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "pl": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "pt": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "ro": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "ru": "Сырые тигли из огнеупорной глины. Без них медь не станет слитком.",
+        "sk": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "sr": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "sv": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "th": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "tr": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "uk": "Сырые тигли из огнеупорной глины. Без них медь не станет слитком.",
+        "vi": "Raw crucibles of fire clay. Without them copper never becomes an ingot.",
+        "zh": "Raw crucibles of fire clay. Without them copper never becomes an ingot."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crucible-fire-raw",
+          "count": 2,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Firewood for the pit kiln — forge of pauper and genius.",
+        "be": "Дрова для ямной печи — кузня бедняка и гения.",
+        "cs": "Firewood for the pit kiln — forge of pauper and genius.",
+        "da": "Firewood for the pit kiln — forge of pauper and genius.",
+        "de": "Firewood for the pit kiln — forge of pauper and genius.",
+        "en": "Firewood for the pit kiln — forge of pauper and genius.",
+        "eo": "Firewood for the pit kiln — forge of pauper and genius.",
+        "es": "Firewood for the pit kiln — forge of pauper and genius.",
+        "fi": "Firewood for the pit kiln — forge of pauper and genius.",
+        "fr": "Firewood for the pit kiln — forge of pauper and genius.",
+        "hu": "Firewood for the pit kiln — forge of pauper and genius.",
+        "is": "Firewood for the pit kiln — forge of pauper and genius.",
+        "it": "Firewood for the pit kiln — forge of pauper and genius.",
+        "ja": "Firewood for the pit kiln — forge of pauper and genius.",
+        "ko": "Firewood for the pit kiln — forge of pauper and genius.",
+        "li": "Firewood for the pit kiln — forge of pauper and genius.",
+        "lt": "Firewood for the pit kiln — forge of pauper and genius.",
+        "nl": "Firewood for the pit kiln — forge of pauper and genius.",
+        "no": "Firewood for the pit kiln — forge of pauper and genius.",
+        "pl": "Firewood for the pit kiln — forge of pauper and genius.",
+        "pt": "Firewood for the pit kiln — forge of pauper and genius.",
+        "ro": "Firewood for the pit kiln — forge of pauper and genius.",
+        "ru": "Дрова для ямной печи — кузня бедняка и гения.",
+        "sk": "Firewood for the pit kiln — forge of pauper and genius.",
+        "sr": "Firewood for the pit kiln — forge of pauper and genius.",
+        "sv": "Firewood for the pit kiln — forge of pauper and genius.",
+        "th": "Firewood for the pit kiln — forge of pauper and genius.",
+        "tr": "Firewood for the pit kiln — forge of pauper and genius.",
+        "uk": "Дрова для ямной печи — кузня бедняка и гения.",
+        "vi": "Firewood for the pit kiln — forge of pauper and genius.",
+        "zh": "Firewood for the pit kiln — forge of pauper and genius."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 48,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:drygrass",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired bowls. Fire grants them the right to hold food.",
+        "be": "Обожжённые миски. Огонь даёт им право держать еду.",
+        "cs": "Fired bowls. Fire grants them the right to hold food.",
+        "da": "Fired bowls. Fire grants them the right to hold food.",
+        "de": "Fired bowls. Fire grants them the right to hold food.",
+        "en": "Fired bowls. Fire grants them the right to hold food.",
+        "eo": "Fired bowls. Fire grants them the right to hold food.",
+        "es": "Fired bowls. Fire grants them the right to hold food.",
+        "fi": "Fired bowls. Fire grants them the right to hold food.",
+        "fr": "Fired bowls. Fire grants them the right to hold food.",
+        "hu": "Fired bowls. Fire grants them the right to hold food.",
+        "is": "Fired bowls. Fire grants them the right to hold food.",
+        "it": "Fired bowls. Fire grants them the right to hold food.",
+        "ja": "Fired bowls. Fire grants them the right to hold food.",
+        "ko": "Fired bowls. Fire grants them the right to hold food.",
+        "li": "Fired bowls. Fire grants them the right to hold food.",
+        "lt": "Fired bowls. Fire grants them the right to hold food.",
+        "nl": "Fired bowls. Fire grants them the right to hold food.",
+        "no": "Fired bowls. Fire grants them the right to hold food.",
+        "pl": "Fired bowls. Fire grants them the right to hold food.",
+        "pt": "Fired bowls. Fire grants them the right to hold food.",
+        "ro": "Fired bowls. Fire grants them the right to hold food.",
+        "ru": "Обожжённые миски. Огонь даёт им право держать еду.",
+        "sk": "Fired bowls. Fire grants them the right to hold food.",
+        "sr": "Fired bowls. Fire grants them the right to hold food.",
+        "sv": "Fired bowls. Fire grants them the right to hold food.",
+        "th": "Fired bowls. Fire grants them the right to hold food.",
+        "tr": "Fired bowls. Fire grants them the right to hold food.",
+        "uk": "Обожжённые миски. Огонь даёт им право держать еду.",
+        "vi": "Fired bowls. Fire grants them the right to hold food.",
+        "zh": "Fired bowls. Fire grants them the right to hold food."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bowl-blue-fired",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired pots. True cooking begins.",
+        "be": "Обожжённые котлы. Настоящая готовка начинается.",
+        "cs": "Fired pots. True cooking begins.",
+        "da": "Fired pots. True cooking begins.",
+        "de": "Fired pots. True cooking begins.",
+        "en": "Fired pots. True cooking begins.",
+        "eo": "Fired pots. True cooking begins.",
+        "es": "Fired pots. True cooking begins.",
+        "fi": "Fired pots. True cooking begins.",
+        "fr": "Fired pots. True cooking begins.",
+        "hu": "Fired pots. True cooking begins.",
+        "is": "Fired pots. True cooking begins.",
+        "it": "Fired pots. True cooking begins.",
+        "ja": "Fired pots. True cooking begins.",
+        "ko": "Fired pots. True cooking begins.",
+        "li": "Fired pots. True cooking begins.",
+        "lt": "Fired pots. True cooking begins.",
+        "nl": "Fired pots. True cooking begins.",
+        "no": "Fired pots. True cooking begins.",
+        "pl": "Fired pots. True cooking begins.",
+        "pt": "Fired pots. True cooking begins.",
+        "ro": "Fired pots. True cooking begins.",
+        "ru": "Обожжённые котлы. Настоящая готовка начинается.",
+        "sk": "Fired pots. True cooking begins.",
+        "sr": "Fired pots. True cooking begins.",
+        "sv": "Fired pots. True cooking begins.",
+        "th": "Fired pots. True cooking begins.",
+        "tr": "Fired pots. True cooking begins.",
+        "uk": "Обожжённые котлы. Настоящая готовка начинается.",
+        "vi": "Fired pots. True cooking begins.",
+        "zh": "Fired pots. True cooking begins."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:claypot-blue-fired",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired crocks. Meals will outlast the road.",
+        "be": "Обожжённые крынки. Еда переживёт дорогу.",
+        "cs": "Fired crocks. Meals will outlast the road.",
+        "da": "Fired crocks. Meals will outlast the road.",
+        "de": "Fired crocks. Meals will outlast the road.",
+        "en": "Fired crocks. Meals will outlast the road.",
+        "eo": "Fired crocks. Meals will outlast the road.",
+        "es": "Fired crocks. Meals will outlast the road.",
+        "fi": "Fired crocks. Meals will outlast the road.",
+        "fr": "Fired crocks. Meals will outlast the road.",
+        "hu": "Fired crocks. Meals will outlast the road.",
+        "is": "Fired crocks. Meals will outlast the road.",
+        "it": "Fired crocks. Meals will outlast the road.",
+        "ja": "Fired crocks. Meals will outlast the road.",
+        "ko": "Fired crocks. Meals will outlast the road.",
+        "li": "Fired crocks. Meals will outlast the road.",
+        "lt": "Fired crocks. Meals will outlast the road.",
+        "nl": "Fired crocks. Meals will outlast the road.",
+        "no": "Fired crocks. Meals will outlast the road.",
+        "pl": "Fired crocks. Meals will outlast the road.",
+        "pt": "Fired crocks. Meals will outlast the road.",
+        "ro": "Fired crocks. Meals will outlast the road.",
+        "ru": "Обожжённые крынки. Еда переживёт дорогу.",
+        "sk": "Fired crocks. Meals will outlast the road.",
+        "sr": "Fired crocks. Meals will outlast the road.",
+        "sv": "Fired crocks. Meals will outlast the road.",
+        "th": "Fired crocks. Meals will outlast the road.",
+        "tr": "Fired crocks. Meals will outlast the road.",
+        "uk": "Обожжённые крынки. Еда переживёт дорогу.",
+        "vi": "Fired crocks. Meals will outlast the road.",
+        "zh": "Fired crocks. Meals will outlast the road."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crock-blue-fired",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired crucibles. Open the door to copper.",
+        "be": "Обожжённые тигли. Открой дверь к меди.",
+        "cs": "Fired crucibles. Open the door to copper.",
+        "da": "Fired crucibles. Open the door to copper.",
+        "de": "Fired crucibles. Open the door to copper.",
+        "en": "Fired crucibles. Open the door to copper.",
+        "eo": "Fired crucibles. Open the door to copper.",
+        "es": "Fired crucibles. Open the door to copper.",
+        "fi": "Fired crucibles. Open the door to copper.",
+        "fr": "Fired crucibles. Open the door to copper.",
+        "hu": "Fired crucibles. Open the door to copper.",
+        "is": "Fired crucibles. Open the door to copper.",
+        "it": "Fired crucibles. Open the door to copper.",
+        "ja": "Fired crucibles. Open the door to copper.",
+        "ko": "Fired crucibles. Open the door to copper.",
+        "li": "Fired crucibles. Open the door to copper.",
+        "lt": "Fired crucibles. Open the door to copper.",
+        "nl": "Fired crucibles. Open the door to copper.",
+        "no": "Fired crucibles. Open the door to copper.",
+        "pl": "Fired crucibles. Open the door to copper.",
+        "pt": "Fired crucibles. Open the door to copper.",
+        "ro": "Fired crucibles. Open the door to copper.",
+        "ru": "Обожжённые тигли. Открой дверь к меди.",
+        "sk": "Fired crucibles. Open the door to copper.",
+        "sr": "Fired crucibles. Open the door to copper.",
+        "sv": "Fired crucibles. Open the door to copper.",
+        "th": "Fired crucibles. Open the door to copper.",
+        "tr": "Fired crucibles. Open the door to copper.",
+        "uk": "Обожжённые тигли. Открой дверь к меди.",
+        "vi": "Fired crucibles. Open the door to copper.",
+        "zh": "Fired crucibles. Open the door to copper."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crucible-fire-fired",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:nugget-nativecopper",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A raw planter. Even smiths kept green by the door.",
+        "be": "Сырое кашпо. Даже кузнецы держали зелень у двери.",
+        "cs": "A raw planter. Even smiths kept green by the door.",
+        "da": "A raw planter. Even smiths kept green by the door.",
+        "de": "A raw planter. Even smiths kept green by the door.",
+        "en": "A raw planter. Even smiths kept green by the door.",
+        "eo": "A raw planter. Even smiths kept green by the door.",
+        "es": "A raw planter. Even smiths kept green by the door.",
+        "fi": "A raw planter. Even smiths kept green by the door.",
+        "fr": "A raw planter. Even smiths kept green by the door.",
+        "hu": "A raw planter. Even smiths kept green by the door.",
+        "is": "A raw planter. Even smiths kept green by the door.",
+        "it": "A raw planter. Even smiths kept green by the door.",
+        "ja": "A raw planter. Even smiths kept green by the door.",
+        "ko": "A raw planter. Even smiths kept green by the door.",
+        "li": "A raw planter. Even smiths kept green by the door.",
+        "lt": "A raw planter. Even smiths kept green by the door.",
+        "nl": "A raw planter. Even smiths kept green by the door.",
+        "no": "A raw planter. Even smiths kept green by the door.",
+        "pl": "A raw planter. Even smiths kept green by the door.",
+        "pt": "A raw planter. Even smiths kept green by the door.",
+        "ro": "A raw planter. Even smiths kept green by the door.",
+        "ru": "Сырое кашпо. Даже кузнецы держали зелень у двери.",
+        "sk": "A raw planter. Even smiths kept green by the door.",
+        "sr": "A raw planter. Even smiths kept green by the door.",
+        "sv": "A raw planter. Even smiths kept green by the door.",
+        "th": "A raw planter. Even smiths kept green by the door.",
+        "tr": "A raw planter. Even smiths kept green by the door.",
+        "uk": "Сырое кашпо. Даже кузнецы держали зелень у двери.",
+        "vi": "A raw planter. Even smiths kept green by the door.",
+        "zh": "A raw planter. Even smiths kept green by the door."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clayplanter-blue-raw",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired planter. Roots need a home that remembers the kiln.",
+        "be": "Обожжённое кашпо. Корням нужен дом, помнящий печь.",
+        "cs": "Fired planter. Roots need a home that remembers the kiln.",
+        "da": "Fired planter. Roots need a home that remembers the kiln.",
+        "de": "Fired planter. Roots need a home that remembers the kiln.",
+        "en": "Fired planter. Roots need a home that remembers the kiln.",
+        "eo": "Fired planter. Roots need a home that remembers the kiln.",
+        "es": "Fired planter. Roots need a home that remembers the kiln.",
+        "fi": "Fired planter. Roots need a home that remembers the kiln.",
+        "fr": "Fired planter. Roots need a home that remembers the kiln.",
+        "hu": "Fired planter. Roots need a home that remembers the kiln.",
+        "is": "Fired planter. Roots need a home that remembers the kiln.",
+        "it": "Fired planter. Roots need a home that remembers the kiln.",
+        "ja": "Fired planter. Roots need a home that remembers the kiln.",
+        "ko": "Fired planter. Roots need a home that remembers the kiln.",
+        "li": "Fired planter. Roots need a home that remembers the kiln.",
+        "lt": "Fired planter. Roots need a home that remembers the kiln.",
+        "nl": "Fired planter. Roots need a home that remembers the kiln.",
+        "no": "Fired planter. Roots need a home that remembers the kiln.",
+        "pl": "Fired planter. Roots need a home that remembers the kiln.",
+        "pt": "Fired planter. Roots need a home that remembers the kiln.",
+        "ro": "Fired planter. Roots need a home that remembers the kiln.",
+        "ru": "Обожжённое кашпо. Корням нужен дом, помнящий печь.",
+        "sk": "Fired planter. Roots need a home that remembers the kiln.",
+        "sr": "Fired planter. Roots need a home that remembers the kiln.",
+        "sv": "Fired planter. Roots need a home that remembers the kiln.",
+        "th": "Fired planter. Roots need a home that remembers the kiln.",
+        "tr": "Fired planter. Roots need a home that remembers the kiln.",
+        "uk": "Обожжённое кашпо. Корням нужен дом, помнящий печь.",
+        "vi": "Fired planter. Roots need a home that remembers the kiln.",
+        "zh": "Fired planter. Roots need a home that remembers the kiln."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clayplanter-blue-fired",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-flax",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "be": "Ещё синяя глина на запасные сосуды. Бой — налог ремесла.",
+        "cs": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "da": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "de": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "en": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "eo": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "es": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "fi": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "fr": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "hu": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "is": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "it": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "ja": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "ko": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "li": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "lt": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "nl": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "no": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "pl": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "pt": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "ro": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "ru": "Ещё синяя глина на запасные сосуды. Бой — налог ремесла.",
+        "sk": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "sr": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "sv": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "th": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "tr": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "uk": "Ещё синяя глина на запасные сосуды. Бой — налог ремесла.",
+        "vi": "More blue clay for spare vessels. Breakage is a tax of craft.",
+        "zh": "More blue clay for spare vessels. Breakage is a tax of craft."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 40,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Shape extra bowls for the table and the road.",
+        "be": "Сформируй ещё миски для стола и дороги.",
+        "cs": "Shape extra bowls for the table and the road.",
+        "da": "Shape extra bowls for the table and the road.",
+        "de": "Shape extra bowls for the table and the road.",
+        "en": "Shape extra bowls for the table and the road.",
+        "eo": "Shape extra bowls for the table and the road.",
+        "es": "Shape extra bowls for the table and the road.",
+        "fi": "Shape extra bowls for the table and the road.",
+        "fr": "Shape extra bowls for the table and the road.",
+        "hu": "Shape extra bowls for the table and the road.",
+        "is": "Shape extra bowls for the table and the road.",
+        "it": "Shape extra bowls for the table and the road.",
+        "ja": "Shape extra bowls for the table and the road.",
+        "ko": "Shape extra bowls for the table and the road.",
+        "li": "Shape extra bowls for the table and the road.",
+        "lt": "Shape extra bowls for the table and the road.",
+        "nl": "Shape extra bowls for the table and the road.",
+        "no": "Shape extra bowls for the table and the road.",
+        "pl": "Shape extra bowls for the table and the road.",
+        "pt": "Shape extra bowls for the table and the road.",
+        "ro": "Shape extra bowls for the table and the road.",
+        "ru": "Сформируй ещё миски для стола и дороги.",
+        "sk": "Shape extra bowls for the table and the road.",
+        "sr": "Shape extra bowls for the table and the road.",
+        "sv": "Shape extra bowls for the table and the road.",
+        "th": "Shape extra bowls for the table and the road.",
+        "tr": "Shape extra bowls for the table and the road.",
+        "uk": "Сформируй ещё миски для стола и дороги.",
+        "vi": "Shape extra bowls for the table and the road.",
+        "zh": "Shape extra bowls for the table and the road."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bowl-blue-raw",
+          "count": 6,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fire the extra bowls. Stack them like quiet victories.",
+        "be": "Обожги запасные миски. Сложи их как тихие победы.",
+        "cs": "Fire the extra bowls. Stack them like quiet victories.",
+        "da": "Fire the extra bowls. Stack them like quiet victories.",
+        "de": "Fire the extra bowls. Stack them like quiet victories.",
+        "en": "Fire the extra bowls. Stack them like quiet victories.",
+        "eo": "Fire the extra bowls. Stack them like quiet victories.",
+        "es": "Fire the extra bowls. Stack them like quiet victories.",
+        "fi": "Fire the extra bowls. Stack them like quiet victories.",
+        "fr": "Fire the extra bowls. Stack them like quiet victories.",
+        "hu": "Fire the extra bowls. Stack them like quiet victories.",
+        "is": "Fire the extra bowls. Stack them like quiet victories.",
+        "it": "Fire the extra bowls. Stack them like quiet victories.",
+        "ja": "Fire the extra bowls. Stack them like quiet victories.",
+        "ko": "Fire the extra bowls. Stack them like quiet victories.",
+        "li": "Fire the extra bowls. Stack them like quiet victories.",
+        "lt": "Fire the extra bowls. Stack them like quiet victories.",
+        "nl": "Fire the extra bowls. Stack them like quiet victories.",
+        "no": "Fire the extra bowls. Stack them like quiet victories.",
+        "pl": "Fire the extra bowls. Stack them like quiet victories.",
+        "pt": "Fire the extra bowls. Stack them like quiet victories.",
+        "ro": "Fire the extra bowls. Stack them like quiet victories.",
+        "ru": "Обожги запасные миски. Сложи их как тихие победы.",
+        "sk": "Fire the extra bowls. Stack them like quiet victories.",
+        "sr": "Fire the extra bowls. Stack them like quiet victories.",
+        "sv": "Fire the extra bowls. Stack them like quiet victories.",
+        "th": "Fire the extra bowls. Stack them like quiet victories.",
+        "tr": "Fire the extra bowls. Stack them like quiet victories.",
+        "uk": "Обожги запасные миски. Сложи их как тихие победы.",
+        "vi": "Fire the extra bowls. Stack them like quiet victories.",
+        "zh": "Fire the extra bowls. Stack them like quiet victories."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bowl-blue-fired",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Charcoal for hotter firings later. Prepare the black sun.",
+        "be": "Уголь для более горячих обжигов. Готовь чёрное солнце.",
+        "cs": "Charcoal for hotter firings later. Prepare the black sun.",
+        "da": "Charcoal for hotter firings later. Prepare the black sun.",
+        "de": "Charcoal for hotter firings later. Prepare the black sun.",
+        "en": "Charcoal for hotter firings later. Prepare the black sun.",
+        "eo": "Charcoal for hotter firings later. Prepare the black sun.",
+        "es": "Charcoal for hotter firings later. Prepare the black sun.",
+        "fi": "Charcoal for hotter firings later. Prepare the black sun.",
+        "fr": "Charcoal for hotter firings later. Prepare the black sun.",
+        "hu": "Charcoal for hotter firings later. Prepare the black sun.",
+        "is": "Charcoal for hotter firings later. Prepare the black sun.",
+        "it": "Charcoal for hotter firings later. Prepare the black sun.",
+        "ja": "Charcoal for hotter firings later. Prepare the black sun.",
+        "ko": "Charcoal for hotter firings later. Prepare the black sun.",
+        "li": "Charcoal for hotter firings later. Prepare the black sun.",
+        "lt": "Charcoal for hotter firings later. Prepare the black sun.",
+        "nl": "Charcoal for hotter firings later. Prepare the black sun.",
+        "no": "Charcoal for hotter firings later. Prepare the black sun.",
+        "pl": "Charcoal for hotter firings later. Prepare the black sun.",
+        "pt": "Charcoal for hotter firings later. Prepare the black sun.",
+        "ro": "Charcoal for hotter firings later. Prepare the black sun.",
+        "ru": "Уголь для более горячих обжигов. Готовь чёрное солнце.",
+        "sk": "Charcoal for hotter firings later. Prepare the black sun.",
+        "sr": "Charcoal for hotter firings later. Prepare the black sun.",
+        "sv": "Charcoal for hotter firings later. Prepare the black sun.",
+        "th": "Charcoal for hotter firings later. Prepare the black sun.",
+        "tr": "Charcoal for hotter firings later. Prepare the black sun.",
+        "uk": "Уголь для более горячих обжигов. Готовь чёрное солнце.",
+        "vi": "Charcoal for hotter firings later. Prepare the black sun.",
+        "zh": "Charcoal for hotter firings later. Prepare the black sun."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 24,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "One more raw crucible. The forge path never has enough vessels.",
+        "be": "Ещё один сырой тигель. У кузнечного пути никогда не бывает лишних сосудов.",
+        "cs": "One more raw crucible. The forge path never has enough vessels.",
+        "da": "One more raw crucible. The forge path never has enough vessels.",
+        "de": "One more raw crucible. The forge path never has enough vessels.",
+        "en": "One more raw crucible. The forge path never has enough vessels.",
+        "eo": "One more raw crucible. The forge path never has enough vessels.",
+        "es": "One more raw crucible. The forge path never has enough vessels.",
+        "fi": "One more raw crucible. The forge path never has enough vessels.",
+        "fr": "One more raw crucible. The forge path never has enough vessels.",
+        "hu": "One more raw crucible. The forge path never has enough vessels.",
+        "is": "One more raw crucible. The forge path never has enough vessels.",
+        "it": "One more raw crucible. The forge path never has enough vessels.",
+        "ja": "One more raw crucible. The forge path never has enough vessels.",
+        "ko": "One more raw crucible. The forge path never has enough vessels.",
+        "li": "One more raw crucible. The forge path never has enough vessels.",
+        "lt": "One more raw crucible. The forge path never has enough vessels.",
+        "nl": "One more raw crucible. The forge path never has enough vessels.",
+        "no": "One more raw crucible. The forge path never has enough vessels.",
+        "pl": "One more raw crucible. The forge path never has enough vessels.",
+        "pt": "One more raw crucible. The forge path never has enough vessels.",
+        "ro": "One more raw crucible. The forge path never has enough vessels.",
+        "ru": "Ещё один сырой тигель. У кузнечного пути никогда не бывает лишних сосудов.",
+        "sk": "One more raw crucible. The forge path never has enough vessels.",
+        "sr": "One more raw crucible. The forge path never has enough vessels.",
+        "sv": "One more raw crucible. The forge path never has enough vessels.",
+        "th": "One more raw crucible. The forge path never has enough vessels.",
+        "tr": "One more raw crucible. The forge path never has enough vessels.",
+        "uk": "Ещё один сырой тигель. У кузнечного пути никогда не бывает лишних сосудов.",
+        "vi": "One more raw crucible. The forge path never has enough vessels.",
+        "zh": "One more raw crucible. The forge path never has enough vessels."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crucible-fire-raw",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 19,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired crucible ready for copper. The metal age knocks.",
+        "be": "Обожжённый тигель готов к меди. Век металла стучится.",
+        "cs": "Fired crucible ready for copper. The metal age knocks.",
+        "da": "Fired crucible ready for copper. The metal age knocks.",
+        "de": "Fired crucible ready for copper. The metal age knocks.",
+        "en": "Fired crucible ready for copper. The metal age knocks.",
+        "eo": "Fired crucible ready for copper. The metal age knocks.",
+        "es": "Fired crucible ready for copper. The metal age knocks.",
+        "fi": "Fired crucible ready for copper. The metal age knocks.",
+        "fr": "Fired crucible ready for copper. The metal age knocks.",
+        "hu": "Fired crucible ready for copper. The metal age knocks.",
+        "is": "Fired crucible ready for copper. The metal age knocks.",
+        "it": "Fired crucible ready for copper. The metal age knocks.",
+        "ja": "Fired crucible ready for copper. The metal age knocks.",
+        "ko": "Fired crucible ready for copper. The metal age knocks.",
+        "li": "Fired crucible ready for copper. The metal age knocks.",
+        "lt": "Fired crucible ready for copper. The metal age knocks.",
+        "nl": "Fired crucible ready for copper. The metal age knocks.",
+        "no": "Fired crucible ready for copper. The metal age knocks.",
+        "pl": "Fired crucible ready for copper. The metal age knocks.",
+        "pt": "Fired crucible ready for copper. The metal age knocks.",
+        "ro": "Fired crucible ready for copper. The metal age knocks.",
+        "ru": "Обожжённый тигель готов к меди. Век металла стучится.",
+        "sk": "Fired crucible ready for copper. The metal age knocks.",
+        "sr": "Fired crucible ready for copper. The metal age knocks.",
+        "sv": "Fired crucible ready for copper. The metal age knocks.",
+        "th": "Fired crucible ready for copper. The metal age knocks.",
+        "tr": "Fired crucible ready for copper. The metal age knocks.",
+        "uk": "Обожжённый тигель готов к меди. Век металла стучится.",
+        "vi": "Fired crucible ready for copper. The metal age knocks.",
+        "zh": "Fired crucible ready for copper. The metal age knocks."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crucible-fire-fired",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:nugget-nativecopper",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Pottery chapter closed. Vessels ready — metal may come.",
+        "be": "Глава о глине закрыта. Сосуды готовы — металл может прийти.",
+        "cs": "Pottery chapter closed. Vessels ready — metal may come.",
+        "da": "Pottery chapter closed. Vessels ready — metal may come.",
+        "de": "Pottery chapter closed. Vessels ready — metal may come.",
+        "en": "Pottery chapter closed. Vessels ready — metal may come.",
+        "eo": "Pottery chapter closed. Vessels ready — metal may come.",
+        "es": "Pottery chapter closed. Vessels ready — metal may come.",
+        "fi": "Pottery chapter closed. Vessels ready — metal may come.",
+        "fr": "Pottery chapter closed. Vessels ready — metal may come.",
+        "hu": "Pottery chapter closed. Vessels ready — metal may come.",
+        "is": "Pottery chapter closed. Vessels ready — metal may come.",
+        "it": "Pottery chapter closed. Vessels ready — metal may come.",
+        "ja": "Pottery chapter closed. Vessels ready — metal may come.",
+        "ko": "Pottery chapter closed. Vessels ready — metal may come.",
+        "li": "Pottery chapter closed. Vessels ready — metal may come.",
+        "lt": "Pottery chapter closed. Vessels ready — metal may come.",
+        "nl": "Pottery chapter closed. Vessels ready — metal may come.",
+        "no": "Pottery chapter closed. Vessels ready — metal may come.",
+        "pl": "Pottery chapter closed. Vessels ready — metal may come.",
+        "pt": "Pottery chapter closed. Vessels ready — metal may come.",
+        "ro": "Pottery chapter closed. Vessels ready — metal may come.",
+        "ru": "Глава о глине закрыта. Сосуды готовы — металл может прийти.",
+        "sk": "Pottery chapter closed. Vessels ready — metal may come.",
+        "sr": "Pottery chapter closed. Vessels ready — metal may come.",
+        "sv": "Pottery chapter closed. Vessels ready — metal may come.",
+        "th": "Pottery chapter closed. Vessels ready — metal may come.",
+        "tr": "Pottery chapter closed. Vessels ready — metal may come.",
+        "uk": "Глава о глине закрыта. Сосуды готовы — металл может прийти.",
+        "vi": "Pottery chapter closed. Vessels ready — metal may come.",
+        "zh": "Pottery chapter closed. Vessels ready — metal may come."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 21,
+      "x": -120,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Red clay if the land offers it — color is also a craft.",
+        "be": "Красная глина, если земля даст — цвет тоже ремесло.",
+        "cs": "Red clay if the land offers it — color is also a craft.",
+        "da": "Red clay if the land offers it — color is also a craft.",
+        "de": "Red clay if the land offers it — color is also a craft.",
+        "en": "Red clay if the land offers it — color is also a craft.",
+        "eo": "Red clay if the land offers it — color is also a craft.",
+        "es": "Red clay if the land offers it — color is also a craft.",
+        "fi": "Red clay if the land offers it — color is also a craft.",
+        "fr": "Red clay if the land offers it — color is also a craft.",
+        "hu": "Red clay if the land offers it — color is also a craft.",
+        "is": "Red clay if the land offers it — color is also a craft.",
+        "it": "Red clay if the land offers it — color is also a craft.",
+        "ja": "Red clay if the land offers it — color is also a craft.",
+        "ko": "Red clay if the land offers it — color is also a craft.",
+        "li": "Red clay if the land offers it — color is also a craft.",
+        "lt": "Red clay if the land offers it — color is also a craft.",
+        "nl": "Red clay if the land offers it — color is also a craft.",
+        "no": "Red clay if the land offers it — color is also a craft.",
+        "pl": "Red clay if the land offers it — color is also a craft.",
+        "pt": "Red clay if the land offers it — color is also a craft.",
+        "ro": "Red clay if the land offers it — color is also a craft.",
+        "ru": "Красная глина, если земля даст — цвет тоже ремесло.",
+        "sk": "Red clay if the land offers it — color is also a craft.",
+        "sr": "Red clay if the land offers it — color is also a craft.",
+        "sv": "Red clay if the land offers it — color is also a craft.",
+        "th": "Red clay if the land offers it — color is also a craft.",
+        "tr": "Red clay if the land offers it — color is also a craft.",
+        "uk": "Красная глина, если земля даст — цвет тоже ремесло.",
+        "vi": "Red clay if the land offers it — color is also a craft.",
+        "zh": "Red clay if the land offers it — color is also a craft."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-red",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 22,
+      "x": -120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "be": "Сырой цветочный горшок. Маленькая зелень для подоконника кузни.",
+        "cs": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "da": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "de": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "en": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "eo": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "es": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "fi": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "fr": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "hu": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "is": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "it": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "ja": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "ko": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "li": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "lt": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "nl": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "no": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "pl": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "pt": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "ro": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "ru": "Сырой цветочный горшок. Маленькая зелень для подоконника кузни.",
+        "sk": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "sr": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "sv": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "th": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "tr": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "uk": "Сырой цветочный горшок. Маленькая зелень для подоконника кузни.",
+        "vi": "Raw flowerpot. Small green for the windowsill of the forge.",
+        "zh": "Raw flowerpot. Small green for the windowsill of the forge."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flowerpot-blue-raw",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 21,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 8
+    }
+  ],
+  "nextNodeId": 23
+}

@@ -70,14 +70,16 @@ SwixyViStory/
 
 ### Данные квестов
 
-- **quests.json** — единственный источник правды для квестов.
-- Путь к runtime: `%APPDATA%\VintagestoryData\Questbook\questbook\quests.json`
-- При первом запуске сервер копирует из `questbook/quests.json` рядом с DLL.
+- **Источник правды (в моде):** `Data/quests/` (`manifest.json` + `branches/*.json`).
+- **Runtime на сервере (ModConfig):**
+  - `%APPDATA%\VintagestoryData\ModConfig\swixyquestbook\quests\manifest.json`
+  - `%APPDATA%\VintagestoryData\ModConfig\swixyquestbook\quests\branches\*.json`
+- При первом запуске сервер копирует packaged defaults из `swixyquestbook/quests/` рядом с DLL.
 - **QuestbookSampleData.cs** — заглушка (возвращает `[]`), не используется.
 
 ### Игроки
 
-- Прогресс хранится в: `%APPDATA%\VintagestoryData\Questbook\questbook\players\{playeruid}.json`
+- Прогресс: `%APPDATA%\VintagestoryData\ModConfig\swixyquestbook\players\{playeruid}.json`
 
 ---
 

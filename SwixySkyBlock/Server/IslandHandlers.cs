@@ -10,7 +10,7 @@ using Vintagestory.API.Server;
 
 namespace SwixySkyBlock;
 
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     private void OnHubRequest(IServerPlayer player, IslandHubRequestPacket _)
     {

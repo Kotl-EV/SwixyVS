@@ -1,7 +1,5 @@
-using SwixyQuestBook.Gui;
-using SwixyQuestBook.Helpers;
+﻿using SwixyQuestBook.Gui;
 using SwixyQuestBook.Network;
-using SwixyQuestBook.Server;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 
@@ -34,6 +32,9 @@ namespace SwixyQuestBook.Client
                 .RegisterMessageType<QuestbookSubmitQuestResponse>()
                 .RegisterMessageType<QuestbookSyncQuestsPacket>()
                 .RegisterMessageType<QuestbookSyncProgressPacket>()
+                .RegisterMessageType<QuestbookRequestCategoryPacket>()
+                .RegisterMessageType<QuestbookSyncCategoryUpdatePacket>()
+                .RegisterMessageType<QuestbookSyncCategoryMetaPacket>()
                 .RegisterMessageType<QuestbookAdminCreateNodeRequest>()
                 .RegisterMessageType<QuestbookAdminDeleteLastNodeRequest>()
                 .RegisterMessageType<QuestbookAdminSaveCategoryRequest>()
@@ -43,6 +44,8 @@ namespace SwixyQuestBook.Client
                 .RegisterMessageType<QuestbookAdminResponse>()
                 .SetMessageHandler<QuestbookSyncQuestsPacket>(OnQuestsPacket)
                 .SetMessageHandler<QuestbookSyncProgressPacket>(OnProgressPacket)
+                .SetMessageHandler<QuestbookSyncCategoryUpdatePacket>(OnCategoryUpdatePacket)
+                .SetMessageHandler<QuestbookSyncCategoryMetaPacket>(OnCategoryMetaPacket)
                 .SetMessageHandler<QuestbookSubmitQuestResponse>(OnQuestSubmitResponse)
                 .SetMessageHandler<QuestbookAdminResponse>(OnAdminResponse);
 
@@ -86,7 +89,10 @@ namespace SwixyQuestBook.Client
             dialog.Toggle();
 
             if (!wasOpen)
+            {
                 QuestbookSoundHelper.PlayBookOpening(capi);
+                dialog?.EnsureSelectedCategoryContentLoaded();
+            }
 
             return true;
         }
@@ -94,6 +100,17 @@ namespace SwixyQuestBook.Client
         private void OnQuestsPacket(QuestbookSyncQuestsPacket packet)
         {
             dataManager?.HandleQuestsPacket(packet);
+            dialog?.EnsureSelectedCategoryContentLoaded();
+        }
+
+        private void OnCategoryUpdatePacket(QuestbookSyncCategoryUpdatePacket packet)
+        {
+            dataManager?.HandleCategoryUpdatePacket(packet);
+        }
+
+        private void OnCategoryMetaPacket(QuestbookSyncCategoryMetaPacket packet)
+        {
+            dataManager?.HandleCategoryMetaPacket(packet);
         }
 
         private void OnProgressPacket(QuestbookSyncProgressPacket packet)

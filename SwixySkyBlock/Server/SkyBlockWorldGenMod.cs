@@ -11,6 +11,6 @@ public sealed class SkyBlockWorldGenMod : ModSystem
     public override void StartServerSide(ICoreServerAPI api)
     {
         base.StartServerSide(api);
-        api.ModLoader.GetModSystem<SwixySkyBlockMod>().EnsureSkyBlockWorldGenRegistered(api);
+        api.ModLoader.GetModSystem<SwixySkyBlockServerMod>().EnsureSkyBlockWorldGenRegistered(api);
     }
 }

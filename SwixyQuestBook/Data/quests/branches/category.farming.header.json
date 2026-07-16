@@ -1,0 +1,1427 @@
+{
+  "iconItemCode": "game:seeds-flax",
+  "title": {
+    "ar": "Farming",
+    "be": "Земледелие",
+    "cs": "Farming",
+    "da": "Farming",
+    "de": "Landwirtschaft",
+    "en": "Farming",
+    "eo": "Farming",
+    "es": "Agricultura",
+    "fi": "Farming",
+    "fr": "Agriculture",
+    "hu": "Farming",
+    "is": "Farming",
+    "it": "Agricoltura",
+    "ja": "農業",
+    "ko": "농업",
+    "li": "Farming",
+    "lt": "Farming",
+    "nl": "Farming",
+    "no": "Farming",
+    "pl": "Rolnictwo",
+    "pt": "Agricultura",
+    "ro": "Farming",
+    "ru": "Земледелие",
+    "sk": "Farming",
+    "sr": "Farming",
+    "sv": "Farming",
+    "th": "Farming",
+    "tr": "Tarım",
+    "uk": "Земледелие",
+    "vi": "Farming",
+    "zh": "农业"
+  },
+  "headerTitle": "category.farming.header",
+  "header": {
+    "ar": "FARMING",
+    "be": "ЗЕМЛЕДЕЛИЕ",
+    "cs": "FARMING",
+    "da": "FARMING",
+    "de": "FARMING",
+    "en": "FARMING",
+    "eo": "FARMING",
+    "es": "FARMING",
+    "fi": "FARMING",
+    "fr": "FARMING",
+    "hu": "FARMING",
+    "is": "FARMING",
+    "it": "FARMING",
+    "ja": "FARMING",
+    "ko": "FARMING",
+    "li": "FARMING",
+    "lt": "FARMING",
+    "nl": "FARMING",
+    "no": "FARMING",
+    "pl": "FARMING",
+    "pt": "FARMING",
+    "ro": "FARMING",
+    "ru": "ЗЕМЛЕДЕЛИЕ",
+    "sk": "FARMING",
+    "sr": "FARMING",
+    "sv": "FARMING",
+    "th": "FARMING",
+    "tr": "FARMİNG",
+    "uk": "ЗЕМЛЕДЕЛИЕ",
+    "vi": "FARMING",
+    "zh": "FARMING"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Farming. “Who plants, already fights winter.”",
+        "be": "Земледелие. «Кто сеет, уже воюет с зимой».",
+        "cs": "Farming. “Who plants, already fights winter.”",
+        "da": "Farming. “Who plants, already fights winter.”",
+        "de": "Farming. “Who plants, already fights winter.”",
+        "en": "Farming. “Who plants, already fights winter.”",
+        "eo": "Farming. “Who plants, already fights winter.”",
+        "es": "Farming. “Who plants, already fights winter.”",
+        "fi": "Farming. “Who plants, already fights winter.”",
+        "fr": "Farming. “Who plants, already fights winter.”",
+        "hu": "Farming. “Who plants, already fights winter.”",
+        "is": "Farming. “Who plants, already fights winter.”",
+        "it": "Farming. “Who plants, already fights winter.”",
+        "ja": "Farming. “Who plants, already fights winter.”",
+        "ko": "Farming. “Who plants, already fights winter.”",
+        "li": "Farming. “Who plants, already fights winter.”",
+        "lt": "Farming. “Who plants, already fights winter.”",
+        "nl": "Farming. “Who plants, already fights winter.”",
+        "no": "Farming. “Who plants, already fights winter.”",
+        "pl": "Farming. “Who plants, already fights winter.”",
+        "pt": "Farming. “Who plants, already fights winter.”",
+        "ro": "Farming. “Who plants, already fights winter.”",
+        "ru": "Земледелие. «Кто сеет, уже воюет с зимой».",
+        "sk": "Farming. “Who plants, already fights winter.”",
+        "sr": "Farming. “Who plants, already fights winter.”",
+        "sv": "Farming. “Who plants, already fights winter.”",
+        "th": "Farming. “Who plants, already fights winter.”",
+        "tr": "Farming. “Who plants, already fights winter.”",
+        "uk": "Земледелие. «Кто сеет, уже воюет с зимой».",
+        "vi": "Farming. “Who plants, already fights winter.”",
+        "zh": "Farming. “Who plants, already fights winter.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A hoe — even flint can open soil.",
+        "be": "Мотыга — даже кремень может открыть почву.",
+        "cs": "A hoe — even flint can open soil.",
+        "da": "A hoe — even flint can open soil.",
+        "de": "A hoe — even flint can open soil.",
+        "en": "A hoe — even flint can open soil.",
+        "eo": "A hoe — even flint can open soil.",
+        "es": "A hoe — even flint can open soil.",
+        "fi": "A hoe — even flint can open soil.",
+        "fr": "A hoe — even flint can open soil.",
+        "hu": "A hoe — even flint can open soil.",
+        "is": "A hoe — even flint can open soil.",
+        "it": "A hoe — even flint can open soil.",
+        "ja": "A hoe — even flint can open soil.",
+        "ko": "A hoe — even flint can open soil.",
+        "li": "A hoe — even flint can open soil.",
+        "lt": "A hoe — even flint can open soil.",
+        "nl": "A hoe — even flint can open soil.",
+        "no": "A hoe — even flint can open soil.",
+        "pl": "A hoe — even flint can open soil.",
+        "pt": "A hoe — even flint can open soil.",
+        "ro": "A hoe — even flint can open soil.",
+        "ru": "Мотыга — даже кремень может открыть почву.",
+        "sk": "A hoe — even flint can open soil.",
+        "sr": "A hoe — even flint can open soil.",
+        "sv": "A hoe — even flint can open soil.",
+        "th": "A hoe — even flint can open soil.",
+        "tr": "A hoe — even flint can open soil.",
+        "uk": "Мотыга — даже кремень может открыть почву.",
+        "vi": "A hoe — even flint can open soil.",
+        "zh": "A hoe — even flint can open soil."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hoe-flint",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:cattailtops",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flax seeds. Thread begins as a green promise.",
+        "be": "Семена льна. Нить начинается как зелёное обещание.",
+        "cs": "Flax seeds. Thread begins as a green promise.",
+        "da": "Flax seeds. Thread begins as a green promise.",
+        "de": "Flax seeds. Thread begins as a green promise.",
+        "en": "Flax seeds. Thread begins as a green promise.",
+        "eo": "Flax seeds. Thread begins as a green promise.",
+        "es": "Flax seeds. Thread begins as a green promise.",
+        "fi": "Flax seeds. Thread begins as a green promise.",
+        "fr": "Flax seeds. Thread begins as a green promise.",
+        "hu": "Flax seeds. Thread begins as a green promise.",
+        "is": "Flax seeds. Thread begins as a green promise.",
+        "it": "Flax seeds. Thread begins as a green promise.",
+        "ja": "Flax seeds. Thread begins as a green promise.",
+        "ko": "Flax seeds. Thread begins as a green promise.",
+        "li": "Flax seeds. Thread begins as a green promise.",
+        "lt": "Flax seeds. Thread begins as a green promise.",
+        "nl": "Flax seeds. Thread begins as a green promise.",
+        "no": "Flax seeds. Thread begins as a green promise.",
+        "pl": "Flax seeds. Thread begins as a green promise.",
+        "pt": "Flax seeds. Thread begins as a green promise.",
+        "ro": "Flax seeds. Thread begins as a green promise.",
+        "ru": "Семена льна. Нить начинается как зелёное обещание.",
+        "sk": "Flax seeds. Thread begins as a green promise.",
+        "sr": "Flax seeds. Thread begins as a green promise.",
+        "sv": "Flax seeds. Thread begins as a green promise.",
+        "th": "Flax seeds. Thread begins as a green promise.",
+        "tr": "Flax seeds. Thread begins as a green promise.",
+        "uk": "Семена льна. Нить начинается как зелёное обещание.",
+        "vi": "Flax seeds. Thread begins as a green promise.",
+        "zh": "Flax seeds. Thread begins as a green promise."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:seeds-flax",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Spelt seeds. Bread is a long patience.",
+        "be": "Семена спельты. Хлеб — долгое терпение.",
+        "cs": "Spelt seeds. Bread is a long patience.",
+        "da": "Spelt seeds. Bread is a long patience.",
+        "de": "Spelt seeds. Bread is a long patience.",
+        "en": "Spelt seeds. Bread is a long patience.",
+        "eo": "Spelt seeds. Bread is a long patience.",
+        "es": "Spelt seeds. Bread is a long patience.",
+        "fi": "Spelt seeds. Bread is a long patience.",
+        "fr": "Spelt seeds. Bread is a long patience.",
+        "hu": "Spelt seeds. Bread is a long patience.",
+        "is": "Spelt seeds. Bread is a long patience.",
+        "it": "Spelt seeds. Bread is a long patience.",
+        "ja": "Spelt seeds. Bread is a long patience.",
+        "ko": "Spelt seeds. Bread is a long patience.",
+        "li": "Spelt seeds. Bread is a long patience.",
+        "lt": "Spelt seeds. Bread is a long patience.",
+        "nl": "Spelt seeds. Bread is a long patience.",
+        "no": "Spelt seeds. Bread is a long patience.",
+        "pl": "Spelt seeds. Bread is a long patience.",
+        "pt": "Spelt seeds. Bread is a long patience.",
+        "ro": "Spelt seeds. Bread is a long patience.",
+        "ru": "Семена спельты. Хлеб — долгое терпение.",
+        "sk": "Spelt seeds. Bread is a long patience.",
+        "sr": "Spelt seeds. Bread is a long patience.",
+        "sv": "Spelt seeds. Bread is a long patience.",
+        "th": "Spelt seeds. Bread is a long patience.",
+        "tr": "Spelt seeds. Bread is a long patience.",
+        "uk": "Семена спельты. Хлеб — долгое терпение.",
+        "vi": "Spelt seeds. Bread is a long patience.",
+        "zh": "Spelt seeds. Bread is a long patience."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:seeds-spelt",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:drygrass",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Carrot seeds. Color and roots for the stew.",
+        "be": "Семена моркови. Цвет и корни для похлёбки.",
+        "cs": "Carrot seeds. Color and roots for the stew.",
+        "da": "Carrot seeds. Color and roots for the stew.",
+        "de": "Carrot seeds. Color and roots for the stew.",
+        "en": "Carrot seeds. Color and roots for the stew.",
+        "eo": "Carrot seeds. Color and roots for the stew.",
+        "es": "Carrot seeds. Color and roots for the stew.",
+        "fi": "Carrot seeds. Color and roots for the stew.",
+        "fr": "Carrot seeds. Color and roots for the stew.",
+        "hu": "Carrot seeds. Color and roots for the stew.",
+        "is": "Carrot seeds. Color and roots for the stew.",
+        "it": "Carrot seeds. Color and roots for the stew.",
+        "ja": "Carrot seeds. Color and roots for the stew.",
+        "ko": "Carrot seeds. Color and roots for the stew.",
+        "li": "Carrot seeds. Color and roots for the stew.",
+        "lt": "Carrot seeds. Color and roots for the stew.",
+        "nl": "Carrot seeds. Color and roots for the stew.",
+        "no": "Carrot seeds. Color and roots for the stew.",
+        "pl": "Carrot seeds. Color and roots for the stew.",
+        "pt": "Carrot seeds. Color and roots for the stew.",
+        "ro": "Carrot seeds. Color and roots for the stew.",
+        "ru": "Семена моркови. Цвет и корни для похлёбки.",
+        "sk": "Carrot seeds. Color and roots for the stew.",
+        "sr": "Carrot seeds. Color and roots for the stew.",
+        "sv": "Carrot seeds. Color and roots for the stew.",
+        "th": "Carrot seeds. Color and roots for the stew.",
+        "tr": "Carrot seeds. Color and roots for the stew.",
+        "uk": "Семена моркови. Цвет и корни для похлёбки.",
+        "vi": "Carrot seeds. Color and roots for the stew.",
+        "zh": "Carrot seeds. Color and roots for the stew."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:seeds-carrot",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-flax",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "be": "Собери льняное волокно. Стебли на нить, семена на завтра.",
+        "cs": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "da": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "de": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "en": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "eo": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "es": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "fi": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "fr": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "hu": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "is": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "it": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "ja": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "ko": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "li": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "lt": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "nl": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "no": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "pl": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "pt": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "ro": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "ru": "Собери льняное волокно. Стебли на нить, семена на завтра.",
+        "sk": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "sr": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "sv": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "th": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "tr": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "uk": "Собери льняное волокно. Стебли на нить, семена на завтра.",
+        "vi": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow.",
+        "zh": "Harvest flax fibers. Stalks for fiber, seeds for tomorrow."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flaxfibers",
+          "count": 32,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-flax",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flax grain from the same harvest. Nothing is wasted.",
+        "be": "Зерно льна с того же урожая. Ничего не пропадает.",
+        "cs": "Flax grain from the same harvest. Nothing is wasted.",
+        "da": "Flax grain from the same harvest. Nothing is wasted.",
+        "de": "Flax grain from the same harvest. Nothing is wasted.",
+        "en": "Flax grain from the same harvest. Nothing is wasted.",
+        "eo": "Flax grain from the same harvest. Nothing is wasted.",
+        "es": "Flax grain from the same harvest. Nothing is wasted.",
+        "fi": "Flax grain from the same harvest. Nothing is wasted.",
+        "fr": "Flax grain from the same harvest. Nothing is wasted.",
+        "hu": "Flax grain from the same harvest. Nothing is wasted.",
+        "is": "Flax grain from the same harvest. Nothing is wasted.",
+        "it": "Flax grain from the same harvest. Nothing is wasted.",
+        "ja": "Flax grain from the same harvest. Nothing is wasted.",
+        "ko": "Flax grain from the same harvest. Nothing is wasted.",
+        "li": "Flax grain from the same harvest. Nothing is wasted.",
+        "lt": "Flax grain from the same harvest. Nothing is wasted.",
+        "nl": "Flax grain from the same harvest. Nothing is wasted.",
+        "no": "Flax grain from the same harvest. Nothing is wasted.",
+        "pl": "Flax grain from the same harvest. Nothing is wasted.",
+        "pt": "Flax grain from the same harvest. Nothing is wasted.",
+        "ro": "Flax grain from the same harvest. Nothing is wasted.",
+        "ru": "Зерно льна с того же урожая. Ничего не пропадает.",
+        "sk": "Flax grain from the same harvest. Nothing is wasted.",
+        "sr": "Flax grain from the same harvest. Nothing is wasted.",
+        "sv": "Flax grain from the same harvest. Nothing is wasted.",
+        "th": "Flax grain from the same harvest. Nothing is wasted.",
+        "tr": "Flax grain from the same harvest. Nothing is wasted.",
+        "uk": "Зерно льна с того же урожая. Ничего не пропадает.",
+        "vi": "Flax grain from the same harvest. Nothing is wasted.",
+        "zh": "Flax grain from the same harvest. Nothing is wasted."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:grain-flax",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxfibers",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Harvest spelt grain. The field pays in gold of another kind.",
+        "be": "Собери зерно спельты. Поле платит золотом другого рода.",
+        "cs": "Harvest spelt grain. The field pays in gold of another kind.",
+        "da": "Harvest spelt grain. The field pays in gold of another kind.",
+        "de": "Harvest spelt grain. The field pays in gold of another kind.",
+        "en": "Harvest spelt grain. The field pays in gold of another kind.",
+        "eo": "Harvest spelt grain. The field pays in gold of another kind.",
+        "es": "Harvest spelt grain. The field pays in gold of another kind.",
+        "fi": "Harvest spelt grain. The field pays in gold of another kind.",
+        "fr": "Harvest spelt grain. The field pays in gold of another kind.",
+        "hu": "Harvest spelt grain. The field pays in gold of another kind.",
+        "is": "Harvest spelt grain. The field pays in gold of another kind.",
+        "it": "Harvest spelt grain. The field pays in gold of another kind.",
+        "ja": "Harvest spelt grain. The field pays in gold of another kind.",
+        "ko": "Harvest spelt grain. The field pays in gold of another kind.",
+        "li": "Harvest spelt grain. The field pays in gold of another kind.",
+        "lt": "Harvest spelt grain. The field pays in gold of another kind.",
+        "nl": "Harvest spelt grain. The field pays in gold of another kind.",
+        "no": "Harvest spelt grain. The field pays in gold of another kind.",
+        "pl": "Harvest spelt grain. The field pays in gold of another kind.",
+        "pt": "Harvest spelt grain. The field pays in gold of another kind.",
+        "ro": "Harvest spelt grain. The field pays in gold of another kind.",
+        "ru": "Собери зерно спельты. Поле платит золотом другого рода.",
+        "sk": "Harvest spelt grain. The field pays in gold of another kind.",
+        "sr": "Harvest spelt grain. The field pays in gold of another kind.",
+        "sv": "Harvest spelt grain. The field pays in gold of another kind.",
+        "th": "Harvest spelt grain. The field pays in gold of another kind.",
+        "tr": "Harvest spelt grain. The field pays in gold of another kind.",
+        "uk": "Собери зерно спельты. Поле платит золотом другого рода.",
+        "vi": "Harvest spelt grain. The field pays in gold of another kind.",
+        "zh": "Harvest spelt grain. The field pays in gold of another kind."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:grain-spelt",
+          "count": 40,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-spelt",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flax twine from your own field. Independence smells of dust.",
+        "be": "Льняная бечёвка со своего поля. Независимость пахнет пылью.",
+        "cs": "Flax twine from your own field. Independence smells of dust.",
+        "da": "Flax twine from your own field. Independence smells of dust.",
+        "de": "Flax twine from your own field. Independence smells of dust.",
+        "en": "Flax twine from your own field. Independence smells of dust.",
+        "eo": "Flax twine from your own field. Independence smells of dust.",
+        "es": "Flax twine from your own field. Independence smells of dust.",
+        "fi": "Flax twine from your own field. Independence smells of dust.",
+        "fr": "Flax twine from your own field. Independence smells of dust.",
+        "hu": "Flax twine from your own field. Independence smells of dust.",
+        "is": "Flax twine from your own field. Independence smells of dust.",
+        "it": "Flax twine from your own field. Independence smells of dust.",
+        "ja": "Flax twine from your own field. Independence smells of dust.",
+        "ko": "Flax twine from your own field. Independence smells of dust.",
+        "li": "Flax twine from your own field. Independence smells of dust.",
+        "lt": "Flax twine from your own field. Independence smells of dust.",
+        "nl": "Flax twine from your own field. Independence smells of dust.",
+        "no": "Flax twine from your own field. Independence smells of dust.",
+        "pl": "Flax twine from your own field. Independence smells of dust.",
+        "pt": "Flax twine from your own field. Independence smells of dust.",
+        "ro": "Flax twine from your own field. Independence smells of dust.",
+        "ru": "Льняная бечёвка со своего поля. Независимость пахнет пылью.",
+        "sk": "Flax twine from your own field. Independence smells of dust.",
+        "sr": "Flax twine from your own field. Independence smells of dust.",
+        "sv": "Flax twine from your own field. Independence smells of dust.",
+        "th": "Flax twine from your own field. Independence smells of dust.",
+        "tr": "Flax twine from your own field. Independence smells of dust.",
+        "uk": "Льняная бечёвка со своего поля. Независимость пахнет пылью.",
+        "vi": "Flax twine from your own field. Independence smells of dust.",
+        "zh": "Flax twine from your own field. Independence smells of dust."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 20,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxfibers",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Rope for wells and loads. Twine’s stronger cousin.",
+        "be": "Верёвка для колодцев и грузов. Более сильный родич бечёвки.",
+        "cs": "Rope for wells and loads. Twine’s stronger cousin.",
+        "da": "Rope for wells and loads. Twine’s stronger cousin.",
+        "de": "Rope for wells and loads. Twine’s stronger cousin.",
+        "en": "Rope for wells and loads. Twine’s stronger cousin.",
+        "eo": "Rope for wells and loads. Twine’s stronger cousin.",
+        "es": "Rope for wells and loads. Twine’s stronger cousin.",
+        "fi": "Rope for wells and loads. Twine’s stronger cousin.",
+        "fr": "Rope for wells and loads. Twine’s stronger cousin.",
+        "hu": "Rope for wells and loads. Twine’s stronger cousin.",
+        "is": "Rope for wells and loads. Twine’s stronger cousin.",
+        "it": "Rope for wells and loads. Twine’s stronger cousin.",
+        "ja": "Rope for wells and loads. Twine’s stronger cousin.",
+        "ko": "Rope for wells and loads. Twine’s stronger cousin.",
+        "li": "Rope for wells and loads. Twine’s stronger cousin.",
+        "lt": "Rope for wells and loads. Twine’s stronger cousin.",
+        "nl": "Rope for wells and loads. Twine’s stronger cousin.",
+        "no": "Rope for wells and loads. Twine’s stronger cousin.",
+        "pl": "Rope for wells and loads. Twine’s stronger cousin.",
+        "pt": "Rope for wells and loads. Twine’s stronger cousin.",
+        "ro": "Rope for wells and loads. Twine’s stronger cousin.",
+        "ru": "Верёвка для колодцев и грузов. Более сильный родич бечёвки.",
+        "sk": "Rope for wells and loads. Twine’s stronger cousin.",
+        "sr": "Rope for wells and loads. Twine’s stronger cousin.",
+        "sv": "Rope for wells and loads. Twine’s stronger cousin.",
+        "th": "Rope for wells and loads. Twine’s stronger cousin.",
+        "tr": "Rope for wells and loads. Twine’s stronger cousin.",
+        "uk": "Верёвка для колодцев и грузов. Более сильный родич бечёвки.",
+        "vi": "Rope for wells and loads. Twine’s stronger cousin.",
+        "zh": "Rope for wells and loads. Twine’s stronger cousin."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:rope",
+          "count": 4,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flour. The first soft power of civilization.",
+        "be": "Мука. Первая мягкая сила цивилизации.",
+        "cs": "Flour. The first soft power of civilization.",
+        "da": "Flour. The first soft power of civilization.",
+        "de": "Flour. The first soft power of civilization.",
+        "en": "Flour. The first soft power of civilization.",
+        "eo": "Flour. The first soft power of civilization.",
+        "es": "Flour. The first soft power of civilization.",
+        "fi": "Flour. The first soft power of civilization.",
+        "fr": "Flour. The first soft power of civilization.",
+        "hu": "Flour. The first soft power of civilization.",
+        "is": "Flour. The first soft power of civilization.",
+        "it": "Flour. The first soft power of civilization.",
+        "ja": "Flour. The first soft power of civilization.",
+        "ko": "Flour. The first soft power of civilization.",
+        "li": "Flour. The first soft power of civilization.",
+        "lt": "Flour. The first soft power of civilization.",
+        "nl": "Flour. The first soft power of civilization.",
+        "no": "Flour. The first soft power of civilization.",
+        "pl": "Flour. The first soft power of civilization.",
+        "pt": "Flour. The first soft power of civilization.",
+        "ro": "Flour. The first soft power of civilization.",
+        "ru": "Мука. Первая мягкая сила цивилизации.",
+        "sk": "Flour. The first soft power of civilization.",
+        "sr": "Flour. The first soft power of civilization.",
+        "sv": "Flour. The first soft power of civilization.",
+        "th": "Flour. The first soft power of civilization.",
+        "tr": "Flour. The first soft power of civilization.",
+        "uk": "Мука. Первая мягкая сила цивилизации.",
+        "vi": "Flour. The first soft power of civilization.",
+        "zh": "Flour. The first soft power of civilization."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flour-spelt",
+          "count": 20,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:grain-spelt",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Dough. Hands remember the rhythm of hunger.",
+        "be": "Тесто. Руки помнят ритм голода.",
+        "cs": "Dough. Hands remember the rhythm of hunger.",
+        "da": "Dough. Hands remember the rhythm of hunger.",
+        "de": "Dough. Hands remember the rhythm of hunger.",
+        "en": "Dough. Hands remember the rhythm of hunger.",
+        "eo": "Dough. Hands remember the rhythm of hunger.",
+        "es": "Dough. Hands remember the rhythm of hunger.",
+        "fi": "Dough. Hands remember the rhythm of hunger.",
+        "fr": "Dough. Hands remember the rhythm of hunger.",
+        "hu": "Dough. Hands remember the rhythm of hunger.",
+        "is": "Dough. Hands remember the rhythm of hunger.",
+        "it": "Dough. Hands remember the rhythm of hunger.",
+        "ja": "Dough. Hands remember the rhythm of hunger.",
+        "ko": "Dough. Hands remember the rhythm of hunger.",
+        "li": "Dough. Hands remember the rhythm of hunger.",
+        "lt": "Dough. Hands remember the rhythm of hunger.",
+        "nl": "Dough. Hands remember the rhythm of hunger.",
+        "no": "Dough. Hands remember the rhythm of hunger.",
+        "pl": "Dough. Hands remember the rhythm of hunger.",
+        "pt": "Dough. Hands remember the rhythm of hunger.",
+        "ro": "Dough. Hands remember the rhythm of hunger.",
+        "ru": "Тесто. Руки помнят ритм голода.",
+        "sk": "Dough. Hands remember the rhythm of hunger.",
+        "sr": "Dough. Hands remember the rhythm of hunger.",
+        "sv": "Dough. Hands remember the rhythm of hunger.",
+        "th": "Dough. Hands remember the rhythm of hunger.",
+        "tr": "Dough. Hands remember the rhythm of hunger.",
+        "uk": "Тесто. Руки помнят ритм голода.",
+        "vi": "Dough. Hands remember the rhythm of hunger.",
+        "zh": "Dough. Hands remember the rhythm of hunger."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:dough-spelt",
+          "count": 10,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flour-spelt",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Bread. Eat what you grew — Era would approve.",
+        "be": "Хлеб. Ешь то, что вырастил — Эра одобрила бы.",
+        "cs": "Bread. Eat what you grew — Era would approve.",
+        "da": "Bread. Eat what you grew — Era would approve.",
+        "de": "Bread. Eat what you grew — Era would approve.",
+        "en": "Bread. Eat what you grew — Era would approve.",
+        "eo": "Bread. Eat what you grew — Era would approve.",
+        "es": "Bread. Eat what you grew — Era would approve.",
+        "fi": "Bread. Eat what you grew — Era would approve.",
+        "fr": "Bread. Eat what you grew — Era would approve.",
+        "hu": "Bread. Eat what you grew — Era would approve.",
+        "is": "Bread. Eat what you grew — Era would approve.",
+        "it": "Bread. Eat what you grew — Era would approve.",
+        "ja": "Bread. Eat what you grew — Era would approve.",
+        "ko": "Bread. Eat what you grew — Era would approve.",
+        "li": "Bread. Eat what you grew — Era would approve.",
+        "lt": "Bread. Eat what you grew — Era would approve.",
+        "nl": "Bread. Eat what you grew — Era would approve.",
+        "no": "Bread. Eat what you grew — Era would approve.",
+        "pl": "Bread. Eat what you grew — Era would approve.",
+        "pt": "Bread. Eat what you grew — Era would approve.",
+        "ro": "Bread. Eat what you grew — Era would approve.",
+        "ru": "Хлеб. Ешь то, что вырастил — Эра одобрила бы.",
+        "sk": "Bread. Eat what you grew — Era would approve.",
+        "sr": "Bread. Eat what you grew — Era would approve.",
+        "sv": "Bread. Eat what you grew — Era would approve.",
+        "th": "Bread. Eat what you grew — Era would approve.",
+        "tr": "Bread. Eat what you grew — Era would approve.",
+        "uk": "Хлеб. Ешь то, что вырастил — Эра одобрила бы.",
+        "vi": "Bread. Eat what you grew — Era would approve.",
+        "zh": "Bread. Eat what you grew — Era would approve."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bread-spelt-*",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Perfect loaves if you can. Pride is edible.",
+        "be": "Идеальные буханки, если сумеешь. Гордость съедобна.",
+        "cs": "Perfect loaves if you can. Pride is edible.",
+        "da": "Perfect loaves if you can. Pride is edible.",
+        "de": "Perfect loaves if you can. Pride is edible.",
+        "en": "Perfect loaves if you can. Pride is edible.",
+        "eo": "Perfect loaves if you can. Pride is edible.",
+        "es": "Perfect loaves if you can. Pride is edible.",
+        "fi": "Perfect loaves if you can. Pride is edible.",
+        "fr": "Perfect loaves if you can. Pride is edible.",
+        "hu": "Perfect loaves if you can. Pride is edible.",
+        "is": "Perfect loaves if you can. Pride is edible.",
+        "it": "Perfect loaves if you can. Pride is edible.",
+        "ja": "Perfect loaves if you can. Pride is edible.",
+        "ko": "Perfect loaves if you can. Pride is edible.",
+        "li": "Perfect loaves if you can. Pride is edible.",
+        "lt": "Perfect loaves if you can. Pride is edible.",
+        "nl": "Perfect loaves if you can. Pride is edible.",
+        "no": "Perfect loaves if you can. Pride is edible.",
+        "pl": "Perfect loaves if you can. Pride is edible.",
+        "pt": "Perfect loaves if you can. Pride is edible.",
+        "ro": "Perfect loaves if you can. Pride is edible.",
+        "ru": "Идеальные буханки, если сумеешь. Гордость съедобна.",
+        "sk": "Perfect loaves if you can. Pride is edible.",
+        "sr": "Perfect loaves if you can. Pride is edible.",
+        "sv": "Perfect loaves if you can. Pride is edible.",
+        "th": "Perfect loaves if you can. Pride is edible.",
+        "tr": "Perfect loaves if you can. Pride is edible.",
+        "uk": "Идеальные буханки, если сумеешь. Гордость съедобна.",
+        "vi": "Perfect loaves if you can. Pride is edible.",
+        "zh": "Perfect loaves if you can. Pride is edible."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bread-spelt-perfect",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-spelt",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Carrots from the garden. Roots for the pot.",
+        "be": "Морковь с огорода. Корни для котла.",
+        "cs": "Carrots from the garden. Roots for the pot.",
+        "da": "Carrots from the garden. Roots for the pot.",
+        "de": "Carrots from the garden. Roots for the pot.",
+        "en": "Carrots from the garden. Roots for the pot.",
+        "eo": "Carrots from the garden. Roots for the pot.",
+        "es": "Carrots from the garden. Roots for the pot.",
+        "fi": "Carrots from the garden. Roots for the pot.",
+        "fr": "Carrots from the garden. Roots for the pot.",
+        "hu": "Carrots from the garden. Roots for the pot.",
+        "is": "Carrots from the garden. Roots for the pot.",
+        "it": "Carrots from the garden. Roots for the pot.",
+        "ja": "Carrots from the garden. Roots for the pot.",
+        "ko": "Carrots from the garden. Roots for the pot.",
+        "li": "Carrots from the garden. Roots for the pot.",
+        "lt": "Carrots from the garden. Roots for the pot.",
+        "nl": "Carrots from the garden. Roots for the pot.",
+        "no": "Carrots from the garden. Roots for the pot.",
+        "pl": "Carrots from the garden. Roots for the pot.",
+        "pt": "Carrots from the garden. Roots for the pot.",
+        "ro": "Carrots from the garden. Roots for the pot.",
+        "ru": "Морковь с огорода. Корни для котла.",
+        "sk": "Carrots from the garden. Roots for the pot.",
+        "sr": "Carrots from the garden. Roots for the pot.",
+        "sv": "Carrots from the garden. Roots for the pot.",
+        "th": "Carrots from the garden. Roots for the pot.",
+        "tr": "Carrots from the garden. Roots for the pot.",
+        "uk": "Морковь с огорода. Корни для котла.",
+        "vi": "Carrots from the garden. Roots for the pot.",
+        "zh": "Carrots from the garden. Roots for the pot."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:vegetable-carrot",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-carrot",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Cabbage if you planted it — leaves for long storage.",
+        "be": "Капуста, если сажал — листья для долгого хранения.",
+        "cs": "Cabbage if you planted it — leaves for long storage.",
+        "da": "Cabbage if you planted it — leaves for long storage.",
+        "de": "Cabbage if you planted it — leaves for long storage.",
+        "en": "Cabbage if you planted it — leaves for long storage.",
+        "eo": "Cabbage if you planted it — leaves for long storage.",
+        "es": "Cabbage if you planted it — leaves for long storage.",
+        "fi": "Cabbage if you planted it — leaves for long storage.",
+        "fr": "Cabbage if you planted it — leaves for long storage.",
+        "hu": "Cabbage if you planted it — leaves for long storage.",
+        "is": "Cabbage if you planted it — leaves for long storage.",
+        "it": "Cabbage if you planted it — leaves for long storage.",
+        "ja": "Cabbage if you planted it — leaves for long storage.",
+        "ko": "Cabbage if you planted it — leaves for long storage.",
+        "li": "Cabbage if you planted it — leaves for long storage.",
+        "lt": "Cabbage if you planted it — leaves for long storage.",
+        "nl": "Cabbage if you planted it — leaves for long storage.",
+        "no": "Cabbage if you planted it — leaves for long storage.",
+        "pl": "Cabbage if you planted it — leaves for long storage.",
+        "pt": "Cabbage if you planted it — leaves for long storage.",
+        "ro": "Cabbage if you planted it — leaves for long storage.",
+        "ru": "Капуста, если сажал — листья для долгого хранения.",
+        "sk": "Cabbage if you planted it — leaves for long storage.",
+        "sr": "Cabbage if you planted it — leaves for long storage.",
+        "sv": "Cabbage if you planted it — leaves for long storage.",
+        "th": "Cabbage if you planted it — leaves for long storage.",
+        "tr": "Cabbage if you planted it — leaves for long storage.",
+        "uk": "Капуста, если сажал — листья для долгого хранения.",
+        "vi": "Cabbage if you planted it — leaves for long storage.",
+        "zh": "Cabbage if you planted it — leaves for long storage."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:vegetable-cabbage",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-spelt",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Wild fruit. The land’s free dessert.",
+        "be": "Дикие плоды. Бесплатный десерт земли.",
+        "cs": "Wild fruit. The land’s free dessert.",
+        "da": "Wild fruit. The land’s free dessert.",
+        "de": "Wild fruit. The land’s free dessert.",
+        "en": "Wild fruit. The land’s free dessert.",
+        "eo": "Wild fruit. The land’s free dessert.",
+        "es": "Wild fruit. The land’s free dessert.",
+        "fi": "Wild fruit. The land’s free dessert.",
+        "fr": "Wild fruit. The land’s free dessert.",
+        "hu": "Wild fruit. The land’s free dessert.",
+        "is": "Wild fruit. The land’s free dessert.",
+        "it": "Wild fruit. The land’s free dessert.",
+        "ja": "Wild fruit. The land’s free dessert.",
+        "ko": "Wild fruit. The land’s free dessert.",
+        "li": "Wild fruit. The land’s free dessert.",
+        "lt": "Wild fruit. The land’s free dessert.",
+        "nl": "Wild fruit. The land’s free dessert.",
+        "no": "Wild fruit. The land’s free dessert.",
+        "pl": "Wild fruit. The land’s free dessert.",
+        "pt": "Wild fruit. The land’s free dessert.",
+        "ro": "Wild fruit. The land’s free dessert.",
+        "ru": "Дикие плоды. Бесплатный десерт земли.",
+        "sk": "Wild fruit. The land’s free dessert.",
+        "sr": "Wild fruit. The land’s free dessert.",
+        "sv": "Wild fruit. The land’s free dessert.",
+        "th": "Wild fruit. The land’s free dessert.",
+        "tr": "Wild fruit. The land’s free dessert.",
+        "uk": "Дикие плоды. Бесплатный десерт земли.",
+        "vi": "Wild fruit. The land’s free dessert.",
+        "zh": "Wild fruit. The land’s free dessert."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:fruit-*",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fruit-blueberry",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Cattail roots. The marsh feeds when fields sleep.",
+        "be": "Корни рогоза. Болото кормит, когда поля спят.",
+        "cs": "Cattail roots. The marsh feeds when fields sleep.",
+        "da": "Cattail roots. The marsh feeds when fields sleep.",
+        "de": "Cattail roots. The marsh feeds when fields sleep.",
+        "en": "Cattail roots. The marsh feeds when fields sleep.",
+        "eo": "Cattail roots. The marsh feeds when fields sleep.",
+        "es": "Cattail roots. The marsh feeds when fields sleep.",
+        "fi": "Cattail roots. The marsh feeds when fields sleep.",
+        "fr": "Cattail roots. The marsh feeds when fields sleep.",
+        "hu": "Cattail roots. The marsh feeds when fields sleep.",
+        "is": "Cattail roots. The marsh feeds when fields sleep.",
+        "it": "Cattail roots. The marsh feeds when fields sleep.",
+        "ja": "Cattail roots. The marsh feeds when fields sleep.",
+        "ko": "Cattail roots. The marsh feeds when fields sleep.",
+        "li": "Cattail roots. The marsh feeds when fields sleep.",
+        "lt": "Cattail roots. The marsh feeds when fields sleep.",
+        "nl": "Cattail roots. The marsh feeds when fields sleep.",
+        "no": "Cattail roots. The marsh feeds when fields sleep.",
+        "pl": "Cattail roots. The marsh feeds when fields sleep.",
+        "pt": "Cattail roots. The marsh feeds when fields sleep.",
+        "ro": "Cattail roots. The marsh feeds when fields sleep.",
+        "ru": "Корни рогоза. Болото кормит, когда поля спят.",
+        "sk": "Cattail roots. The marsh feeds when fields sleep.",
+        "sr": "Cattail roots. The marsh feeds when fields sleep.",
+        "sv": "Cattail roots. The marsh feeds when fields sleep.",
+        "th": "Cattail roots. The marsh feeds when fields sleep.",
+        "tr": "Cattail roots. The marsh feeds when fields sleep.",
+        "uk": "Корни рогоза. Болото кормит, когда поля спят.",
+        "vi": "Cattail roots. The marsh feeds when fields sleep.",
+        "zh": "Cattail roots. The marsh feeds when fields sleep."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:cattailroot",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:cattailtops",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A clay planter. Even smiths kept green by the door.",
+        "be": "Глиняное кашпо. Даже кузнецы держали зелень у двери.",
+        "cs": "A clay planter. Even smiths kept green by the door.",
+        "da": "A clay planter. Even smiths kept green by the door.",
+        "de": "A clay planter. Even smiths kept green by the door.",
+        "en": "A clay planter. Even smiths kept green by the door.",
+        "eo": "A clay planter. Even smiths kept green by the door.",
+        "es": "A clay planter. Even smiths kept green by the door.",
+        "fi": "A clay planter. Even smiths kept green by the door.",
+        "fr": "A clay planter. Even smiths kept green by the door.",
+        "hu": "A clay planter. Even smiths kept green by the door.",
+        "is": "A clay planter. Even smiths kept green by the door.",
+        "it": "A clay planter. Even smiths kept green by the door.",
+        "ja": "A clay planter. Even smiths kept green by the door.",
+        "ko": "A clay planter. Even smiths kept green by the door.",
+        "li": "A clay planter. Even smiths kept green by the door.",
+        "lt": "A clay planter. Even smiths kept green by the door.",
+        "nl": "A clay planter. Even smiths kept green by the door.",
+        "no": "A clay planter. Even smiths kept green by the door.",
+        "pl": "A clay planter. Even smiths kept green by the door.",
+        "pt": "A clay planter. Even smiths kept green by the door.",
+        "ro": "A clay planter. Even smiths kept green by the door.",
+        "ru": "Глиняное кашпо. Даже кузнецы держали зелень у двери.",
+        "sk": "A clay planter. Even smiths kept green by the door.",
+        "sr": "A clay planter. Even smiths kept green by the door.",
+        "sv": "A clay planter. Even smiths kept green by the door.",
+        "th": "A clay planter. Even smiths kept green by the door.",
+        "tr": "A clay planter. Even smiths kept green by the door.",
+        "uk": "Глиняное кашпо. Даже кузнецы держали зелень у двери.",
+        "vi": "A clay planter. Even smiths kept green by the door.",
+        "zh": "A clay planter. Even smiths kept green by the door."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clayplanter-blue-raw",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 19,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired planter. Roots need a home that remembers the kiln.",
+        "be": "Обожжённое кашпо. Корням нужен дом, помнящий печь.",
+        "cs": "Fired planter. Roots need a home that remembers the kiln.",
+        "da": "Fired planter. Roots need a home that remembers the kiln.",
+        "de": "Fired planter. Roots need a home that remembers the kiln.",
+        "en": "Fired planter. Roots need a home that remembers the kiln.",
+        "eo": "Fired planter. Roots need a home that remembers the kiln.",
+        "es": "Fired planter. Roots need a home that remembers the kiln.",
+        "fi": "Fired planter. Roots need a home that remembers the kiln.",
+        "fr": "Fired planter. Roots need a home that remembers the kiln.",
+        "hu": "Fired planter. Roots need a home that remembers the kiln.",
+        "is": "Fired planter. Roots need a home that remembers the kiln.",
+        "it": "Fired planter. Roots need a home that remembers the kiln.",
+        "ja": "Fired planter. Roots need a home that remembers the kiln.",
+        "ko": "Fired planter. Roots need a home that remembers the kiln.",
+        "li": "Fired planter. Roots need a home that remembers the kiln.",
+        "lt": "Fired planter. Roots need a home that remembers the kiln.",
+        "nl": "Fired planter. Roots need a home that remembers the kiln.",
+        "no": "Fired planter. Roots need a home that remembers the kiln.",
+        "pl": "Fired planter. Roots need a home that remembers the kiln.",
+        "pt": "Fired planter. Roots need a home that remembers the kiln.",
+        "ro": "Fired planter. Roots need a home that remembers the kiln.",
+        "ru": "Обожжённое кашпо. Корням нужен дом, помнящий печь.",
+        "sk": "Fired planter. Roots need a home that remembers the kiln.",
+        "sr": "Fired planter. Roots need a home that remembers the kiln.",
+        "sv": "Fired planter. Roots need a home that remembers the kiln.",
+        "th": "Fired planter. Roots need a home that remembers the kiln.",
+        "tr": "Fired planter. Roots need a home that remembers the kiln.",
+        "uk": "Обожжённое кашпо. Корням нужен дом, помнящий печь.",
+        "vi": "Fired planter. Roots need a home that remembers the kiln.",
+        "zh": "Fired planter. Roots need a home that remembers the kiln."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clayplanter-blue-fired",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-flax",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "be": "Медная мотыга, когда придёт металл. Поля растут вместе с веком.",
+        "cs": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "da": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "de": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "en": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "eo": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "es": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "fi": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "fr": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "hu": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "is": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "it": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "ja": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "ko": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "li": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "lt": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "nl": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "no": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "pl": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "pt": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "ro": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "ru": "Медная мотыга, когда придёт металл. Поля растут вместе с веком.",
+        "sk": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "sr": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "sv": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "th": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "tr": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "uk": "Медная мотыга, когда придёт металл. Поля растут вместе с веком.",
+        "vi": "Copper hoe when metal arrives. Fields upgrade with the age.",
+        "zh": "Copper hoe when metal arrives. Fields upgrade with the age."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hoe-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-spelt",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 21,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Farming path complete. Winter will find your stores full.",
+        "be": "Путь земледелия завершён. Зима найдёт твои запасы полными.",
+        "cs": "Farming path complete. Winter will find your stores full.",
+        "da": "Farming path complete. Winter will find your stores full.",
+        "de": "Farming path complete. Winter will find your stores full.",
+        "en": "Farming path complete. Winter will find your stores full.",
+        "eo": "Farming path complete. Winter will find your stores full.",
+        "es": "Farming path complete. Winter will find your stores full.",
+        "fi": "Farming path complete. Winter will find your stores full.",
+        "fr": "Farming path complete. Winter will find your stores full.",
+        "hu": "Farming path complete. Winter will find your stores full.",
+        "is": "Farming path complete. Winter will find your stores full.",
+        "it": "Farming path complete. Winter will find your stores full.",
+        "ja": "Farming path complete. Winter will find your stores full.",
+        "ko": "Farming path complete. Winter will find your stores full.",
+        "li": "Farming path complete. Winter will find your stores full.",
+        "lt": "Farming path complete. Winter will find your stores full.",
+        "nl": "Farming path complete. Winter will find your stores full.",
+        "no": "Farming path complete. Winter will find your stores full.",
+        "pl": "Farming path complete. Winter will find your stores full.",
+        "pt": "Farming path complete. Winter will find your stores full.",
+        "ro": "Farming path complete. Winter will find your stores full.",
+        "ru": "Путь земледелия завершён. Зима найдёт твои запасы полными.",
+        "sk": "Farming path complete. Winter will find your stores full.",
+        "sr": "Farming path complete. Winter will find your stores full.",
+        "sv": "Farming path complete. Winter will find your stores full.",
+        "th": "Farming path complete. Winter will find your stores full.",
+        "tr": "Farming path complete. Winter will find your stores full.",
+        "uk": "Путь земледелия завершён. Зима найдёт твои запасы полными.",
+        "vi": "Farming path complete. Winter will find your stores full.",
+        "zh": "Farming path complete. Winter will find your stores full."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 22,
+      "x": -120,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Honeycomb for sweet bread and candles later.",
+        "be": "Соты для сладкого хлеба и будущих свечей.",
+        "cs": "Honeycomb for sweet bread and candles later.",
+        "da": "Honeycomb for sweet bread and candles later.",
+        "de": "Honeycomb for sweet bread and candles later.",
+        "en": "Honeycomb for sweet bread and candles later.",
+        "eo": "Honeycomb for sweet bread and candles later.",
+        "es": "Honeycomb for sweet bread and candles later.",
+        "fi": "Honeycomb for sweet bread and candles later.",
+        "fr": "Honeycomb for sweet bread and candles later.",
+        "hu": "Honeycomb for sweet bread and candles later.",
+        "is": "Honeycomb for sweet bread and candles later.",
+        "it": "Honeycomb for sweet bread and candles later.",
+        "ja": "Honeycomb for sweet bread and candles later.",
+        "ko": "Honeycomb for sweet bread and candles later.",
+        "li": "Honeycomb for sweet bread and candles later.",
+        "lt": "Honeycomb for sweet bread and candles later.",
+        "nl": "Honeycomb for sweet bread and candles later.",
+        "no": "Honeycomb for sweet bread and candles later.",
+        "pl": "Honeycomb for sweet bread and candles later.",
+        "pt": "Honeycomb for sweet bread and candles later.",
+        "ro": "Honeycomb for sweet bread and candles later.",
+        "ru": "Соты для сладкого хлеба и будущих свечей.",
+        "sk": "Honeycomb for sweet bread and candles later.",
+        "sr": "Honeycomb for sweet bread and candles later.",
+        "sv": "Honeycomb for sweet bread and candles later.",
+        "th": "Honeycomb for sweet bread and candles later.",
+        "tr": "Honeycomb for sweet bread and candles later.",
+        "uk": "Соты для сладкого хлеба и будущих свечей.",
+        "vi": "Honeycomb for sweet bread and candles later.",
+        "zh": "Honeycomb for sweet bread and candles later."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:honeycomb",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:beeswax",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 5
+    }
+  ],
+  "nextNodeId": 23
+}

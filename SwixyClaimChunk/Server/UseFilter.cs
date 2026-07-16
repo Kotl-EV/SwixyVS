@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -10,113 +11,21 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — сервер: фильтр блоков для Use.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>����� <see cref="SwixyClaimChunkServerMod"/> � ������: ������ ������ ��� Use.</summary>
+public sealed partial class SwixyClaimChunkServerMod
 {
-    private UseFilterRuleData? TryGetUseFilter(LandClaim claim, bool clientSide = false)
-    {
-        if (claim == null)
-        {
-            return null;
-        }
-
-        var store = GetUseFilterStore(clientSide);
-        foreach (var key in EnumerateClaimStorageKeys(claim))
-        {
-            if (TryGetWhitelistRule(store, key, out var rule))
-            {
-                return rule;
-            }
-        }
-
-        // Fallback: после расширения чанков coord-ключ меняется — ищем по owner+name.
-        var owner = claim.OwnedByPlayerUid ?? "";
-        var name = (claim.Description ?? "").Trim();
-        if (string.IsNullOrWhiteSpace(owner))
-        {
-            return null;
-        }
-
-        if (!string.IsNullOrWhiteSpace(name))
-        {
-            var nameKey = $"{owner}:name:{name}";
-            if (TryGetWhitelistRule(store, nameKey, out var byName))
-            {
-                return byName;
-            }
-        }
-
-        // Последний fallback: единственный whitelist этого владельца (один приват).
-        UseFilterRuleData? sole = null;
-        var soleCount = 0;
-        foreach (var entry in store)
-        {
-            if (!entry.Key.StartsWith(owner + ":", StringComparison.Ordinal)
-                || entry.Value.Mode != ClaimUseFilterMode.Whitelist
-                || entry.Value.Codes.Count == 0)
-            {
-                continue;
-            }
-
-            sole = entry.Value;
-            soleCount++;
-            if (soleCount > 1)
-            {
-                return null;
-            }
-        }
-
-        return soleCount == 1 ? sole : null;
-    }
-
-    /// <summary>
-    /// Клиент (MP) читает clientUseFilters; сервер/SP — useFilters.
-    /// На SP clientSide с пустым client-dict — fallback на server dict (общая память).
-    /// </summary>
-    private Dictionary<string, UseFilterRuleData> GetUseFilterStore(bool clientSide)
-    {
-        if (!clientSide)
-        {
-            return useFiltersByClaimKey;
-        }
-
-        if (clientUseFiltersByClaimKey.Count > 0)
-        {
-            return clientUseFiltersByClaimKey;
-        }
-
-        // SP integrated: фильтры живут в server dict.
-        if (serverApi != null && useFiltersByClaimKey.Count > 0)
-        {
-            return useFiltersByClaimKey;
-        }
-
-        return clientUseFiltersByClaimKey;
-    }
-
-    private static bool TryGetWhitelistRule(
-        Dictionary<string, UseFilterRuleData> store,
-        string key,
-        out UseFilterRuleData? rule)
-    {
-        rule = null;
-        if (!store.TryGetValue(key, out var found)
-            || found.Mode != ClaimUseFilterMode.Whitelist
-            || found.Codes.Count == 0)
-        {
-            return false;
-        }
-
-        rule = found;
-        return true;
-    }
+    private UseFilterRuleData? TryGetUseFilter(LandClaim claim)
+        => ClaimUseFilterLogic.TryGetUseFilter(useFiltersByClaimKey, claim);
 
     private bool TryGetWhitelistRule(string key, out UseFilterRuleData? rule)
-        => TryGetWhitelistRule(useFiltersByClaimKey, key, out rule);
+        => ClaimUseFilterLogic.TryGetWhitelistRule(useFiltersByClaimKey, key, out rule);
+
+    private static List<string> NormalizeUseFilterCodes(IEnumerable<string>? codes)
+        => ClaimUseFilterLogic.NormalizeUseFilterCodes(codes);
 
     /// <summary>
-    /// Перезаписывает ключи фильтра актуальными (после expand),
-    /// чтобы coord-ключ не «отваливался».
+    /// �������������� ����� ������� ����������� (����� expand),
+    /// ����� coord-���� �� �������������.
     /// </summary>
     private void RebindUseFilterKeys(LandClaim claim)
     {
@@ -129,9 +38,9 @@ public sealed partial class SwixyClaimChunkMod
         var codes = rule.Codes.ToList();
         var owner = claim.OwnedByPlayerUid ?? "";
         var name = (claim.Description ?? "").Trim();
-        var freshKeys = new HashSet<string>(EnumerateClaimStorageKeys(claim), StringComparer.Ordinal);
+        var freshKeys = new HashSet<string>(ClaimStorageKeys.EnumerateClaimStorageKeys(claim), StringComparer.Ordinal);
 
-        // Удаляем orphan coord-ключи этого владельца (старый minXYZ после expand).
+        // ������� orphan coord-����� ����� ��������� (������ minXYZ ����� expand).
         if (!string.IsNullOrWhiteSpace(owner))
         {
             foreach (var key in useFiltersByClaimKey.Keys.ToList())
@@ -141,7 +50,7 @@ public sealed partial class SwixyClaimChunkMod
                     continue;
                 }
 
-                // name-ключ чужого привата того же владельца не трогаем.
+                // name-���� ������ ������� ���� �� ��������� �� �������.
                 if (key.StartsWith(owner + ":name:", StringComparison.Ordinal))
                 {
                     var keyName = key[(owner.Length + ":name:".Length)..];
@@ -161,7 +70,7 @@ public sealed partial class SwixyClaimChunkMod
         WriteUseFilter(claim, ClaimUseFilterMode.Whitelist, codes);
     }
 
-    /// <summary>Перенос whitelist при переименовании привата (name-ключ меняется).</summary>
+    /// <summary>������� whitelist ��� �������������� ������� (name-���� ��������).</summary>
     private void MigrateUseFilterAfterRename(LandClaim claim, string oldName)
     {
         var owner = claim.OwnedByPlayerUid ?? "";
@@ -195,7 +104,7 @@ public sealed partial class SwixyClaimChunkMod
 
     private void ClearUseFilter(LandClaim claim)
     {
-        foreach (var key in EnumerateClaimStorageKeys(claim).ToList())
+        foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList())
         {
             useFiltersByClaimKey.Remove(key);
         }
@@ -239,7 +148,7 @@ public sealed partial class SwixyClaimChunkMod
 
     private void ClearUseFilterKeysOnly(LandClaim claim)
     {
-        foreach (var key in EnumerateClaimStorageKeys(claim).ToList())
+        foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList())
         {
             useFiltersByClaimKey.Remove(key);
         }
@@ -253,7 +162,7 @@ public sealed partial class SwixyClaimChunkMod
             return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }
 
-        // Не вызываем TouchClaim: он сдвигает claim в конец All и ломает ClaimId.
+        // �� �������� TouchClaim: �� �������� claim � ����� All � ������ ClaimId.
         var normalized = NormalizeUseFilterCodes(codes);
         if (mode == ClaimUseFilterMode.Whitelist && normalized.Count == 0)
         {
@@ -261,7 +170,7 @@ public sealed partial class SwixyClaimChunkMod
             return ClaimActionResult.Error("swixyclaimchunk:use-filter-error-empty");
         }
 
-        var keys = EnumerateClaimStorageKeys(claim).ToList();
+        var keys = ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList();
         if (keys.Count == 0)
         {
             serverApi?.Logger.Warning("[SwixyClaimChunk] SetUseFilter: no storage keys for claim");
@@ -300,84 +209,13 @@ public sealed partial class SwixyClaimChunkMod
             Codes = codes.ToList()
         };
 
-        foreach (var key in EnumerateClaimStorageKeys(claim))
+        foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim))
         {
             useFiltersByClaimKey[key] = new UseFilterRuleData
             {
                 Mode = rule.Mode,
                 Codes = rule.Codes.ToList()
             };
-        }
-    }
-
-    /// <summary>
-    /// Несколько ключей на один приват: координаты (как co-owners) + имя.
-    /// Lookup срабатывает, если совпал любой.
-    /// </summary>
-    private static IEnumerable<string> EnumerateClaimStorageKeys(LandClaim claim)
-    {
-        if (string.IsNullOrWhiteSpace(claim.OwnedByPlayerUid))
-        {
-            yield break;
-        }
-
-        var coordKey = BuildClaimStorageKey(claim);
-        if (!string.IsNullOrWhiteSpace(coordKey))
-        {
-            yield return coordKey;
-        }
-
-        var name = (claim.Description ?? "").Trim();
-        if (!string.IsNullOrWhiteSpace(name))
-        {
-            yield return $"{claim.OwnedByPlayerUid}:name:{name}";
-        }
-    }
-
-    private static List<string> NormalizeUseFilterCodes(IEnumerable<string>? codes)
-    {
-        if (codes == null)
-        {
-            return [];
-        }
-
-        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var raw in codes)
-        {
-            var code = NormalizeCollectibleCode(raw);
-            if (string.IsNullOrWhiteSpace(code))
-            {
-                continue;
-            }
-
-            set.Add(code);
-        }
-
-        return set.OrderBy(static code => code, StringComparer.OrdinalIgnoreCase).ToList();
-    }
-
-    /// <summary>Единый вид кода: domain:path (через AssetLocation).</summary>
-    internal static string NormalizeCollectibleCode(string? raw)
-    {
-        if (string.IsNullOrWhiteSpace(raw))
-        {
-            return "";
-        }
-
-        var trimmed = raw.Trim();
-        try
-        {
-            var location = new AssetLocation(trimmed);
-            if (string.IsNullOrWhiteSpace(location.Domain) || string.IsNullOrWhiteSpace(location.Path))
-            {
-                return trimmed;
-            }
-
-            return location.ToString();
-        }
-        catch
-        {
-            return trimmed;
         }
     }
 
@@ -395,30 +233,13 @@ public sealed partial class SwixyClaimChunkMod
         info.UseFilterCodesRaw = ClaimUseFilterCodesCodec.Join(rule.Codes);
     }
 
-    private EnumWorldAccessResponse OnClientTestBlockAccess(
-        IPlayer player,
-        BlockSelection blockSel,
-        EnumBlockAccessFlags accessType,
-        ref string claimant,
-        EnumWorldAccessResponse response)
-        => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, null, response, clientSide: true);
-
-    private EnumWorldAccessResponse OnClientTestBlockAccessClaim(
-        IPlayer player,
-        BlockSelection blockSel,
-        EnumBlockAccessFlags accessType,
-        ref string claimant,
-        LandClaim claim,
-        EnumWorldAccessResponse response)
-        => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, claim, response, clientSide: true);
-
     private EnumWorldAccessResponse OnServerTestBlockAccess(
         IPlayer player,
         BlockSelection blockSel,
         EnumBlockAccessFlags accessType,
         ref string claimant,
         EnumWorldAccessResponse response)
-        => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, null, response, clientSide: false);
+        => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, null, response);
 
     private EnumWorldAccessResponse OnServerTestBlockAccessClaim(
         IPlayer player,
@@ -427,490 +248,30 @@ public sealed partial class SwixyClaimChunkMod
         ref string claimant,
         LandClaim claim,
         EnumWorldAccessResponse response)
-        => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, claim, response, clientSide: false);
+        => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, claim, response);
 
-    /// <summary>
-    /// Сужает уже разрешённый ванилью Use: whitelist для всех без Build.
-    /// clientSide=true — prediction/GUI; false — authoritative server.
-    /// </summary>
+    /// <summary>������ ��� ����������� ������� Use: whitelist ��� ���� ��� Build.</summary>
     private EnumWorldAccessResponse ApplyUseBlockFilter(
         IPlayer player,
         BlockSelection? blockSel,
         EnumBlockAccessFlags accessType,
         ref string claimant,
         LandClaim? claim,
-        EnumWorldAccessResponse response,
-        bool clientSide)
+        EnumWorldAccessResponse response)
     {
-        try
-        {
-            IWorldAccessor? world;
-            if (clientSide)
-            {
-                world = clientApi?.World;
-                // SP: client world may lag; server world has claims too.
-                if (world == null && serverApi != null)
-                {
-                    world = serverApi.World;
-                }
-            }
-            else
-            {
-                world = serverApi?.World;
-                if (world == null && clientApi != null)
-                {
-                    world = clientApi.World;
-                }
-            }
-
-            if (player == null || world == null)
-            {
-                return response;
-            }
-
-            if (response != EnumWorldAccessResponse.Granted)
-            {
-                return response;
-            }
-
-            if (accessType != EnumBlockAccessFlags.Use)
-            {
-                return response;
-            }
-
-            var playerUid = player.PlayerUID;
-            if (string.IsNullOrWhiteSpace(playerUid))
-            {
-                return response;
-            }
-
-            var pos = blockSel?.Position;
-            if (pos == null)
-            {
-                return response;
-            }
-
-            var store = GetUseFilterStore(clientSide);
-            // На чистом клиенте без синка whitelist — не угадываем (server всё равно решит),
-            // но это и есть desync. Потому клиент обязан получать sync.
-            // Если store пуст на clientSide — пробуем server store (SP).
-            if (clientSide && store.Count == 0)
-            {
-                return response;
-            }
-
-            var resolved = ResolveBlockForUseFilter(world, blockSel, pos);
-            var lookupPos = resolved.ControlPos ?? pos;
-            var claims = ResolveClaimsAt(world, claim, lookupPos, pos);
-            if (claims.Length == 0)
-            {
-                return response;
-            }
-
-            // Кандидаты кода: control + исходный (дверь/multiblock).
-            var codesToTest = new List<string>(2);
-            if (!string.IsNullOrWhiteSpace(resolved.BlockCode))
-            {
-                codesToTest.Add(resolved.BlockCode);
-            }
-
-            if (!string.IsNullOrWhiteSpace(resolved.AltBlockCode)
-                && !codesToTest.Contains(resolved.AltBlockCode, StringComparer.OrdinalIgnoreCase))
-            {
-                codesToTest.Add(resolved.AltBlockCode);
-            }
-
-            foreach (var activeClaim in claims)
-            {
-                if (activeClaim == null)
-                {
-                    continue;
-                }
-
-                if (IsClaimOwner(activeClaim, playerUid) || IsCoOwner(activeClaim, playerUid))
-                {
-                    continue;
-                }
-
-                if (HasBuildAccess(activeClaim, playerUid))
-                {
-                    continue;
-                }
-
-                var rule = TryGetUseFilter(activeClaim, clientSide);
-                if (rule == null || rule.Mode != ClaimUseFilterMode.Whitelist || rule.Codes.Count == 0)
-                {
-                    continue;
-                }
-
-                var allowed = false;
-                foreach (var code in codesToTest)
-                {
-                    if (IsBlockCodeAllowedByUseFilter(code, rule.Codes))
-                    {
-                        allowed = true;
-                        break;
-                    }
-                }
-
-                if (!allowed)
-                {
-                    claimant = Lang.Get("swixyclaimchunk:use-filter-denied");
-                    return EnumWorldAccessResponse.DeniedByMod;
-                }
-            }
-
-            return response;
-        }
-        catch (Exception exception)
-        {
-            (serverApi?.Logger ?? clientApi?.Logger)?.Error(
-                "[SwixyClaimChunk] ApplyUseBlockFilter failed: {0}",
-                exception);
-            return response;
-        }
+        return ClaimUseFilterLogic.ApplyUseBlockFilter(
+            serverApi?.World,
+            useFiltersByClaimKey,
+            player,
+            blockSel,
+            accessType,
+            ref claimant,
+            claim,
+            response,
+            isPrivileged: (activeClaim, playerUid) =>
+                IsClaimOwner(activeClaim, playerUid) || IsCoOwner(activeClaim, playerUid),
+            logError: msg => serverApi?.Logger.Error(msg));
     }
-
-    private static LandClaim[] ResolveClaimsAt(
-        IWorldAccessor world,
-        LandClaim? claim,
-        BlockPos lookupPos,
-        BlockPos originalPos)
-    {
-        if (claim != null)
-        {
-            return [claim];
-        }
-
-        var found = world.Claims.Get(lookupPos);
-        if ((found == null || found.Length == 0) && lookupPos != originalPos)
-        {
-            found = world.Claims.Get(originalPos);
-        }
-
-        if (found != null && found.Length > 0)
-        {
-            return found;
-        }
-
-        // Клиентский индекс LandClaimByRegion иногда пуст — сканируем All.
-        var all = world.Claims.All;
-        if (all == null || all.Count == 0)
-        {
-            return [];
-        }
-
-        var list = new List<LandClaim>();
-        foreach (var c in all)
-        {
-            try
-            {
-                if (c != null && (c.PositionInside(lookupPos) || c.PositionInside(originalPos)))
-                {
-                    list.Add(c);
-                }
-            }
-            catch
-            {
-                // ignore broken claim
-            }
-        }
-
-        return list.ToArray();
-    }
-
-    private readonly struct ResolvedUseFilterBlock
-    {
-        public readonly string BlockCode;
-        public readonly string AltBlockCode;
-        public readonly BlockPos? ControlPos;
-
-        public ResolvedUseFilterBlock(string blockCode, string altBlockCode, BlockPos? controlPos)
-        {
-            BlockCode = blockCode;
-            AltBlockCode = altBlockCode;
-            ControlPos = controlPos;
-        }
-    }
-
-    /// <summary>
-    /// Код «логического» блока для фильтра + control-pos multiblock (двери 1x2).
-    /// </summary>
-    private static ResolvedUseFilterBlock ResolveBlockForUseFilter(
-        IWorldAccessor world,
-        BlockSelection? blockSel,
-        BlockPos pos)
-    {
-        try
-        {
-            var block = world.BlockAccessor.GetBlock(pos);
-            BlockPos? controlPos = null;
-            string alt = "";
-
-            IMultiblockOffset? multiblock = block as IMultiblockOffset
-                ?? block?.GetInterface<IMultiblockOffset>(world, pos);
-            if (multiblock != null)
-            {
-                controlPos = multiblock.GetControlBlockPos(pos);
-                if (controlPos != null)
-                {
-                    var controlBlock = world.BlockAccessor.GetBlock(controlPos);
-                    var controlCode = NormalizeCollectibleCode(controlBlock?.Code?.ToString());
-                    if (!string.IsNullOrWhiteSpace(controlCode) && !IsMultiblockStubCode(controlCode))
-                    {
-                        // BE на control-блоке — самый надёжный источник.
-                        var be = world.BlockAccessor.GetBlockEntity(controlPos);
-                        var beCode = NormalizeCollectibleCode(be?.Block?.Code?.ToString());
-                        if (!string.IsNullOrWhiteSpace(beCode) && !IsMultiblockStubCode(beCode))
-                        {
-                            return new ResolvedUseFilterBlock(beCode, controlCode, controlPos);
-                        }
-
-                        return new ResolvedUseFilterBlock(controlCode, "", controlPos);
-                    }
-                }
-            }
-
-            var code = NormalizeCollectibleCode(block?.Code?.ToString());
-
-            // Верх двери / multiblock stub: пробуем блок снизу (control двери).
-            if (IsMultiblockStubCode(code) || string.IsNullOrWhiteSpace(code))
-            {
-                var belowPos = pos.DownCopy();
-                var below = world.BlockAccessor.GetBlock(belowPos);
-                var belowCode = NormalizeCollectibleCode(below?.Code?.ToString());
-                if (!string.IsNullOrWhiteSpace(belowCode) && !IsMultiblockStubCode(belowCode))
-                {
-                    controlPos ??= belowPos;
-                    alt = code;
-                    code = belowCode;
-                }
-            }
-
-            // BE на текущей/control позиции.
-            if (string.IsNullOrWhiteSpace(code) || IsMultiblockStubCode(code))
-            {
-                var bePos = controlPos ?? pos;
-                var be = world.BlockAccessor.GetBlockEntity(bePos);
-                var beCode = NormalizeCollectibleCode(be?.Block?.Code?.ToString());
-                if (!string.IsNullOrWhiteSpace(beCode) && !IsMultiblockStubCode(beCode))
-                {
-                    code = beCode;
-                    controlPos ??= bePos;
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(code) || IsMultiblockStubCode(code))
-            {
-                var fromSelection = NormalizeCollectibleCode(blockSel?.Block?.Code?.ToString());
-                if (!IsMultiblockStubCode(fromSelection) && !string.IsNullOrWhiteSpace(fromSelection))
-                {
-                    code = fromSelection;
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(code) || IsMultiblockStubCode(code))
-            {
-                var solid = world.BlockAccessor.GetBlock(pos, BlockLayersAccess.MostSolid);
-                var solidCode = NormalizeCollectibleCode(solid?.Code?.ToString());
-                if (!string.IsNullOrWhiteSpace(solidCode) && !IsMultiblockStubCode(solidCode))
-                {
-                    code = solidCode;
-                }
-            }
-
-            return new ResolvedUseFilterBlock(code, alt, controlPos);
-        }
-        catch
-        {
-            return new ResolvedUseFilterBlock(
-                NormalizeCollectibleCode(blockSel?.Block?.Code?.ToString()),
-                "",
-                null);
-        }
-    }
-
-    private static bool IsMultiblockStubCode(string? code)
-    {
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            return false;
-        }
-
-        var path = code;
-        var colon = code.IndexOf(':');
-        if (colon >= 0 && colon + 1 < code.Length)
-        {
-            path = code[(colon + 1)..];
-        }
-
-        return path.StartsWith("multiblock", StringComparison.OrdinalIgnoreCase);
-    }
-
-    /// <summary>
-    /// Whitelist match: exact/prefix, strip orientation/state, FirstCodePart
-    /// (metaldoor-solid-iron ↔ metaldoor-barred-iron по first part «metaldoor»).
-    /// </summary>
-    internal static bool IsBlockCodeAllowedByUseFilter(string blockCode, IReadOnlyList<string> allowedCodes)
-    {
-        blockCode = NormalizeCollectibleCode(blockCode);
-        if (string.IsNullOrWhiteSpace(blockCode) || IsMultiblockStubCode(blockCode))
-        {
-            return false;
-        }
-
-        var blockStripped = StripVariantSuffixes(blockCode);
-        var blockFirst = GetFirstCodePart(blockCode);
-
-        foreach (var allowedRaw in allowedCodes)
-        {
-            var allowed = NormalizeCollectibleCode(allowedRaw);
-            if (string.IsNullOrWhiteSpace(allowed))
-            {
-                continue;
-            }
-
-            if (CodesLooselyMatch(blockCode, allowed))
-            {
-                return true;
-            }
-
-            var allowedStripped = StripVariantSuffixes(allowed);
-            if (CodesLooselyMatch(blockStripped, allowedStripped)
-                || CodesLooselyMatch(blockCode, allowedStripped)
-                || CodesLooselyMatch(blockStripped, allowed))
-            {
-                return true;
-            }
-
-            // domain:metaldoor ≈ domain:metaldoor-solid-iron
-            var allowedFirst = GetFirstCodePart(allowed);
-            if (!string.IsNullOrWhiteSpace(blockFirst)
-                && string.Equals(blockFirst, allowedFirst, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>game:metaldoor-solid-iron → game:metaldoor</summary>
-    internal static string GetFirstCodePart(string code)
-    {
-        code = NormalizeCollectibleCode(code);
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            return "";
-        }
-
-        var colon = code.IndexOf(':');
-        var domain = colon >= 0 ? code[..colon] : "game";
-        var path = colon >= 0 ? code[(colon + 1)..] : code;
-        var dash = path.IndexOf('-');
-        var first = dash >= 0 ? path[..dash] : path;
-        return string.IsNullOrWhiteSpace(first) ? "" : $"{domain}:{first}";
-    }
-
-    private static bool CodesLooselyMatch(string left, string right)
-    {
-        if (string.IsNullOrWhiteSpace(left) || string.IsNullOrWhiteSpace(right))
-        {
-            return false;
-        }
-
-        if (string.Equals(left, right, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        if (left.StartsWith(right + "-", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        if (right.StartsWith(left + "-", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Срезает trailing-варианты ориентации/состояния: north/east, lit/cold/extinct и т.п.
-    /// Не трогает смысловые части вроде normal/oak.
-    /// </summary>
-    internal static string StripVariantSuffixes(string code)
-    {
-        code = NormalizeCollectibleCode(code);
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            return "";
-        }
-
-        var colon = code.IndexOf(':');
-        var domain = colon >= 0 ? code[..colon] : "game";
-        var path = colon >= 0 ? code[(colon + 1)..] : code;
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            return code;
-        }
-
-        var parts = path.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (parts.Length <= 1)
-        {
-            return $"{domain}:{path}";
-        }
-
-        var end = parts.Length;
-        while (end > 1 && IsStrippableVariantPart(parts[end - 1]))
-        {
-            end--;
-        }
-
-        return $"{domain}:{string.Join("-", parts.Take(end))}";
-    }
-
-    private static bool IsStrippableVariantPart(string part)
-    {
-        if (string.IsNullOrWhiteSpace(part))
-        {
-            return false;
-        }
-
-        return part.Equals("north", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("south", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("east", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("west", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("up", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("down", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("n", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("s", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("e", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("w", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("ns", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("sn", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("we", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("ew", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("ud", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("du", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("lit", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("cold", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("extinct", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("construct1", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("construct2", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("construct3", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("construct4", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("open", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("closed", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("opened", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("empty", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("full", StringComparison.OrdinalIgnoreCase)
-            || part.Equals("filled", StringComparison.OrdinalIgnoreCase);
-    }
-
-    /// <summary>Отправляет клиентам актуальный снимок фильтров Use.</summary>
     private void BroadcastUseFiltersSync(IServerPlayer? onlyPlayer = null)
     {
         if (serverApi == null || serverChannel == null)
@@ -952,45 +313,6 @@ public sealed partial class SwixyClaimChunkMod
         return packet;
     }
 
-    /// <summary>
-    /// Клиент: снимок фильтров только в <see cref="clientUseFiltersByClaimKey"/>.
-    /// Никогда не трогаем server dict (на SP это уничтожало whitelist).
-    /// </summary>
-    private void OnUseFiltersSyncPacket(ClaimUseFiltersSyncPacket packet)
-    {
-        clientUseFiltersByClaimKey.Clear();
-        if (packet?.Entries == null)
-        {
-            clientApi?.Logger.Notification("[SwixyClaimChunk] Client use filters synced: 0 entries");
-            return;
-        }
-
-        foreach (var entry in packet.Entries)
-        {
-            if (string.IsNullOrWhiteSpace(entry.ClaimKey))
-            {
-                continue;
-            }
-
-            var codes = NormalizeUseFilterCodes(ClaimUseFilterCodesCodec.Split(entry.CodesRaw));
-            if (entry.Mode != ClaimUseFilterMode.Whitelist || codes.Count == 0)
-            {
-                continue;
-            }
-
-            clientUseFiltersByClaimKey[entry.ClaimKey] = new UseFilterRuleData
-            {
-                Mode = ClaimUseFilterMode.Whitelist,
-                Codes = codes
-            };
-        }
-
-        clientApi?.Logger.Notification(
-            "[SwixyClaimChunk] Client use filters synced: {0} entries (server store={1})",
-            clientUseFiltersByClaimKey.Count,
-            useFiltersByClaimKey.Count);
-    }
-
     private void OnPlayerJoinSendUseFilters(IServerPlayer byPlayer)
     {
         // Небольшая задержка: канал клиента уже готов после NowPlaying.
@@ -1012,7 +334,7 @@ public sealed partial class SwixyClaimChunkMod
         useFiltersByClaimKey.Clear();
 
         // 1) byte[] + SerializerUtil (как co-owners)
-        var data = serverApi?.WorldManager.SaveGame.GetData(UseFiltersSaveKey);
+        var data = serverApi?.WorldManager.SaveGame.GetData(ClaimConstants.UseFiltersSaveKey);
         if (data != null && data.Length > 0)
         {
             try
@@ -1031,7 +353,7 @@ public sealed partial class SwixyClaimChunkMod
         {
             try
             {
-                var generic = serverApi.WorldManager.SaveGame.GetData<UseFilterSaveData>(UseFiltersSaveKey + "_obj", null!);
+                var generic = serverApi.WorldManager.SaveGame.GetData<UseFilterSaveData>(ClaimConstants.UseFiltersSaveKey + "_obj", null!);
                 if (generic?.Entries != null)
                 {
                     ImportUseFilterSaveData(generic);
@@ -1110,9 +432,9 @@ public sealed partial class SwixyClaimChunkMod
         try
         {
             var bytes = SerializerUtil.Serialize(payload);
-            serverApi.WorldManager.SaveGame.StoreData(UseFiltersSaveKey, bytes);
+            serverApi.WorldManager.SaveGame.StoreData(ClaimConstants.UseFiltersSaveKey, bytes);
             // Дублируем generic-путём — на случай если byte[] не попадёт в сейв.
-            serverApi.WorldManager.SaveGame.StoreData(UseFiltersSaveKey + "_obj", payload);
+            serverApi.WorldManager.SaveGame.StoreData(ClaimConstants.UseFiltersSaveKey + "_obj", payload);
 
             serverApi.Logger.Notification(
                 "[SwixyClaimChunk] Use filters persisted entries={0} bytes={1}",
@@ -1265,13 +587,13 @@ public sealed partial class SwixyClaimChunkMod
                         continue;
                     }
 
-                    var code = NormalizeCollectibleCode(block.Code?.ToString());
-                    if (string.IsNullOrWhiteSpace(code) || IsMultiblockStubCode(code))
+                    var code = ClaimCodeUtil.NormalizeCollectibleCode(block.Code?.ToString());
+                    if (string.IsNullOrWhiteSpace(code) || ClaimCodeUtil.IsMultiblockStubCode(code))
                     {
                         continue;
                     }
 
-                    var groupKey = StripVariantSuffixes(code);
+                    var groupKey = ClaimCodeUtil.StripVariantSuffixes(code);
                     if (string.IsNullOrWhiteSpace(groupKey))
                     {
                         groupKey = code;
@@ -1383,13 +705,13 @@ public sealed partial class SwixyClaimChunkMod
                 continue;
             }
 
-            var full = NormalizeCollectibleCode(b.Code.ToString());
-            if (string.IsNullOrWhiteSpace(full) || IsMultiblockStubCode(full))
+            var full = ClaimCodeUtil.NormalizeCollectibleCode(b.Code.ToString());
+            if (string.IsNullOrWhiteSpace(full) || ClaimCodeUtil.IsMultiblockStubCode(full))
             {
                 continue;
             }
 
-            var groupKey = StripVariantSuffixes(full);
+            var groupKey = ClaimCodeUtil.StripVariantSuffixes(full);
             if (string.IsNullOrWhiteSpace(groupKey))
             {
                 groupKey = full;
@@ -1441,7 +763,7 @@ public sealed partial class SwixyClaimChunkMod
         }
 
         // Только creative-вариант той же «семьи» (материал/тип), не всего firstPart.
-        var groupKey = StripVariantSuffixes(worldCode);
+        var groupKey = ClaimCodeUtil.StripVariantSuffixes(worldCode);
         if (string.IsNullOrWhiteSpace(groupKey))
         {
             groupKey = worldCode;

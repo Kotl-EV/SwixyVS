@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using ProtoBuf;
-using static SwixyClaimChunk.Content.ClaimVolumeUtil;
+using static SwixyClaimChunk.Core.ClaimVolumeUtil;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
@@ -14,8 +14,8 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — сервер: инициализация и /land.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: инициализация и /land.</summary>
+public sealed partial class SwixyClaimChunkServerMod
 {
     public override void StartServerSide(ICoreServerAPI api)
     {
@@ -24,7 +24,7 @@ public sealed partial class SwixyClaimChunkMod
         api.Logger.Notification("Swixy Claim Chunk server side starting.");
 
         serverApi = api;
-        serverChannel = RegisterClaimPacketTypes(api.Network.RegisterChannel(ChannelName))
+        serverChannel = ClaimPacketChannel.Register(api.Network.RegisterChannel(ClaimConstants.ChannelName))
             .SetMessageHandler<ClaimMapRequestPacket>(OnMapRequest)
             .SetMessageHandler<ClaimChunkActionPacket>(OnChunkAction)
             .SetMessageHandler<ClaimChunksBatchActionPacket>(OnChunksBatchAction)
@@ -125,7 +125,7 @@ public sealed partial class SwixyClaimChunkMod
     private void OnCoOwnersSaveGameLoaded()
     {
         coOwnerUidsByClaimKey.Clear();
-        var data = serverApi?.WorldManager.SaveGame.GetData(CoOwnersSaveKey);
+        var data = serverApi?.WorldManager.SaveGame.GetData(ClaimConstants.CoOwnersSaveKey);
         if (data == null)
         {
             return;
@@ -167,7 +167,7 @@ public sealed partial class SwixyClaimChunkMod
             payload.Entries[entry.Key] = entry.Value.ToList();
         }
 
-        serverApi.WorldManager.SaveGame.StoreData(CoOwnersSaveKey, SerializerUtil.Serialize(payload));
+        serverApi.WorldManager.SaveGame.StoreData(ClaimConstants.CoOwnersSaveKey, SerializerUtil.Serialize(payload));
     }
 
 }

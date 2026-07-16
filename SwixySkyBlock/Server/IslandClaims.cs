@@ -1,4 +1,5 @@
 using System;
+using SwixySkyBlock.Core;
 using System.Collections.Generic;
 using System.Linq;
 using SwixySkyBlock.Net;
@@ -10,7 +11,7 @@ using Vintagestory.API.Util;
 
 namespace SwixySkyBlock;
 
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     private readonly struct IslandActionResult
     {
@@ -191,7 +192,7 @@ public sealed partial class SwixySkyBlockMod
         }
 
         var area = BuildIslandClaimArea(serverApi, template, origin);
-        var claim = LandClaim.CreateClaim(actor, ProtectionLevel);
+        var claim = LandClaim.CreateClaim(actor, SkyBlockConstants.ProtectionLevel);
         claim.OwnedByPlayerUid = ownerUid;
         claim.LastKnownOwnerName = ownerName;
         claim.Description = SkyBlockWorld.IslandClaimDescriptionPrefix + " Island";

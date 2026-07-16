@@ -1,5 +1,6 @@
 using System;
 using SwixySkyBlock.Content;
+using SwixySkyBlock.Core;
 using SwixySkyBlock.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -8,8 +9,8 @@ using Vintagestory.API.MathTools;
 
 namespace SwixySkyBlock;
 
-/// <summary>Client-side initialization.</summary>
-public sealed partial class SwixySkyBlockMod
+/// <summary>Часть <see cref="SwixySkyBlockClientMod"/> — клиент: GUI и входящие пакеты.</summary>
+public sealed partial class SwixySkyBlockClientMod
 {
     private const int ClientClimateApplyRetryMs = 250;
     private const int ClientClimateApplyMaxAttempts = 40;
@@ -25,7 +26,7 @@ public sealed partial class SwixySkyBlockMod
 
         clientApi = api;
         clientClimateApplyAttempts = 0;
-        clientChannel = RegisterIslandPacketTypes(api.Network.RegisterChannel(ChannelName))
+        clientChannel = IslandPacketChannel.Register(api.Network.RegisterChannel(SkyBlockConstants.ChannelName))
             .SetMessageHandler<IslandHubStatePacket>(OnHubStatePacket)
             .SetMessageHandler<IslandGeneratorLabelsPacket>(OnGeneratorLabelsPacket)
             .SetMessageHandler<IslandGeneratorStatePacket>(OnGeneratorStatePacket)
@@ -44,14 +45,14 @@ public sealed partial class SwixySkyBlockMod
         api.Event.RegisterCallback(_ => RequestGeneratorLabels(), ClientGeneratorLabelsLateRetryRequestDelayMs);
 
         api.Input.RegisterHotKey(
-            OpenIslandHubHotkeyCode,
+            SkyBlockConstants.OpenIslandHubHotkeyCode,
             Lang.Get("swixyskyblock:open-island-hub-hotkey"),
             GlKeys.I,
             HotkeyType.GUIOrOtherControls,
             false,
             false,
             false);
-        api.Input.SetHotKeyHandler(OpenIslandHubHotkeyCode, _ =>
+        api.Input.SetHotKeyHandler(SkyBlockConstants.OpenIslandHubHotkeyCode, _ =>
         {
             api.Logger.Notification("[SwixySkyBlock][Hub] Hotkey I pressed.");
             ToggleHubDialog();

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using ProtoBuf;
-using static SwixyClaimChunk.Content.ClaimVolumeUtil;
+using static SwixyClaimChunk.Core.ClaimVolumeUtil;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
@@ -14,8 +14,8 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — сервер: пакетный клейм.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: пакетный клейм.</summary>
+public sealed partial class SwixyClaimChunkServerMod
 {
     /// <summary>Обрабатывает выделение чанков: свободные — claim, свои — unclaim; чужие — unclaim для админа.</summary>
     private ClaimActionResult ProcessChunksBatch(IServerPlayer player, IReadOnlyList<ClaimChunkCoordPacket> chunks)
@@ -348,7 +348,7 @@ public sealed partial class SwixyClaimChunkMod
             }
 
             var claimIndex = GetNextClaimIndex(player, ownClaims);
-            targetClaim = LandClaim.CreateClaim(player, ProtectionLevel);
+            targetClaim = LandClaim.CreateClaim(player, ClaimConstants.ProtectionLevel);
             targetClaim.Description = BuildClaimName(player, claimIndex);
         }
 

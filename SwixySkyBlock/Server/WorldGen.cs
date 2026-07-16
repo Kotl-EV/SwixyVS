@@ -13,7 +13,7 @@ using Vintagestory.API.Util;
 namespace SwixySkyBlock;
 
 /// <summary>Standard worldgen без блоков в чанках + размещение островов из схематик.</summary>
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     private IslandTemplate? activeIsland;
     private BlockPos islandOrigin;

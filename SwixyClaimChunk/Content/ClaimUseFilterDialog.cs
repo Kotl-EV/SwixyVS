@@ -14,6 +14,8 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
+using SwixyClaimChunk.Core;
+
 namespace SwixyClaimChunk.Content;
 
 /// <summary>
@@ -556,7 +558,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         }
 
         // Только варианты той же «семьи» (без ориентации): wood ≠ metal у windmillrotor.
-        var groupKey = SwixyClaimChunkMod.StripVariantSuffixes(code);
+        var groupKey = ClaimCodeUtil.StripVariantSuffixes(code);
         if (string.IsNullOrWhiteSpace(groupKey))
         {
             groupKey = code;
@@ -690,7 +692,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             }
 
             var colCode = NormalizeCode(col.Code.ToString());
-            var colGroup = SwixyClaimChunkMod.StripVariantSuffixes(colCode);
+            var colGroup = ClaimCodeUtil.StripVariantSuffixes(colCode);
             if (string.IsNullOrWhiteSpace(colGroup))
             {
                 colGroup = colCode;
@@ -784,7 +786,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             score += col.CreativeInventoryStacks is { Length: > 0 } ? 500 : 50;
         }
 
-        var colGroup = SwixyClaimChunkMod.StripVariantSuffixes(colCode);
+        var colGroup = ClaimCodeUtil.StripVariantSuffixes(colCode);
         if (string.Equals(colGroup, groupKey, StringComparison.OrdinalIgnoreCase))
         {
             score += 200;

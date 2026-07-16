@@ -1,10 +1,11 @@
+using SwixySkyBlock.Core;
 using SwixySkyBlock.Net;
 using Vintagestory.API.Server;
 
 namespace SwixySkyBlock;
 
-/// <summary>Серверная инициализация.</summary>
-public sealed partial class SwixySkyBlockMod
+/// <summary>Часть <see cref="SwixySkyBlockServerMod"/> — сервер: инициализация.</summary>
+public sealed partial class SwixySkyBlockServerMod
 {
     public override void StartServerSide(ICoreServerAPI api)
     {
@@ -17,7 +18,7 @@ public sealed partial class SwixySkyBlockMod
             SkyBlockWorld.ApplyWorldConfig(api);
         }
 
-        serverChannel = RegisterIslandPacketTypes(api.Network.RegisterChannel(ChannelName))
+        serverChannel = IslandPacketChannel.Register(api.Network.RegisterChannel(SkyBlockConstants.ChannelName))
             .SetMessageHandler<IslandHubRequestPacket>(OnHubRequest)
             .SetMessageHandler<IslandActionPacket>(OnIslandAction)
             .SetMessageHandler<IslandGeneratorLabelsRequestPacket>(OnGeneratorLabelsRequest)

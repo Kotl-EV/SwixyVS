@@ -1,0 +1,1247 @@
+{
+  "iconItemCode": "game:ingot-iron",
+  "title": {
+    "ar": "Iron Age",
+    "be": "Железный век",
+    "cs": "Iron Age",
+    "da": "Iron Age",
+    "de": "Eisenzeit",
+    "en": "Iron Age",
+    "eo": "Iron Age",
+    "es": "Edad del hierro",
+    "fi": "Iron Age",
+    "fr": "Âge du fer",
+    "hu": "Iron Age",
+    "is": "Iron Age",
+    "it": "Età del ferro",
+    "ja": "鉄器時代",
+    "ko": "철기 시대",
+    "li": "Iron Age",
+    "lt": "Iron Age",
+    "nl": "Iron Age",
+    "no": "Iron Age",
+    "pl": "Epoka żelaza",
+    "pt": "Idade do Ferro",
+    "ro": "Iron Age",
+    "ru": "Железный век",
+    "sk": "Iron Age",
+    "sr": "Iron Age",
+    "sv": "Iron Age",
+    "th": "Iron Age",
+    "tr": "Demir Çağı",
+    "uk": "Железный век",
+    "vi": "Iron Age",
+    "zh": "铁器时代"
+  },
+  "headerTitle": "category.iron.header",
+  "header": {
+    "ar": "IRON AGE",
+    "be": "ЖЕЛЕЗНЫЙ ВЕК",
+    "cs": "IRON AGE",
+    "da": "IRON AGE",
+    "de": "IRON AGE",
+    "en": "IRON AGE",
+    "eo": "IRON AGE",
+    "es": "IRON AGE",
+    "fi": "IRON AGE",
+    "fr": "IRON AGE",
+    "hu": "IRON AGE",
+    "is": "IRON AGE",
+    "it": "IRON AGE",
+    "ja": "IRON AGE",
+    "ko": "IRON AGE",
+    "li": "IRON AGE",
+    "lt": "IRON AGE",
+    "nl": "IRON AGE",
+    "no": "IRON AGE",
+    "pl": "IRON AGE",
+    "pt": "IRON AGE",
+    "ro": "IRON AGE",
+    "ru": "ЖЕЛЕЗНЫЙ ВЕК",
+    "sk": "IRON AGE",
+    "sr": "IRON AGE",
+    "sv": "IRON AGE",
+    "th": "IRON AGE",
+    "tr": "IRON AGE",
+    "uk": "ЖЕЛЕЗНЫЙ ВЕК",
+    "vi": "IRON AGE",
+    "zh": "IRON AGE"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Iron is stubborn. Charcoal and patience are its language.",
+        "be": "Железо упрямо. Уголь и терпение — его язык.",
+        "cs": "Iron is stubborn. Charcoal and patience are its language.",
+        "da": "Iron is stubborn. Charcoal and patience are its language.",
+        "de": "Iron is stubborn. Charcoal and patience are its language.",
+        "en": "Iron is stubborn. Charcoal and patience are its language.",
+        "eo": "Iron is stubborn. Charcoal and patience are its language.",
+        "es": "Iron is stubborn. Charcoal and patience are its language.",
+        "fi": "Iron is stubborn. Charcoal and patience are its language.",
+        "fr": "Iron is stubborn. Charcoal and patience are its language.",
+        "hu": "Iron is stubborn. Charcoal and patience are its language.",
+        "is": "Iron is stubborn. Charcoal and patience are its language.",
+        "it": "Iron is stubborn. Charcoal and patience are its language.",
+        "ja": "Iron is stubborn. Charcoal and patience are its language.",
+        "ko": "Iron is stubborn. Charcoal and patience are its language.",
+        "li": "Iron is stubborn. Charcoal and patience are its language.",
+        "lt": "Iron is stubborn. Charcoal and patience are its language.",
+        "nl": "Iron is stubborn. Charcoal and patience are its language.",
+        "no": "Iron is stubborn. Charcoal and patience are its language.",
+        "pl": "Iron is stubborn. Charcoal and patience are its language.",
+        "pt": "Iron is stubborn. Charcoal and patience are its language.",
+        "ro": "Iron is stubborn. Charcoal and patience are its language.",
+        "ru": "Железо упрямо. Уголь и терпение — его язык.",
+        "sk": "Iron is stubborn. Charcoal and patience are its language.",
+        "sr": "Iron is stubborn. Charcoal and patience are its language.",
+        "sv": "Iron is stubborn. Charcoal and patience are its language.",
+        "th": "Iron is stubborn. Charcoal and patience are its language.",
+        "tr": "Iron is stubborn. Charcoal and patience are its language.",
+        "uk": "Железо упрямо. Уголь и терпение — его язык.",
+        "vi": "Iron is stubborn. Charcoal and patience are its language.",
+        "zh": "Iron is stubborn. Charcoal and patience are its language."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "be": "Лимонит. Копай, где камень тяжёл и жёлто-красен.",
+        "cs": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "da": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "de": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "en": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "eo": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "es": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "fi": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "fr": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "hu": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "is": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "it": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "ja": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "ko": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "li": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "lt": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "nl": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "no": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "pl": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "pt": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "ro": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "ru": "Лимонит. Копай, где камень тяжёл и жёлто-красен.",
+        "sk": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "sr": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "sv": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "th": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "tr": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "uk": "Лимонит. Копай, где камень тяжёл и жёлто-красен.",
+        "vi": "Limonite. Dig where the stone is heavy and yellow-red.",
+        "zh": "Limonite. Dig where the stone is heavy and yellow-red."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-limonite-*",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 28,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Hematite if you find it — another face of iron.",
+        "be": "Гематит, если найдёшь — другое лицо железа.",
+        "cs": "Hematite if you find it — another face of iron.",
+        "da": "Hematite if you find it — another face of iron.",
+        "de": "Hematite if you find it — another face of iron.",
+        "en": "Hematite if you find it — another face of iron.",
+        "eo": "Hematite if you find it — another face of iron.",
+        "es": "Hematite if you find it — another face of iron.",
+        "fi": "Hematite if you find it — another face of iron.",
+        "fr": "Hematite if you find it — another face of iron.",
+        "hu": "Hematite if you find it — another face of iron.",
+        "is": "Hematite if you find it — another face of iron.",
+        "it": "Hematite if you find it — another face of iron.",
+        "ja": "Hematite if you find it — another face of iron.",
+        "ko": "Hematite if you find it — another face of iron.",
+        "li": "Hematite if you find it — another face of iron.",
+        "lt": "Hematite if you find it — another face of iron.",
+        "nl": "Hematite if you find it — another face of iron.",
+        "no": "Hematite if you find it — another face of iron.",
+        "pl": "Hematite if you find it — another face of iron.",
+        "pt": "Hematite if you find it — another face of iron.",
+        "ro": "Hematite if you find it — another face of iron.",
+        "ru": "Гематит, если найдёшь — другое лицо железа.",
+        "sk": "Hematite if you find it — another face of iron.",
+        "sr": "Hematite if you find it — another face of iron.",
+        "sv": "Hematite if you find it — another face of iron.",
+        "th": "Hematite if you find it — another face of iron.",
+        "tr": "Hematite if you find it — another face of iron.",
+        "uk": "Гематит, если найдёшь — другое лицо железа.",
+        "vi": "Hematite if you find it — another face of iron.",
+        "zh": "Hematite if you find it — another face of iron."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-hematite-*",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More charcoal. Iron drinks heat without thanks.",
+        "be": "Ещё уголь. Железо пьёт жар без благодарности.",
+        "cs": "More charcoal. Iron drinks heat without thanks.",
+        "da": "More charcoal. Iron drinks heat without thanks.",
+        "de": "More charcoal. Iron drinks heat without thanks.",
+        "en": "More charcoal. Iron drinks heat without thanks.",
+        "eo": "More charcoal. Iron drinks heat without thanks.",
+        "es": "More charcoal. Iron drinks heat without thanks.",
+        "fi": "More charcoal. Iron drinks heat without thanks.",
+        "fr": "More charcoal. Iron drinks heat without thanks.",
+        "hu": "More charcoal. Iron drinks heat without thanks.",
+        "is": "More charcoal. Iron drinks heat without thanks.",
+        "it": "More charcoal. Iron drinks heat without thanks.",
+        "ja": "More charcoal. Iron drinks heat without thanks.",
+        "ko": "More charcoal. Iron drinks heat without thanks.",
+        "li": "More charcoal. Iron drinks heat without thanks.",
+        "lt": "More charcoal. Iron drinks heat without thanks.",
+        "nl": "More charcoal. Iron drinks heat without thanks.",
+        "no": "More charcoal. Iron drinks heat without thanks.",
+        "pl": "More charcoal. Iron drinks heat without thanks.",
+        "pt": "More charcoal. Iron drinks heat without thanks.",
+        "ro": "More charcoal. Iron drinks heat without thanks.",
+        "ru": "Ещё уголь. Железо пьёт жар без благодарности.",
+        "sk": "More charcoal. Iron drinks heat without thanks.",
+        "sr": "More charcoal. Iron drinks heat without thanks.",
+        "sv": "More charcoal. Iron drinks heat without thanks.",
+        "th": "More charcoal. Iron drinks heat without thanks.",
+        "tr": "More charcoal. Iron drinks heat without thanks.",
+        "uk": "Ещё уголь. Железо пьёт жар без благодарности.",
+        "vi": "More charcoal. Iron drinks heat without thanks.",
+        "zh": "More charcoal. Iron drinks heat without thanks."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 80,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 28,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fire clay and vessels ready for bloomery work.",
+        "be": "Огнеупорная глина и сосуды готовы к сыродутне.",
+        "cs": "Fire clay and vessels ready for bloomery work.",
+        "da": "Fire clay and vessels ready for bloomery work.",
+        "de": "Fire clay and vessels ready for bloomery work.",
+        "en": "Fire clay and vessels ready for bloomery work.",
+        "eo": "Fire clay and vessels ready for bloomery work.",
+        "es": "Fire clay and vessels ready for bloomery work.",
+        "fi": "Fire clay and vessels ready for bloomery work.",
+        "fr": "Fire clay and vessels ready for bloomery work.",
+        "hu": "Fire clay and vessels ready for bloomery work.",
+        "is": "Fire clay and vessels ready for bloomery work.",
+        "it": "Fire clay and vessels ready for bloomery work.",
+        "ja": "Fire clay and vessels ready for bloomery work.",
+        "ko": "Fire clay and vessels ready for bloomery work.",
+        "li": "Fire clay and vessels ready for bloomery work.",
+        "lt": "Fire clay and vessels ready for bloomery work.",
+        "nl": "Fire clay and vessels ready for bloomery work.",
+        "no": "Fire clay and vessels ready for bloomery work.",
+        "pl": "Fire clay and vessels ready for bloomery work.",
+        "pt": "Fire clay and vessels ready for bloomery work.",
+        "ro": "Fire clay and vessels ready for bloomery work.",
+        "ru": "Огнеупорная глина и сосуды готовы к сыродутне.",
+        "sk": "Fire clay and vessels ready for bloomery work.",
+        "sr": "Fire clay and vessels ready for bloomery work.",
+        "sv": "Fire clay and vessels ready for bloomery work.",
+        "th": "Fire clay and vessels ready for bloomery work.",
+        "tr": "Fire clay and vessels ready for bloomery work.",
+        "uk": "Огнеупорная глина и сосуды готовы к сыродутне.",
+        "vi": "Fire clay and vessels ready for bloomery work.",
+        "zh": "Fire clay and vessels ready for bloomery work."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Iron blooms. Ugly metal that will become honest.",
+        "be": "Железные крицы. Уродливый металл, что станет честным.",
+        "cs": "Iron blooms. Ugly metal that will become honest.",
+        "da": "Iron blooms. Ugly metal that will become honest.",
+        "de": "Iron blooms. Ugly metal that will become honest.",
+        "en": "Iron blooms. Ugly metal that will become honest.",
+        "eo": "Iron blooms. Ugly metal that will become honest.",
+        "es": "Iron blooms. Ugly metal that will become honest.",
+        "fi": "Iron blooms. Ugly metal that will become honest.",
+        "fr": "Iron blooms. Ugly metal that will become honest.",
+        "hu": "Iron blooms. Ugly metal that will become honest.",
+        "is": "Iron blooms. Ugly metal that will become honest.",
+        "it": "Iron blooms. Ugly metal that will become honest.",
+        "ja": "Iron blooms. Ugly metal that will become honest.",
+        "ko": "Iron blooms. Ugly metal that will become honest.",
+        "li": "Iron blooms. Ugly metal that will become honest.",
+        "lt": "Iron blooms. Ugly metal that will become honest.",
+        "nl": "Iron blooms. Ugly metal that will become honest.",
+        "no": "Iron blooms. Ugly metal that will become honest.",
+        "pl": "Iron blooms. Ugly metal that will become honest.",
+        "pt": "Iron blooms. Ugly metal that will become honest.",
+        "ro": "Iron blooms. Ugly metal that will become honest.",
+        "ru": "Железные крицы. Уродливый металл, что станет честным.",
+        "sk": "Iron blooms. Ugly metal that will become honest.",
+        "sr": "Iron blooms. Ugly metal that will become honest.",
+        "sv": "Iron blooms. Ugly metal that will become honest.",
+        "th": "Iron blooms. Ugly metal that will become honest.",
+        "tr": "Iron blooms. Ugly metal that will become honest.",
+        "uk": "Железные крицы. Уродливый металл, что станет честным.",
+        "vi": "Iron blooms. Ugly metal that will become honest.",
+        "zh": "Iron blooms. Ugly metal that will become honest."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ironbloom",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "be": "Железные слитки. Куй крицу, пока она не вспомнит форму.",
+        "cs": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "da": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "de": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "en": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "eo": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "es": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "fi": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "fr": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "hu": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "is": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "it": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "ja": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "ko": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "li": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "lt": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "nl": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "no": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "pl": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "pt": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "ro": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "ru": "Железные слитки. Куй крицу, пока она не вспомнит форму.",
+        "sk": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "sr": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "sv": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "th": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "tr": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "uk": "Железные слитки. Куй крицу, пока она не вспомнит форму.",
+        "vi": "Iron ingots. Hammer the bloom until it remembers shape.",
+        "zh": "Iron ingots. Hammer the bloom until it remembers shape."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 6,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Iron plates for tools that outlive bronze.",
+        "be": "Железные пластины для инструментов дольше бронзы.",
+        "cs": "Iron plates for tools that outlive bronze.",
+        "da": "Iron plates for tools that outlive bronze.",
+        "de": "Iron plates for tools that outlive bronze.",
+        "en": "Iron plates for tools that outlive bronze.",
+        "eo": "Iron plates for tools that outlive bronze.",
+        "es": "Iron plates for tools that outlive bronze.",
+        "fi": "Iron plates for tools that outlive bronze.",
+        "fr": "Iron plates for tools that outlive bronze.",
+        "hu": "Iron plates for tools that outlive bronze.",
+        "is": "Iron plates for tools that outlive bronze.",
+        "it": "Iron plates for tools that outlive bronze.",
+        "ja": "Iron plates for tools that outlive bronze.",
+        "ko": "Iron plates for tools that outlive bronze.",
+        "li": "Iron plates for tools that outlive bronze.",
+        "lt": "Iron plates for tools that outlive bronze.",
+        "nl": "Iron plates for tools that outlive bronze.",
+        "no": "Iron plates for tools that outlive bronze.",
+        "pl": "Iron plates for tools that outlive bronze.",
+        "pt": "Iron plates for tools that outlive bronze.",
+        "ro": "Iron plates for tools that outlive bronze.",
+        "ru": "Железные пластины для инструментов дольше бронзы.",
+        "sk": "Iron plates for tools that outlive bronze.",
+        "sr": "Iron plates for tools that outlive bronze.",
+        "sv": "Iron plates for tools that outlive bronze.",
+        "th": "Iron plates for tools that outlive bronze.",
+        "tr": "Iron plates for tools that outlive bronze.",
+        "uk": "Железные пластины для инструментов дольше бронзы.",
+        "vi": "Iron plates for tools that outlive bronze.",
+        "zh": "Iron plates for tools that outlive bronze."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalplate-iron",
+          "count": 4,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "An iron pick. The deep rock finally answers.",
+        "be": "Железная кирка. Глубокая порода наконец отвечает.",
+        "cs": "An iron pick. The deep rock finally answers.",
+        "da": "An iron pick. The deep rock finally answers.",
+        "de": "An iron pick. The deep rock finally answers.",
+        "en": "An iron pick. The deep rock finally answers.",
+        "eo": "An iron pick. The deep rock finally answers.",
+        "es": "An iron pick. The deep rock finally answers.",
+        "fi": "An iron pick. The deep rock finally answers.",
+        "fr": "An iron pick. The deep rock finally answers.",
+        "hu": "An iron pick. The deep rock finally answers.",
+        "is": "An iron pick. The deep rock finally answers.",
+        "it": "An iron pick. The deep rock finally answers.",
+        "ja": "An iron pick. The deep rock finally answers.",
+        "ko": "An iron pick. The deep rock finally answers.",
+        "li": "An iron pick. The deep rock finally answers.",
+        "lt": "An iron pick. The deep rock finally answers.",
+        "nl": "An iron pick. The deep rock finally answers.",
+        "no": "An iron pick. The deep rock finally answers.",
+        "pl": "An iron pick. The deep rock finally answers.",
+        "pt": "An iron pick. The deep rock finally answers.",
+        "ro": "An iron pick. The deep rock finally answers.",
+        "ru": "Железная кирка. Глубокая порода наконец отвечает.",
+        "sk": "An iron pick. The deep rock finally answers.",
+        "sr": "An iron pick. The deep rock finally answers.",
+        "sv": "An iron pick. The deep rock finally answers.",
+        "th": "An iron pick. The deep rock finally answers.",
+        "tr": "An iron pick. The deep rock finally answers.",
+        "uk": "Железная кирка. Глубокая порода наконец отвечает.",
+        "vi": "An iron pick. The deep rock finally answers.",
+        "zh": "An iron pick. The deep rock finally answers."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:pickaxe-iron",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ore-poor-limonite-shale",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "An iron axe. Houses grow from forests you fell.",
+        "be": "Железный топор. Дома растут из леса, что ты валишь.",
+        "cs": "An iron axe. Houses grow from forests you fell.",
+        "da": "An iron axe. Houses grow from forests you fell.",
+        "de": "An iron axe. Houses grow from forests you fell.",
+        "en": "An iron axe. Houses grow from forests you fell.",
+        "eo": "An iron axe. Houses grow from forests you fell.",
+        "es": "An iron axe. Houses grow from forests you fell.",
+        "fi": "An iron axe. Houses grow from forests you fell.",
+        "fr": "An iron axe. Houses grow from forests you fell.",
+        "hu": "An iron axe. Houses grow from forests you fell.",
+        "is": "An iron axe. Houses grow from forests you fell.",
+        "it": "An iron axe. Houses grow from forests you fell.",
+        "ja": "An iron axe. Houses grow from forests you fell.",
+        "ko": "An iron axe. Houses grow from forests you fell.",
+        "li": "An iron axe. Houses grow from forests you fell.",
+        "lt": "An iron axe. Houses grow from forests you fell.",
+        "nl": "An iron axe. Houses grow from forests you fell.",
+        "no": "An iron axe. Houses grow from forests you fell.",
+        "pl": "An iron axe. Houses grow from forests you fell.",
+        "pt": "An iron axe. Houses grow from forests you fell.",
+        "ro": "An iron axe. Houses grow from forests you fell.",
+        "ru": "Железный топор. Дома растут из леса, что ты валишь.",
+        "sk": "An iron axe. Houses grow from forests you fell.",
+        "sr": "An iron axe. Houses grow from forests you fell.",
+        "sv": "An iron axe. Houses grow from forests you fell.",
+        "th": "An iron axe. Houses grow from forests you fell.",
+        "tr": "An iron axe. Houses grow from forests you fell.",
+        "uk": "Железный топор. Дома растут из леса, что ты валишь.",
+        "vi": "An iron axe. Houses grow from forests you fell.",
+        "zh": "An iron axe. Houses grow from forests you fell."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:axe-felling-iron",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 28,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "An iron hammer. Smithing becomes real work.",
+        "be": "Железный молот. Кузнечество становится настоящей работой.",
+        "cs": "An iron hammer. Smithing becomes real work.",
+        "da": "An iron hammer. Smithing becomes real work.",
+        "de": "An iron hammer. Smithing becomes real work.",
+        "en": "An iron hammer. Smithing becomes real work.",
+        "eo": "An iron hammer. Smithing becomes real work.",
+        "es": "An iron hammer. Smithing becomes real work.",
+        "fi": "An iron hammer. Smithing becomes real work.",
+        "fr": "An iron hammer. Smithing becomes real work.",
+        "hu": "An iron hammer. Smithing becomes real work.",
+        "is": "An iron hammer. Smithing becomes real work.",
+        "it": "An iron hammer. Smithing becomes real work.",
+        "ja": "An iron hammer. Smithing becomes real work.",
+        "ko": "An iron hammer. Smithing becomes real work.",
+        "li": "An iron hammer. Smithing becomes real work.",
+        "lt": "An iron hammer. Smithing becomes real work.",
+        "nl": "An iron hammer. Smithing becomes real work.",
+        "no": "An iron hammer. Smithing becomes real work.",
+        "pl": "An iron hammer. Smithing becomes real work.",
+        "pt": "An iron hammer. Smithing becomes real work.",
+        "ro": "An iron hammer. Smithing becomes real work.",
+        "ru": "Железный молот. Кузнечество становится настоящей работой.",
+        "sk": "An iron hammer. Smithing becomes real work.",
+        "sr": "An iron hammer. Smithing becomes real work.",
+        "sv": "An iron hammer. Smithing becomes real work.",
+        "th": "An iron hammer. Smithing becomes real work.",
+        "tr": "An iron hammer. Smithing becomes real work.",
+        "uk": "Железный молот. Кузнечество становится настоящей работой.",
+        "vi": "An iron hammer. Smithing becomes real work.",
+        "zh": "An iron hammer. Smithing becomes real work."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hammer-iron",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "An iron saw. Boards for the lasting house.",
+        "be": "Железная пила. Доски для долгого дома.",
+        "cs": "An iron saw. Boards for the lasting house.",
+        "da": "An iron saw. Boards for the lasting house.",
+        "de": "An iron saw. Boards for the lasting house.",
+        "en": "An iron saw. Boards for the lasting house.",
+        "eo": "An iron saw. Boards for the lasting house.",
+        "es": "An iron saw. Boards for the lasting house.",
+        "fi": "An iron saw. Boards for the lasting house.",
+        "fr": "An iron saw. Boards for the lasting house.",
+        "hu": "An iron saw. Boards for the lasting house.",
+        "is": "An iron saw. Boards for the lasting house.",
+        "it": "An iron saw. Boards for the lasting house.",
+        "ja": "An iron saw. Boards for the lasting house.",
+        "ko": "An iron saw. Boards for the lasting house.",
+        "li": "An iron saw. Boards for the lasting house.",
+        "lt": "An iron saw. Boards for the lasting house.",
+        "nl": "An iron saw. Boards for the lasting house.",
+        "no": "An iron saw. Boards for the lasting house.",
+        "pl": "An iron saw. Boards for the lasting house.",
+        "pt": "An iron saw. Boards for the lasting house.",
+        "ro": "An iron saw. Boards for the lasting house.",
+        "ru": "Железная пила. Доски для долгого дома.",
+        "sk": "An iron saw. Boards for the lasting house.",
+        "sr": "An iron saw. Boards for the lasting house.",
+        "sv": "An iron saw. Boards for the lasting house.",
+        "th": "An iron saw. Boards for the lasting house.",
+        "tr": "An iron saw. Boards for the lasting house.",
+        "uk": "Железная пила. Доски для долгого дома.",
+        "vi": "An iron saw. Boards for the lasting house.",
+        "zh": "An iron saw. Boards for the lasting house."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:saw-iron",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "An iron chisel. Detail survives the ages.",
+        "be": "Железное зубило. Деталь переживает века.",
+        "cs": "An iron chisel. Detail survives the ages.",
+        "da": "An iron chisel. Detail survives the ages.",
+        "de": "An iron chisel. Detail survives the ages.",
+        "en": "An iron chisel. Detail survives the ages.",
+        "eo": "An iron chisel. Detail survives the ages.",
+        "es": "An iron chisel. Detail survives the ages.",
+        "fi": "An iron chisel. Detail survives the ages.",
+        "fr": "An iron chisel. Detail survives the ages.",
+        "hu": "An iron chisel. Detail survives the ages.",
+        "is": "An iron chisel. Detail survives the ages.",
+        "it": "An iron chisel. Detail survives the ages.",
+        "ja": "An iron chisel. Detail survives the ages.",
+        "ko": "An iron chisel. Detail survives the ages.",
+        "li": "An iron chisel. Detail survives the ages.",
+        "lt": "An iron chisel. Detail survives the ages.",
+        "nl": "An iron chisel. Detail survives the ages.",
+        "no": "An iron chisel. Detail survives the ages.",
+        "pl": "An iron chisel. Detail survives the ages.",
+        "pt": "An iron chisel. Detail survives the ages.",
+        "ro": "An iron chisel. Detail survives the ages.",
+        "ru": "Железное зубило. Деталь переживает века.",
+        "sk": "An iron chisel. Detail survives the ages.",
+        "sr": "An iron chisel. Detail survives the ages.",
+        "sv": "An iron chisel. Detail survives the ages.",
+        "th": "An iron chisel. Detail survives the ages.",
+        "tr": "An iron chisel. Detail survives the ages.",
+        "uk": "Железное зубило. Деталь переживает века.",
+        "vi": "An iron chisel. Detail survives the ages.",
+        "zh": "An iron chisel. Detail survives the ages."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:chisel-iron",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:metalbit-iron",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "An iron anvil. The heart of a lasting forge.",
+        "be": "Железная наковальня. Сердце долгой кузни.",
+        "cs": "An iron anvil. The heart of a lasting forge.",
+        "da": "An iron anvil. The heart of a lasting forge.",
+        "de": "An iron anvil. The heart of a lasting forge.",
+        "en": "An iron anvil. The heart of a lasting forge.",
+        "eo": "An iron anvil. The heart of a lasting forge.",
+        "es": "An iron anvil. The heart of a lasting forge.",
+        "fi": "An iron anvil. The heart of a lasting forge.",
+        "fr": "An iron anvil. The heart of a lasting forge.",
+        "hu": "An iron anvil. The heart of a lasting forge.",
+        "is": "An iron anvil. The heart of a lasting forge.",
+        "it": "An iron anvil. The heart of a lasting forge.",
+        "ja": "An iron anvil. The heart of a lasting forge.",
+        "ko": "An iron anvil. The heart of a lasting forge.",
+        "li": "An iron anvil. The heart of a lasting forge.",
+        "lt": "An iron anvil. The heart of a lasting forge.",
+        "nl": "An iron anvil. The heart of a lasting forge.",
+        "no": "An iron anvil. The heart of a lasting forge.",
+        "pl": "An iron anvil. The heart of a lasting forge.",
+        "pt": "An iron anvil. The heart of a lasting forge.",
+        "ro": "An iron anvil. The heart of a lasting forge.",
+        "ru": "Железная наковальня. Сердце долгой кузни.",
+        "sk": "An iron anvil. The heart of a lasting forge.",
+        "sr": "An iron anvil. The heart of a lasting forge.",
+        "sv": "An iron anvil. The heart of a lasting forge.",
+        "th": "An iron anvil. The heart of a lasting forge.",
+        "tr": "An iron anvil. The heart of a lasting forge.",
+        "uk": "Железная наковальня. Сердце долгой кузни.",
+        "vi": "An iron anvil. The heart of a lasting forge.",
+        "zh": "An iron anvil. The heart of a lasting forge."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:anvil-iron",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Iron nails. Invisible, but every house leans on them.",
+        "be": "Железные гвозди. Невидимы, но каждый дом на них держится.",
+        "cs": "Iron nails. Invisible, but every house leans on them.",
+        "da": "Iron nails. Invisible, but every house leans on them.",
+        "de": "Iron nails. Invisible, but every house leans on them.",
+        "en": "Iron nails. Invisible, but every house leans on them.",
+        "eo": "Iron nails. Invisible, but every house leans on them.",
+        "es": "Iron nails. Invisible, but every house leans on them.",
+        "fi": "Iron nails. Invisible, but every house leans on them.",
+        "fr": "Iron nails. Invisible, but every house leans on them.",
+        "hu": "Iron nails. Invisible, but every house leans on them.",
+        "is": "Iron nails. Invisible, but every house leans on them.",
+        "it": "Iron nails. Invisible, but every house leans on them.",
+        "ja": "Iron nails. Invisible, but every house leans on them.",
+        "ko": "Iron nails. Invisible, but every house leans on them.",
+        "li": "Iron nails. Invisible, but every house leans on them.",
+        "lt": "Iron nails. Invisible, but every house leans on them.",
+        "nl": "Iron nails. Invisible, but every house leans on them.",
+        "no": "Iron nails. Invisible, but every house leans on them.",
+        "pl": "Iron nails. Invisible, but every house leans on them.",
+        "pt": "Iron nails. Invisible, but every house leans on them.",
+        "ro": "Iron nails. Invisible, but every house leans on them.",
+        "ru": "Железные гвозди. Невидимы, но каждый дом на них держится.",
+        "sk": "Iron nails. Invisible, but every house leans on them.",
+        "sr": "Iron nails. Invisible, but every house leans on them.",
+        "sv": "Iron nails. Invisible, but every house leans on them.",
+        "th": "Iron nails. Invisible, but every house leans on them.",
+        "tr": "Iron nails. Invisible, but every house leans on them.",
+        "uk": "Железные гвозди. Невидимы, но каждый дом на них держится.",
+        "vi": "Iron nails. Invisible, but every house leans on them.",
+        "zh": "Iron nails. Invisible, but every house leans on them."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalnailsandstrips-iron",
+          "count": 40,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More iron blooms for the next generation of tools.",
+        "be": "Ещё криц для следующего поколения инструментов.",
+        "cs": "More iron blooms for the next generation of tools.",
+        "da": "More iron blooms for the next generation of tools.",
+        "de": "More iron blooms for the next generation of tools.",
+        "en": "More iron blooms for the next generation of tools.",
+        "eo": "More iron blooms for the next generation of tools.",
+        "es": "More iron blooms for the next generation of tools.",
+        "fi": "More iron blooms for the next generation of tools.",
+        "fr": "More iron blooms for the next generation of tools.",
+        "hu": "More iron blooms for the next generation of tools.",
+        "is": "More iron blooms for the next generation of tools.",
+        "it": "More iron blooms for the next generation of tools.",
+        "ja": "More iron blooms for the next generation of tools.",
+        "ko": "More iron blooms for the next generation of tools.",
+        "li": "More iron blooms for the next generation of tools.",
+        "lt": "More iron blooms for the next generation of tools.",
+        "nl": "More iron blooms for the next generation of tools.",
+        "no": "More iron blooms for the next generation of tools.",
+        "pl": "More iron blooms for the next generation of tools.",
+        "pt": "More iron blooms for the next generation of tools.",
+        "ro": "More iron blooms for the next generation of tools.",
+        "ru": "Ещё криц для следующего поколения инструментов.",
+        "sk": "More iron blooms for the next generation of tools.",
+        "sr": "More iron blooms for the next generation of tools.",
+        "sv": "More iron blooms for the next generation of tools.",
+        "th": "More iron blooms for the next generation of tools.",
+        "tr": "More iron blooms for the next generation of tools.",
+        "uk": "Ещё криц для следующего поколения инструментов.",
+        "vi": "More iron blooms for the next generation of tools.",
+        "zh": "More iron blooms for the next generation of tools."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ironbloom",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A stock of iron ingots. Surplus is safety.",
+        "be": "Запас железных слитков. Избыток — это безопасность.",
+        "cs": "A stock of iron ingots. Surplus is safety.",
+        "da": "A stock of iron ingots. Surplus is safety.",
+        "de": "A stock of iron ingots. Surplus is safety.",
+        "en": "A stock of iron ingots. Surplus is safety.",
+        "eo": "A stock of iron ingots. Surplus is safety.",
+        "es": "A stock of iron ingots. Surplus is safety.",
+        "fi": "A stock of iron ingots. Surplus is safety.",
+        "fr": "A stock of iron ingots. Surplus is safety.",
+        "hu": "A stock of iron ingots. Surplus is safety.",
+        "is": "A stock of iron ingots. Surplus is safety.",
+        "it": "A stock of iron ingots. Surplus is safety.",
+        "ja": "A stock of iron ingots. Surplus is safety.",
+        "ko": "A stock of iron ingots. Surplus is safety.",
+        "li": "A stock of iron ingots. Surplus is safety.",
+        "lt": "A stock of iron ingots. Surplus is safety.",
+        "nl": "A stock of iron ingots. Surplus is safety.",
+        "no": "A stock of iron ingots. Surplus is safety.",
+        "pl": "A stock of iron ingots. Surplus is safety.",
+        "pt": "A stock of iron ingots. Surplus is safety.",
+        "ro": "A stock of iron ingots. Surplus is safety.",
+        "ru": "Запас железных слитков. Избыток — это безопасность.",
+        "sk": "A stock of iron ingots. Surplus is safety.",
+        "sr": "A stock of iron ingots. Surplus is safety.",
+        "sv": "A stock of iron ingots. Surplus is safety.",
+        "th": "A stock of iron ingots. Surplus is safety.",
+        "tr": "A stock of iron ingots. Surplus is safety.",
+        "uk": "Запас железных слитков. Избыток — это безопасность.",
+        "vi": "A stock of iron ingots. Surplus is safety.",
+        "zh": "A stock of iron ingots. Surplus is safety."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Rusty gears as tribute to Era — iron of the past and present.",
+        "be": "Ржавые шестерни как дань Эре — железо прошлого и настоящего.",
+        "cs": "Rusty gears as tribute to Era — iron of the past and present.",
+        "da": "Rusty gears as tribute to Era — iron of the past and present.",
+        "de": "Rusty gears as tribute to Era — iron of the past and present.",
+        "en": "Rusty gears as tribute to Era — iron of the past and present.",
+        "eo": "Rusty gears as tribute to Era — iron of the past and present.",
+        "es": "Rusty gears as tribute to Era — iron of the past and present.",
+        "fi": "Rusty gears as tribute to Era — iron of the past and present.",
+        "fr": "Rusty gears as tribute to Era — iron of the past and present.",
+        "hu": "Rusty gears as tribute to Era — iron of the past and present.",
+        "is": "Rusty gears as tribute to Era — iron of the past and present.",
+        "it": "Rusty gears as tribute to Era — iron of the past and present.",
+        "ja": "Rusty gears as tribute to Era — iron of the past and present.",
+        "ko": "Rusty gears as tribute to Era — iron of the past and present.",
+        "li": "Rusty gears as tribute to Era — iron of the past and present.",
+        "lt": "Rusty gears as tribute to Era — iron of the past and present.",
+        "nl": "Rusty gears as tribute to Era — iron of the past and present.",
+        "no": "Rusty gears as tribute to Era — iron of the past and present.",
+        "pl": "Rusty gears as tribute to Era — iron of the past and present.",
+        "pt": "Rusty gears as tribute to Era — iron of the past and present.",
+        "ro": "Rusty gears as tribute to Era — iron of the past and present.",
+        "ru": "Ржавые шестерни как дань Эре — железо прошлого и настоящего.",
+        "sk": "Rusty gears as tribute to Era — iron of the past and present.",
+        "sr": "Rusty gears as tribute to Era — iron of the past and present.",
+        "sv": "Rusty gears as tribute to Era — iron of the past and present.",
+        "th": "Rusty gears as tribute to Era — iron of the past and present.",
+        "tr": "Rusty gears as tribute to Era — iron of the past and present.",
+        "uk": "Ржавые шестерни как дань Эре — железо прошлого и настоящего.",
+        "vi": "Rusty gears as tribute to Era — iron of the past and present.",
+        "zh": "Rusty gears as tribute to Era — iron of the past and present."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "be": "Железный век завершён. Сталь — железо, отказавшееся быть мягким.",
+        "cs": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "da": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "de": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "en": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "eo": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "es": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "fi": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "fr": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "hu": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "is": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "it": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "ja": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "ko": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "li": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "lt": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "nl": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "no": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "pl": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "pt": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "ro": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "ru": "Железный век завершён. Сталь — железо, отказавшееся быть мягким.",
+        "sk": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "sr": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "sv": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "th": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "tr": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "uk": "Железный век завершён. Сталь — железо, отказавшееся быть мягким.",
+        "vi": "Iron Age complete. Steel is iron that refused to stay soft.",
+        "zh": "Iron Age complete. Steel is iron that refused to stay soft."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 19,
+      "x": -120,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Firewood mountain for continuous bloomery fires.",
+        "be": "Гора дров для непрерывных сыродутных огней.",
+        "cs": "Firewood mountain for continuous bloomery fires.",
+        "da": "Firewood mountain for continuous bloomery fires.",
+        "de": "Firewood mountain for continuous bloomery fires.",
+        "en": "Firewood mountain for continuous bloomery fires.",
+        "eo": "Firewood mountain for continuous bloomery fires.",
+        "es": "Firewood mountain for continuous bloomery fires.",
+        "fi": "Firewood mountain for continuous bloomery fires.",
+        "fr": "Firewood mountain for continuous bloomery fires.",
+        "hu": "Firewood mountain for continuous bloomery fires.",
+        "is": "Firewood mountain for continuous bloomery fires.",
+        "it": "Firewood mountain for continuous bloomery fires.",
+        "ja": "Firewood mountain for continuous bloomery fires.",
+        "ko": "Firewood mountain for continuous bloomery fires.",
+        "li": "Firewood mountain for continuous bloomery fires.",
+        "lt": "Firewood mountain for continuous bloomery fires.",
+        "nl": "Firewood mountain for continuous bloomery fires.",
+        "no": "Firewood mountain for continuous bloomery fires.",
+        "pl": "Firewood mountain for continuous bloomery fires.",
+        "pt": "Firewood mountain for continuous bloomery fires.",
+        "ro": "Firewood mountain for continuous bloomery fires.",
+        "ru": "Гора дров для непрерывных сыродутных огней.",
+        "sk": "Firewood mountain for continuous bloomery fires.",
+        "sr": "Firewood mountain for continuous bloomery fires.",
+        "sv": "Firewood mountain for continuous bloomery fires.",
+        "th": "Firewood mountain for continuous bloomery fires.",
+        "tr": "Firewood mountain for continuous bloomery fires.",
+        "uk": "Гора дров для непрерывных сыродутных огней.",
+        "vi": "Firewood mountain for continuous bloomery fires.",
+        "zh": "Firewood mountain for continuous bloomery fires."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 64,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 4
+    }
+  ],
+  "nextNodeId": 20
+}

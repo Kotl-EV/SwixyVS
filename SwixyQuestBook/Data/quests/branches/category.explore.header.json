@@ -1,0 +1,1427 @@
+{
+  "iconItemCode": "game:gear-temporal",
+  "title": {
+    "ar": "Wanderings",
+    "be": "Странствия",
+    "cs": "Wanderings",
+    "da": "Wanderings",
+    "de": "Wanderungen",
+    "en": "Wanderings",
+    "eo": "Wanderings",
+    "es": "Andanzas",
+    "fi": "Wanderings",
+    "fr": "Pérégrinations",
+    "hu": "Wanderings",
+    "is": "Wanderings",
+    "it": "Peregrinazioni",
+    "ja": "放浪",
+    "ko": "방랑",
+    "li": "Wanderings",
+    "lt": "Wanderings",
+    "nl": "Wanderings",
+    "no": "Wanderings",
+    "pl": "Wędrówki",
+    "pt": "Andanças",
+    "ro": "Wanderings",
+    "ru": "Странствия",
+    "sk": "Wanderings",
+    "sr": "Wanderings",
+    "sv": "Wanderings",
+    "th": "Wanderings",
+    "tr": "Yolculuklar",
+    "uk": "Странствия",
+    "vi": "Wanderings",
+    "zh": "漫游"
+  },
+  "headerTitle": "category.explore.header",
+  "header": {
+    "ar": "WANDERINGS",
+    "be": "СТРАНСТВИЯ",
+    "cs": "WANDERINGS",
+    "da": "WANDERINGS",
+    "de": "WANDERINGS",
+    "en": "WANDERINGS",
+    "eo": "WANDERINGS",
+    "es": "WANDERINGS",
+    "fi": "WANDERINGS",
+    "fr": "WANDERINGS",
+    "hu": "WANDERINGS",
+    "is": "WANDERINGS",
+    "it": "WANDERINGS",
+    "ja": "WANDERINGS",
+    "ko": "WANDERINGS",
+    "li": "WANDERINGS",
+    "lt": "WANDERINGS",
+    "nl": "WANDERINGS",
+    "no": "WANDERINGS",
+    "pl": "WANDERINGS",
+    "pt": "WANDERINGS",
+    "ro": "WANDERINGS",
+    "ru": "СТРАНСТВИЯ",
+    "sk": "WANDERINGS",
+    "sr": "WANDERINGS",
+    "sv": "WANDERINGS",
+    "th": "WANDERINGS",
+    "tr": "WANDERİNGS",
+    "uk": "СТРАНСТВИЯ",
+    "vi": "WANDERINGS",
+    "zh": "WANDERINGS"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Wanderings. Ruins remember those who listen.",
+        "be": "Странствия. Руины помнят тех, кто умеет слушать.",
+        "cs": "Wanderings. Ruins remember those who listen.",
+        "da": "Wanderings. Ruins remember those who listen.",
+        "de": "Wanderings. Ruins remember those who listen.",
+        "en": "Wanderings. Ruins remember those who listen.",
+        "eo": "Wanderings. Ruins remember those who listen.",
+        "es": "Wanderings. Ruins remember those who listen.",
+        "fi": "Wanderings. Ruins remember those who listen.",
+        "fr": "Wanderings. Ruins remember those who listen.",
+        "hu": "Wanderings. Ruins remember those who listen.",
+        "is": "Wanderings. Ruins remember those who listen.",
+        "it": "Wanderings. Ruins remember those who listen.",
+        "ja": "Wanderings. Ruins remember those who listen.",
+        "ko": "Wanderings. Ruins remember those who listen.",
+        "li": "Wanderings. Ruins remember those who listen.",
+        "lt": "Wanderings. Ruins remember those who listen.",
+        "nl": "Wanderings. Ruins remember those who listen.",
+        "no": "Wanderings. Ruins remember those who listen.",
+        "pl": "Wanderings. Ruins remember those who listen.",
+        "pt": "Wanderings. Ruins remember those who listen.",
+        "ro": "Wanderings. Ruins remember those who listen.",
+        "ru": "Странствия. Руины помнят тех, кто умеет слушать.",
+        "sk": "Wanderings. Ruins remember those who listen.",
+        "sr": "Wanderings. Ruins remember those who listen.",
+        "sv": "Wanderings. Ruins remember those who listen.",
+        "th": "Wanderings. Ruins remember those who listen.",
+        "tr": "Wanderings. Ruins remember those who listen.",
+        "uk": "Странствия. Руины помнят тех, кто умеет слушать.",
+        "vi": "Wanderings. Ruins remember those who listen.",
+        "zh": "Wanderings. Ruins remember those who listen."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Stock torches. Darkness is a room with no door.",
+        "be": "Запаси факелы. Тьма — комната без двери.",
+        "cs": "Stock torches. Darkness is a room with no door.",
+        "da": "Stock torches. Darkness is a room with no door.",
+        "de": "Stock torches. Darkness is a room with no door.",
+        "en": "Stock torches. Darkness is a room with no door.",
+        "eo": "Stock torches. Darkness is a room with no door.",
+        "es": "Stock torches. Darkness is a room with no door.",
+        "fi": "Stock torches. Darkness is a room with no door.",
+        "fr": "Stock torches. Darkness is a room with no door.",
+        "hu": "Stock torches. Darkness is a room with no door.",
+        "is": "Stock torches. Darkness is a room with no door.",
+        "it": "Stock torches. Darkness is a room with no door.",
+        "ja": "Stock torches. Darkness is a room with no door.",
+        "ko": "Stock torches. Darkness is a room with no door.",
+        "li": "Stock torches. Darkness is a room with no door.",
+        "lt": "Stock torches. Darkness is a room with no door.",
+        "nl": "Stock torches. Darkness is a room with no door.",
+        "no": "Stock torches. Darkness is a room with no door.",
+        "pl": "Stock torches. Darkness is a room with no door.",
+        "pt": "Stock torches. Darkness is a room with no door.",
+        "ro": "Stock torches. Darkness is a room with no door.",
+        "ru": "Запаси факелы. Тьма — комната без двери.",
+        "sk": "Stock torches. Darkness is a room with no door.",
+        "sr": "Stock torches. Darkness is a room with no door.",
+        "sv": "Stock torches. Darkness is a room with no door.",
+        "th": "Stock torches. Darkness is a room with no door.",
+        "tr": "Stock torches. Darkness is a room with no door.",
+        "uk": "Запаси факелы. Тьма — комната без двери.",
+        "vi": "Stock torches. Darkness is a room with no door.",
+        "zh": "Stock torches. Darkness is a room with no door."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:torch-basic-extinct-up",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Food for the road. Cooked meat travels better than hope.",
+        "be": "Еда в дорогу. Жареное мясо идёт лучше надежды.",
+        "cs": "Food for the road. Cooked meat travels better than hope.",
+        "da": "Food for the road. Cooked meat travels better than hope.",
+        "de": "Food for the road. Cooked meat travels better than hope.",
+        "en": "Food for the road. Cooked meat travels better than hope.",
+        "eo": "Food for the road. Cooked meat travels better than hope.",
+        "es": "Food for the road. Cooked meat travels better than hope.",
+        "fi": "Food for the road. Cooked meat travels better than hope.",
+        "fr": "Food for the road. Cooked meat travels better than hope.",
+        "hu": "Food for the road. Cooked meat travels better than hope.",
+        "is": "Food for the road. Cooked meat travels better than hope.",
+        "it": "Food for the road. Cooked meat travels better than hope.",
+        "ja": "Food for the road. Cooked meat travels better than hope.",
+        "ko": "Food for the road. Cooked meat travels better than hope.",
+        "li": "Food for the road. Cooked meat travels better than hope.",
+        "lt": "Food for the road. Cooked meat travels better than hope.",
+        "nl": "Food for the road. Cooked meat travels better than hope.",
+        "no": "Food for the road. Cooked meat travels better than hope.",
+        "pl": "Food for the road. Cooked meat travels better than hope.",
+        "pt": "Food for the road. Cooked meat travels better than hope.",
+        "ro": "Food for the road. Cooked meat travels better than hope.",
+        "ru": "Еда в дорогу. Жареное мясо идёт лучше надежды.",
+        "sk": "Food for the road. Cooked meat travels better than hope.",
+        "sr": "Food for the road. Cooked meat travels better than hope.",
+        "sv": "Food for the road. Cooked meat travels better than hope.",
+        "th": "Food for the road. Cooked meat travels better than hope.",
+        "tr": "Food for the road. Cooked meat travels better than hope.",
+        "uk": "Еда в дорогу. Жареное мясо идёт лучше надежды.",
+        "vi": "Food for the road. Cooked meat travels better than hope.",
+        "zh": "Food for the road. Cooked meat travels better than hope."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:redmeat-cooked",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "be": "Найди ржавые шестерни в руинах. Хлебные крошки Эры из железа.",
+        "cs": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "da": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "de": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "en": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "eo": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "es": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "fi": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "fr": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "hu": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "is": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "it": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "ja": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "ko": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "li": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "lt": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "nl": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "no": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "pl": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "pt": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "ro": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "ru": "Найди ржавые шестерни в руинах. Хлебные крошки Эры из железа.",
+        "sk": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "sr": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "sv": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "th": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "tr": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "uk": "Найди ржавые шестерни в руинах. Хлебные крошки Эры из железа.",
+        "vi": "Find rusty gears in ruins. Era’s breadcrumbs of iron.",
+        "zh": "Find rusty gears in ruins. Era’s breadcrumbs of iron."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 2,
+          "objective": "detect",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More gears. The hum under the sky grows louder.",
+        "be": "Ещё шестерни. Гул под небом становится громче.",
+        "cs": "More gears. The hum under the sky grows louder.",
+        "da": "More gears. The hum under the sky grows louder.",
+        "de": "More gears. The hum under the sky grows louder.",
+        "en": "More gears. The hum under the sky grows louder.",
+        "eo": "More gears. The hum under the sky grows louder.",
+        "es": "More gears. The hum under the sky grows louder.",
+        "fi": "More gears. The hum under the sky grows louder.",
+        "fr": "More gears. The hum under the sky grows louder.",
+        "hu": "More gears. The hum under the sky grows louder.",
+        "is": "More gears. The hum under the sky grows louder.",
+        "it": "More gears. The hum under the sky grows louder.",
+        "ja": "More gears. The hum under the sky grows louder.",
+        "ko": "More gears. The hum under the sky grows louder.",
+        "li": "More gears. The hum under the sky grows louder.",
+        "lt": "More gears. The hum under the sky grows louder.",
+        "nl": "More gears. The hum under the sky grows louder.",
+        "no": "More gears. The hum under the sky grows louder.",
+        "pl": "More gears. The hum under the sky grows louder.",
+        "pt": "More gears. The hum under the sky grows louder.",
+        "ro": "More gears. The hum under the sky grows louder.",
+        "ru": "Ещё шестерни. Гул под небом становится громче.",
+        "sk": "More gears. The hum under the sky grows louder.",
+        "sr": "More gears. The hum under the sky grows louder.",
+        "sv": "More gears. The hum under the sky grows louder.",
+        "th": "More gears. The hum under the sky grows louder.",
+        "tr": "More gears. The hum under the sky grows louder.",
+        "uk": "Ещё шестерни. Гул под небом становится громче.",
+        "vi": "More gears. The hum under the sky grows louder.",
+        "zh": "More gears. The hum under the sky grows louder."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A temporal gear if fate allows — or keep hunting rust.",
+        "be": "Временная шестерня, если судьба позволит — или продолжай искать ржавчину.",
+        "cs": "A temporal gear if fate allows — or keep hunting rust.",
+        "da": "A temporal gear if fate allows — or keep hunting rust.",
+        "de": "A temporal gear if fate allows — or keep hunting rust.",
+        "en": "A temporal gear if fate allows — or keep hunting rust.",
+        "eo": "A temporal gear if fate allows — or keep hunting rust.",
+        "es": "A temporal gear if fate allows — or keep hunting rust.",
+        "fi": "A temporal gear if fate allows — or keep hunting rust.",
+        "fr": "A temporal gear if fate allows — or keep hunting rust.",
+        "hu": "A temporal gear if fate allows — or keep hunting rust.",
+        "is": "A temporal gear if fate allows — or keep hunting rust.",
+        "it": "A temporal gear if fate allows — or keep hunting rust.",
+        "ja": "A temporal gear if fate allows — or keep hunting rust.",
+        "ko": "A temporal gear if fate allows — or keep hunting rust.",
+        "li": "A temporal gear if fate allows — or keep hunting rust.",
+        "lt": "A temporal gear if fate allows — or keep hunting rust.",
+        "nl": "A temporal gear if fate allows — or keep hunting rust.",
+        "no": "A temporal gear if fate allows — or keep hunting rust.",
+        "pl": "A temporal gear if fate allows — or keep hunting rust.",
+        "pt": "A temporal gear if fate allows — or keep hunting rust.",
+        "ro": "A temporal gear if fate allows — or keep hunting rust.",
+        "ru": "Временная шестерня, если судьба позволит — или продолжай искать ржавчину.",
+        "sk": "A temporal gear if fate allows — or keep hunting rust.",
+        "sr": "A temporal gear if fate allows — or keep hunting rust.",
+        "sv": "A temporal gear if fate allows — or keep hunting rust.",
+        "th": "A temporal gear if fate allows — or keep hunting rust.",
+        "tr": "A temporal gear if fate allows — or keep hunting rust.",
+        "uk": "Временная шестерня, если судьба позволит — или продолжай искать ржавчину.",
+        "vi": "A temporal gear if fate allows — or keep hunting rust.",
+        "zh": "A temporal gear if fate allows — or keep hunting rust."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-temporal",
+          "count": 1,
+          "objective": "detect",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Resin from the wild road. Glue for broken machines of the past.",
+        "be": "Смола с дикой дороги. Клей для сломанных машин прошлого.",
+        "cs": "Resin from the wild road. Glue for broken machines of the past.",
+        "da": "Resin from the wild road. Glue for broken machines of the past.",
+        "de": "Resin from the wild road. Glue for broken machines of the past.",
+        "en": "Resin from the wild road. Glue for broken machines of the past.",
+        "eo": "Resin from the wild road. Glue for broken machines of the past.",
+        "es": "Resin from the wild road. Glue for broken machines of the past.",
+        "fi": "Resin from the wild road. Glue for broken machines of the past.",
+        "fr": "Resin from the wild road. Glue for broken machines of the past.",
+        "hu": "Resin from the wild road. Glue for broken machines of the past.",
+        "is": "Resin from the wild road. Glue for broken machines of the past.",
+        "it": "Resin from the wild road. Glue for broken machines of the past.",
+        "ja": "Resin from the wild road. Glue for broken machines of the past.",
+        "ko": "Resin from the wild road. Glue for broken machines of the past.",
+        "li": "Resin from the wild road. Glue for broken machines of the past.",
+        "lt": "Resin from the wild road. Glue for broken machines of the past.",
+        "nl": "Resin from the wild road. Glue for broken machines of the past.",
+        "no": "Resin from the wild road. Glue for broken machines of the past.",
+        "pl": "Resin from the wild road. Glue for broken machines of the past.",
+        "pt": "Resin from the wild road. Glue for broken machines of the past.",
+        "ro": "Resin from the wild road. Glue for broken machines of the past.",
+        "ru": "Смола с дикой дороги. Клей для сломанных машин прошлого.",
+        "sk": "Resin from the wild road. Glue for broken machines of the past.",
+        "sr": "Resin from the wild road. Glue for broken machines of the past.",
+        "sv": "Resin from the wild road. Glue for broken machines of the past.",
+        "th": "Resin from the wild road. Glue for broken machines of the past.",
+        "tr": "Resin from the wild road. Glue for broken machines of the past.",
+        "uk": "Смола с дикой дороги. Клей для сломанных машин прошлого.",
+        "vi": "Resin from the wild road. Glue for broken machines of the past.",
+        "zh": "Resin from the wild road. Glue for broken machines of the past."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:resin",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "be": "Соты с дальних ульев. Сладость ничьей земли.",
+        "cs": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "da": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "de": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "en": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "eo": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "es": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "fi": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "fr": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "hu": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "is": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "it": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "ja": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "ko": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "li": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "lt": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "nl": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "no": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "pl": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "pt": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "ro": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "ru": "Соты с дальних ульев. Сладость ничьей земли.",
+        "sk": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "sr": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "sv": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "th": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "tr": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "uk": "Соты с дальних ульев. Сладость ничьей земли.",
+        "vi": "Honeycomb from distant hives. Sweetness of unowned land.",
+        "zh": "Honeycomb from distant hives. Sweetness of unowned land."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:honeycomb",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:beeswax",
+          "count": 3,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Clear drifters near ruins. The past bites those who dig.",
+        "be": "Зачисти дрифтеров у руин. Прошлое кусает тех, кто копает.",
+        "cs": "Clear drifters near ruins. The past bites those who dig.",
+        "da": "Clear drifters near ruins. The past bites those who dig.",
+        "de": "Clear drifters near ruins. The past bites those who dig.",
+        "en": "Clear drifters near ruins. The past bites those who dig.",
+        "eo": "Clear drifters near ruins. The past bites those who dig.",
+        "es": "Clear drifters near ruins. The past bites those who dig.",
+        "fi": "Clear drifters near ruins. The past bites those who dig.",
+        "fr": "Clear drifters near ruins. The past bites those who dig.",
+        "hu": "Clear drifters near ruins. The past bites those who dig.",
+        "is": "Clear drifters near ruins. The past bites those who dig.",
+        "it": "Clear drifters near ruins. The past bites those who dig.",
+        "ja": "Clear drifters near ruins. The past bites those who dig.",
+        "ko": "Clear drifters near ruins. The past bites those who dig.",
+        "li": "Clear drifters near ruins. The past bites those who dig.",
+        "lt": "Clear drifters near ruins. The past bites those who dig.",
+        "nl": "Clear drifters near ruins. The past bites those who dig.",
+        "no": "Clear drifters near ruins. The past bites those who dig.",
+        "pl": "Clear drifters near ruins. The past bites those who dig.",
+        "pt": "Clear drifters near ruins. The past bites those who dig.",
+        "ro": "Clear drifters near ruins. The past bites those who dig.",
+        "ru": "Зачисти дрифтеров у руин. Прошлое кусает тех, кто копает.",
+        "sk": "Clear drifters near ruins. The past bites those who dig.",
+        "sr": "Clear drifters near ruins. The past bites those who dig.",
+        "sv": "Clear drifters near ruins. The past bites those who dig.",
+        "th": "Clear drifters near ruins. The past bites those who dig.",
+        "tr": "Clear drifters near ruins. The past bites those who dig.",
+        "uk": "Зачисти дрифтеров у руин. Прошлое кусает тех, кто копает.",
+        "vi": "Clear drifters near ruins. The past bites those who dig.",
+        "zh": "Clear drifters near ruins. The past bites those who dig."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:drifter-*",
+          "count": 10,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Kill",
+      "description": {
+        "ar": "Locusts in the deep. Clicking horror of the underground.",
+        "be": "Саранча в глубине. Щёлкающий ужас подземелий.",
+        "cs": "Locusts in the deep. Clicking horror of the underground.",
+        "da": "Locusts in the deep. Clicking horror of the underground.",
+        "de": "Locusts in the deep. Clicking horror of the underground.",
+        "en": "Locusts in the deep. Clicking horror of the underground.",
+        "eo": "Locusts in the deep. Clicking horror of the underground.",
+        "es": "Locusts in the deep. Clicking horror of the underground.",
+        "fi": "Locusts in the deep. Clicking horror of the underground.",
+        "fr": "Locusts in the deep. Clicking horror of the underground.",
+        "hu": "Locusts in the deep. Clicking horror of the underground.",
+        "is": "Locusts in the deep. Clicking horror of the underground.",
+        "it": "Locusts in the deep. Clicking horror of the underground.",
+        "ja": "Locusts in the deep. Clicking horror of the underground.",
+        "ko": "Locusts in the deep. Clicking horror of the underground.",
+        "li": "Locusts in the deep. Clicking horror of the underground.",
+        "lt": "Locusts in the deep. Clicking horror of the underground.",
+        "nl": "Locusts in the deep. Clicking horror of the underground.",
+        "no": "Locusts in the deep. Clicking horror of the underground.",
+        "pl": "Locusts in the deep. Clicking horror of the underground.",
+        "pt": "Locusts in the deep. Clicking horror of the underground.",
+        "ro": "Locusts in the deep. Clicking horror of the underground.",
+        "ru": "Саранча в глубине. Щёлкающий ужас подземелий.",
+        "sk": "Locusts in the deep. Clicking horror of the underground.",
+        "sr": "Locusts in the deep. Clicking horror of the underground.",
+        "sv": "Locusts in the deep. Clicking horror of the underground.",
+        "th": "Locusts in the deep. Clicking horror of the underground.",
+        "tr": "Locusts in the deep. Clicking horror of the underground.",
+        "uk": "Саранча в глубине. Щёлкающий ужас подземелий.",
+        "vi": "Locusts in the deep. Clicking horror of the underground.",
+        "zh": "Locusts in the deep. Clicking horror of the underground."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:locust-*",
+          "count": 6,
+          "objective": "kill",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Flint in foreign soil. Even far away, the first tool waits.",
+        "be": "Кремень на чужой земле. Даже вдали ждёт первый инструмент.",
+        "cs": "Flint in foreign soil. Even far away, the first tool waits.",
+        "da": "Flint in foreign soil. Even far away, the first tool waits.",
+        "de": "Flint in foreign soil. Even far away, the first tool waits.",
+        "en": "Flint in foreign soil. Even far away, the first tool waits.",
+        "eo": "Flint in foreign soil. Even far away, the first tool waits.",
+        "es": "Flint in foreign soil. Even far away, the first tool waits.",
+        "fi": "Flint in foreign soil. Even far away, the first tool waits.",
+        "fr": "Flint in foreign soil. Even far away, the first tool waits.",
+        "hu": "Flint in foreign soil. Even far away, the first tool waits.",
+        "is": "Flint in foreign soil. Even far away, the first tool waits.",
+        "it": "Flint in foreign soil. Even far away, the first tool waits.",
+        "ja": "Flint in foreign soil. Even far away, the first tool waits.",
+        "ko": "Flint in foreign soil. Even far away, the first tool waits.",
+        "li": "Flint in foreign soil. Even far away, the first tool waits.",
+        "lt": "Flint in foreign soil. Even far away, the first tool waits.",
+        "nl": "Flint in foreign soil. Even far away, the first tool waits.",
+        "no": "Flint in foreign soil. Even far away, the first tool waits.",
+        "pl": "Flint in foreign soil. Even far away, the first tool waits.",
+        "pt": "Flint in foreign soil. Even far away, the first tool waits.",
+        "ro": "Flint in foreign soil. Even far away, the first tool waits.",
+        "ru": "Кремень на чужой земле. Даже вдали ждёт первый инструмент.",
+        "sk": "Flint in foreign soil. Even far away, the first tool waits.",
+        "sr": "Flint in foreign soil. Even far away, the first tool waits.",
+        "sv": "Flint in foreign soil. Even far away, the first tool waits.",
+        "th": "Flint in foreign soil. Even far away, the first tool waits.",
+        "tr": "Flint in foreign soil. Even far away, the first tool waits.",
+        "uk": "Кремень на чужой земле. Даже вдали ждёт первый инструмент.",
+        "vi": "Flint in foreign soil. Even far away, the first tool waits.",
+        "zh": "Flint in foreign soil. Even far away, the first tool waits."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:stick",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Clay from a river you did not name. Maps grow by walking.",
+        "be": "Глина из реки без имени. Карты растут от ходьбы.",
+        "cs": "Clay from a river you did not name. Maps grow by walking.",
+        "da": "Clay from a river you did not name. Maps grow by walking.",
+        "de": "Clay from a river you did not name. Maps grow by walking.",
+        "en": "Clay from a river you did not name. Maps grow by walking.",
+        "eo": "Clay from a river you did not name. Maps grow by walking.",
+        "es": "Clay from a river you did not name. Maps grow by walking.",
+        "fi": "Clay from a river you did not name. Maps grow by walking.",
+        "fr": "Clay from a river you did not name. Maps grow by walking.",
+        "hu": "Clay from a river you did not name. Maps grow by walking.",
+        "is": "Clay from a river you did not name. Maps grow by walking.",
+        "it": "Clay from a river you did not name. Maps grow by walking.",
+        "ja": "Clay from a river you did not name. Maps grow by walking.",
+        "ko": "Clay from a river you did not name. Maps grow by walking.",
+        "li": "Clay from a river you did not name. Maps grow by walking.",
+        "lt": "Clay from a river you did not name. Maps grow by walking.",
+        "nl": "Clay from a river you did not name. Maps grow by walking.",
+        "no": "Clay from a river you did not name. Maps grow by walking.",
+        "pl": "Clay from a river you did not name. Maps grow by walking.",
+        "pt": "Clay from a river you did not name. Maps grow by walking.",
+        "ro": "Clay from a river you did not name. Maps grow by walking.",
+        "ru": "Глина из реки без имени. Карты растут от ходьбы.",
+        "sk": "Clay from a river you did not name. Maps grow by walking.",
+        "sr": "Clay from a river you did not name. Maps grow by walking.",
+        "sv": "Clay from a river you did not name. Maps grow by walking.",
+        "th": "Clay from a river you did not name. Maps grow by walking.",
+        "tr": "Clay from a river you did not name. Maps grow by walking.",
+        "uk": "Глина из реки без имени. Карты растут от ходьбы.",
+        "vi": "Clay from a river you did not name. Maps grow by walking.",
+        "zh": "Clay from a river you did not name. Maps grow by walking."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper from a distant seam. The path of Era is not a straight line.",
+        "be": "Медь с дальней жилы. Путь Эры — не прямая линия.",
+        "cs": "Copper from a distant seam. The path of Era is not a straight line.",
+        "da": "Copper from a distant seam. The path of Era is not a straight line.",
+        "de": "Copper from a distant seam. The path of Era is not a straight line.",
+        "en": "Copper from a distant seam. The path of Era is not a straight line.",
+        "eo": "Copper from a distant seam. The path of Era is not a straight line.",
+        "es": "Copper from a distant seam. The path of Era is not a straight line.",
+        "fi": "Copper from a distant seam. The path of Era is not a straight line.",
+        "fr": "Copper from a distant seam. The path of Era is not a straight line.",
+        "hu": "Copper from a distant seam. The path of Era is not a straight line.",
+        "is": "Copper from a distant seam. The path of Era is not a straight line.",
+        "it": "Copper from a distant seam. The path of Era is not a straight line.",
+        "ja": "Copper from a distant seam. The path of Era is not a straight line.",
+        "ko": "Copper from a distant seam. The path of Era is not a straight line.",
+        "li": "Copper from a distant seam. The path of Era is not a straight line.",
+        "lt": "Copper from a distant seam. The path of Era is not a straight line.",
+        "nl": "Copper from a distant seam. The path of Era is not a straight line.",
+        "no": "Copper from a distant seam. The path of Era is not a straight line.",
+        "pl": "Copper from a distant seam. The path of Era is not a straight line.",
+        "pt": "Copper from a distant seam. The path of Era is not a straight line.",
+        "ro": "Copper from a distant seam. The path of Era is not a straight line.",
+        "ru": "Медь с дальней жилы. Путь Эры — не прямая линия.",
+        "sk": "Copper from a distant seam. The path of Era is not a straight line.",
+        "sr": "Copper from a distant seam. The path of Era is not a straight line.",
+        "sv": "Copper from a distant seam. The path of Era is not a straight line.",
+        "th": "Copper from a distant seam. The path of Era is not a straight line.",
+        "tr": "Copper from a distant seam. The path of Era is not a straight line.",
+        "uk": "Медь с дальней жилы. Путь Эры — не прямая линия.",
+        "vi": "Copper from a distant seam. The path of Era is not a straight line.",
+        "zh": "Copper from a distant seam. The path of Era is not a straight line."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:nugget-nativecopper",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Clear quartz from caves. Light trapped in stone.",
+        "be": "Прозрачный кварц из пещер. Свет, пойманный в камень.",
+        "cs": "Clear quartz from caves. Light trapped in stone.",
+        "da": "Clear quartz from caves. Light trapped in stone.",
+        "de": "Clear quartz from caves. Light trapped in stone.",
+        "en": "Clear quartz from caves. Light trapped in stone.",
+        "eo": "Clear quartz from caves. Light trapped in stone.",
+        "es": "Clear quartz from caves. Light trapped in stone.",
+        "fi": "Clear quartz from caves. Light trapped in stone.",
+        "fr": "Clear quartz from caves. Light trapped in stone.",
+        "hu": "Clear quartz from caves. Light trapped in stone.",
+        "is": "Clear quartz from caves. Light trapped in stone.",
+        "it": "Clear quartz from caves. Light trapped in stone.",
+        "ja": "Clear quartz from caves. Light trapped in stone.",
+        "ko": "Clear quartz from caves. Light trapped in stone.",
+        "li": "Clear quartz from caves. Light trapped in stone.",
+        "lt": "Clear quartz from caves. Light trapped in stone.",
+        "nl": "Clear quartz from caves. Light trapped in stone.",
+        "no": "Clear quartz from caves. Light trapped in stone.",
+        "pl": "Clear quartz from caves. Light trapped in stone.",
+        "pt": "Clear quartz from caves. Light trapped in stone.",
+        "ro": "Clear quartz from caves. Light trapped in stone.",
+        "ru": "Прозрачный кварц из пещер. Свет, пойманный в камень.",
+        "sk": "Clear quartz from caves. Light trapped in stone.",
+        "sr": "Clear quartz from caves. Light trapped in stone.",
+        "sv": "Clear quartz from caves. Light trapped in stone.",
+        "th": "Clear quartz from caves. Light trapped in stone.",
+        "tr": "Clear quartz from caves. Light trapped in stone.",
+        "uk": "Прозрачный кварц из пещер. Свет, пойманный в камень.",
+        "vi": "Clear quartz from caves. Light trapped in stone.",
+        "zh": "Clear quartz from caves. Light trapped in stone."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:clearquartz",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flint",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "be": "Золотые самородки, если повезёт — мягкий металл дальних дорог.",
+        "cs": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "da": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "de": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "en": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "eo": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "es": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "fi": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "fr": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "hu": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "is": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "it": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "ja": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "ko": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "li": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "lt": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "nl": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "no": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "pl": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "pt": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "ro": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "ru": "Золотые самородки, если повезёт — мягкий металл дальних дорог.",
+        "sk": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "sr": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "sv": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "th": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "tr": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "uk": "Золотые самородки, если повезёт — мягкий металл дальних дорог.",
+        "vi": "Gold nuggets if fortune allows — soft metal of far roads.",
+        "zh": "Gold nuggets if fortune allows — soft metal of far roads."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:nugget-nativegold",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Silver nuggets. Moon-colored metal of the deep.",
+        "be": "Серебряные самородки. Металл цвета луны из глубины.",
+        "cs": "Silver nuggets. Moon-colored metal of the deep.",
+        "da": "Silver nuggets. Moon-colored metal of the deep.",
+        "de": "Silver nuggets. Moon-colored metal of the deep.",
+        "en": "Silver nuggets. Moon-colored metal of the deep.",
+        "eo": "Silver nuggets. Moon-colored metal of the deep.",
+        "es": "Silver nuggets. Moon-colored metal of the deep.",
+        "fi": "Silver nuggets. Moon-colored metal of the deep.",
+        "fr": "Silver nuggets. Moon-colored metal of the deep.",
+        "hu": "Silver nuggets. Moon-colored metal of the deep.",
+        "is": "Silver nuggets. Moon-colored metal of the deep.",
+        "it": "Silver nuggets. Moon-colored metal of the deep.",
+        "ja": "Silver nuggets. Moon-colored metal of the deep.",
+        "ko": "Silver nuggets. Moon-colored metal of the deep.",
+        "li": "Silver nuggets. Moon-colored metal of the deep.",
+        "lt": "Silver nuggets. Moon-colored metal of the deep.",
+        "nl": "Silver nuggets. Moon-colored metal of the deep.",
+        "no": "Silver nuggets. Moon-colored metal of the deep.",
+        "pl": "Silver nuggets. Moon-colored metal of the deep.",
+        "pt": "Silver nuggets. Moon-colored metal of the deep.",
+        "ro": "Silver nuggets. Moon-colored metal of the deep.",
+        "ru": "Серебряные самородки. Металл цвета луны из глубины.",
+        "sk": "Silver nuggets. Moon-colored metal of the deep.",
+        "sr": "Silver nuggets. Moon-colored metal of the deep.",
+        "sv": "Silver nuggets. Moon-colored metal of the deep.",
+        "th": "Silver nuggets. Moon-colored metal of the deep.",
+        "tr": "Silver nuggets. Moon-colored metal of the deep.",
+        "uk": "Серебряные самородки. Металл цвета луны из глубины.",
+        "vi": "Silver nuggets. Moon-colored metal of the deep.",
+        "zh": "Silver nuggets. Moon-colored metal of the deep."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:nugget-nativesilver",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Malachite from a distant green seam.",
+        "be": "Малахит с дальней зелёной жилы.",
+        "cs": "Malachite from a distant green seam.",
+        "da": "Malachite from a distant green seam.",
+        "de": "Malachite from a distant green seam.",
+        "en": "Malachite from a distant green seam.",
+        "eo": "Malachite from a distant green seam.",
+        "es": "Malachite from a distant green seam.",
+        "fi": "Malachite from a distant green seam.",
+        "fr": "Malachite from a distant green seam.",
+        "hu": "Malachite from a distant green seam.",
+        "is": "Malachite from a distant green seam.",
+        "it": "Malachite from a distant green seam.",
+        "ja": "Malachite from a distant green seam.",
+        "ko": "Malachite from a distant green seam.",
+        "li": "Malachite from a distant green seam.",
+        "lt": "Malachite from a distant green seam.",
+        "nl": "Malachite from a distant green seam.",
+        "no": "Malachite from a distant green seam.",
+        "pl": "Malachite from a distant green seam.",
+        "pt": "Malachite from a distant green seam.",
+        "ro": "Malachite from a distant green seam.",
+        "ru": "Малахит с дальней зелёной жилы.",
+        "sk": "Malachite from a distant green seam.",
+        "sr": "Malachite from a distant green seam.",
+        "sv": "Malachite from a distant green seam.",
+        "th": "Malachite from a distant green seam.",
+        "tr": "Malachite from a distant green seam.",
+        "uk": "Малахит с дальней зелёной жилы.",
+        "vi": "Malachite from a distant green seam.",
+        "zh": "Malachite from a distant green seam."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-malachite-*",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Wild fruit from foreign groves.",
+        "be": "Дикие плоды с чужих рощ.",
+        "cs": "Wild fruit from foreign groves.",
+        "da": "Wild fruit from foreign groves.",
+        "de": "Wild fruit from foreign groves.",
+        "en": "Wild fruit from foreign groves.",
+        "eo": "Wild fruit from foreign groves.",
+        "es": "Wild fruit from foreign groves.",
+        "fi": "Wild fruit from foreign groves.",
+        "fr": "Wild fruit from foreign groves.",
+        "hu": "Wild fruit from foreign groves.",
+        "is": "Wild fruit from foreign groves.",
+        "it": "Wild fruit from foreign groves.",
+        "ja": "Wild fruit from foreign groves.",
+        "ko": "Wild fruit from foreign groves.",
+        "li": "Wild fruit from foreign groves.",
+        "lt": "Wild fruit from foreign groves.",
+        "nl": "Wild fruit from foreign groves.",
+        "no": "Wild fruit from foreign groves.",
+        "pl": "Wild fruit from foreign groves.",
+        "pt": "Wild fruit from foreign groves.",
+        "ro": "Wild fruit from foreign groves.",
+        "ru": "Дикие плоды с чужих рощ.",
+        "sk": "Wild fruit from foreign groves.",
+        "sr": "Wild fruit from foreign groves.",
+        "sv": "Wild fruit from foreign groves.",
+        "th": "Wild fruit from foreign groves.",
+        "tr": "Wild fruit from foreign groves.",
+        "uk": "Дикие плоды с чужих рощ.",
+        "vi": "Wild fruit from foreign groves.",
+        "zh": "Wild fruit from foreign groves."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:fruit-*",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fruit-blueberry",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Bones from beasts of far lands.",
+        "be": "Кости зверей дальних земель.",
+        "cs": "Bones from beasts of far lands.",
+        "da": "Bones from beasts of far lands.",
+        "de": "Bones from beasts of far lands.",
+        "en": "Bones from beasts of far lands.",
+        "eo": "Bones from beasts of far lands.",
+        "es": "Bones from beasts of far lands.",
+        "fi": "Bones from beasts of far lands.",
+        "fr": "Bones from beasts of far lands.",
+        "hu": "Bones from beasts of far lands.",
+        "is": "Bones from beasts of far lands.",
+        "it": "Bones from beasts of far lands.",
+        "ja": "Bones from beasts of far lands.",
+        "ko": "Bones from beasts of far lands.",
+        "li": "Bones from beasts of far lands.",
+        "lt": "Bones from beasts of far lands.",
+        "nl": "Bones from beasts of far lands.",
+        "no": "Bones from beasts of far lands.",
+        "pl": "Bones from beasts of far lands.",
+        "pt": "Bones from beasts of far lands.",
+        "ro": "Bones from beasts of far lands.",
+        "ru": "Кости зверей дальних земель.",
+        "sk": "Bones from beasts of far lands.",
+        "sr": "Bones from beasts of far lands.",
+        "sv": "Bones from beasts of far lands.",
+        "th": "Bones from beasts of far lands.",
+        "tr": "Bones from beasts of far lands.",
+        "uk": "Кости зверей дальних земель.",
+        "vi": "Bones from beasts of far lands.",
+        "zh": "Bones from beasts of far lands."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:bone",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 19,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More rusty gears — the ruins still speak.",
+        "be": "Ещё ржавые шестерни — руины всё ещё говорят.",
+        "cs": "More rusty gears — the ruins still speak.",
+        "da": "More rusty gears — the ruins still speak.",
+        "de": "More rusty gears — the ruins still speak.",
+        "en": "More rusty gears — the ruins still speak.",
+        "eo": "More rusty gears — the ruins still speak.",
+        "es": "More rusty gears — the ruins still speak.",
+        "fi": "More rusty gears — the ruins still speak.",
+        "fr": "More rusty gears — the ruins still speak.",
+        "hu": "More rusty gears — the ruins still speak.",
+        "is": "More rusty gears — the ruins still speak.",
+        "it": "More rusty gears — the ruins still speak.",
+        "ja": "More rusty gears — the ruins still speak.",
+        "ko": "More rusty gears — the ruins still speak.",
+        "li": "More rusty gears — the ruins still speak.",
+        "lt": "More rusty gears — the ruins still speak.",
+        "nl": "More rusty gears — the ruins still speak.",
+        "no": "More rusty gears — the ruins still speak.",
+        "pl": "More rusty gears — the ruins still speak.",
+        "pt": "More rusty gears — the ruins still speak.",
+        "ro": "More rusty gears — the ruins still speak.",
+        "ru": "Ещё ржавые шестерни — руины всё ещё говорят.",
+        "sk": "More rusty gears — the ruins still speak.",
+        "sr": "More rusty gears — the ruins still speak.",
+        "sv": "More rusty gears — the ruins still speak.",
+        "th": "More rusty gears — the ruins still speak.",
+        "tr": "More rusty gears — the ruins still speak.",
+        "uk": "Ещё ржавые шестерни — руины всё ещё говорят.",
+        "vi": "More rusty gears — the ruins still speak.",
+        "zh": "More rusty gears — the ruins still speak."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:gear-rusty",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-iron",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 20,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Return with charcoal ready for the home forge.",
+        "be": "Вернись с углём для домашней кузни.",
+        "cs": "Return with charcoal ready for the home forge.",
+        "da": "Return with charcoal ready for the home forge.",
+        "de": "Return with charcoal ready for the home forge.",
+        "en": "Return with charcoal ready for the home forge.",
+        "eo": "Return with charcoal ready for the home forge.",
+        "es": "Return with charcoal ready for the home forge.",
+        "fi": "Return with charcoal ready for the home forge.",
+        "fr": "Return with charcoal ready for the home forge.",
+        "hu": "Return with charcoal ready for the home forge.",
+        "is": "Return with charcoal ready for the home forge.",
+        "it": "Return with charcoal ready for the home forge.",
+        "ja": "Return with charcoal ready for the home forge.",
+        "ko": "Return with charcoal ready for the home forge.",
+        "li": "Return with charcoal ready for the home forge.",
+        "lt": "Return with charcoal ready for the home forge.",
+        "nl": "Return with charcoal ready for the home forge.",
+        "no": "Return with charcoal ready for the home forge.",
+        "pl": "Return with charcoal ready for the home forge.",
+        "pt": "Return with charcoal ready for the home forge.",
+        "ro": "Return with charcoal ready for the home forge.",
+        "ru": "Вернись с углём для домашней кузни.",
+        "sk": "Return with charcoal ready for the home forge.",
+        "sr": "Return with charcoal ready for the home forge.",
+        "sv": "Return with charcoal ready for the home forge.",
+        "th": "Return with charcoal ready for the home forge.",
+        "tr": "Return with charcoal ready for the home forge.",
+        "uk": "Вернись с углём для домашней кузни.",
+        "vi": "Return with charcoal ready for the home forge.",
+        "zh": "Return with charcoal ready for the home forge."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 40,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 21,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "be": "Странствия завершены. Ты возвращаешься тяжелее — знанием, не только добычей.",
+        "cs": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "da": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "de": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "en": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "eo": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "es": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "fi": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "fr": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "hu": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "is": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "it": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "ja": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "ko": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "li": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "lt": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "nl": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "no": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "pl": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "pt": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "ro": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "ru": "Странствия завершены. Ты возвращаешься тяжелее — знанием, не только добычей.",
+        "sk": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "sr": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "sv": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "th": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "tr": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "uk": "Странствия завершены. Ты возвращаешься тяжелее — знанием, не только добычей.",
+        "vi": "Wanderings complete. You return heavier — with knowledge, not only loot.",
+        "zh": "Wanderings complete. You return heavier — with knowledge, not only loot."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 22,
+      "x": -120,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A spear for the road. Distance is a traveler’s friend.",
+        "be": "Копьё в дорогу. Дистанция — друг странника.",
+        "cs": "A spear for the road. Distance is a traveler’s friend.",
+        "da": "A spear for the road. Distance is a traveler’s friend.",
+        "de": "A spear for the road. Distance is a traveler’s friend.",
+        "en": "A spear for the road. Distance is a traveler’s friend.",
+        "eo": "A spear for the road. Distance is a traveler’s friend.",
+        "es": "A spear for the road. Distance is a traveler’s friend.",
+        "fi": "A spear for the road. Distance is a traveler’s friend.",
+        "fr": "A spear for the road. Distance is a traveler’s friend.",
+        "hu": "A spear for the road. Distance is a traveler’s friend.",
+        "is": "A spear for the road. Distance is a traveler’s friend.",
+        "it": "A spear for the road. Distance is a traveler’s friend.",
+        "ja": "A spear for the road. Distance is a traveler’s friend.",
+        "ko": "A spear for the road. Distance is a traveler’s friend.",
+        "li": "A spear for the road. Distance is a traveler’s friend.",
+        "lt": "A spear for the road. Distance is a traveler’s friend.",
+        "nl": "A spear for the road. Distance is a traveler’s friend.",
+        "no": "A spear for the road. Distance is a traveler’s friend.",
+        "pl": "A spear for the road. Distance is a traveler’s friend.",
+        "pt": "A spear for the road. Distance is a traveler’s friend.",
+        "ro": "A spear for the road. Distance is a traveler’s friend.",
+        "ru": "Копьё в дорогу. Дистанция — друг странника.",
+        "sk": "A spear for the road. Distance is a traveler’s friend.",
+        "sr": "A spear for the road. Distance is a traveler’s friend.",
+        "sv": "A spear for the road. Distance is a traveler’s friend.",
+        "th": "A spear for the road. Distance is a traveler’s friend.",
+        "tr": "A spear for the road. Distance is a traveler’s friend.",
+        "uk": "Копьё в дорогу. Дистанция — друг странника.",
+        "vi": "A spear for the road. Distance is a traveler’s friend.",
+        "zh": "A spear for the road. Distance is a traveler’s friend."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:spear-generic-flint",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 3
+    }
+  ],
+  "nextNodeId": 23
+}

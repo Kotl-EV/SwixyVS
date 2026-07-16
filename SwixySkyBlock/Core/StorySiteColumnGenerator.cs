@@ -18,7 +18,7 @@ internal static class StorySiteColumnGenerator
             return 0;
         }
 
-        if (SwixySkyBlockMod.Config.UseVanillaStoryTerrain)
+        if (SkyBlockRuntime.Config.UseVanillaStoryTerrain)
         {
             SkyBlockVanillaStoryPocketGen.GenerateColumn(api, chunkX, chunkZ, chunks);
         }

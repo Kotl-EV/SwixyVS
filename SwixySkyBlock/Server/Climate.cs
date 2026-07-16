@@ -5,7 +5,7 @@ using Vintagestory.API.Server;
 namespace SwixySkyBlock;
 
 /// <summary>Одинаковый умеренный климат на любых координатах, сезоны включены.</summary>
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     /// <summary>Регистрируем OnGetClimate до survival, чтобы подменить базовую температуру.</summary>
     public override double ExecuteOrder() => 0.01;

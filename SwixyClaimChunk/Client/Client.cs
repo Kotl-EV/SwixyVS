@@ -1,5 +1,6 @@
 using System;
 using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -7,8 +8,8 @@ using Vintagestory.API.Config;
 
 namespace SwixyClaimChunk;
 
-/// <summary>Часть <see cref="SwixyClaimChunkMod"/> — клиент: GUI и входящие пакеты.</summary>
-public sealed partial class SwixyClaimChunkMod
+/// <summary>Часть <see cref="SwixyClaimChunkClientMod"/> — клиент: GUI и входящие пакеты.</summary>
+public sealed partial class SwixyClaimChunkClientMod
 {
     public override void StartClientSide(ICoreClientAPI api)
     {
@@ -17,7 +18,7 @@ public sealed partial class SwixyClaimChunkMod
         api.Logger.Notification("Swixy Claim Chunk client side starting.");
 
         clientApi = api;
-        clientChannel = RegisterClaimPacketTypes(api.Network.RegisterChannel(ChannelName))
+        clientChannel = ClaimPacketChannel.Register(api.Network.RegisterChannel(ClaimConstants.ChannelName))
             .SetMessageHandler<ClaimMapStatePacket>(OnMapStatePacket)
             .SetMessageHandler<ClaimListStatePacket>(OnClaimListStatePacket)
             .SetMessageHandler<ClaimShowStatePacket>(OnClaimShowStatePacket)
@@ -36,14 +37,14 @@ public sealed partial class SwixyClaimChunkMod
         api.Logger.Notification("[SwixyClaimChunk] Client claim channel registered");
 
         api.Input.RegisterHotKey(
-            OpenMapHotkeyCode,
+            ClaimConstants.OpenMapHotkeyCode,
             Lang.Get("swixyclaimchunk:open-map-hotkey"),
             GlKeys.P,
             HotkeyType.GUIOrOtherControls,
             false,
             false,
             false);
-        api.Input.SetHotKeyHandler(OpenMapHotkeyCode, _ =>
+        api.Input.SetHotKeyHandler(ClaimConstants.OpenMapHotkeyCode, _ =>
         {
             ToggleDialog();
             return true;
@@ -148,5 +149,4 @@ public sealed partial class SwixyClaimChunkMod
     {
         dialog?.ApplyUseFilterScanResult(packet);
     }
-
 }

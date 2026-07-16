@@ -1,0 +1,1427 @@
+{
+  "iconItemCode": "game:ingot-copper",
+  "title": {
+    "ar": "Copper Age",
+    "be": "Медный век",
+    "cs": "Copper Age",
+    "da": "Copper Age",
+    "de": "Kupferzeit",
+    "en": "Copper Age",
+    "eo": "Copper Age",
+    "es": "Edad del cobre",
+    "fi": "Copper Age",
+    "fr": "Âge du cuivre",
+    "hu": "Copper Age",
+    "is": "Copper Age",
+    "it": "Età del rame",
+    "ja": "銅器時代",
+    "ko": "동기 시대",
+    "li": "Copper Age",
+    "lt": "Copper Age",
+    "nl": "Copper Age",
+    "no": "Copper Age",
+    "pl": "Epoka miedzi",
+    "pt": "Idade do Cobre",
+    "ro": "Copper Age",
+    "ru": "Медный век",
+    "sk": "Copper Age",
+    "sr": "Copper Age",
+    "sv": "Copper Age",
+    "th": "Copper Age",
+    "tr": "Bakır Çağı",
+    "uk": "Медный век",
+    "vi": "Copper Age",
+    "zh": "铜器时代"
+  },
+  "headerTitle": "category.copper.header",
+  "header": {
+    "ar": "COPPER AGE",
+    "be": "МЕДНЫЙ ВЕК",
+    "cs": "COPPER AGE",
+    "da": "COPPER AGE",
+    "de": "COPPER AGE",
+    "en": "COPPER AGE",
+    "eo": "COPPER AGE",
+    "es": "COPPER AGE",
+    "fi": "COPPER AGE",
+    "fr": "COPPER AGE",
+    "hu": "COPPER AGE",
+    "is": "COPPER AGE",
+    "it": "COPPER AGE",
+    "ja": "COPPER AGE",
+    "ko": "COPPER AGE",
+    "li": "COPPER AGE",
+    "lt": "COPPER AGE",
+    "nl": "COPPER AGE",
+    "no": "COPPER AGE",
+    "pl": "COPPER AGE",
+    "pt": "COPPER AGE",
+    "ro": "COPPER AGE",
+    "ru": "МЕДНЫЙ ВЕК",
+    "sk": "COPPER AGE",
+    "sr": "COPPER AGE",
+    "sv": "COPPER AGE",
+    "th": "COPPER AGE",
+    "tr": "COPPER AGE",
+    "uk": "МЕДНЫЙ ВЕК",
+    "vi": "COPPER AGE",
+    "zh": "COPPER AGE"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "be": "Медь — мягкая кровь земли. «Кто плавит, тот правит ночью».",
+        "cs": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "da": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "de": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "en": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "eo": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "es": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "fi": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "fr": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "hu": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "is": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "it": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "ja": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "ko": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "li": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "lt": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "nl": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "no": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "pl": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "pt": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "ro": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "ru": "Медь — мягкая кровь земли. «Кто плавит, тот правит ночью».",
+        "sk": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "sr": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "sv": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "th": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "tr": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "uk": "Медь — мягкая кровь земли. «Кто плавит, тот правит ночью».",
+        "vi": "Copper is earth’s soft blood. “Who smelts, rules the night.”",
+        "zh": "Copper is earth’s soft blood. “Who smelts, rules the night.”"
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Native copper nuggets. Pick them where the earth blushed green.",
+        "be": "Самородки меди. Собери там, где земля позеленела.",
+        "cs": "Native copper nuggets. Pick them where the earth blushed green.",
+        "da": "Native copper nuggets. Pick them where the earth blushed green.",
+        "de": "Native copper nuggets. Pick them where the earth blushed green.",
+        "en": "Native copper nuggets. Pick them where the earth blushed green.",
+        "eo": "Native copper nuggets. Pick them where the earth blushed green.",
+        "es": "Native copper nuggets. Pick them where the earth blushed green.",
+        "fi": "Native copper nuggets. Pick them where the earth blushed green.",
+        "fr": "Native copper nuggets. Pick them where the earth blushed green.",
+        "hu": "Native copper nuggets. Pick them where the earth blushed green.",
+        "is": "Native copper nuggets. Pick them where the earth blushed green.",
+        "it": "Native copper nuggets. Pick them where the earth blushed green.",
+        "ja": "Native copper nuggets. Pick them where the earth blushed green.",
+        "ko": "Native copper nuggets. Pick them where the earth blushed green.",
+        "li": "Native copper nuggets. Pick them where the earth blushed green.",
+        "lt": "Native copper nuggets. Pick them where the earth blushed green.",
+        "nl": "Native copper nuggets. Pick them where the earth blushed green.",
+        "no": "Native copper nuggets. Pick them where the earth blushed green.",
+        "pl": "Native copper nuggets. Pick them where the earth blushed green.",
+        "pt": "Native copper nuggets. Pick them where the earth blushed green.",
+        "ro": "Native copper nuggets. Pick them where the earth blushed green.",
+        "ru": "Самородки меди. Собери там, где земля позеленела.",
+        "sk": "Native copper nuggets. Pick them where the earth blushed green.",
+        "sr": "Native copper nuggets. Pick them where the earth blushed green.",
+        "sv": "Native copper nuggets. Pick them where the earth blushed green.",
+        "th": "Native copper nuggets. Pick them where the earth blushed green.",
+        "tr": "Native copper nuggets. Pick them where the earth blushed green.",
+        "uk": "Самородки меди. Собери там, где земля позеленела.",
+        "vi": "Native copper nuggets. Pick them where the earth blushed green.",
+        "zh": "Native copper nuggets. Pick them where the earth blushed green."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:nugget-nativecopper",
+          "count": 48,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-fire",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Malachite. Green promise of more metal below.",
+        "be": "Малахит. Зелёное обещание металла внизу.",
+        "cs": "Malachite. Green promise of more metal below.",
+        "da": "Malachite. Green promise of more metal below.",
+        "de": "Malachite. Green promise of more metal below.",
+        "en": "Malachite. Green promise of more metal below.",
+        "eo": "Malachite. Green promise of more metal below.",
+        "es": "Malachite. Green promise of more metal below.",
+        "fi": "Malachite. Green promise of more metal below.",
+        "fr": "Malachite. Green promise of more metal below.",
+        "hu": "Malachite. Green promise of more metal below.",
+        "is": "Malachite. Green promise of more metal below.",
+        "it": "Malachite. Green promise of more metal below.",
+        "ja": "Malachite. Green promise of more metal below.",
+        "ko": "Malachite. Green promise of more metal below.",
+        "li": "Malachite. Green promise of more metal below.",
+        "lt": "Malachite. Green promise of more metal below.",
+        "nl": "Malachite. Green promise of more metal below.",
+        "no": "Malachite. Green promise of more metal below.",
+        "pl": "Malachite. Green promise of more metal below.",
+        "pt": "Malachite. Green promise of more metal below.",
+        "ro": "Malachite. Green promise of more metal below.",
+        "ru": "Малахит. Зелёное обещание металла внизу.",
+        "sk": "Malachite. Green promise of more metal below.",
+        "sr": "Malachite. Green promise of more metal below.",
+        "sv": "Malachite. Green promise of more metal below.",
+        "th": "Malachite. Green promise of more metal below.",
+        "tr": "Malachite. Green promise of more metal below.",
+        "uk": "Малахит. Зелёное обещание металла внизу.",
+        "vi": "Malachite. Green promise of more metal below.",
+        "zh": "Malachite. Green promise of more metal below."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-malachite-*",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "be": "Уголь для тигля. Жар — инструмент, не гость.",
+        "cs": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "da": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "de": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "en": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "eo": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "es": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "fi": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "fr": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "hu": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "is": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "it": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "ja": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "ko": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "li": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "lt": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "nl": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "no": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "pl": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "pt": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "ro": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "ru": "Уголь для тигля. Жар — инструмент, не гость.",
+        "sk": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "sr": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "sv": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "th": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "tr": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "uk": "Уголь для тигля. Жар — инструмент, не гость.",
+        "vi": "Charcoal for the crucible. Heat is a tool, not a guest.",
+        "zh": "Charcoal for the crucible. Heat is a tool, not a guest."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 56,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired crucibles ready. Vessels for the first metal.",
+        "be": "Обожжённые тигли. Сосуды для первого металла.",
+        "cs": "Fired crucibles ready. Vessels for the first metal.",
+        "da": "Fired crucibles ready. Vessels for the first metal.",
+        "de": "Fired crucibles ready. Vessels for the first metal.",
+        "en": "Fired crucibles ready. Vessels for the first metal.",
+        "eo": "Fired crucibles ready. Vessels for the first metal.",
+        "es": "Fired crucibles ready. Vessels for the first metal.",
+        "fi": "Fired crucibles ready. Vessels for the first metal.",
+        "fr": "Fired crucibles ready. Vessels for the first metal.",
+        "hu": "Fired crucibles ready. Vessels for the first metal.",
+        "is": "Fired crucibles ready. Vessels for the first metal.",
+        "it": "Fired crucibles ready. Vessels for the first metal.",
+        "ja": "Fired crucibles ready. Vessels for the first metal.",
+        "ko": "Fired crucibles ready. Vessels for the first metal.",
+        "li": "Fired crucibles ready. Vessels for the first metal.",
+        "lt": "Fired crucibles ready. Vessels for the first metal.",
+        "nl": "Fired crucibles ready. Vessels for the first metal.",
+        "no": "Fired crucibles ready. Vessels for the first metal.",
+        "pl": "Fired crucibles ready. Vessels for the first metal.",
+        "pt": "Fired crucibles ready. Vessels for the first metal.",
+        "ro": "Fired crucibles ready. Vessels for the first metal.",
+        "ru": "Обожжённые тигли. Сосуды для первого металла.",
+        "sk": "Fired crucibles ready. Vessels for the first metal.",
+        "sr": "Fired crucibles ready. Vessels for the first metal.",
+        "sv": "Fired crucibles ready. Vessels for the first metal.",
+        "th": "Fired crucibles ready. Vessels for the first metal.",
+        "tr": "Fired crucibles ready. Vessels for the first metal.",
+        "uk": "Обожжённые тигли. Сосуды для первого металла.",
+        "vi": "Fired crucibles ready. Vessels for the first metal.",
+        "zh": "Fired crucibles ready. Vessels for the first metal."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crucible-fire-fired",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "be": "Куски меди из тигля. Мягкий металл, жёсткий урок.",
+        "cs": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "da": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "de": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "en": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "eo": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "es": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "fi": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "fr": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "hu": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "is": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "it": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "ja": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "ko": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "li": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "lt": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "nl": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "no": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "pl": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "pt": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "ro": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "ru": "Куски меди из тигля. Мягкий металл, жёсткий урок.",
+        "sk": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "sr": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "sv": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "th": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "tr": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "uk": "Куски меди из тигля. Мягкий металл, жёсткий урок.",
+        "vi": "Copper bits from the crucible. Soft metal, hard lesson.",
+        "zh": "Copper bits from the crucible. Soft metal, hard lesson."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalbit-copper",
+          "count": 40,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Pour copper ingots. The age of pure metal begins.",
+        "be": "Отлей медные слитки. Век чистого металла начинается.",
+        "cs": "Pour copper ingots. The age of pure metal begins.",
+        "da": "Pour copper ingots. The age of pure metal begins.",
+        "de": "Pour copper ingots. The age of pure metal begins.",
+        "en": "Pour copper ingots. The age of pure metal begins.",
+        "eo": "Pour copper ingots. The age of pure metal begins.",
+        "es": "Pour copper ingots. The age of pure metal begins.",
+        "fi": "Pour copper ingots. The age of pure metal begins.",
+        "fr": "Pour copper ingots. The age of pure metal begins.",
+        "hu": "Pour copper ingots. The age of pure metal begins.",
+        "is": "Pour copper ingots. The age of pure metal begins.",
+        "it": "Pour copper ingots. The age of pure metal begins.",
+        "ja": "Pour copper ingots. The age of pure metal begins.",
+        "ko": "Pour copper ingots. The age of pure metal begins.",
+        "li": "Pour copper ingots. The age of pure metal begins.",
+        "lt": "Pour copper ingots. The age of pure metal begins.",
+        "nl": "Pour copper ingots. The age of pure metal begins.",
+        "no": "Pour copper ingots. The age of pure metal begins.",
+        "pl": "Pour copper ingots. The age of pure metal begins.",
+        "pt": "Pour copper ingots. The age of pure metal begins.",
+        "ro": "Pour copper ingots. The age of pure metal begins.",
+        "ru": "Отлей медные слитки. Век чистого металла начинается.",
+        "sk": "Pour copper ingots. The age of pure metal begins.",
+        "sr": "Pour copper ingots. The age of pure metal begins.",
+        "sv": "Pour copper ingots. The age of pure metal begins.",
+        "th": "Pour copper ingots. The age of pure metal begins.",
+        "tr": "Pour copper ingots. The age of pure metal begins.",
+        "uk": "Отлей медные слитки. Век чистого металла начинается.",
+        "vi": "Pour copper ingots. The age of pure metal begins.",
+        "zh": "Pour copper ingots. The age of pure metal begins."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 4,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper plates for tools that outlast flint.",
+        "be": "Медные пластины для инструментов твёрже кремня.",
+        "cs": "Copper plates for tools that outlast flint.",
+        "da": "Copper plates for tools that outlast flint.",
+        "de": "Copper plates for tools that outlast flint.",
+        "en": "Copper plates for tools that outlast flint.",
+        "eo": "Copper plates for tools that outlast flint.",
+        "es": "Copper plates for tools that outlast flint.",
+        "fi": "Copper plates for tools that outlast flint.",
+        "fr": "Copper plates for tools that outlast flint.",
+        "hu": "Copper plates for tools that outlast flint.",
+        "is": "Copper plates for tools that outlast flint.",
+        "it": "Copper plates for tools that outlast flint.",
+        "ja": "Copper plates for tools that outlast flint.",
+        "ko": "Copper plates for tools that outlast flint.",
+        "li": "Copper plates for tools that outlast flint.",
+        "lt": "Copper plates for tools that outlast flint.",
+        "nl": "Copper plates for tools that outlast flint.",
+        "no": "Copper plates for tools that outlast flint.",
+        "pl": "Copper plates for tools that outlast flint.",
+        "pt": "Copper plates for tools that outlast flint.",
+        "ro": "Copper plates for tools that outlast flint.",
+        "ru": "Медные пластины для инструментов твёрже кремня.",
+        "sk": "Copper plates for tools that outlast flint.",
+        "sr": "Copper plates for tools that outlast flint.",
+        "sv": "Copper plates for tools that outlast flint.",
+        "th": "Copper plates for tools that outlast flint.",
+        "tr": "Copper plates for tools that outlast flint.",
+        "uk": "Медные пластины для инструментов твёрже кремня.",
+        "vi": "Copper plates for tools that outlast flint.",
+        "zh": "Copper plates for tools that outlast flint."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalplate-copper",
+          "count": 4,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper pick. The mine opens to those who paid in sweat.",
+        "be": "Медная кирка. Шахта открывается тем, кто платил потом.",
+        "cs": "A copper pick. The mine opens to those who paid in sweat.",
+        "da": "A copper pick. The mine opens to those who paid in sweat.",
+        "de": "A copper pick. The mine opens to those who paid in sweat.",
+        "en": "A copper pick. The mine opens to those who paid in sweat.",
+        "eo": "A copper pick. The mine opens to those who paid in sweat.",
+        "es": "A copper pick. The mine opens to those who paid in sweat.",
+        "fi": "A copper pick. The mine opens to those who paid in sweat.",
+        "fr": "A copper pick. The mine opens to those who paid in sweat.",
+        "hu": "A copper pick. The mine opens to those who paid in sweat.",
+        "is": "A copper pick. The mine opens to those who paid in sweat.",
+        "it": "A copper pick. The mine opens to those who paid in sweat.",
+        "ja": "A copper pick. The mine opens to those who paid in sweat.",
+        "ko": "A copper pick. The mine opens to those who paid in sweat.",
+        "li": "A copper pick. The mine opens to those who paid in sweat.",
+        "lt": "A copper pick. The mine opens to those who paid in sweat.",
+        "nl": "A copper pick. The mine opens to those who paid in sweat.",
+        "no": "A copper pick. The mine opens to those who paid in sweat.",
+        "pl": "A copper pick. The mine opens to those who paid in sweat.",
+        "pt": "A copper pick. The mine opens to those who paid in sweat.",
+        "ro": "A copper pick. The mine opens to those who paid in sweat.",
+        "ru": "Медная кирка. Шахта открывается тем, кто платил потом.",
+        "sk": "A copper pick. The mine opens to those who paid in sweat.",
+        "sr": "A copper pick. The mine opens to those who paid in sweat.",
+        "sv": "A copper pick. The mine opens to those who paid in sweat.",
+        "th": "A copper pick. The mine opens to those who paid in sweat.",
+        "tr": "A copper pick. The mine opens to those who paid in sweat.",
+        "uk": "Медная кирка. Шахта открывается тем, кто платил потом.",
+        "vi": "A copper pick. The mine opens to those who paid in sweat.",
+        "zh": "A copper pick. The mine opens to those who paid in sweat."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:pickaxe-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ore-poor-malachite-limestone",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper felling axe. Timber falls cleaner for the forge.",
+        "be": "Медный валочный топор. Лес падает чище ради кузни.",
+        "cs": "A copper felling axe. Timber falls cleaner for the forge.",
+        "da": "A copper felling axe. Timber falls cleaner for the forge.",
+        "de": "A copper felling axe. Timber falls cleaner for the forge.",
+        "en": "A copper felling axe. Timber falls cleaner for the forge.",
+        "eo": "A copper felling axe. Timber falls cleaner for the forge.",
+        "es": "A copper felling axe. Timber falls cleaner for the forge.",
+        "fi": "A copper felling axe. Timber falls cleaner for the forge.",
+        "fr": "A copper felling axe. Timber falls cleaner for the forge.",
+        "hu": "A copper felling axe. Timber falls cleaner for the forge.",
+        "is": "A copper felling axe. Timber falls cleaner for the forge.",
+        "it": "A copper felling axe. Timber falls cleaner for the forge.",
+        "ja": "A copper felling axe. Timber falls cleaner for the forge.",
+        "ko": "A copper felling axe. Timber falls cleaner for the forge.",
+        "li": "A copper felling axe. Timber falls cleaner for the forge.",
+        "lt": "A copper felling axe. Timber falls cleaner for the forge.",
+        "nl": "A copper felling axe. Timber falls cleaner for the forge.",
+        "no": "A copper felling axe. Timber falls cleaner for the forge.",
+        "pl": "A copper felling axe. Timber falls cleaner for the forge.",
+        "pt": "A copper felling axe. Timber falls cleaner for the forge.",
+        "ro": "A copper felling axe. Timber falls cleaner for the forge.",
+        "ru": "Медный валочный топор. Лес падает чище ради кузни.",
+        "sk": "A copper felling axe. Timber falls cleaner for the forge.",
+        "sr": "A copper felling axe. Timber falls cleaner for the forge.",
+        "sv": "A copper felling axe. Timber falls cleaner for the forge.",
+        "th": "A copper felling axe. Timber falls cleaner for the forge.",
+        "tr": "A copper felling axe. Timber falls cleaner for the forge.",
+        "uk": "Медный валочный топор. Лес падает чище ради кузни.",
+        "vi": "A copper felling axe. Timber falls cleaner for the forge.",
+        "zh": "A copper felling axe. Timber falls cleaner for the forge."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:axe-felling-copper",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper saw. Boards for chests, doors, and future roofs.",
+        "be": "Медная пила. Доски для сундуков, дверей и будущих крыш.",
+        "cs": "A copper saw. Boards for chests, doors, and future roofs.",
+        "da": "A copper saw. Boards for chests, doors, and future roofs.",
+        "de": "A copper saw. Boards for chests, doors, and future roofs.",
+        "en": "A copper saw. Boards for chests, doors, and future roofs.",
+        "eo": "A copper saw. Boards for chests, doors, and future roofs.",
+        "es": "A copper saw. Boards for chests, doors, and future roofs.",
+        "fi": "A copper saw. Boards for chests, doors, and future roofs.",
+        "fr": "A copper saw. Boards for chests, doors, and future roofs.",
+        "hu": "A copper saw. Boards for chests, doors, and future roofs.",
+        "is": "A copper saw. Boards for chests, doors, and future roofs.",
+        "it": "A copper saw. Boards for chests, doors, and future roofs.",
+        "ja": "A copper saw. Boards for chests, doors, and future roofs.",
+        "ko": "A copper saw. Boards for chests, doors, and future roofs.",
+        "li": "A copper saw. Boards for chests, doors, and future roofs.",
+        "lt": "A copper saw. Boards for chests, doors, and future roofs.",
+        "nl": "A copper saw. Boards for chests, doors, and future roofs.",
+        "no": "A copper saw. Boards for chests, doors, and future roofs.",
+        "pl": "A copper saw. Boards for chests, doors, and future roofs.",
+        "pt": "A copper saw. Boards for chests, doors, and future roofs.",
+        "ro": "A copper saw. Boards for chests, doors, and future roofs.",
+        "ru": "Медная пила. Доски для сундуков, дверей и будущих крыш.",
+        "sk": "A copper saw. Boards for chests, doors, and future roofs.",
+        "sr": "A copper saw. Boards for chests, doors, and future roofs.",
+        "sv": "A copper saw. Boards for chests, doors, and future roofs.",
+        "th": "A copper saw. Boards for chests, doors, and future roofs.",
+        "tr": "A copper saw. Boards for chests, doors, and future roofs.",
+        "uk": "Медная пила. Доски для сундуков, дверей и будущих крыш.",
+        "vi": "A copper saw. Boards for chests, doors, and future roofs.",
+        "zh": "A copper saw. Boards for chests, doors, and future roofs."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:saw-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper hammer. Anvil work starts with an honest blow.",
+        "be": "Медный молот. Работа на наковальне начинается с честного удара.",
+        "cs": "A copper hammer. Anvil work starts with an honest blow.",
+        "da": "A copper hammer. Anvil work starts with an honest blow.",
+        "de": "A copper hammer. Anvil work starts with an honest blow.",
+        "en": "A copper hammer. Anvil work starts with an honest blow.",
+        "eo": "A copper hammer. Anvil work starts with an honest blow.",
+        "es": "A copper hammer. Anvil work starts with an honest blow.",
+        "fi": "A copper hammer. Anvil work starts with an honest blow.",
+        "fr": "A copper hammer. Anvil work starts with an honest blow.",
+        "hu": "A copper hammer. Anvil work starts with an honest blow.",
+        "is": "A copper hammer. Anvil work starts with an honest blow.",
+        "it": "A copper hammer. Anvil work starts with an honest blow.",
+        "ja": "A copper hammer. Anvil work starts with an honest blow.",
+        "ko": "A copper hammer. Anvil work starts with an honest blow.",
+        "li": "A copper hammer. Anvil work starts with an honest blow.",
+        "lt": "A copper hammer. Anvil work starts with an honest blow.",
+        "nl": "A copper hammer. Anvil work starts with an honest blow.",
+        "no": "A copper hammer. Anvil work starts with an honest blow.",
+        "pl": "A copper hammer. Anvil work starts with an honest blow.",
+        "pt": "A copper hammer. Anvil work starts with an honest blow.",
+        "ro": "A copper hammer. Anvil work starts with an honest blow.",
+        "ru": "Медный молот. Работа на наковальне начинается с честного удара.",
+        "sk": "A copper hammer. Anvil work starts with an honest blow.",
+        "sr": "A copper hammer. Anvil work starts with an honest blow.",
+        "sv": "A copper hammer. Anvil work starts with an honest blow.",
+        "th": "A copper hammer. Anvil work starts with an honest blow.",
+        "tr": "A copper hammer. Anvil work starts with an honest blow.",
+        "uk": "Медный молот. Работа на наковальне начинается с честного удара.",
+        "vi": "A copper hammer. Anvil work starts with an honest blow.",
+        "zh": "A copper hammer. Anvil work starts with an honest blow."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hammer-copper",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper chisel. Detail is also power.",
+        "be": "Медное зубило. Деталь — тоже сила.",
+        "cs": "A copper chisel. Detail is also power.",
+        "da": "A copper chisel. Detail is also power.",
+        "de": "A copper chisel. Detail is also power.",
+        "en": "A copper chisel. Detail is also power.",
+        "eo": "A copper chisel. Detail is also power.",
+        "es": "A copper chisel. Detail is also power.",
+        "fi": "A copper chisel. Detail is also power.",
+        "fr": "A copper chisel. Detail is also power.",
+        "hu": "A copper chisel. Detail is also power.",
+        "is": "A copper chisel. Detail is also power.",
+        "it": "A copper chisel. Detail is also power.",
+        "ja": "A copper chisel. Detail is also power.",
+        "ko": "A copper chisel. Detail is also power.",
+        "li": "A copper chisel. Detail is also power.",
+        "lt": "A copper chisel. Detail is also power.",
+        "nl": "A copper chisel. Detail is also power.",
+        "no": "A copper chisel. Detail is also power.",
+        "pl": "A copper chisel. Detail is also power.",
+        "pt": "A copper chisel. Detail is also power.",
+        "ro": "A copper chisel. Detail is also power.",
+        "ru": "Медное зубило. Деталь — тоже сила.",
+        "sk": "A copper chisel. Detail is also power.",
+        "sr": "A copper chisel. Detail is also power.",
+        "sv": "A copper chisel. Detail is also power.",
+        "th": "A copper chisel. Detail is also power.",
+        "tr": "A copper chisel. Detail is also power.",
+        "uk": "Медное зубило. Деталь — тоже сила.",
+        "vi": "A copper chisel. Detail is also power.",
+        "zh": "A copper chisel. Detail is also power."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:chisel-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:metalbit-copper",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper shovel. Dig faster than flint ever allowed.",
+        "be": "Медная лопата. Копай быстрее, чем позволял кремень.",
+        "cs": "A copper shovel. Dig faster than flint ever allowed.",
+        "da": "A copper shovel. Dig faster than flint ever allowed.",
+        "de": "A copper shovel. Dig faster than flint ever allowed.",
+        "en": "A copper shovel. Dig faster than flint ever allowed.",
+        "eo": "A copper shovel. Dig faster than flint ever allowed.",
+        "es": "A copper shovel. Dig faster than flint ever allowed.",
+        "fi": "A copper shovel. Dig faster than flint ever allowed.",
+        "fr": "A copper shovel. Dig faster than flint ever allowed.",
+        "hu": "A copper shovel. Dig faster than flint ever allowed.",
+        "is": "A copper shovel. Dig faster than flint ever allowed.",
+        "it": "A copper shovel. Dig faster than flint ever allowed.",
+        "ja": "A copper shovel. Dig faster than flint ever allowed.",
+        "ko": "A copper shovel. Dig faster than flint ever allowed.",
+        "li": "A copper shovel. Dig faster than flint ever allowed.",
+        "lt": "A copper shovel. Dig faster than flint ever allowed.",
+        "nl": "A copper shovel. Dig faster than flint ever allowed.",
+        "no": "A copper shovel. Dig faster than flint ever allowed.",
+        "pl": "A copper shovel. Dig faster than flint ever allowed.",
+        "pt": "A copper shovel. Dig faster than flint ever allowed.",
+        "ro": "A copper shovel. Dig faster than flint ever allowed.",
+        "ru": "Медная лопата. Копай быстрее, чем позволял кремень.",
+        "sk": "A copper shovel. Dig faster than flint ever allowed.",
+        "sr": "A copper shovel. Dig faster than flint ever allowed.",
+        "sv": "A copper shovel. Dig faster than flint ever allowed.",
+        "th": "A copper shovel. Dig faster than flint ever allowed.",
+        "tr": "A copper shovel. Dig faster than flint ever allowed.",
+        "uk": "Медная лопата. Копай быстрее, чем позволял кремень.",
+        "vi": "A copper shovel. Dig faster than flint ever allowed.",
+        "zh": "A copper shovel. Dig faster than flint ever allowed."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:shovel-copper",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:clay-blue",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper hoe. Fields respect metal edges.",
+        "be": "Медная мотыга. Поля уважают металлическую кромку.",
+        "cs": "A copper hoe. Fields respect metal edges.",
+        "da": "A copper hoe. Fields respect metal edges.",
+        "de": "A copper hoe. Fields respect metal edges.",
+        "en": "A copper hoe. Fields respect metal edges.",
+        "eo": "A copper hoe. Fields respect metal edges.",
+        "es": "A copper hoe. Fields respect metal edges.",
+        "fi": "A copper hoe. Fields respect metal edges.",
+        "fr": "A copper hoe. Fields respect metal edges.",
+        "hu": "A copper hoe. Fields respect metal edges.",
+        "is": "A copper hoe. Fields respect metal edges.",
+        "it": "A copper hoe. Fields respect metal edges.",
+        "ja": "A copper hoe. Fields respect metal edges.",
+        "ko": "A copper hoe. Fields respect metal edges.",
+        "li": "A copper hoe. Fields respect metal edges.",
+        "lt": "A copper hoe. Fields respect metal edges.",
+        "nl": "A copper hoe. Fields respect metal edges.",
+        "no": "A copper hoe. Fields respect metal edges.",
+        "pl": "A copper hoe. Fields respect metal edges.",
+        "pt": "A copper hoe. Fields respect metal edges.",
+        "ro": "A copper hoe. Fields respect metal edges.",
+        "ru": "Медная мотыга. Поля уважают металлическую кромку.",
+        "sk": "A copper hoe. Fields respect metal edges.",
+        "sr": "A copper hoe. Fields respect metal edges.",
+        "sv": "A copper hoe. Fields respect metal edges.",
+        "th": "A copper hoe. Fields respect metal edges.",
+        "tr": "A copper hoe. Fields respect metal edges.",
+        "uk": "Медная мотыга. Поля уважают металлическую кромку.",
+        "vi": "A copper hoe. Fields respect metal edges.",
+        "zh": "A copper hoe. Fields respect metal edges."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hoe-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:seeds-spelt",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper knife. Soft metal, sharp enough for the table.",
+        "be": "Медный нож. Мягкий металл, достаточно острый для стола.",
+        "cs": "A copper knife. Soft metal, sharp enough for the table.",
+        "da": "A copper knife. Soft metal, sharp enough for the table.",
+        "de": "A copper knife. Soft metal, sharp enough for the table.",
+        "en": "A copper knife. Soft metal, sharp enough for the table.",
+        "eo": "A copper knife. Soft metal, sharp enough for the table.",
+        "es": "A copper knife. Soft metal, sharp enough for the table.",
+        "fi": "A copper knife. Soft metal, sharp enough for the table.",
+        "fr": "A copper knife. Soft metal, sharp enough for the table.",
+        "hu": "A copper knife. Soft metal, sharp enough for the table.",
+        "is": "A copper knife. Soft metal, sharp enough for the table.",
+        "it": "A copper knife. Soft metal, sharp enough for the table.",
+        "ja": "A copper knife. Soft metal, sharp enough for the table.",
+        "ko": "A copper knife. Soft metal, sharp enough for the table.",
+        "li": "A copper knife. Soft metal, sharp enough for the table.",
+        "lt": "A copper knife. Soft metal, sharp enough for the table.",
+        "nl": "A copper knife. Soft metal, sharp enough for the table.",
+        "no": "A copper knife. Soft metal, sharp enough for the table.",
+        "pl": "A copper knife. Soft metal, sharp enough for the table.",
+        "pt": "A copper knife. Soft metal, sharp enough for the table.",
+        "ro": "A copper knife. Soft metal, sharp enough for the table.",
+        "ru": "Медный нож. Мягкий металл, достаточно острый для стола.",
+        "sk": "A copper knife. Soft metal, sharp enough for the table.",
+        "sr": "A copper knife. Soft metal, sharp enough for the table.",
+        "sv": "A copper knife. Soft metal, sharp enough for the table.",
+        "th": "A copper knife. Soft metal, sharp enough for the table.",
+        "tr": "A copper knife. Soft metal, sharp enough for the table.",
+        "uk": "Медный нож. Мягкий металл, достаточно острый для стола.",
+        "vi": "A copper knife. Soft metal, sharp enough for the table.",
+        "zh": "A copper knife. Soft metal, sharp enough for the table."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:knife-generic-copper",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper spear. Distance again — cleaner than flint.",
+        "be": "Медное копьё. Снова дистанция — чище кремня.",
+        "cs": "A copper spear. Distance again — cleaner than flint.",
+        "da": "A copper spear. Distance again — cleaner than flint.",
+        "de": "A copper spear. Distance again — cleaner than flint.",
+        "en": "A copper spear. Distance again — cleaner than flint.",
+        "eo": "A copper spear. Distance again — cleaner than flint.",
+        "es": "A copper spear. Distance again — cleaner than flint.",
+        "fi": "A copper spear. Distance again — cleaner than flint.",
+        "fr": "A copper spear. Distance again — cleaner than flint.",
+        "hu": "A copper spear. Distance again — cleaner than flint.",
+        "is": "A copper spear. Distance again — cleaner than flint.",
+        "it": "A copper spear. Distance again — cleaner than flint.",
+        "ja": "A copper spear. Distance again — cleaner than flint.",
+        "ko": "A copper spear. Distance again — cleaner than flint.",
+        "li": "A copper spear. Distance again — cleaner than flint.",
+        "lt": "A copper spear. Distance again — cleaner than flint.",
+        "nl": "A copper spear. Distance again — cleaner than flint.",
+        "no": "A copper spear. Distance again — cleaner than flint.",
+        "pl": "A copper spear. Distance again — cleaner than flint.",
+        "pt": "A copper spear. Distance again — cleaner than flint.",
+        "ro": "A copper spear. Distance again — cleaner than flint.",
+        "ru": "Медное копьё. Снова дистанция — чище кремня.",
+        "sk": "A copper spear. Distance again — cleaner than flint.",
+        "sr": "A copper spear. Distance again — cleaner than flint.",
+        "sv": "A copper spear. Distance again — cleaner than flint.",
+        "th": "A copper spear. Distance again — cleaner than flint.",
+        "tr": "A copper spear. Distance again — cleaner than flint.",
+        "uk": "Медное копьё. Снова дистанция — чище кремня.",
+        "vi": "A copper spear. Distance again — cleaner than flint.",
+        "zh": "A copper spear. Distance again — cleaner than flint."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:spear-generic-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Copper nails and strips. Invisible bones of wooden work.",
+        "be": "Медные гвозди и полосы. Невидимые кости деревянной работы.",
+        "cs": "Copper nails and strips. Invisible bones of wooden work.",
+        "da": "Copper nails and strips. Invisible bones of wooden work.",
+        "de": "Copper nails and strips. Invisible bones of wooden work.",
+        "en": "Copper nails and strips. Invisible bones of wooden work.",
+        "eo": "Copper nails and strips. Invisible bones of wooden work.",
+        "es": "Copper nails and strips. Invisible bones of wooden work.",
+        "fi": "Copper nails and strips. Invisible bones of wooden work.",
+        "fr": "Copper nails and strips. Invisible bones of wooden work.",
+        "hu": "Copper nails and strips. Invisible bones of wooden work.",
+        "is": "Copper nails and strips. Invisible bones of wooden work.",
+        "it": "Copper nails and strips. Invisible bones of wooden work.",
+        "ja": "Copper nails and strips. Invisible bones of wooden work.",
+        "ko": "Copper nails and strips. Invisible bones of wooden work.",
+        "li": "Copper nails and strips. Invisible bones of wooden work.",
+        "lt": "Copper nails and strips. Invisible bones of wooden work.",
+        "nl": "Copper nails and strips. Invisible bones of wooden work.",
+        "no": "Copper nails and strips. Invisible bones of wooden work.",
+        "pl": "Copper nails and strips. Invisible bones of wooden work.",
+        "pt": "Copper nails and strips. Invisible bones of wooden work.",
+        "ro": "Copper nails and strips. Invisible bones of wooden work.",
+        "ru": "Медные гвозди и полосы. Невидимые кости деревянной работы.",
+        "sk": "Copper nails and strips. Invisible bones of wooden work.",
+        "sr": "Copper nails and strips. Invisible bones of wooden work.",
+        "sv": "Copper nails and strips. Invisible bones of wooden work.",
+        "th": "Copper nails and strips. Invisible bones of wooden work.",
+        "tr": "Copper nails and strips. Invisible bones of wooden work.",
+        "uk": "Медные гвозди и полосы. Невидимые кости деревянной работы.",
+        "vi": "Copper nails and strips. Invisible bones of wooden work.",
+        "zh": "Copper nails and strips. Invisible bones of wooden work."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalnailsandstrips-copper",
+          "count": 24,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More copper ingots for the next age’s alloy.",
+        "be": "Ещё медные слитки для сплава следующего века.",
+        "cs": "More copper ingots for the next age’s alloy.",
+        "da": "More copper ingots for the next age’s alloy.",
+        "de": "More copper ingots for the next age’s alloy.",
+        "en": "More copper ingots for the next age’s alloy.",
+        "eo": "More copper ingots for the next age’s alloy.",
+        "es": "More copper ingots for the next age’s alloy.",
+        "fi": "More copper ingots for the next age’s alloy.",
+        "fr": "More copper ingots for the next age’s alloy.",
+        "hu": "More copper ingots for the next age’s alloy.",
+        "is": "More copper ingots for the next age’s alloy.",
+        "it": "More copper ingots for the next age’s alloy.",
+        "ja": "More copper ingots for the next age’s alloy.",
+        "ko": "More copper ingots for the next age’s alloy.",
+        "li": "More copper ingots for the next age’s alloy.",
+        "lt": "More copper ingots for the next age’s alloy.",
+        "nl": "More copper ingots for the next age’s alloy.",
+        "no": "More copper ingots for the next age’s alloy.",
+        "pl": "More copper ingots for the next age’s alloy.",
+        "pt": "More copper ingots for the next age’s alloy.",
+        "ro": "More copper ingots for the next age’s alloy.",
+        "ru": "Ещё медные слитки для сплава следующего века.",
+        "sk": "More copper ingots for the next age’s alloy.",
+        "sr": "More copper ingots for the next age’s alloy.",
+        "sv": "More copper ingots for the next age’s alloy.",
+        "th": "More copper ingots for the next age’s alloy.",
+        "tr": "More copper ingots for the next age’s alloy.",
+        "uk": "Ещё медные слитки для сплава следующего века.",
+        "vi": "More copper ingots for the next age’s alloy.",
+        "zh": "More copper ingots for the next age’s alloy."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 19,
+      "x": 240,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Oak planks from the saw. Walls wait in every trunk.",
+        "be": "Дубовые доски с пилы. Стены ждут в каждом стволе.",
+        "cs": "Oak planks from the saw. Walls wait in every trunk.",
+        "da": "Oak planks from the saw. Walls wait in every trunk.",
+        "de": "Oak planks from the saw. Walls wait in every trunk.",
+        "en": "Oak planks from the saw. Walls wait in every trunk.",
+        "eo": "Oak planks from the saw. Walls wait in every trunk.",
+        "es": "Oak planks from the saw. Walls wait in every trunk.",
+        "fi": "Oak planks from the saw. Walls wait in every trunk.",
+        "fr": "Oak planks from the saw. Walls wait in every trunk.",
+        "hu": "Oak planks from the saw. Walls wait in every trunk.",
+        "is": "Oak planks from the saw. Walls wait in every trunk.",
+        "it": "Oak planks from the saw. Walls wait in every trunk.",
+        "ja": "Oak planks from the saw. Walls wait in every trunk.",
+        "ko": "Oak planks from the saw. Walls wait in every trunk.",
+        "li": "Oak planks from the saw. Walls wait in every trunk.",
+        "lt": "Oak planks from the saw. Walls wait in every trunk.",
+        "nl": "Oak planks from the saw. Walls wait in every trunk.",
+        "no": "Oak planks from the saw. Walls wait in every trunk.",
+        "pl": "Oak planks from the saw. Walls wait in every trunk.",
+        "pt": "Oak planks from the saw. Walls wait in every trunk.",
+        "ro": "Oak planks from the saw. Walls wait in every trunk.",
+        "ru": "Дубовые доски с пилы. Стены ждут в каждом стволе.",
+        "sk": "Oak planks from the saw. Walls wait in every trunk.",
+        "sr": "Oak planks from the saw. Walls wait in every trunk.",
+        "sv": "Oak planks from the saw. Walls wait in every trunk.",
+        "th": "Oak planks from the saw. Walls wait in every trunk.",
+        "tr": "Oak planks from the saw. Walls wait in every trunk.",
+        "uk": "Дубовые доски с пилы. Стены ждут в каждом стволе.",
+        "vi": "Oak planks from the saw. Walls wait in every trunk.",
+        "zh": "Oak planks from the saw. Walls wait in every trunk."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 40,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 20,
+      "x": 120,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A copper anvil if you can cast one — the workshop’s heart.",
+        "be": "Медная наковальня, если отольёшь — сердце мастерской.",
+        "cs": "A copper anvil if you can cast one — the workshop’s heart.",
+        "da": "A copper anvil if you can cast one — the workshop’s heart.",
+        "de": "A copper anvil if you can cast one — the workshop’s heart.",
+        "en": "A copper anvil if you can cast one — the workshop’s heart.",
+        "eo": "A copper anvil if you can cast one — the workshop’s heart.",
+        "es": "A copper anvil if you can cast one — the workshop’s heart.",
+        "fi": "A copper anvil if you can cast one — the workshop’s heart.",
+        "fr": "A copper anvil if you can cast one — the workshop’s heart.",
+        "hu": "A copper anvil if you can cast one — the workshop’s heart.",
+        "is": "A copper anvil if you can cast one — the workshop’s heart.",
+        "it": "A copper anvil if you can cast one — the workshop’s heart.",
+        "ja": "A copper anvil if you can cast one — the workshop’s heart.",
+        "ko": "A copper anvil if you can cast one — the workshop’s heart.",
+        "li": "A copper anvil if you can cast one — the workshop’s heart.",
+        "lt": "A copper anvil if you can cast one — the workshop’s heart.",
+        "nl": "A copper anvil if you can cast one — the workshop’s heart.",
+        "no": "A copper anvil if you can cast one — the workshop’s heart.",
+        "pl": "A copper anvil if you can cast one — the workshop’s heart.",
+        "pt": "A copper anvil if you can cast one — the workshop’s heart.",
+        "ro": "A copper anvil if you can cast one — the workshop’s heart.",
+        "ru": "Медная наковальня, если отольёшь — сердце мастерской.",
+        "sk": "A copper anvil if you can cast one — the workshop’s heart.",
+        "sr": "A copper anvil if you can cast one — the workshop’s heart.",
+        "sv": "A copper anvil if you can cast one — the workshop’s heart.",
+        "th": "A copper anvil if you can cast one — the workshop’s heart.",
+        "tr": "A copper anvil if you can cast one — the workshop’s heart.",
+        "uk": "Медная наковальня, если отольёшь — сердце мастерской.",
+        "vi": "A copper anvil if you can cast one — the workshop’s heart.",
+        "zh": "A copper anvil if you can cast one — the workshop’s heart."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:anvil-copper",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 21,
+      "x": 0,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Copper Age complete. Tin waits — and with it, bronze.",
+        "be": "Медный век завершён. Ждёт олово — и с ним бронза.",
+        "cs": "Copper Age complete. Tin waits — and with it, bronze.",
+        "da": "Copper Age complete. Tin waits — and with it, bronze.",
+        "de": "Copper Age complete. Tin waits — and with it, bronze.",
+        "en": "Copper Age complete. Tin waits — and with it, bronze.",
+        "eo": "Copper Age complete. Tin waits — and with it, bronze.",
+        "es": "Copper Age complete. Tin waits — and with it, bronze.",
+        "fi": "Copper Age complete. Tin waits — and with it, bronze.",
+        "fr": "Copper Age complete. Tin waits — and with it, bronze.",
+        "hu": "Copper Age complete. Tin waits — and with it, bronze.",
+        "is": "Copper Age complete. Tin waits — and with it, bronze.",
+        "it": "Copper Age complete. Tin waits — and with it, bronze.",
+        "ja": "Copper Age complete. Tin waits — and with it, bronze.",
+        "ko": "Copper Age complete. Tin waits — and with it, bronze.",
+        "li": "Copper Age complete. Tin waits — and with it, bronze.",
+        "lt": "Copper Age complete. Tin waits — and with it, bronze.",
+        "nl": "Copper Age complete. Tin waits — and with it, bronze.",
+        "no": "Copper Age complete. Tin waits — and with it, bronze.",
+        "pl": "Copper Age complete. Tin waits — and with it, bronze.",
+        "pt": "Copper Age complete. Tin waits — and with it, bronze.",
+        "ro": "Copper Age complete. Tin waits — and with it, bronze.",
+        "ru": "Медный век завершён. Ждёт олово — и с ним бронза.",
+        "sk": "Copper Age complete. Tin waits — and with it, bronze.",
+        "sr": "Copper Age complete. Tin waits — and with it, bronze.",
+        "sv": "Copper Age complete. Tin waits — and with it, bronze.",
+        "th": "Copper Age complete. Tin waits — and with it, bronze.",
+        "tr": "Copper Age complete. Tin waits — and with it, bronze.",
+        "uk": "Медный век завершён. Ждёт олово — и с ним бронза.",
+        "vi": "Copper Age complete. Tin waits — and with it, bronze.",
+        "zh": "Copper Age complete. Tin waits — and with it, bronze."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 22,
+      "x": 600,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Arrowheads of copper. The hunt learns metal.",
+        "be": "Медные наконечники. Охота учит металл.",
+        "cs": "Arrowheads of copper. The hunt learns metal.",
+        "da": "Arrowheads of copper. The hunt learns metal.",
+        "de": "Arrowheads of copper. The hunt learns metal.",
+        "en": "Arrowheads of copper. The hunt learns metal.",
+        "eo": "Arrowheads of copper. The hunt learns metal.",
+        "es": "Arrowheads of copper. The hunt learns metal.",
+        "fi": "Arrowheads of copper. The hunt learns metal.",
+        "fr": "Arrowheads of copper. The hunt learns metal.",
+        "hu": "Arrowheads of copper. The hunt learns metal.",
+        "is": "Arrowheads of copper. The hunt learns metal.",
+        "it": "Arrowheads of copper. The hunt learns metal.",
+        "ja": "Arrowheads of copper. The hunt learns metal.",
+        "ko": "Arrowheads of copper. The hunt learns metal.",
+        "li": "Arrowheads of copper. The hunt learns metal.",
+        "lt": "Arrowheads of copper. The hunt learns metal.",
+        "nl": "Arrowheads of copper. The hunt learns metal.",
+        "no": "Arrowheads of copper. The hunt learns metal.",
+        "pl": "Arrowheads of copper. The hunt learns metal.",
+        "pt": "Arrowheads of copper. The hunt learns metal.",
+        "ro": "Arrowheads of copper. The hunt learns metal.",
+        "ru": "Медные наконечники. Охота учит металл.",
+        "sk": "Arrowheads of copper. The hunt learns metal.",
+        "sr": "Arrowheads of copper. The hunt learns metal.",
+        "sv": "Arrowheads of copper. The hunt learns metal.",
+        "th": "Arrowheads of copper. The hunt learns metal.",
+        "tr": "Arrowheads of copper. The hunt learns metal.",
+        "uk": "Медные наконечники. Охота учит металл.",
+        "vi": "Arrowheads of copper. The hunt learns metal.",
+        "zh": "Arrowheads of copper. The hunt learns metal."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:arrowhead-copper",
+          "count": 12,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:feather",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 18,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 20
+    },
+    {
+      "startNodeId": 20,
+      "endNodeId": 21
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 22
+    },
+    {
+      "startNodeId": 22,
+      "endNodeId": 10
+    }
+  ],
+  "nextNodeId": 23
+}

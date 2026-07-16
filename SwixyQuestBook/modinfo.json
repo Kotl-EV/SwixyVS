@@ -6,6 +6,9 @@
   "description": "[SwixyQuestBook] Открывается клавишей K",
   "version": "1.0.0",
   "gameversions": [ "1.22.3" ],
+  "side": "Universal",
+  "requiredOnClient": true,
+  "requiredOnServer": true,
   "dependencies": {
     "game": "1.22.3"
   }

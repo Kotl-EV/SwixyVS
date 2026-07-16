@@ -1,0 +1,15 @@
+{
+  "type": "code",
+  "modid": "swixyquestbook",
+  "name": "SwixyQuestBook",
+  "authors": [ "Mengel" ],
+  "description": "[SwixyQuestBook] CLIENT package — players / public (hotkey K)",
+  "version": "1.0.0",
+  "gameversions": [ "1.22.3" ],
+  "side": "Client",
+  "requiredOnClient": true,
+  "requiredOnServer": true,
+  "dependencies": {
+    "game": "1.22.3"
+  }
+}

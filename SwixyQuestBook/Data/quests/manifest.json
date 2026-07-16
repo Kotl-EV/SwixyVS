@@ -1,0 +1,49 @@
+{
+  "version": "3.1-emberstar-expanded-fixed-codes",
+  "categories": [
+    {
+      "headerTitle": "category.legend.header",
+      "file": "category.legend.header.json"
+    },
+    {
+      "headerTitle": "category.stone.header",
+      "file": "category.stone.header.json"
+    },
+    {
+      "headerTitle": "category.clay.header",
+      "file": "category.clay.header.json"
+    },
+    {
+      "headerTitle": "category.copper.header",
+      "file": "category.copper.header.json"
+    },
+    {
+      "headerTitle": "category.bronze.header",
+      "file": "category.bronze.header.json"
+    },
+    {
+      "headerTitle": "category.iron.header",
+      "file": "category.iron.header.json"
+    },
+    {
+      "headerTitle": "category.steel.header",
+      "file": "category.steel.header.json"
+    },
+    {
+      "headerTitle": "category.hunting.header",
+      "file": "category.hunting.header.json"
+    },
+    {
+      "headerTitle": "category.farming.header",
+      "file": "category.farming.header.json"
+    },
+    {
+      "headerTitle": "category.crafts.header",
+      "file": "category.crafts.header.json"
+    },
+    {
+      "headerTitle": "category.explore.header",
+      "file": "category.explore.header.json"
+    }
+  ]
+}

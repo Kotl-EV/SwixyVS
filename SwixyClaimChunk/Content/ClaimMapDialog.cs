@@ -16,6 +16,8 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
+using SwixyClaimChunk.Core;
+
 namespace SwixyClaimChunk.Content;
 
 /// <summary>
@@ -115,7 +117,7 @@ public sealed class ClaimMapDialog : GuiDialog
     #endregion
 
     /// <summary>Код горячей клавиши P для открытия карты приватов.</summary>
-    public override string ToggleKeyCombinationCode => SwixyClaimChunkMod.OpenMapHotkeyCode;
+    public override string ToggleKeyCombinationCode => ClaimConstants.OpenMapHotkeyCode;
 
     /// <summary>Не захватывать мышь глобально — удобнее кликать по карте.</summary>
     public override bool PrefersUngrabbedMouse => true;

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Cairo;
+using SwixySkyBlock.Core;
 using SwixySkyBlock.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -70,7 +71,7 @@ public sealed class IslandHubDialog : GuiDialog
     private Action? deferredGeneratorUiAction;
     private readonly TextDrawUtil templateHeaderTextUtil = new();
 
-    public override string ToggleKeyCombinationCode => SwixySkyBlockMod.OpenIslandHubHotkeyCode;
+    public override string ToggleKeyCombinationCode => SkyBlockConstants.OpenIslandHubHotkeyCode;
 
     public override bool PrefersUngrabbedMouse => true;
 
@@ -111,7 +112,7 @@ public sealed class IslandHubDialog : GuiDialog
     private void EnsureLocalGeneratorState()
     {
         generatorState ??= IslandGeneratorStateBuilder.Build(
-            SwixySkyBlockMod.GeneratorConfig,
+            SkyBlockRuntime.GeneratorConfig,
             hubState?.HasIsland == true,
             generatorState?.CurrentLevel ?? 1);
     }

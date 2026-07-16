@@ -48,7 +48,7 @@ internal static class SkyBlockWorld
     public static BlockPos ComputeIslandOrigin(ICoreServerAPI api)
     {
         var y = Math.Clamp(
-            SwixySkyBlockMod.Config.IslandSurfaceY,
+            SkyBlockRuntime.Config.IslandSurfaceY,
             1,
             Math.Max(1, api.WorldManager.MapSizeY - 4));
         return new BlockPos(api.WorldManager.MapSizeX / 2, y, api.WorldManager.MapSizeZ / 2);
@@ -56,7 +56,7 @@ internal static class SkyBlockWorld
 
     public static BlockPos ComputePlayerIslandOrigin(ICoreServerAPI api, int slotIndex)
     {
-        var spacing = Math.Max(SkyBlockWorld.MinIslandSpacingBlocks, SwixySkyBlockMod.Config.IslandSpacing);
+        var spacing = Math.Max(SkyBlockWorld.MinIslandSpacingBlocks, SkyBlockRuntime.Config.IslandSpacing);
         var gridWidth = Math.Max(8, (int)Math.Ceiling(Math.Sqrt(slotIndex + 1)) + 4);
         var gx = slotIndex % gridWidth;
         var gz = slotIndex / gridWidth;

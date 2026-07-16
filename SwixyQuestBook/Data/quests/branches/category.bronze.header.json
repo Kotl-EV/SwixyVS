@@ -1,0 +1,1247 @@
+{
+  "iconItemCode": "game:ingot-tinbronze",
+  "title": {
+    "ar": "Bronze Age",
+    "be": "Бронзовый век",
+    "cs": "Bronze Age",
+    "da": "Bronze Age",
+    "de": "Bronzezeit",
+    "en": "Bronze Age",
+    "eo": "Bronze Age",
+    "es": "Edad del bronce",
+    "fi": "Bronze Age",
+    "fr": "Âge du bronze",
+    "hu": "Bronze Age",
+    "is": "Bronze Age",
+    "it": "Età del bronzo",
+    "ja": "青銅器時代",
+    "ko": "청동기 시대",
+    "li": "Bronze Age",
+    "lt": "Bronze Age",
+    "nl": "Bronze Age",
+    "no": "Bronze Age",
+    "pl": "Epoka brązu",
+    "pt": "Idade do Bronze",
+    "ro": "Bronze Age",
+    "ru": "Бронзовый век",
+    "sk": "Bronze Age",
+    "sr": "Bronze Age",
+    "sv": "Bronze Age",
+    "th": "Bronze Age",
+    "tr": "Tunç Çağı",
+    "uk": "Бронзовый век",
+    "vi": "Bronze Age",
+    "zh": "青铜时代"
+  },
+  "headerTitle": "category.bronze.header",
+  "header": {
+    "ar": "BRONZE AGE",
+    "be": "БРОНЗОВЫЙ ВЕК",
+    "cs": "BRONZE AGE",
+    "da": "BRONZE AGE",
+    "de": "BRONZE AGE",
+    "en": "BRONZE AGE",
+    "eo": "BRONZE AGE",
+    "es": "BRONZE AGE",
+    "fi": "BRONZE AGE",
+    "fr": "BRONZE AGE",
+    "hu": "BRONZE AGE",
+    "is": "BRONZE AGE",
+    "it": "BRONZE AGE",
+    "ja": "BRONZE AGE",
+    "ko": "BRONZE AGE",
+    "li": "BRONZE AGE",
+    "lt": "BRONZE AGE",
+    "nl": "BRONZE AGE",
+    "no": "BRONZE AGE",
+    "pl": "BRONZE AGE",
+    "pt": "BRONZE AGE",
+    "ro": "BRONZE AGE",
+    "ru": "БРОНЗОВЫЙ ВЕК",
+    "sk": "BRONZE AGE",
+    "sr": "BRONZE AGE",
+    "sv": "BRONZE AGE",
+    "th": "BRONZE AGE",
+    "tr": "BRONZE AGE",
+    "uk": "БРОНЗОВЫЙ ВЕК",
+    "vi": "BRONZE AGE",
+    "zh": "BRONZE AGE"
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0,
+      "nodeType": "Start",
+      "description": {
+        "ar": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "be": "Бронза — медь, познавшая дисциплину. Олово — её наставник.",
+        "cs": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "da": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "de": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "en": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "eo": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "es": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "fi": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "fr": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "hu": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "is": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "it": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "ja": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "ko": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "li": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "lt": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "nl": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "no": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "pl": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "pt": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "ro": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "ru": "Бронза — медь, познавшая дисциплину. Олово — её наставник.",
+        "sk": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "sr": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "sv": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "th": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "tr": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "uk": "Бронза — медь, познавшая дисциплину. Олово — её наставник.",
+        "vi": "Bronze is copper that learned discipline. Tin is its tutor.",
+        "zh": "Bronze is copper that learned discipline. Tin is its tutor."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 1,
+      "x": 120,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Cassiterite. The rare tutor of bronze.",
+        "be": "Касситерит. Редкий наставник бронзы.",
+        "cs": "Cassiterite. The rare tutor of bronze.",
+        "da": "Cassiterite. The rare tutor of bronze.",
+        "de": "Cassiterite. The rare tutor of bronze.",
+        "en": "Cassiterite. The rare tutor of bronze.",
+        "eo": "Cassiterite. The rare tutor of bronze.",
+        "es": "Cassiterite. The rare tutor of bronze.",
+        "fi": "Cassiterite. The rare tutor of bronze.",
+        "fr": "Cassiterite. The rare tutor of bronze.",
+        "hu": "Cassiterite. The rare tutor of bronze.",
+        "is": "Cassiterite. The rare tutor of bronze.",
+        "it": "Cassiterite. The rare tutor of bronze.",
+        "ja": "Cassiterite. The rare tutor of bronze.",
+        "ko": "Cassiterite. The rare tutor of bronze.",
+        "li": "Cassiterite. The rare tutor of bronze.",
+        "lt": "Cassiterite. The rare tutor of bronze.",
+        "nl": "Cassiterite. The rare tutor of bronze.",
+        "no": "Cassiterite. The rare tutor of bronze.",
+        "pl": "Cassiterite. The rare tutor of bronze.",
+        "pt": "Cassiterite. The rare tutor of bronze.",
+        "ro": "Cassiterite. The rare tutor of bronze.",
+        "ru": "Касситерит. Редкий наставник бронзы.",
+        "sk": "Cassiterite. The rare tutor of bronze.",
+        "sr": "Cassiterite. The rare tutor of bronze.",
+        "sv": "Cassiterite. The rare tutor of bronze.",
+        "th": "Cassiterite. The rare tutor of bronze.",
+        "tr": "Cassiterite. The rare tutor of bronze.",
+        "uk": "Касситерит. Редкий наставник бронзы.",
+        "vi": "Cassiterite. The rare tutor of bronze.",
+        "zh": "Cassiterite. The rare tutor of bronze."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-cassiterite-*",
+          "count": 14,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 2,
+      "x": 240,
+      "y": 0,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Tin metal bits. Small, but they change everything.",
+        "be": "Куски олова. Малы, но меняют всё.",
+        "cs": "Tin metal bits. Small, but they change everything.",
+        "da": "Tin metal bits. Small, but they change everything.",
+        "de": "Tin metal bits. Small, but they change everything.",
+        "en": "Tin metal bits. Small, but they change everything.",
+        "eo": "Tin metal bits. Small, but they change everything.",
+        "es": "Tin metal bits. Small, but they change everything.",
+        "fi": "Tin metal bits. Small, but they change everything.",
+        "fr": "Tin metal bits. Small, but they change everything.",
+        "hu": "Tin metal bits. Small, but they change everything.",
+        "is": "Tin metal bits. Small, but they change everything.",
+        "it": "Tin metal bits. Small, but they change everything.",
+        "ja": "Tin metal bits. Small, but they change everything.",
+        "ko": "Tin metal bits. Small, but they change everything.",
+        "li": "Tin metal bits. Small, but they change everything.",
+        "lt": "Tin metal bits. Small, but they change everything.",
+        "nl": "Tin metal bits. Small, but they change everything.",
+        "no": "Tin metal bits. Small, but they change everything.",
+        "pl": "Tin metal bits. Small, but they change everything.",
+        "pt": "Tin metal bits. Small, but they change everything.",
+        "ro": "Tin metal bits. Small, but they change everything.",
+        "ru": "Куски олова. Малы, но меняют всё.",
+        "sk": "Tin metal bits. Small, but they change everything.",
+        "sr": "Tin metal bits. Small, but they change everything.",
+        "sv": "Tin metal bits. Small, but they change everything.",
+        "th": "Tin metal bits. Small, but they change everything.",
+        "tr": "Tin metal bits. Small, but they change everything.",
+        "uk": "Куски олова. Малы, но меняют всё.",
+        "vi": "Tin metal bits. Small, but they change everything.",
+        "zh": "Tin metal bits. Small, but they change everything."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalbit-tin",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 3,
+      "x": 240,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "be": "Запаси медь для сплава. Олово одно — только шёпот.",
+        "cs": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "da": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "de": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "en": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "eo": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "es": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "fi": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "fr": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "hu": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "is": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "it": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "ja": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "ko": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "li": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "lt": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "nl": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "no": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "pl": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "pt": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "ro": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "ru": "Запаси медь для сплава. Олово одно — только шёпот.",
+        "sk": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "sr": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "sv": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "th": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "tr": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "uk": "Запаси медь для сплава. Олово одно — только шёпот.",
+        "vi": "Stock copper for the alloy. Tin alone is only a whisper.",
+        "zh": "Stock copper for the alloy. Tin alone is only a whisper."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 8,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 4,
+      "x": 360,
+      "y": -120,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "be": "Уголь для жара сплава. Два металла — одна более горячая воля.",
+        "cs": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "da": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "de": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "en": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "eo": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "es": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "fi": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "fr": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "hu": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "is": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "it": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "ja": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "ko": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "li": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "lt": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "nl": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "no": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "pl": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "pt": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "ro": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "ru": "Уголь для жара сплава. Два металла — одна более горячая воля.",
+        "sk": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "sr": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "sv": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "th": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "tr": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "uk": "Уголь для жара сплава. Два металла — одна более горячая воля.",
+        "vi": "Charcoal for alloy heat. Two metals, one hotter will.",
+        "zh": "Charcoal for alloy heat. Two metals, one hotter will."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 64,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 5,
+      "x": 360,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Alloy tin bronze. Two metals, one harder will.",
+        "be": "Сплавь оловянную бронзу. Два металла — одна твёрдая воля.",
+        "cs": "Alloy tin bronze. Two metals, one harder will.",
+        "da": "Alloy tin bronze. Two metals, one harder will.",
+        "de": "Alloy tin bronze. Two metals, one harder will.",
+        "en": "Alloy tin bronze. Two metals, one harder will.",
+        "eo": "Alloy tin bronze. Two metals, one harder will.",
+        "es": "Alloy tin bronze. Two metals, one harder will.",
+        "fi": "Alloy tin bronze. Two metals, one harder will.",
+        "fr": "Alloy tin bronze. Two metals, one harder will.",
+        "hu": "Alloy tin bronze. Two metals, one harder will.",
+        "is": "Alloy tin bronze. Two metals, one harder will.",
+        "it": "Alloy tin bronze. Two metals, one harder will.",
+        "ja": "Alloy tin bronze. Two metals, one harder will.",
+        "ko": "Alloy tin bronze. Two metals, one harder will.",
+        "li": "Alloy tin bronze. Two metals, one harder will.",
+        "lt": "Alloy tin bronze. Two metals, one harder will.",
+        "nl": "Alloy tin bronze. Two metals, one harder will.",
+        "no": "Alloy tin bronze. Two metals, one harder will.",
+        "pl": "Alloy tin bronze. Two metals, one harder will.",
+        "pt": "Alloy tin bronze. Two metals, one harder will.",
+        "ro": "Alloy tin bronze. Two metals, one harder will.",
+        "ru": "Сплавь оловянную бронзу. Два металла — одна твёрдая воля.",
+        "sk": "Alloy tin bronze. Two metals, one harder will.",
+        "sr": "Alloy tin bronze. Two metals, one harder will.",
+        "sv": "Alloy tin bronze. Two metals, one harder will.",
+        "th": "Alloy tin bronze. Two metals, one harder will.",
+        "tr": "Alloy tin bronze. Two metals, one harder will.",
+        "uk": "Сплавь оловянную бронзу. Два металла — одна твёрдая воля.",
+        "vi": "Alloy tin bronze. Two metals, one harder will.",
+        "zh": "Alloy tin bronze. Two metals, one harder will."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-tinbronze",
+          "count": 6,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 6,
+      "x": 480,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Bronze plates for tools that shame copper.",
+        "be": "Бронзовые пластины для инструментов, стыдящих медь.",
+        "cs": "Bronze plates for tools that shame copper.",
+        "da": "Bronze plates for tools that shame copper.",
+        "de": "Bronze plates for tools that shame copper.",
+        "en": "Bronze plates for tools that shame copper.",
+        "eo": "Bronze plates for tools that shame copper.",
+        "es": "Bronze plates for tools that shame copper.",
+        "fi": "Bronze plates for tools that shame copper.",
+        "fr": "Bronze plates for tools that shame copper.",
+        "hu": "Bronze plates for tools that shame copper.",
+        "is": "Bronze plates for tools that shame copper.",
+        "it": "Bronze plates for tools that shame copper.",
+        "ja": "Bronze plates for tools that shame copper.",
+        "ko": "Bronze plates for tools that shame copper.",
+        "li": "Bronze plates for tools that shame copper.",
+        "lt": "Bronze plates for tools that shame copper.",
+        "nl": "Bronze plates for tools that shame copper.",
+        "no": "Bronze plates for tools that shame copper.",
+        "pl": "Bronze plates for tools that shame copper.",
+        "pt": "Bronze plates for tools that shame copper.",
+        "ro": "Bronze plates for tools that shame copper.",
+        "ru": "Бронзовые пластины для инструментов, стыдящих медь.",
+        "sk": "Bronze plates for tools that shame copper.",
+        "sr": "Bronze plates for tools that shame copper.",
+        "sv": "Bronze plates for tools that shame copper.",
+        "th": "Bronze plates for tools that shame copper.",
+        "tr": "Bronze plates for tools that shame copper.",
+        "uk": "Бронзовые пластины для инструментов, стыдящих медь.",
+        "vi": "Bronze plates for tools that shame copper.",
+        "zh": "Bronze plates for tools that shame copper."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:metalplate-tinbronze",
+          "count": 4,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-tinbronze",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 7,
+      "x": 480,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A bronze pick. Deeper shafts, faster ore.",
+        "be": "Бронзовая кирка. Глубже шахты, быстрее руда.",
+        "cs": "A bronze pick. Deeper shafts, faster ore.",
+        "da": "A bronze pick. Deeper shafts, faster ore.",
+        "de": "A bronze pick. Deeper shafts, faster ore.",
+        "en": "A bronze pick. Deeper shafts, faster ore.",
+        "eo": "A bronze pick. Deeper shafts, faster ore.",
+        "es": "A bronze pick. Deeper shafts, faster ore.",
+        "fi": "A bronze pick. Deeper shafts, faster ore.",
+        "fr": "A bronze pick. Deeper shafts, faster ore.",
+        "hu": "A bronze pick. Deeper shafts, faster ore.",
+        "is": "A bronze pick. Deeper shafts, faster ore.",
+        "it": "A bronze pick. Deeper shafts, faster ore.",
+        "ja": "A bronze pick. Deeper shafts, faster ore.",
+        "ko": "A bronze pick. Deeper shafts, faster ore.",
+        "li": "A bronze pick. Deeper shafts, faster ore.",
+        "lt": "A bronze pick. Deeper shafts, faster ore.",
+        "nl": "A bronze pick. Deeper shafts, faster ore.",
+        "no": "A bronze pick. Deeper shafts, faster ore.",
+        "pl": "A bronze pick. Deeper shafts, faster ore.",
+        "pt": "A bronze pick. Deeper shafts, faster ore.",
+        "ro": "A bronze pick. Deeper shafts, faster ore.",
+        "ru": "Бронзовая кирка. Глубже шахты, быстрее руда.",
+        "sk": "A bronze pick. Deeper shafts, faster ore.",
+        "sr": "A bronze pick. Deeper shafts, faster ore.",
+        "sv": "A bronze pick. Deeper shafts, faster ore.",
+        "th": "A bronze pick. Deeper shafts, faster ore.",
+        "tr": "A bronze pick. Deeper shafts, faster ore.",
+        "uk": "Бронзовая кирка. Глубже шахты, быстрее руда.",
+        "vi": "A bronze pick. Deeper shafts, faster ore.",
+        "zh": "A bronze pick. Deeper shafts, faster ore."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:pickaxe-tinbronze",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ore-poor-cassiterite-granite",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 8,
+      "x": 360,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A bronze axe. The forest yields boards for a real house.",
+        "be": "Бронзовый топор. Лес даёт доски для настоящего дома.",
+        "cs": "A bronze axe. The forest yields boards for a real house.",
+        "da": "A bronze axe. The forest yields boards for a real house.",
+        "de": "A bronze axe. The forest yields boards for a real house.",
+        "en": "A bronze axe. The forest yields boards for a real house.",
+        "eo": "A bronze axe. The forest yields boards for a real house.",
+        "es": "A bronze axe. The forest yields boards for a real house.",
+        "fi": "A bronze axe. The forest yields boards for a real house.",
+        "fr": "A bronze axe. The forest yields boards for a real house.",
+        "hu": "A bronze axe. The forest yields boards for a real house.",
+        "is": "A bronze axe. The forest yields boards for a real house.",
+        "it": "A bronze axe. The forest yields boards for a real house.",
+        "ja": "A bronze axe. The forest yields boards for a real house.",
+        "ko": "A bronze axe. The forest yields boards for a real house.",
+        "li": "A bronze axe. The forest yields boards for a real house.",
+        "lt": "A bronze axe. The forest yields boards for a real house.",
+        "nl": "A bronze axe. The forest yields boards for a real house.",
+        "no": "A bronze axe. The forest yields boards for a real house.",
+        "pl": "A bronze axe. The forest yields boards for a real house.",
+        "pt": "A bronze axe. The forest yields boards for a real house.",
+        "ro": "A bronze axe. The forest yields boards for a real house.",
+        "ru": "Бронзовый топор. Лес даёт доски для настоящего дома.",
+        "sk": "A bronze axe. The forest yields boards for a real house.",
+        "sr": "A bronze axe. The forest yields boards for a real house.",
+        "sv": "A bronze axe. The forest yields boards for a real house.",
+        "th": "A bronze axe. The forest yields boards for a real house.",
+        "tr": "A bronze axe. The forest yields boards for a real house.",
+        "uk": "Бронзовый топор. Лес даёт доски для настоящего дома.",
+        "vi": "A bronze axe. The forest yields boards for a real house.",
+        "zh": "A bronze axe. The forest yields boards for a real house."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:axe-felling-tinbronze",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:plank-oak",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 9,
+      "x": 240,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A bronze saw. Precision is a kind of mercy.",
+        "be": "Бронзовая пила. Точность — тоже милосердие.",
+        "cs": "A bronze saw. Precision is a kind of mercy.",
+        "da": "A bronze saw. Precision is a kind of mercy.",
+        "de": "A bronze saw. Precision is a kind of mercy.",
+        "en": "A bronze saw. Precision is a kind of mercy.",
+        "eo": "A bronze saw. Precision is a kind of mercy.",
+        "es": "A bronze saw. Precision is a kind of mercy.",
+        "fi": "A bronze saw. Precision is a kind of mercy.",
+        "fr": "A bronze saw. Precision is a kind of mercy.",
+        "hu": "A bronze saw. Precision is a kind of mercy.",
+        "is": "A bronze saw. Precision is a kind of mercy.",
+        "it": "A bronze saw. Precision is a kind of mercy.",
+        "ja": "A bronze saw. Precision is a kind of mercy.",
+        "ko": "A bronze saw. Precision is a kind of mercy.",
+        "li": "A bronze saw. Precision is a kind of mercy.",
+        "lt": "A bronze saw. Precision is a kind of mercy.",
+        "nl": "A bronze saw. Precision is a kind of mercy.",
+        "no": "A bronze saw. Precision is a kind of mercy.",
+        "pl": "A bronze saw. Precision is a kind of mercy.",
+        "pt": "A bronze saw. Precision is a kind of mercy.",
+        "ro": "A bronze saw. Precision is a kind of mercy.",
+        "ru": "Бронзовая пила. Точность — тоже милосердие.",
+        "sk": "A bronze saw. Precision is a kind of mercy.",
+        "sr": "A bronze saw. Precision is a kind of mercy.",
+        "sv": "A bronze saw. Precision is a kind of mercy.",
+        "th": "A bronze saw. Precision is a kind of mercy.",
+        "tr": "A bronze saw. Precision is a kind of mercy.",
+        "uk": "Бронзовая пила. Точность — тоже милосердие.",
+        "vi": "A bronze saw. Precision is a kind of mercy.",
+        "zh": "A bronze saw. Precision is a kind of mercy."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:saw-tinbronze",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:flaxtwine",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 10,
+      "x": 120,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A bronze hammer. Anvils respect bronze more than copper.",
+        "be": "Бронзовый молот. Наковальни уважают бронзу больше меди.",
+        "cs": "A bronze hammer. Anvils respect bronze more than copper.",
+        "da": "A bronze hammer. Anvils respect bronze more than copper.",
+        "de": "A bronze hammer. Anvils respect bronze more than copper.",
+        "en": "A bronze hammer. Anvils respect bronze more than copper.",
+        "eo": "A bronze hammer. Anvils respect bronze more than copper.",
+        "es": "A bronze hammer. Anvils respect bronze more than copper.",
+        "fi": "A bronze hammer. Anvils respect bronze more than copper.",
+        "fr": "A bronze hammer. Anvils respect bronze more than copper.",
+        "hu": "A bronze hammer. Anvils respect bronze more than copper.",
+        "is": "A bronze hammer. Anvils respect bronze more than copper.",
+        "it": "A bronze hammer. Anvils respect bronze more than copper.",
+        "ja": "A bronze hammer. Anvils respect bronze more than copper.",
+        "ko": "A bronze hammer. Anvils respect bronze more than copper.",
+        "li": "A bronze hammer. Anvils respect bronze more than copper.",
+        "lt": "A bronze hammer. Anvils respect bronze more than copper.",
+        "nl": "A bronze hammer. Anvils respect bronze more than copper.",
+        "no": "A bronze hammer. Anvils respect bronze more than copper.",
+        "pl": "A bronze hammer. Anvils respect bronze more than copper.",
+        "pt": "A bronze hammer. Anvils respect bronze more than copper.",
+        "ro": "A bronze hammer. Anvils respect bronze more than copper.",
+        "ru": "Бронзовый молот. Наковальни уважают бронзу больше меди.",
+        "sk": "A bronze hammer. Anvils respect bronze more than copper.",
+        "sr": "A bronze hammer. Anvils respect bronze more than copper.",
+        "sv": "A bronze hammer. Anvils respect bronze more than copper.",
+        "th": "A bronze hammer. Anvils respect bronze more than copper.",
+        "tr": "A bronze hammer. Anvils respect bronze more than copper.",
+        "uk": "Бронзовый молот. Наковальни уважают бронзу больше меди.",
+        "vi": "A bronze hammer. Anvils respect bronze more than copper.",
+        "zh": "A bronze hammer. Anvils respect bronze more than copper."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:hammer-tinbronze",
+          "count": 1,
+          "objective": "craft",
+          "consume": false
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-tinbronze",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 11,
+      "x": 0,
+      "y": -360,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "A bronze spear. Distance again — but cleaner.",
+        "be": "Бронзовое копьё. Снова дистанция — но чище.",
+        "cs": "A bronze spear. Distance again — but cleaner.",
+        "da": "A bronze spear. Distance again — but cleaner.",
+        "de": "A bronze spear. Distance again — but cleaner.",
+        "en": "A bronze spear. Distance again — but cleaner.",
+        "eo": "A bronze spear. Distance again — but cleaner.",
+        "es": "A bronze spear. Distance again — but cleaner.",
+        "fi": "A bronze spear. Distance again — but cleaner.",
+        "fr": "A bronze spear. Distance again — but cleaner.",
+        "hu": "A bronze spear. Distance again — but cleaner.",
+        "is": "A bronze spear. Distance again — but cleaner.",
+        "it": "A bronze spear. Distance again — but cleaner.",
+        "ja": "A bronze spear. Distance again — but cleaner.",
+        "ko": "A bronze spear. Distance again — but cleaner.",
+        "li": "A bronze spear. Distance again — but cleaner.",
+        "lt": "A bronze spear. Distance again — but cleaner.",
+        "nl": "A bronze spear. Distance again — but cleaner.",
+        "no": "A bronze spear. Distance again — but cleaner.",
+        "pl": "A bronze spear. Distance again — but cleaner.",
+        "pt": "A bronze spear. Distance again — but cleaner.",
+        "ro": "A bronze spear. Distance again — but cleaner.",
+        "ru": "Бронзовое копьё. Снова дистанция — но чище.",
+        "sk": "A bronze spear. Distance again — but cleaner.",
+        "sr": "A bronze spear. Distance again — but cleaner.",
+        "sv": "A bronze spear. Distance again — but cleaner.",
+        "th": "A bronze spear. Distance again — but cleaner.",
+        "tr": "A bronze spear. Distance again — but cleaner.",
+        "uk": "Бронзовое копьё. Снова дистанция — но чище.",
+        "vi": "A bronze spear. Distance again — but cleaner.",
+        "zh": "A bronze spear. Distance again — but cleaner."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:spear-generic-tinbronze",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:fat",
+          "count": 6,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 12,
+      "x": 0,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Bronze anvil. The workshop stops being temporary.",
+        "be": "Бронзовая наковальня. Мастерская перестаёт быть временной.",
+        "cs": "Bronze anvil. The workshop stops being temporary.",
+        "da": "Bronze anvil. The workshop stops being temporary.",
+        "de": "Bronze anvil. The workshop stops being temporary.",
+        "en": "Bronze anvil. The workshop stops being temporary.",
+        "eo": "Bronze anvil. The workshop stops being temporary.",
+        "es": "Bronze anvil. The workshop stops being temporary.",
+        "fi": "Bronze anvil. The workshop stops being temporary.",
+        "fr": "Bronze anvil. The workshop stops being temporary.",
+        "hu": "Bronze anvil. The workshop stops being temporary.",
+        "is": "Bronze anvil. The workshop stops being temporary.",
+        "it": "Bronze anvil. The workshop stops being temporary.",
+        "ja": "Bronze anvil. The workshop stops being temporary.",
+        "ko": "Bronze anvil. The workshop stops being temporary.",
+        "li": "Bronze anvil. The workshop stops being temporary.",
+        "lt": "Bronze anvil. The workshop stops being temporary.",
+        "nl": "Bronze anvil. The workshop stops being temporary.",
+        "no": "Bronze anvil. The workshop stops being temporary.",
+        "pl": "Bronze anvil. The workshop stops being temporary.",
+        "pt": "Bronze anvil. The workshop stops being temporary.",
+        "ro": "Bronze anvil. The workshop stops being temporary.",
+        "ru": "Бронзовая наковальня. Мастерская перестаёт быть временной.",
+        "sk": "Bronze anvil. The workshop stops being temporary.",
+        "sr": "Bronze anvil. The workshop stops being temporary.",
+        "sv": "Bronze anvil. The workshop stops being temporary.",
+        "th": "Bronze anvil. The workshop stops being temporary.",
+        "tr": "Bronze anvil. The workshop stops being temporary.",
+        "uk": "Бронзовая наковальня. Мастерская перестаёт быть временной.",
+        "vi": "Bronze anvil. The workshop stops being temporary.",
+        "zh": "Bronze anvil. The workshop stops being temporary."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:anvil-tinbronze",
+          "count": 1,
+          "objective": "craft_have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-tinbronze",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 13,
+      "x": 120,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More bronze ingots for armor and tools to come.",
+        "be": "Ещё бронзовые слитки для будущих доспехов и инструментов.",
+        "cs": "More bronze ingots for armor and tools to come.",
+        "da": "More bronze ingots for armor and tools to come.",
+        "de": "More bronze ingots for armor and tools to come.",
+        "en": "More bronze ingots for armor and tools to come.",
+        "eo": "More bronze ingots for armor and tools to come.",
+        "es": "More bronze ingots for armor and tools to come.",
+        "fi": "More bronze ingots for armor and tools to come.",
+        "fr": "More bronze ingots for armor and tools to come.",
+        "hu": "More bronze ingots for armor and tools to come.",
+        "is": "More bronze ingots for armor and tools to come.",
+        "it": "More bronze ingots for armor and tools to come.",
+        "ja": "More bronze ingots for armor and tools to come.",
+        "ko": "More bronze ingots for armor and tools to come.",
+        "li": "More bronze ingots for armor and tools to come.",
+        "lt": "More bronze ingots for armor and tools to come.",
+        "nl": "More bronze ingots for armor and tools to come.",
+        "no": "More bronze ingots for armor and tools to come.",
+        "pl": "More bronze ingots for armor and tools to come.",
+        "pt": "More bronze ingots for armor and tools to come.",
+        "ro": "More bronze ingots for armor and tools to come.",
+        "ru": "Ещё бронзовые слитки для будущих доспехов и инструментов.",
+        "sk": "More bronze ingots for armor and tools to come.",
+        "sr": "More bronze ingots for armor and tools to come.",
+        "sv": "More bronze ingots for armor and tools to come.",
+        "th": "More bronze ingots for armor and tools to come.",
+        "tr": "More bronze ingots for armor and tools to come.",
+        "uk": "Ещё бронзовые слитки для будущих доспехов и инструментов.",
+        "vi": "More bronze ingots for armor and tools to come.",
+        "zh": "More bronze ingots for armor and tools to come."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ingot-tinbronze",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 20,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 14,
+      "x": 240,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Planks for a real roof over the anvil.",
+        "be": "Доски для настоящей крыши над наковальней.",
+        "cs": "Planks for a real roof over the anvil.",
+        "da": "Planks for a real roof over the anvil.",
+        "de": "Planks for a real roof over the anvil.",
+        "en": "Planks for a real roof over the anvil.",
+        "eo": "Planks for a real roof over the anvil.",
+        "es": "Planks for a real roof over the anvil.",
+        "fi": "Planks for a real roof over the anvil.",
+        "fr": "Planks for a real roof over the anvil.",
+        "hu": "Planks for a real roof over the anvil.",
+        "is": "Planks for a real roof over the anvil.",
+        "it": "Planks for a real roof over the anvil.",
+        "ja": "Planks for a real roof over the anvil.",
+        "ko": "Planks for a real roof over the anvil.",
+        "li": "Planks for a real roof over the anvil.",
+        "lt": "Planks for a real roof over the anvil.",
+        "nl": "Planks for a real roof over the anvil.",
+        "no": "Planks for a real roof over the anvil.",
+        "pl": "Planks for a real roof over the anvil.",
+        "pt": "Planks for a real roof over the anvil.",
+        "ro": "Planks for a real roof over the anvil.",
+        "ru": "Доски для настоящей крыши над наковальней.",
+        "sk": "Planks for a real roof over the anvil.",
+        "sr": "Planks for a real roof over the anvil.",
+        "sv": "Planks for a real roof over the anvil.",
+        "th": "Planks for a real roof over the anvil.",
+        "tr": "Planks for a real roof over the anvil.",
+        "uk": "Доски для настоящей крыши над наковальней.",
+        "vi": "Planks for a real roof over the anvil.",
+        "zh": "Planks for a real roof over the anvil."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:plank-*",
+          "count": 48,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:metalnailsandstrips-copper",
+          "count": 16,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 15,
+      "x": 360,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "More cassiterite for the next pours. Tin is never enough.",
+        "be": "Ещё касситерита для следующих отливок. Олова никогда не бывает достаточно.",
+        "cs": "More cassiterite for the next pours. Tin is never enough.",
+        "da": "More cassiterite for the next pours. Tin is never enough.",
+        "de": "More cassiterite for the next pours. Tin is never enough.",
+        "en": "More cassiterite for the next pours. Tin is never enough.",
+        "eo": "More cassiterite for the next pours. Tin is never enough.",
+        "es": "More cassiterite for the next pours. Tin is never enough.",
+        "fi": "More cassiterite for the next pours. Tin is never enough.",
+        "fr": "More cassiterite for the next pours. Tin is never enough.",
+        "hu": "More cassiterite for the next pours. Tin is never enough.",
+        "is": "More cassiterite for the next pours. Tin is never enough.",
+        "it": "More cassiterite for the next pours. Tin is never enough.",
+        "ja": "More cassiterite for the next pours. Tin is never enough.",
+        "ko": "More cassiterite for the next pours. Tin is never enough.",
+        "li": "More cassiterite for the next pours. Tin is never enough.",
+        "lt": "More cassiterite for the next pours. Tin is never enough.",
+        "nl": "More cassiterite for the next pours. Tin is never enough.",
+        "no": "More cassiterite for the next pours. Tin is never enough.",
+        "pl": "More cassiterite for the next pours. Tin is never enough.",
+        "pt": "More cassiterite for the next pours. Tin is never enough.",
+        "ro": "More cassiterite for the next pours. Tin is never enough.",
+        "ru": "Ещё касситерита для следующих отливок. Олова никогда не бывает достаточно.",
+        "sk": "More cassiterite for the next pours. Tin is never enough.",
+        "sr": "More cassiterite for the next pours. Tin is never enough.",
+        "sv": "More cassiterite for the next pours. Tin is never enough.",
+        "th": "More cassiterite for the next pours. Tin is never enough.",
+        "tr": "More cassiterite for the next pours. Tin is never enough.",
+        "uk": "Ещё касситерита для следующих отливок. Олова никогда не бывает достаточно.",
+        "vi": "More cassiterite for the next pours. Tin is never enough.",
+        "zh": "More cassiterite for the next pours. Tin is never enough."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:ore-poor-cassiterite-*",
+          "count": 10,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-copper",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 16,
+      "x": 480,
+      "y": -480,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Fired crucibles ready for another alloy day.",
+        "be": "Обожжённые тигли готовы к новому дню сплавов.",
+        "cs": "Fired crucibles ready for another alloy day.",
+        "da": "Fired crucibles ready for another alloy day.",
+        "de": "Fired crucibles ready for another alloy day.",
+        "en": "Fired crucibles ready for another alloy day.",
+        "eo": "Fired crucibles ready for another alloy day.",
+        "es": "Fired crucibles ready for another alloy day.",
+        "fi": "Fired crucibles ready for another alloy day.",
+        "fr": "Fired crucibles ready for another alloy day.",
+        "hu": "Fired crucibles ready for another alloy day.",
+        "is": "Fired crucibles ready for another alloy day.",
+        "it": "Fired crucibles ready for another alloy day.",
+        "ja": "Fired crucibles ready for another alloy day.",
+        "ko": "Fired crucibles ready for another alloy day.",
+        "li": "Fired crucibles ready for another alloy day.",
+        "lt": "Fired crucibles ready for another alloy day.",
+        "nl": "Fired crucibles ready for another alloy day.",
+        "no": "Fired crucibles ready for another alloy day.",
+        "pl": "Fired crucibles ready for another alloy day.",
+        "pt": "Fired crucibles ready for another alloy day.",
+        "ro": "Fired crucibles ready for another alloy day.",
+        "ru": "Обожжённые тигли готовы к новому дню сплавов.",
+        "sk": "Fired crucibles ready for another alloy day.",
+        "sr": "Fired crucibles ready for another alloy day.",
+        "sv": "Fired crucibles ready for another alloy day.",
+        "th": "Fired crucibles ready for another alloy day.",
+        "tr": "Fired crucibles ready for another alloy day.",
+        "uk": "Обожжённые тигли готовы к новому дню сплавов.",
+        "vi": "Fired crucibles ready for another alloy day.",
+        "zh": "Fired crucibles ready for another alloy day."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:crucible-fire-fired",
+          "count": 2,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 12,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 17,
+      "x": 480,
+      "y": -600,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "be": "Золотые или серебряные самородки, если повезёт — украшения богатого века.",
+        "cs": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "da": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "de": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "en": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "eo": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "es": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "fi": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "fr": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "hu": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "is": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "it": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "ja": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "ko": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "li": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "lt": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "nl": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "no": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "pl": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "pt": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "ro": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "ru": "Золотые или серебряные самородки, если повезёт — украшения богатого века.",
+        "sk": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "sr": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "sv": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "th": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "tr": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "uk": "Золотые или серебряные самородки, если повезёт — украшения богатого века.",
+        "vi": "Gold or silver nuggets if fortune smiles — ornaments of a richer age.",
+        "zh": "Gold or silver nuggets if fortune smiles — ornaments of a richer age."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:nugget-nativegold",
+          "count": 4,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:ingot-tinbronze",
+          "count": 1,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    },
+    {
+      "id": 18,
+      "x": 360,
+      "y": -600,
+      "nodeType": "Checkpoint",
+      "description": {
+        "ar": "Bronze Age complete. Iron still sleeps in the rock.",
+        "be": "Бронзовый век завершён. Железо ещё спит в породе.",
+        "cs": "Bronze Age complete. Iron still sleeps in the rock.",
+        "da": "Bronze Age complete. Iron still sleeps in the rock.",
+        "de": "Bronze Age complete. Iron still sleeps in the rock.",
+        "en": "Bronze Age complete. Iron still sleeps in the rock.",
+        "eo": "Bronze Age complete. Iron still sleeps in the rock.",
+        "es": "Bronze Age complete. Iron still sleeps in the rock.",
+        "fi": "Bronze Age complete. Iron still sleeps in the rock.",
+        "fr": "Bronze Age complete. Iron still sleeps in the rock.",
+        "hu": "Bronze Age complete. Iron still sleeps in the rock.",
+        "is": "Bronze Age complete. Iron still sleeps in the rock.",
+        "it": "Bronze Age complete. Iron still sleeps in the rock.",
+        "ja": "Bronze Age complete. Iron still sleeps in the rock.",
+        "ko": "Bronze Age complete. Iron still sleeps in the rock.",
+        "li": "Bronze Age complete. Iron still sleeps in the rock.",
+        "lt": "Bronze Age complete. Iron still sleeps in the rock.",
+        "nl": "Bronze Age complete. Iron still sleeps in the rock.",
+        "no": "Bronze Age complete. Iron still sleeps in the rock.",
+        "pl": "Bronze Age complete. Iron still sleeps in the rock.",
+        "pt": "Bronze Age complete. Iron still sleeps in the rock.",
+        "ro": "Bronze Age complete. Iron still sleeps in the rock.",
+        "ru": "Бронзовый век завершён. Железо ещё спит в породе.",
+        "sk": "Bronze Age complete. Iron still sleeps in the rock.",
+        "sr": "Bronze Age complete. Iron still sleeps in the rock.",
+        "sv": "Bronze Age complete. Iron still sleeps in the rock.",
+        "th": "Bronze Age complete. Iron still sleeps in the rock.",
+        "tr": "Bronze Age complete. Iron still sleeps in the rock.",
+        "uk": "Бронзовый век завершён. Железо ещё спит в породе.",
+        "vi": "Bronze Age complete. Iron still sleeps in the rock.",
+        "zh": "Bronze Age complete. Iron still sleeps in the rock."
+      },
+      "requiredItems": [],
+      "rewardItems": [],
+      "consumeRequiredItems": false
+    },
+    {
+      "id": 19,
+      "x": -120,
+      "y": -240,
+      "nodeType": "Quest",
+      "description": {
+        "ar": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "be": "Запас угля. Дни сплавов горят жарко и долго.",
+        "cs": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "da": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "de": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "en": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "eo": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "es": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "fi": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "fr": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "hu": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "is": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "it": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "ja": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "ko": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "li": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "lt": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "nl": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "no": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "pl": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "pt": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "ro": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "ru": "Запас угля. Дни сплавов горят жарко и долго.",
+        "sk": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "sr": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "sv": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "th": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "tr": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "uk": "Запас угля. Дни сплавов горят жарко и долго.",
+        "vi": "Extra charcoal stockpile. Alloy days burn hot and long.",
+        "zh": "Extra charcoal stockpile. Alloy days burn hot and long."
+      },
+      "requiredItems": [
+        {
+          "collectibleCode": "game:charcoal",
+          "count": 80,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "rewardItems": [
+        {
+          "collectibleCode": "game:firewood",
+          "count": 24,
+          "objective": "have",
+          "consume": true
+        }
+      ],
+      "consumeRequiredItems": true
+    }
+  ],
+  "connections": [
+    {
+      "startNodeId": 0,
+      "endNodeId": 1
+    },
+    {
+      "startNodeId": 1,
+      "endNodeId": 2
+    },
+    {
+      "startNodeId": 2,
+      "endNodeId": 3
+    },
+    {
+      "startNodeId": 3,
+      "endNodeId": 4
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 5
+    },
+    {
+      "startNodeId": 5,
+      "endNodeId": 6
+    },
+    {
+      "startNodeId": 6,
+      "endNodeId": 7
+    },
+    {
+      "startNodeId": 7,
+      "endNodeId": 8
+    },
+    {
+      "startNodeId": 8,
+      "endNodeId": 9
+    },
+    {
+      "startNodeId": 9,
+      "endNodeId": 10
+    },
+    {
+      "startNodeId": 10,
+      "endNodeId": 11
+    },
+    {
+      "startNodeId": 11,
+      "endNodeId": 12
+    },
+    {
+      "startNodeId": 12,
+      "endNodeId": 13
+    },
+    {
+      "startNodeId": 13,
+      "endNodeId": 14
+    },
+    {
+      "startNodeId": 14,
+      "endNodeId": 15
+    },
+    {
+      "startNodeId": 15,
+      "endNodeId": 16
+    },
+    {
+      "startNodeId": 16,
+      "endNodeId": 17
+    },
+    {
+      "startNodeId": 17,
+      "endNodeId": 18
+    },
+    {
+      "startNodeId": 4,
+      "endNodeId": 19
+    },
+    {
+      "startNodeId": 19,
+      "endNodeId": 5
+    }
+  ],
+  "nextNodeId": 20
+}

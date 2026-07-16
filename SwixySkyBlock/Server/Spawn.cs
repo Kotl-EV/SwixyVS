@@ -7,7 +7,7 @@ using Vintagestory.API.Server;
 namespace SwixySkyBlock;
 
 /// <summary>Спавн игрока на острове и спасение из пустоты.</summary>
-public sealed partial class SwixySkyBlockMod
+public sealed partial class SwixySkyBlockServerMod
 {
     private readonly Dictionary<string, long> voidRescueCooldownUntilMs = new();
 

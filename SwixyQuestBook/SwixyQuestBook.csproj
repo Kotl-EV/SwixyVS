@@ -1,54 +1,69 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <OutputPath>bin\$(Configuration)\Mods\mod\</OutputPath>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>SwixyQuestBook</RootNamespace>
-        <AssemblyName>SwixyQuestBook</AssemblyName>
-        <LangVersion>latest</LangVersion>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="protobuf-net">
-            <HintPath>$(VINTAGE_STORY)/Lib/protobuf-net.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VintagestoryAPI">
-            <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VintagestoryLib">
-            <HintPath>$(VINTAGE_STORY)/VintagestoryLib.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VSSurvivalMod">
-            <HintPath>$(VINTAGE_STORY)/Mods/VSSurvivalMod.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="cairo-sharp">
-            <HintPath>$(VINTAGE_STORY)/Lib/cairo-sharp.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SkiaSharp">
-            <HintPath>$(VINTAGE_STORY)/Lib/SkiaSharp.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="assets\**">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Include="Data\quests.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>swixyquestbook\quests.json</Link>
-        </Content>
-        <Content Include="modinfo.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Include="modicon.png" Condition="Exists('modicon.png')">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
+  <!--
+    ONE source project. CakeBuild analyzes folders and produces:
+      - server package: Shared.dll + Server.dll
+      - client package: Shared.dll + Client.dll
+    Local Debug still builds a single universal assembly for IDE/testing.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)\Mods\mod\</OutputPath>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>SwixyQuestBook</RootNamespace>
+    <AssemblyName>SwixyQuestBook</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>$(VINTAGE_STORY)/Lib/protobuf-net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VintagestoryLib">
+      <HintPath>$(VINTAGE_STORY)/VintagestoryLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VSSurvivalMod">
+      <HintPath>$(VINTAGE_STORY)/Mods/VSSurvivalMod.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="cairo-sharp">
+      <HintPath>$(VINTAGE_STORY)/Lib/cairo-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SkiaSharp">
+      <HintPath>$(VINTAGE_STORY)/Lib/SkiaSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="assets\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\quests\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>swixyquestbook\quests\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="modinfo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="modicon.png" Condition="Exists('modicon.png')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Split-only files are not needed for the mono IDE build. -->
+  <ItemGroup>
+    <Compile Remove="Domain\Compatibility\**" />
+    <Compile Remove="Server\ServerGlobalUsings.cs" />
+    <Compile Remove="Client\ClientGlobalUsings.cs" />
+  </ItemGroup>
 </Project>

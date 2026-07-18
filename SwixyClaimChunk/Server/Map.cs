@@ -289,6 +289,7 @@ public sealed partial class SwixyClaimChunkServerMod
         };
 
         FillClaimUseFilterInfo(info, claim);
+        FillClaimFlagsInfo(info, claim);
 
         info.Members.Add(new ClaimMemberPacket
         {

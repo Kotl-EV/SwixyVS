@@ -36,8 +36,8 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <summary>Максимальный радиус запроса чанков у сервера при смене области просмотра.</summary>
     private const int MaxVisibleRequestRadius = 16;
 
-    /// <summary>Толщина декоративной рамки вокруг карты в пикселях.</summary>
-    private const double MapBorderThickness = 6;
+    /// <summary>Тонкая рамка сетки (основная SVG-рамка рисуется снаружи в ClaimMapDialog).</summary>
+    private const double MapBorderThickness = 1;
 
     /// <summary>Белый цвет для отрисовки текстуры оверлея без тонирования.</summary>
     private static readonly Vec4f White = new(1, 1, 1, 1);

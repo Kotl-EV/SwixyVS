@@ -1,30 +1,30 @@
 // =============================================================================
 // ClaimUseFilterDialog.cs
 // -----------------------------------------------------------------------------
-// Whitelist Use: список interactable-блоков из скана.
-// Строка = иконка слева + название справа, вертикальный скролл.
-// Без ItemSlotGrid / PassiveItemSlot — нет network-пакетов.
+// Whitelist Use: creative-style catalog (items + blocks like creative menu).
+// Search + scrollable list; click row to toggle whitelist.
+// Opened via RMB on gear (Use) in the members list.
 // =============================================================================
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
-using SwixyClaimChunk.Core;
-
 namespace SwixyClaimChunk.Content;
 
 /// <summary>
-/// Диалог настройки whitelist блоков для права Use в привате.
+/// Диалог настройки whitelist блоков/предметов для права Use в привате.
+/// Каталог — как creative menu (CreativeInventoryTabs / Stacks).
 /// </summary>
 public sealed class ClaimUseFilterDialog : GuiDialog
 {
-    private const double ListWidth = 460;
-    private const double ListHeight = 280;
+    private const double ListWidth = 520;
+    private const double ListHeight = 320;
 
     private readonly ICoreClientAPI clientApi;
     private readonly IClientNetworkChannel channel;
@@ -34,13 +34,15 @@ public sealed class ClaimUseFilterDialog : GuiDialog
 
     private int draftMode;
     private readonly HashSet<string> draftCodes;
-    private readonly HashSet<string> scannedCodes = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>Full creative catalog (built once per dialog open).</summary>
+    private List<(string Code, string Label, ItemStack Stack)> catalog = [];
 
     private List<(string Code, ItemStack Stack)> entries = [];
 
+    private string searchQuery = "";
     private string statusMessage = "";
     private bool syncingModeSwitches;
-    private bool scanPending;
     private float listScrollValue;
 
     private ElementBounds? listClipBounds;
@@ -84,10 +86,9 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             }
         }
 
-        statusMessage = Lang.Get("swixyclaimchunk:use-filter-scan-loading");
-        scanPending = true;
+        catalog = BuildCreativeCatalog();
+        statusMessage = Lang.Get("swixyclaimchunk:use-filter-catalog-ready", catalog.Count);
         ComposeDialog();
-        RequestClaimScan();
     }
 
     public override void OnGuiClosed()
@@ -96,49 +97,10 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         onClosed?.Invoke();
     }
 
+    /// <summary>Legacy scan result hook (no longer required for catalog).</summary>
     public void ApplyScanResult(ClaimUseFilterScanResultPacket packet)
     {
-        if (packet == null || packet.ClaimId != claimId)
-        {
-            return;
-        }
-
-        var savedScroll = listScrollValue;
-        scanPending = false;
-        scannedCodes.Clear();
-        foreach (var code in ClaimUseFilterCodesCodec.Split(packet.CodesRaw))
-        {
-            var normalized = NormalizeCode(code);
-            if (!string.IsNullOrWhiteSpace(normalized))
-            {
-                scannedCodes.Add(normalized);
-            }
-        }
-
-        statusMessage = string.IsNullOrWhiteSpace(packet.Message)
-            ? Lang.Get("swixyclaimchunk:use-filter-scan-ok", scannedCodes.Count)
-            : packet.Message;
-
-        ComposeDialog();
-        RestoreListScroll(savedScroll);
-    }
-
-    private void RequestClaimScan()
-    {
-        try
-        {
-            scanPending = true;
-            statusMessage = Lang.Get("swixyclaimchunk:use-filter-scan-loading");
-            channel.SendPacket(new ClaimUseFilterScanRequestPacket { ClaimId = claimId });
-            SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
-        }
-        catch (Exception exception)
-        {
-            scanPending = false;
-            statusMessage = Lang.Get("swixyclaimchunk:error-send-request-failed");
-            clientApi.Logger.Warning("[SwixyClaimChunk] Use filter scan request failed: {0}", exception.Message);
-            SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
-        }
+        // Catalog is creative-based; scan packets are ignored.
     }
 
     private void ComposeDialog()
@@ -149,7 +111,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             + GuiElementScrollbar.DeafultScrollbarPadding * 2;
         var contentW = ListWidth + 6 + scrollW;
 
-        var mainBounds = ElementBounds.Fixed(0, 0, Math.Max(500, contentW + 36), 560);
+        var mainBounds = ElementBounds.Fixed(0, 0, Math.Max(540, contentW + 36), 600);
         var bgBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding);
         bgBounds.BothSizing = ElementSizing.FitToChildren;
         bgBounds.WithChildren(mainBounds);
@@ -163,20 +125,19 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         var modeAllSwitchBounds = ElementBounds.Fixed(18, 94, 28, 28);
         var modeAllTextBounds = ElementBounds.Fixed(50, 98, 150, 22);
         var modeWhiteSwitchBounds = ElementBounds.Fixed(210, 94, 28, 28);
-        var modeWhiteTextBounds = ElementBounds.Fixed(242, 98, 240, 22);
+        var modeWhiteTextBounds = ElementBounds.Fixed(242, 98, 260, 22);
 
-        var rescanW = 120;
-        var listLabelBounds = ElementBounds.Fixed(18, 132, contentW - rescanW - 16, 24);
-        var rescanBounds = ElementBounds.Fixed(18 + contentW - rescanW, 128, rescanW, 28);
+        var searchLabelBounds = ElementBounds.Fixed(18, 132, 80, 24);
+        var searchInputBounds = ElementBounds.Fixed(100, 128, contentW - 100, 28);
 
-        listViewportBounds = ElementBounds.Fixed(18, 160, ListWidth + 6, ListHeight + 6);
+        listViewportBounds = ElementBounds.Fixed(18, 168, ListWidth + 6, ListHeight + 6);
         listClipBounds = listViewportBounds.ForkContainingChild(3, 3, 3, 3);
         listTableBounds = listClipBounds.ForkContainingChild(0, 0, 0, -3).WithFixedPadding(3);
 
-        var selectedBounds = ElementBounds.Fixed(18, 458, contentW, 20);
-        var messageBounds = ElementBounds.Fixed(18, 480, contentW, 28);
-        var cancelBounds = ElementBounds.Fixed(18 + contentW - 300, 520, 140, 34);
-        var saveBounds = ElementBounds.Fixed(18 + contentW - 150, 520, 140, 34);
+        var selectedBounds = ElementBounds.Fixed(18, 508, contentW, 20);
+        var messageBounds = ElementBounds.Fixed(18, 530, contentW, 24);
+        var cancelBounds = ElementBounds.Fixed(18 + contentW - 300, 560, 140, 34);
+        var saveBounds = ElementBounds.Fixed(18 + contentW - 150, 560, 140, 34);
 
         ClearComposers();
         var composer = capi.Gui
@@ -204,15 +165,10 @@ public sealed class ClaimUseFilterDialog : GuiDialog
                 CairoFont.WhiteSmallText(),
                 modeWhiteTextBounds)
             .AddStaticText(
-                Lang.Get("swixyclaimchunk:use-filter-list-hint"),
+                Lang.Get("swixyclaimchunk:use-filter-search"),
                 CairoFont.WhiteSmallText(),
-                listLabelBounds)
-            .AddSmallButton(
-                Lang.Get("swixyclaimchunk:use-filter-rescan"),
-                RescanButton,
-                rescanBounds,
-                EnumButtonStyle.Normal,
-                "rescan")
+                searchLabelBounds)
+            .AddTextInput(searchInputBounds, OnSearchChanged, CairoFont.WhiteSmallText(), "searchInput")
             .AddInset(listViewportBounds, 3, 0.85f)
             .AddVerticalScrollbar(OnListScroll, ElementStdBounds.VerticalScrollbar(listViewportBounds), "blockListScroll")
             .BeginClip(listClipBounds)
@@ -226,8 +182,27 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             .Compose();
 
         SingleComposer = composer;
+        SingleComposer.GetTextInput("searchInput")?.SetValue(searchQuery, true);
         SyncModeSwitches();
         RestoreListScroll(listScrollValue);
+    }
+
+    private void OnSearchChanged(string text)
+    {
+        searchQuery = text ?? "";
+        var saved = listScrollValue;
+        entries = CollectPickerEntries();
+        var cellList = SingleComposer?.GetCellList<SavegameCellEntry>("blockList");
+        if (cellList != null)
+        {
+            cellList.ReloadCells(BuildFilterCells());
+            RestoreListScroll(0);
+        }
+        else
+        {
+            ComposeDialog();
+            RestoreListScroll(saved);
+        }
     }
 
     private IEnumerable<SavegameCellEntry> BuildFilterCells()
@@ -356,12 +331,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
             draftMode = ClaimUseFilterMode.Whitelist;
         }
 
-        if (!scanPending)
-        {
-            statusMessage = "";
-        }
-
-        // Обновляем только визуал строк — без полного ComposeDialog.
+        statusMessage = "";
         UpdateWhitelistVisualsInPlace();
         SyncModeSwitches();
         SingleComposer?.GetDynamicText("selectedText")?.SetNewText(BuildSelectedText());
@@ -387,12 +357,6 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         }
     }
 
-    private bool RescanButton()
-    {
-        RequestClaimScan();
-        return true;
-    }
-
     private void OnModeAllSwitch(bool on)
     {
         if (syncingModeSwitches)
@@ -401,7 +365,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         }
 
         draftMode = ClaimUseFilterMode.AllowAll;
-        statusMessage = scanPending ? Lang.Get("swixyclaimchunk:use-filter-scan-loading") : "";
+        statusMessage = "";
         SyncModeSwitches();
         SingleComposer?.GetDynamicText("selectedText")?.SetNewText(BuildSelectedText());
         SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
@@ -415,7 +379,7 @@ public sealed class ClaimUseFilterDialog : GuiDialog
         }
 
         draftMode = ClaimUseFilterMode.Whitelist;
-        statusMessage = scanPending ? Lang.Get("swixyclaimchunk:use-filter-scan-loading") : "";
+        statusMessage = "";
         SyncModeSwitches();
         SingleComposer?.GetDynamicText("selectedText")?.SetNewText(BuildSelectedText());
         SingleComposer?.GetDynamicText("statusText")?.SetNewText(statusMessage);
@@ -518,302 +482,172 @@ public sealed class ClaimUseFilterDialog : GuiDialog
 
     private List<(string Code, ItemStack Stack)> CollectPickerEntries()
     {
-        var result = new List<(string Code, ItemStack Stack)>();
+        var filter = (searchQuery ?? "").Trim();
+        var result = new List<(string Code, ItemStack Stack)>(512);
+
+        // Selected first (always visible even if filtered out of search — only if match search).
+        var selected = new List<(string Code, ItemStack Stack)>();
+        var rest = new List<(string Code, ItemStack Stack)>();
+
+        foreach (var (code, label, stack) in catalog)
+        {
+            if (filter.Length > 0
+                && label.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0
+                && code.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                continue;
+            }
+
+            if (draftCodes.Contains(code))
+            {
+                selected.Add((code, stack));
+            }
+            else
+            {
+                rest.Add((code, stack));
+            }
+        }
+
+        result.AddRange(selected);
+        result.AddRange(rest);
+        return result;
+    }
+
+    /// <summary>
+    /// Same source as creative menu / Questbook admin picker:
+    /// collectibles with CreativeInventoryTabs or CreativeInventoryStacks.
+    /// </summary>
+    private List<(string Code, string Label, ItemStack Stack)> BuildCreativeCatalog()
+    {
+        var result = new List<(string Code, string Label, ItemStack Stack)>(2048);
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var code in draftCodes.OrderBy(static v => v, StringComparer.OrdinalIgnoreCase))
+        void TryAddStack(ItemStack? stack)
         {
-            TryAddEntry(result, seen, code);
-        }
-
-        foreach (var code in scannedCodes.OrderBy(static v => v, StringComparer.OrdinalIgnoreCase))
-        {
-            TryAddEntry(result, seen, code);
-        }
-
-        return result;
-    }
-
-    private void TryAddEntry(
-        List<(string Code, ItemStack Stack)> result,
-        HashSet<string> seen,
-        string code)
-    {
-        var normalized = NormalizeCode(code);
-        var stack = ResolveStack(normalized);
-        if (stack == null || string.IsNullOrWhiteSpace(normalized) || !seen.Add(normalized))
-        {
-            return;
-        }
-
-        result.Add((normalized, stack));
-    }
-
-    private ItemStack? ResolveStack(string code)
-    {
-        code = NormalizeCode(code);
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            return null;
-        }
-
-        // Только варианты той же «семьи» (без ориентации): wood ≠ metal у windmillrotor.
-        var groupKey = ClaimCodeUtil.StripVariantSuffixes(code);
-        if (string.IsNullOrWhiteSpace(groupKey))
-        {
-            groupKey = code;
-        }
-
-        var family = CollectGroupCollectibles(code, groupKey);
-        if (family.Count == 0)
-        {
-            return null;
-        }
-
-        // 1) CreativeInventoryStacks / handbook — фонари без material в attributes «кривые».
-        //    Сначала ищем лучший handbook-стек в группе (не bare ItemStack от wall-north).
-        ItemStack? bestHandbook = null;
-        var bestHandbookScore = int.MinValue;
-        CollectibleObject? bestCol = null;
-        var bestColScore = int.MinValue;
-
-        foreach (var col in family)
-        {
-            var colCode = NormalizeCode(col.Code?.ToString());
-            if (string.IsNullOrWhiteSpace(colCode))
-            {
-                continue;
-            }
-
-            var score = ScoreDisplayCandidate(colCode, col, code, groupKey);
-            if (score > bestColScore)
-            {
-                bestColScore = score;
-                bestCol = col;
-            }
-
-            if (col.CreativeInventoryStacks is not { Length: > 0 })
-            {
-                continue;
-            }
-
-            try
-            {
-                var handbook = col.GetHandBookStacks(clientApi);
-                if (handbook is not { Count: > 0 })
-                {
-                    continue;
-                }
-
-                // Первый creative-стек обычно copper plain quartz — как в creative menu.
-                var stack = handbook[0].Clone();
-                stack.ResolveBlockOrItem(clientApi.World);
-                stack.StackSize = 1;
-                // Stacks с attributes важнее bare-блока.
-                var stackScore = score + 5000;
-                if (stackScore > bestHandbookScore)
-                {
-                    bestHandbookScore = stackScore;
-                    bestHandbook = stack;
-                }
-            }
-            catch
-            {
-                // ignore
-            }
-        }
-
-        if (bestHandbook != null)
-        {
-            return bestHandbook;
-        }
-
-        if (bestCol == null)
-        {
-            return null;
-        }
-
-        var result = new ItemStack(bestCol);
-        result.ResolveBlockOrItem(clientApi.World);
-        result.StackSize = 1;
-        EnsureDefaultDisplayAttributes(result);
-        return result;
-    }
-
-    /// <summary>
-    /// Lantern и подобные: material/lining/glass живут в attributes.
-    /// Bare ItemStack без них рендерится криво — подставляем vanilla defaults (BELantern).
-    /// </summary>
-    private static void EnsureDefaultDisplayAttributes(ItemStack stack)
-    {
-        if (stack?.Collectible?.Code == null)
-        {
-            return;
-        }
-
-        var path = stack.Collectible.Code.Path ?? "";
-        if (!path.StartsWith("lantern", StringComparison.OrdinalIgnoreCase)
-            && !path.Contains("lantern-", StringComparison.OrdinalIgnoreCase))
-        {
-            return;
-        }
-
-        stack.Attributes ??= new Vintagestory.API.Datastructures.TreeAttribute();
-        if (string.IsNullOrWhiteSpace(stack.Attributes.GetString("material")))
-        {
-            stack.Attributes.SetString("material", "copper");
-        }
-
-        if (string.IsNullOrWhiteSpace(stack.Attributes.GetString("lining")))
-        {
-            stack.Attributes.SetString("lining", "plain");
-        }
-
-        if (string.IsNullOrWhiteSpace(stack.Attributes.GetString("glass")))
-        {
-            stack.Attributes.SetString("glass", "quartz");
-        }
-    }
-
-    /// <summary>
-    /// Собирает collectible той же groupKey (StripVariantSuffixes).
-    /// Не ходит по firstPart-* — иначе wood-ротор тянет metal-иконку.
-    /// </summary>
-    private List<CollectibleObject> CollectGroupCollectibles(string code, string groupKey)
-    {
-        var result = new List<CollectibleObject>();
-        var seen = new HashSet<int>();
-
-        void TryAdd(CollectibleObject? col)
-        {
-            if (col?.Code == null || col.Id <= 0 || !seen.Add(col.Id))
+            if (stack?.Collectible?.Code == null)
             {
                 return;
             }
 
-            var colCode = NormalizeCode(col.Code.ToString());
-            var colGroup = ClaimCodeUtil.StripVariantSuffixes(colCode);
-            if (string.IsNullOrWhiteSpace(colGroup))
-            {
-                colGroup = colCode;
-            }
-
-            // В группу: exact, тот же stripped path, или code является префиксом/вариантом group.
-            if (!string.Equals(colGroup, groupKey, StringComparison.OrdinalIgnoreCase)
-                && !string.Equals(colCode, code, StringComparison.OrdinalIgnoreCase)
-                && !colCode.StartsWith(groupKey + "-", StringComparison.OrdinalIgnoreCase))
+            var code = NormalizeCode(stack.Collectible.Code.ToString());
+            if (string.IsNullOrWhiteSpace(code) || !seen.Add(code))
             {
                 return;
             }
 
-            result.Add(col);
-        }
+            var path = stack.Collectible.Code.Path ?? "";
+            if (path.Equals("air", StringComparison.OrdinalIgnoreCase)
+                || path.Equals("unknown", StringComparison.OrdinalIgnoreCase)
+                || path.StartsWith("creature-", StringComparison.OrdinalIgnoreCase)
+                || path.Contains("-dead", StringComparison.OrdinalIgnoreCase)
+                || path.Contains("armorstand", StringComparison.OrdinalIgnoreCase)
+                || path.Contains("strawdummy", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
 
-        AssetLocation location;
-        AssetLocation groupLocation;
-        try
-        {
-            location = new AssetLocation(code);
-            groupLocation = new AssetLocation(groupKey);
-        }
-        catch
-        {
-            return result;
-        }
-
-        TryAdd(clientApi.World.GetBlock(location));
-        TryAdd(clientApi.World.GetItem(location));
-        TryAdd(clientApi.World.GetBlock(groupLocation));
-        TryAdd(clientApi.World.GetItem(groupLocation));
-
-        var domain = groupLocation.Domain ?? "game";
-        var groupPath = groupLocation.Path ?? "";
-
-        // Creative-ориентации: windmillrotor-wood-north, torchholder-*-empty-north и т.п.
-        foreach (var suffix in new[]
-                 {
-                     "", "-south", "-north", "-east", "-west", "-normal",
-                     "-empty-north", "-empty-south", "-empty-east", "-empty-west",
-                     "-empty", "-full", "-closed", "-open"
-                 })
-        {
+            ItemStack displayStack;
             try
             {
-                TryAdd(clientApi.World.GetBlock(new AssetLocation(domain, groupPath + suffix)));
+                displayStack = stack.Clone();
+                displayStack.StackSize = 1;
             }
             catch
             {
-                // ignore
+                return;
             }
-        }
 
-        try
-        {
-            foreach (var b in clientApi.World.SearchBlocks(new AssetLocation(domain, groupPath + "-*")))
+            string label;
+            try
             {
-                TryAdd(b);
+                label = displayStack.GetName();
+            }
+            catch
+            {
+                label = code;
+            }
+
+            if (string.IsNullOrWhiteSpace(label))
+            {
+                label = code;
+            }
+
+            result.Add((code, label, displayStack));
+        }
+
+        void TryAddCollectible(CollectibleObject? collectible)
+        {
+            if (collectible?.Code == null || collectible.Id == 0)
+            {
+                return;
+            }
+
+            var hasTabs = collectible.CreativeInventoryTabs is { Length: > 0 };
+            var hasStacks = collectible.CreativeInventoryStacks is { Length: > 0 };
+            if (!hasTabs && !hasStacks)
+            {
+                return;
+            }
+
+            if (hasStacks)
+            {
+                foreach (var tabList in collectible.CreativeInventoryStacks!)
+                {
+                    if (tabList?.Stacks == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var jstack in tabList.Stacks)
+                    {
+                        if (jstack == null)
+                        {
+                            continue;
+                        }
+
+                        try
+                        {
+                            if (jstack.ResolvedItemstack == null)
+                            {
+                                jstack.Resolve(clientApi.World, "swixyclaimchunk use-filter", collectible.Code);
+                            }
+
+                            if (jstack.ResolvedItemstack != null)
+                            {
+                                TryAddStack(jstack.ResolvedItemstack);
+                            }
+                        }
+                        catch
+                        {
+                            // skip broken creative variants
+                        }
+                    }
+                }
+
+                return;
+            }
+
+            try
+            {
+                TryAddStack(new ItemStack(collectible, 1));
+            }
+            catch
+            {
+                // skip
             }
         }
-        catch
+
+        foreach (var item in clientApi.World.Items)
         {
-            // ignore
+            TryAddCollectible(item);
         }
 
+        foreach (var block in clientApi.World.Blocks)
+        {
+            TryAddCollectible(block);
+        }
+
+        result.Sort(static (a, b) => string.Compare(a.Label, b.Label, StringComparison.OrdinalIgnoreCase));
         return result;
-    }
-
-    private static int ScoreDisplayCandidate(
-        string colCode,
-        CollectibleObject col,
-        string requestedCode,
-        string groupKey)
-    {
-        var score = 0;
-
-        // Stacks (фонарь с material) важнее exact wall-ориентации.
-        if (col.CreativeInventoryStacks is { Length: > 0 })
-        {
-            score += 1500;
-        }
-        else if (col.CreativeInventoryTabs is { Length: > 0 })
-        {
-            score += 1000;
-        }
-
-        if (string.Equals(colCode, requestedCode, StringComparison.OrdinalIgnoreCase))
-        {
-            // Exact без stacks — слабый бонус (стена фонаря без attributes).
-            score += col.CreativeInventoryStacks is { Length: > 0 } ? 500 : 50;
-        }
-
-        var colGroup = ClaimCodeUtil.StripVariantSuffixes(colCode);
-        if (string.Equals(colGroup, groupKey, StringComparison.OrdinalIgnoreCase))
-        {
-            score += 200;
-        }
-
-        var lower = colCode.ToLowerInvariant();
-        // Lantern creative = *-up; rotor/EP = *-north / *-south.
-        if (lower.EndsWith("-up") || lower.Contains("-up-"))
-        {
-            score += 120;
-        }
-        else if (lower.EndsWith("-north") || lower.Contains("-north-"))
-        {
-            score += 80;
-        }
-        else if (lower.EndsWith("-south") || lower.Contains("-south-"))
-        {
-            score += 40;
-        }
-
-        if (lower.Contains("-burned") || lower.Contains("-broken") || lower.Contains("-ruined"))
-        {
-            score -= 120;
-        }
-
-        return score;
     }
 }
-
-

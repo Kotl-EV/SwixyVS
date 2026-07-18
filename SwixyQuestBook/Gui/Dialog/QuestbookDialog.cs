@@ -227,7 +227,21 @@ namespace SwixyQuestBook.Gui
         private string branchModalTitleText = string.Empty;
         private string branchModalTargetHeaderTitle = string.Empty;
         private string branchModalSelectedIconItemCode = string.Empty;
+        private string branchModalEditorLang = "en";
+        private readonly Dictionary<string, string> branchModalTitleByLang =
+            new(System.StringComparer.OrdinalIgnoreCase);
+        private string[] branchModalLangCodes = [];
+        private LayoutRect[] branchModalLangButtonHitAreas = [];
         private (ItemSlot Slot, LayoutRect HitArea, string CollectibleCode)[] branchModalItemPickerSlots = [];
+        private bool isBranchModalItemPickerOpen;
+        private string branchModalIconSearchText = string.Empty;
+        private bool branchModalIconSearchFocused;
+        private double branchModalIconScrollOffset;
+        private LayoutRect branchModalIconPreviewHitArea = new(0, 0, 0, 0);
+        private LayoutRect branchModalIconSearchHitArea = new(0, 0, 0, 0);
+        private LayoutRect branchModalIconViewportLocal = new(0, 0, 0, 0);
+        private LayoutRect branchModalIconPickerPanelLocal = new(0, 0, 0, 0);
+        private LayoutRect branchModalIconPickerCancelHitArea = new(0, 0, 0, 0);
         private bool pendingAdminRefreshAfterDelete;
         private bool isBranchModalPrimaryHovered;
         private bool isBranchModalCancelHovered;
@@ -799,9 +813,14 @@ namespace SwixyQuestBook.Gui
             if (isBranchModalOpen)
             {
                 RenderQueuedItemIcons(branchModalIconRenderRequests, deltaTime);
+                // Clip catalog tiles to the branch-icon grid (same path as quest-edit picker).
+                LayoutRect savedPickerViewport = adminEntityPickerViewportLocal;
+                if (branchModalIconViewportLocal.Width > 0)
+                    adminEntityPickerViewportLocal = branchModalIconViewportLocal;
                 RenderPickerSlotIcons(
                     branchModalItemPickerSlots.Select(static entry => (entry.Slot, entry.HitArea)),
                     deltaTime);
+                adminEntityPickerViewportLocal = savedPickerViewport;
             }
 
             if (isQuestModalOpen)
@@ -1127,6 +1146,12 @@ namespace SwixyQuestBook.Gui
 
             if (isBranchModalOpen)
             {
+                if (TryHandleBranchModalMouseWheel(args))
+                {
+                    args.SetHandled();
+                    return;
+                }
+
                 base.OnMouseWheel(args);
                 return;
             }
@@ -1916,10 +1941,14 @@ namespace SwixyQuestBook.Gui
                     ? QuestbookGuiLayout.TopMenuDetachHoverColor
                     : QuestbookGuiLayout.TopMenuDetachColor;
 
+            // Same origin as text — no extra Y nudge (was +1/+2 and sat below "ЗАКРЫТЬ").
+            int ix = (int)System.Math.Round(x);
+            int iy = (int)System.Math.Round(y);
+            int s = (int)System.Math.Round(size);
             ctx.Operator = Operator.Over;
-            capi.Gui.Icons.Drawmenuicon_svg(ctx, (int)(x + 2), (int)(y + 2), (int)size, (int)size, shadowColor);
+            capi.Gui.Icons.Drawmenuicon_svg(ctx, ix + 1, iy + 1, s, s, shadowColor);
             ctx.Operator = Operator.Over;
-            capi.Gui.Icons.Drawmenuicon_svg(ctx, (int)x, (int)(y + 1), (int)size, (int)size, color);
+            capi.Gui.Icons.Drawmenuicon_svg(ctx, ix, iy, s, s, color);
         }
 
         private LayoutRect GetQuestbookDialogContentRect()
@@ -2201,10 +2230,15 @@ namespace SwixyQuestBook.Gui
 
         private bool HasFocusedTextInput()
         {
-            if (isBranchModalOpen && isBranchModalTitleFocused && branchModalMode != BranchModalMode.DeleteConfirm)
+            if (isBranchModalOpen
+                && branchModalMode != BranchModalMode.DeleteConfirm
+                && (isBranchModalTitleFocused || branchModalIconSearchFocused))
                 return true;
 
             if (isQuestEditModalOpen && adminData.HasSelectedNode && !adminData.FocusedField.IsNone)
+                return true;
+
+            if (isQuestEditModalOpen && adminEntityPickerSearchFocused)
                 return true;
 
             return false;
@@ -2760,10 +2794,10 @@ namespace SwixyQuestBook.Gui
             double ToScreenSize(double baseSize) => baseSize * fitScale;
 
             return new LayoutRect(
-                ToScreenX(772),
-                ToScreenY(256),
-                ToScreenSize(712),
-                ToScreenSize(630)
+                ToScreenX(QuestbookGuiLayout.ModalPanelX),
+                ToScreenY(QuestbookGuiLayout.ModalPanelY),
+                ToScreenSize(QuestbookGuiLayout.ModalPanelWidth),
+                ToScreenSize(QuestbookGuiLayout.ModalPanelHeight)
             );
         }
 
@@ -2790,26 +2824,20 @@ namespace SwixyQuestBook.Gui
             double panelWidth = panelRect.Width;
             double panelHeight = panelRect.Height;
 
-            // Flow layout relative to modal panel — avoids hard-coded 1920 coords and overlaps.
-            double padX = 36 * fitScale;
-            double padTop = 28 * fitScale;
-            // Design (1920): start button at Y=748 in a 630-tall panel starting at 256
-            // → ~64px clearance under the button. Too-small padBottom sinks the CTA into the frame.
-            double padBottom = usesInfoModalLayout ? 56 * fitScale : 40 * fitScale;
+            // Questbook-open.svg layout — all positions relative to panel (772, 256).
+            double RelX(double absX) => panelX + ((absX - QuestbookGuiLayout.ModalPanelX) * fitScale);
+            double RelY(double absY) => panelY + ((absY - QuestbookGuiLayout.ModalPanelY) * fitScale);
+            double S(double v) => v * fitScale;
+
+            double padX = S(QuestbookGuiLayout.ModalPadX);
             double contentX = panelX + padX;
-            double contentW = panelWidth - (padX * 2);
-            double cursorY = panelY + padTop;
+            double contentW = panelWidth - (padX * 2); // 568
 
-            double statusH = 34 * fitScale;
-            double titleH = 36 * fitScale;
-            double sectionGap = 14 * fitScale;
-            double buttonH = QuestbookGuiLayout.ModalButtonHeight * fitScale;
-            double closeSize = QuestbookGuiLayout.ModalCloseSize * fitScale;
-
-            // Reserve bottom for action button first.
-            double buttonY = panelY + panelHeight - padBottom - buttonH;
-            double buttonW = contentW;
-            double buttonX = contentX;
+            double buttonH = S(QuestbookGuiLayout.ModalButtonHeight);
+            double buttonW = S(QuestbookGuiLayout.ModalStartButtonWidth);
+            double buttonX = RelX(QuestbookGuiLayout.ModalStartButtonX);
+            double buttonY = RelY(QuestbookGuiLayout.ModalStartButtonY);
+            double closeSize = S(QuestbookGuiLayout.ModalCloseSize);
 
             int totalRequiredCount = GetNodeRequiredTotalCount(node);
             double percent = totalRequiredCount <= 0
@@ -2857,7 +2885,7 @@ namespace SwixyQuestBook.Gui
                 buttonTextColor = QuestbookGuiLayout.ModalStartButtonTextColor;
             }
 
-            // Panel background (no full-window dimming — keeps the book UI visible behind the modal)
+            // Panel background (no full-window dimming by design request).
             ImageSurface? modalSurface = GetTextureSurface("modal.png");
             if (modalSurface != null)
             {
@@ -2868,12 +2896,9 @@ namespace SwixyQuestBook.Gui
                 FillRectangle(ctx, panelX, panelY, panelWidth, panelHeight, QuestbookGuiLayout.ModalBackgroundColor);
             }
 
-            // Close button (top-right). Design ModalCloseY is a bit low in the live frame — nudge up ~30px.
-            const double designModalPanelY = 256;
-            const double designModalPanelRightInset = 72; // panel right (772+712) − close right (1368+44)
-            const double closeYNudgeUp = 30;
-            double closeButtonX = panelX + panelWidth - (designModalPanelRightInset * fitScale) - closeSize;
-            double closeButtonY = panelY + ((QuestbookGuiLayout.ModalCloseY - designModalPanelY - closeYNudgeUp) * fitScale);
+            // Close — exact SVG position (1368, 340), no nudge.
+            double closeButtonX = RelX(QuestbookGuiLayout.ModalCloseX);
+            double closeButtonY = RelY(QuestbookGuiLayout.ModalCloseY);
             string closeButtonTextureFileName = isQuestModalCloseButtonHovered ? "close_active.png" : "close.png";
             ImageSurface? closeButtonSurface = GetTextureSurface(closeButtonTextureFileName);
             if (closeButtonSurface != null)
@@ -2881,13 +2906,15 @@ namespace SwixyQuestBook.Gui
                 DrawImageSurface(ctx, closeButtonSurface, closeButtonX, closeButtonY, closeSize, closeSize);
             }
 
-            // Status row (leave space for close on the right)
-            double statusW = contentW - closeSize - (12 * fitScale);
-            LayoutRect questLabelRect = new(contentX, cursorY, statusW, statusH);
+            // Status «КВЕСТ: N%» — design rect 893,320 470×39 (centered band).
+            LayoutRect questLabelRect = new(
+                RelX(QuestbookGuiLayout.ModalQuestStatusX),
+                RelY(QuestbookGuiLayout.ModalQuestStatusY),
+                S(QuestbookGuiLayout.ModalQuestStatusWidth),
+                S(QuestbookGuiLayout.ModalQuestStatusHeight));
             DrawCenteredQuestStatusLine(ctx, fitScale, questLabelRect, progressPercent, isCompleted);
-            cursorY += statusH + (8 * fitScale);
 
-            // Title
+            // Title — design rect 893,365 470×39.
             string displayTitle = isStartNode
                 ? GetCategoryHeaderDisplay(GetSelectedCategory())
                 : isCheckpointNode
@@ -2904,12 +2931,14 @@ namespace SwixyQuestBook.Gui
             }
 
             CairoFont titleFont = CreateMontserratFont(28 * fitScale, [1.0, 1.0, 1.0, 1.0]);
-            LayoutRect titleRect = new(contentX, cursorY, contentW, titleH);
+            LayoutRect titleRect = new(
+                RelX(QuestbookGuiLayout.ModalTitleX),
+                RelY(QuestbookGuiLayout.ModalTitleY),
+                S(QuestbookGuiLayout.ModalTitleWidth),
+                S(QuestbookGuiLayout.ModalTitleHeight));
             DrawCenteredText(ctx, titleFont, displayTitle, titleRect);
-            cursorY += titleH + sectionGap;
 
             double goalBoxX = 0, goalBoxY = 0, goalBoxWidth = 0, goalBoxHeight = 0;
-            double rewardBoxX = 0, rewardBoxY = 0;
             ImageSurface? modalBoxSurface = GetTextureSurface("modalbox.png");
             ImageSurface? modalTextBoxSurface = GetTextureSurface("modaltextbox.png");
 
@@ -2920,13 +2949,11 @@ namespace SwixyQuestBook.Gui
                 questModalGoalsMaxScroll = 0;
                 questModalRewardsMaxScroll = 0;
 
-                // Description fills the space above the CTA, with a clear gap so the button
-                // does not sit flush against the text box (was reading as "too low").
-                double infoToButtonGap = 20 * fitScale;
-                double infoBoxH = System.Math.Max(120 * fitScale, buttonY - cursorY - infoToButtonGap);
-                double infoBoxX = contentX;
-                double infoBoxY = cursorY;
-                double infoBoxW = contentW;
+                // Start / checkpoint — single info box (design 844,422 568×280).
+                double infoBoxX = RelX(QuestbookGuiLayout.ModalStartInfoBoxX);
+                double infoBoxY = RelY(QuestbookGuiLayout.ModalStartInfoBoxY);
+                double infoBoxW = S(QuestbookGuiLayout.ModalStartInfoBoxWidth);
+                double infoBoxH = S(QuestbookGuiLayout.ModalStartInfoBoxHeight);
 
                 if (modalBoxSurface != null)
                 {
@@ -2948,20 +2975,13 @@ namespace SwixyQuestBook.Gui
             }
             else
             {
-                // Goals | Rewards boxes
-                double colGap = 16 * fitScale;
-                goalBoxWidth = (contentW - colGap) / 2;
-                // Prefer a taller item area so goal labels (craft/turn-in/obtain) fit; overflow scrolls.
-                double availableForBoxes = buttonY - cursorY - sectionGap - (100 * fitScale) - sectionGap;
-                goalBoxHeight = System.Math.Clamp(
-                    availableForBoxes > 0 ? availableForBoxes : 170 * fitScale,
-                    140 * fitScale,
-                    240 * fitScale);
-
-                goalBoxX = contentX;
-                goalBoxY = cursorY;
-                rewardBoxX = contentX + goalBoxWidth + colGap;
-                rewardBoxY = cursorY;
+                // Goals | Rewards — fixed design boxes 272×152, gap 24.
+                goalBoxWidth = S(QuestbookGuiLayout.ModalGoalsBoxWidth);
+                goalBoxHeight = S(QuestbookGuiLayout.ModalGoalsBoxHeight);
+                goalBoxX = RelX(QuestbookGuiLayout.ModalGoalsBoxX);
+                goalBoxY = RelY(QuestbookGuiLayout.ModalGoalsBoxY);
+                double rewardBoxX = RelX(QuestbookGuiLayout.ModalRewardsBoxX);
+                double rewardBoxY = RelY(QuestbookGuiLayout.ModalRewardsBoxY);
 
                 if (modalBoxSurface != null)
                 {
@@ -2978,7 +2998,6 @@ namespace SwixyQuestBook.Gui
                 DrawCenteredText(ctx, sectionRightFont, QuestbookLang.GetLocal("modal.rewards"),
                     new LayoutRect(rewardBoxX, rewardBoxY + (6 * fitScale), goalBoxWidth, labelH));
 
-                // Short player-facing hint: craft / turn in / obtain.
                 string goalsHint = BuildGoalsActionHint(node);
                 if (!string.IsNullOrWhiteSpace(goalsHint))
                 {
@@ -2990,9 +3009,9 @@ namespace SwixyQuestBook.Gui
                         new LayoutRect(goalBoxX + (6 * fitScale), goalBoxY + labelH + (2 * fitScale), goalBoxWidth - (12 * fitScale), goalsHintH));
                 }
 
-                double iconAreaTop = goalBoxY + labelH + goalsHintH + (10 * fitScale);
-                double iconAreaH = goalBoxHeight - labelH - goalsHintH - (18 * fitScale);
-                double iconSize = System.Math.Min(44 * fitScale, iconAreaH * 0.55);
+                double iconAreaTop = goalBoxY + labelH + goalsHintH + (8 * fitScale);
+                double iconAreaH = goalBoxHeight - labelH - goalsHintH - (14 * fitScale);
+                double iconSize = S(QuestbookGuiLayout.ModalIconSize);
 
                 if (node.SupportsItemIcon)
                 {
@@ -3032,13 +3051,11 @@ namespace SwixyQuestBook.Gui
                     questModalRewardsMaxScroll = 0;
                 }
 
-                cursorY = goalBoxY + goalBoxHeight + sectionGap;
-
-                // Description box
-                double textBoxH = System.Math.Max(72 * fitScale, buttonY - cursorY - sectionGap);
-                double textBoxX = contentX;
-                double textBoxY = cursorY;
-                double textBoxW = contentW;
+                // Description — fixed 844,598 568×104.
+                double textBoxX = RelX(QuestbookGuiLayout.ModalDescriptionBoxX);
+                double textBoxY = RelY(QuestbookGuiLayout.ModalDescriptionBoxY);
+                double textBoxW = S(QuestbookGuiLayout.ModalDescriptionBoxWidth);
+                double textBoxH = S(QuestbookGuiLayout.ModalDescriptionBoxHeight);
 
                 if (modalTextBoxSurface != null)
                 {
@@ -3058,7 +3075,7 @@ namespace SwixyQuestBook.Gui
                 DrawWrappedInfoText(ctx, infoFont, infoText, infoRect, 220, 22 * fitScale);
             }
 
-            // Action button
+            // Action button — design 844,748 568×74.
             LayoutRect buttonRect = new(buttonX, buttonY, buttonW, buttonH);
             ImageSurface? buttonSurface = GetTextureSurface(buttonTextureFileName);
             if (buttonSurface != null)
@@ -4140,11 +4157,14 @@ namespace SwixyQuestBook.Gui
 
                     double closeHotkeyX = topMenuWidth - topMenuRightPadding - closeHotkeyWidth;
                     double closeTextX = closeHotkeyX - topMenuCloseGap - closeWidth;
+                    // Align detach control to the same vertical center as top-menu text (ЗАКРЫТЬ).
+                    // Optical nudge: menuicon SVG has bottom-heavy padding vs Montserrat caps.
+                    const double detachOpticalNudgeUp = 2;
                     double closeTextCenterY = GetTextVisualCenterY(closeFont, topTextBaselineY);
                     double detachButtonX = closeTextX - topMenuDetachGap - topMenuDetachButtonSize;
-                    double detachButtonY = closeTextCenterY - (topMenuDetachButtonSize / 2);
+                    double detachButtonY = closeTextCenterY - (topMenuDetachButtonSize / 2) - (detachOpticalNudgeUp * fitScale);
                     double detachIconX = detachButtonX + ((topMenuDetachButtonSize - topMenuDetachIconSize) / 2);
-                    double detachIconY = closeTextCenterY - (topMenuDetachIconSize / 2);
+                    double detachIconY = closeTextCenterY - (topMenuDetachIconSize / 2) - (detachOpticalNudgeUp * fitScale);
 
                     topMenuDragHitArea = new LayoutRect(0, 0, topMenuWidth, topMenuHeight).Offset(screenX, screenY);
                     detachButtonHitArea = new LayoutRect(

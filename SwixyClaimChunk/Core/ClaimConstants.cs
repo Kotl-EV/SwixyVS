@@ -10,4 +10,8 @@ public static class ClaimConstants
     public const int ProtectionLevel = 1;
     public const string CoOwnersSaveKey = "swixyclaimchunk_coowners";
     public const string UseFiltersSaveKey = "swixyclaimchunk_use_filters";
+    public const string ClaimFlagsSaveKey = "swixyclaimchunk_claim_flags";
+
+    /// <summary>EntityBehavior name for PvP / animal protection.</summary>
+    public const string ClaimProtectBehaviorCode = "swixyclaimchunkclaimprotect";
 }

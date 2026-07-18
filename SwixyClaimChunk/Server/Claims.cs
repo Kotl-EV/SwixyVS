@@ -220,6 +220,7 @@ public sealed partial class SwixyClaimChunkServerMod
         serverApi!.World.Claims.Remove(other);
         MergeCoOwners(primary, other);
         MergeUseFilters(primary, other);
+        MergeClaimFlags(primary, other);
         serverApi.Logger.Notification(
             "[SwixyClaimChunk] Merged claim '{0}' into '{1}' for {2}",
             other.Description,

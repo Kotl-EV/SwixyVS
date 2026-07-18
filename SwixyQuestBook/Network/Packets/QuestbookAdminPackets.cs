@@ -33,18 +33,24 @@ namespace SwixyQuestBook.Network
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public sealed class QuestbookAdminAddCategoryRequest
     {
+        /// <summary>Primary/fallback title (usually the editor's active language).</summary>
         public string Title = string.Empty;
         public string HeaderTitle = string.Empty;
         public string IconItemCode = string.Empty;
+        /// <summary>Multi-language branch titles (same shape as quest description i18n).</summary>
+        public QuestbookLangTextPacket[] TitleI18n = [];
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
     public sealed class QuestbookAdminRenameCategoryRequest
     {
         public string CategoryHeaderTitle = string.Empty;
+        /// <summary>Primary/fallback title (usually the editor's active language).</summary>
         public string Title = string.Empty;
         public string HeaderTitle = string.Empty;
         public string IconItemCode = string.Empty;
+        /// <summary>Full multi-language title map; empty = legacy single-lang update via Title.</summary>
+        public QuestbookLangTextPacket[] TitleI18n = [];
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

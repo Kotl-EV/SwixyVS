@@ -1,4 +1,5 @@
 ﻿using Cairo;
+using SwixyQuestBook.Util.Fonts;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -238,13 +239,9 @@ namespace SwixyQuestBook.Gui
                 return font;
             }
 
-            font = new CairoFont(new FontConfig
-            {
-                Fontname = "Montserrat",
-                UnscaledFontsize = (float)(renderSize / RuntimeEnv.GUIScale),
-                FontWeight = FontWeight.Bold,
-                Color = color
-            });
+            // Family is "Montserrat" (file Montserrat-Bold.ttf). Never use the PostScript name
+            // "Montserrat-Bold" — Cairo SelectFontFace will miss it and fall back to sans-serif.
+            font = QuestbookFontHelper.Create(renderSize, color, bold: true);
             montserratFontCache[key] = font;
             return font;
         }
@@ -258,13 +255,7 @@ namespace SwixyQuestBook.Gui
                 return font;
             }
 
-            font = new CairoFont(new FontConfig
-            {
-                Fontname = "Montserrat-Bold",
-                UnscaledFontsize = (float)(renderSize / RuntimeEnv.GUIScale),
-                FontWeight = FontWeight.Normal,
-                Color = color
-            }).WithRenderTwice();
+            font = QuestbookFontHelper.CreateTopMenu(fitScale, color);
             topMenuFontCache[key] = font;
             return font;
         }

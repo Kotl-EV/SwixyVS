@@ -11,6 +11,7 @@
 using System;
 using Cairo;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
@@ -19,20 +20,42 @@ namespace SwixyClaimChunk.Content;
 /// <summary>
 /// Элемент списка приватов с интерактивной подсветкой и кнопкой удаления в правой колонке.
 /// Реализует <see cref="IGuiElementCell"/> для встраивания в GuiElementList / диалоги Vintage Story.
+/// Фон строки — Group 378.png (<c>textures/gui/claim_list_row.png</c>, 302×81).
 /// </summary>
 public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
 {
-    /// <summary>Ширина правой панели с иконками в не масштабированных GUI-единицах.</summary>
-    private const int UnscaledRightBoxWidth = 48;
+    /// <summary>Group 378.png design size (panel only; gap is CellList spacing).</summary>
+    private const int RowTexW = 302;
+    private const int RowTexH = 81;
 
-    /// <summary>Базовый размер иконок лампочки и корзины до применения GUIScale.</summary>
-    private const int UnscaledIconSize = 26;
+    /// <summary>Правая колонка иконок внутри текстуры (~42px) — unscaled.</summary>
+    private const int UnscaledRightBoxWidth = 42;
+
+    /// <summary>Лампочка в колодце 36×36 — чуть крупнее корзины.</summary>
+    private const int UnscaledIconSize = 22;
+
+    /// <summary>
+    /// Корзина как Trash_Full.svg 24×24 в колодце 36×36 (~20–22 design-px, не на весь колодец).
+    /// </summary>
+    private const int UnscaledTrashIconSize = 18;
 
     /// <summary>Глубина рельефа (emboss) кнопки в не масштабированных единицах.</summary>
-    private static readonly int UnscaledDepth = 4;
+    private static readonly int UnscaledDepth = 2;
 
-    /// <summary>Минимальная высота строки, достаточная для заголовка, статистики и двух правых иконок.</summary>
-    private const int UnscaledMinRowHeight = 48;
+    /// <summary>Panel height only (81). Gap = CellList.unscaledCellSpacing = 8.</summary>
+    private const int UnscaledMinRowHeight = RowTexH;
+
+    // Fallback face #412D1D / bevels if texture missing
+    private static readonly double[] ColFace = [0.255, 0.176, 0.114];
+    private static readonly double[] ColHi = [0.337, 0.243, 0.169];
+    private static readonly double[] ColLo = [0.165, 0.118, 0.078];
+    private static readonly double[] ColSelected = [0.32, 0.22, 0.15];
+
+    /// <summary>Shared Cairo surface for Group 378 row chrome (loaded once).</summary>
+    private static ImageSurface? rowTexture;
+
+    /// <summary>True after a failed load attempt (do not retry every compose).</summary>
+    private static bool rowTextureMissing;
 
     /// <summary>Данные строки списка (заголовок, описание, шрифты, флаги отрисовки).</summary>
     public SavegameCellEntry cellEntry;
@@ -169,56 +192,120 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
     /// <param name="pressed">True для визуала выбранной/нажатой кнопки.</param>
     private void ComposeButton(Context ctx, bool pressed)
     {
+        EnsureRowTexture(api);
+
         var rightBoxWidth = scaled(UnscaledRightBoxWidth);
+        // Cell height = panel only (81). Gap is between cells via CellList spacing.
+        var drawH = Bounds.OuterHeight;
+        var drawW = Bounds.OuterWidth;
         pressedYOffset = 0;
 
         if (cellEntry.DrawAsButton)
         {
-            RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
-            ctx.SetSourceRGB(GuiStyle.DialogDefaultBgColor[0], GuiStyle.DialogDefaultBgColor[1], GuiStyle.DialogDefaultBgColor[2]);
-            ctx.Fill();
+            // Group 378.png stretched to cell (81 design-px after FixedHeight + zero padding).
+            if (rowTexture != null)
+            {
+                ctx.Save();
+                ctx.Scale(drawW / rowTexture.Width, drawH / rowTexture.Height);
+                ctx.SetSourceSurface(rowTexture, 0, 0);
+                if (ctx.GetSource() is SurfacePattern pattern)
+                {
+                    pattern.Filter = Filter.Nearest;
+                }
 
-            // При нажатии текст и иконки смещаются вниз на половину глубины рельефа.
+                ctx.Paint();
+                ctx.Restore();
+            }
+            else
+            {
+                DrawFallbackPlate(ctx, drawW, drawH, pressed || cellEntry.Selected);
+            }
+
             if (pressed)
             {
                 pressedYOffset = scaled(UnscaledDepth) / 2;
             }
-
-            EmbossRoundRectangleElement(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, pressed, (int)scaled(UnscaledDepth));
         }
 
-        // Заголовок: ширина минус правая колонка, вертикальные отступы удвоены (стиль списка VS).
+        var textLeft = Bounds.absPaddingX + scaled(10);
+        var textTop = scaled(System.Math.Max(6, cellEntry.LeftOffY)) + pressedYOffset;
+        var textW = Bounds.OuterWidth - rightBoxWidth - textLeft - scaled(4);
+
         Font = cellEntry.TitleFont;
-        var textTop = Bounds.absPaddingY + scaled(cellEntry.LeftOffY) + pressedYOffset;
         titleTextHeight = textUtil.AutobreakAndDrawMultilineTextAt(
             ctx,
             Font,
             cellEntry.Title,
-            Bounds.absPaddingX,
+            textLeft,
             textTop,
-            Bounds.InnerWidth - rightBoxWidth);
+            textW);
 
-        // Статистика сразу под названием привата.
         Font = cellEntry.DetailTextFont;
         textUtil.AutobreakAndDrawMultilineTextAt(
             ctx,
             Font,
             cellEntry.DetailText,
-            Bounds.absPaddingX,
-            textTop + cellEntry.DetailTextOffY + titleTextHeight,
-            Bounds.InnerWidth - rightBoxWidth);
+            textLeft,
+            textTop + scaled(System.Math.Max(2, cellEntry.DetailTextOffY)) + titleTextHeight,
+            textW);
 
-        DrawRightBoxDividers(ctx, rightBoxWidth);
-        DrawLightbulbIcon(ctx, rightBoxWidth, pressedYOffset);
-        DrawTrashIcon(ctx, rightBoxWidth, pressedYOffset);
+        DrawLightbulbIcon(ctx, rightBoxWidth, pressedYOffset, drawH);
+        DrawTrashIcon(ctx, rightBoxWidth, pressedYOffset, drawH);
 
-        // Полупрозрачное затемнение поверх всей кнопки в нажатом состоянии.
-        if (cellEntry.DrawAsButton && pressed)
+        if (cellEntry.DrawAsButton && (pressed || cellEntry.Selected))
         {
-            RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
-            ctx.SetSourceRGBA(0, 0, 0, 0.15);
+            ctx.SetSourceRGBA(0, 0, 0, 0.12);
+            ctx.Rectangle(0, 0, drawW, drawH);
             ctx.Fill();
         }
+    }
+
+    /// <summary>Loads Group 378 row texture once for all claim list cells.</summary>
+    private static void EnsureRowTexture(ICoreClientAPI capi)
+    {
+        if (rowTexture != null || rowTextureMissing)
+        {
+            return;
+        }
+
+        try
+        {
+            var asset = capi.Assets.TryGet(new AssetLocation("swixyclaimchunk", "textures/gui/claim_list_row.png"));
+            if (asset?.Data == null || asset.Data.Length == 0)
+            {
+                capi.Logger.Warning("[SwixyClaimChunk] claim_list_row.png (Group 378) not found");
+                rowTextureMissing = true;
+                return;
+            }
+
+            using var bitmap = capi.Render.BitmapCreateFromPng(asset.Data);
+            rowTexture = GuiElement.getImageSurfaceFromAsset(bitmap);
+        }
+        catch (Exception ex)
+        {
+            capi.Logger.Error("[SwixyClaimChunk] Failed to load claim_list_row.png: {0}", ex.Message);
+            rowTextureMissing = true;
+        }
+    }
+
+    private static void DrawFallbackPlate(Context ctx, double drawW, double drawH, bool selected)
+    {
+        var face = selected ? ColSelected : ColFace;
+        ctx.SetSourceRGB(face[0], face[1], face[2]);
+        ctx.Rectangle(0, 0, drawW, drawH);
+        ctx.Fill();
+
+        var bevel = 3.0;
+        ctx.SetSourceRGB(ColHi[0], ColHi[1], ColHi[2]);
+        ctx.Rectangle(0, 0, drawW, bevel);
+        ctx.Fill();
+        ctx.Rectangle(0, 0, bevel, drawH);
+        ctx.Fill();
+        ctx.SetSourceRGB(ColLo[0], ColLo[1], ColLo[2]);
+        ctx.Rectangle(0, drawH - bevel, drawW, bevel);
+        ctx.Fill();
+        ctx.Rectangle(drawW - bevel, 0, bevel, drawH);
+        ctx.Fill();
     }
 
     /// <summary>
@@ -226,74 +313,40 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
     /// </summary>
     private double GetDividerX(double rightBoxWidth) => Bounds.OuterWidth - rightBoxWidth;
 
-    /// <summary>
-    /// Рисует вертикальный и горизонтальный разделители правой панели (двойные линии для объёма).
-    /// </summary>
-    private void DrawRightBoxDividers(Context ctx, double rightBoxWidth)
-    {
-        var dividerX = GetDividerX(rightBoxWidth);
-        ctx.LineWidth = scaled(1);
-
-        // Тёмная «тень» вертикального разделителя.
-        ctx.SetSourceRGBA(0, 0, 0, 0.4);
-        ctx.NewPath();
-        ctx.MoveTo(dividerX, scaled(1));
-        ctx.LineTo(dividerX, Bounds.OuterHeight - scaled(2));
-        ctx.ClosePath();
-        ctx.Stroke();
-
-        // Светлая кромка справа от разделителя.
-        ctx.SetSourceRGBA(1, 1, 1, 0.3);
-        ctx.NewPath();
-        ctx.MoveTo(dividerX + scaled(1), scaled(1));
-        ctx.LineTo(dividerX + scaled(1), Bounds.OuterHeight - scaled(2));
-        ctx.ClosePath();
-        ctx.Stroke();
-
-        // Горизонтальный разделитель посередине правой колонки (две зоны клика).
-        var midY = Bounds.OuterHeight / 2;
-        ctx.SetSourceRGBA(0, 0, 0, 0.4);
-        ctx.NewPath();
-        ctx.MoveTo(dividerX, midY);
-        ctx.LineTo(Bounds.OuterWidth, midY);
-        ctx.ClosePath();
-        ctx.Stroke();
-
-        ctx.SetSourceRGBA(1, 1, 1, 0.25);
-        ctx.NewPath();
-        ctx.MoveTo(dividerX, midY + scaled(1));
-        ctx.LineTo(Bounds.OuterWidth, midY + scaled(1));
-        ctx.ClosePath();
-        ctx.Stroke();
-    }
-
     /// <summary>Рисует иконку лампочки в верхней половине правой панели.</summary>
-    private void DrawLightbulbIcon(Context ctx, double rightBoxWidth, double yOffset)
+    private void DrawLightbulbIcon(Context ctx, double rightBoxWidth, double yOffset, double faceH)
     {
         var dividerX = GetDividerX(rightBoxWidth);
-        var zoneHeight = Bounds.OuterHeight / 2;
+        var zoneHeight = faceH / 2;
         var iconSize = GetZoneIconSize(rightBoxWidth, zoneHeight);
         GetZoneIconPosition(dividerX, rightBoxWidth, 0, zoneHeight, iconSize, yOffset, out var iconX, out var iconY);
         ClaimCairoIcons.DrawHighlight(ctx, iconX, iconY, iconSize, HighlightActive);
     }
 
     /// <summary>Рисует иконку корзины в нижней половине правой панели.</summary>
-    private void DrawTrashIcon(Context ctx, double rightBoxWidth, double yOffset)
+    private void DrawTrashIcon(Context ctx, double rightBoxWidth, double yOffset, double faceH)
     {
         var dividerX = GetDividerX(rightBoxWidth);
-        var zoneHeight = Bounds.OuterHeight / 2;
-        var iconSize = GetZoneIconSize(rightBoxWidth, zoneHeight);
-        // zoneTop = zoneHeight — нижняя зона начинается от середины ячейки.
+        var zoneHeight = faceH / 2;
+        // Smaller than the lightbulb — matches SVG trash scale inside 36×36 well.
+        var iconSize = GetZoneIconSize(rightBoxWidth, zoneHeight, UnscaledTrashIconSize, maxFill: 0.55);
         GetZoneIconPosition(dividerX, rightBoxWidth, zoneHeight, zoneHeight, iconSize, yOffset, out var iconX, out var iconY);
         ClaimCairoIcons.DrawTrash(ctx, iconX, iconY, iconSize, destructive: AllowDelete);
     }
 
     /// <summary>
-    /// Вычисляет размер иконки с учётом GUIScale и доступного места в зоне (не вылезает за границы).
+    /// Размер иконки: design size, capped so it stays inset inside the 36px well.
     /// </summary>
+    private double GetZoneIconSize(double rightBoxWidth, double zoneHeight, int unscaledSize, double maxFill = 0.62)
+    {
+        return System.Math.Min(
+            scaled(unscaledSize),
+            System.Math.Min(rightBoxWidth * maxFill, zoneHeight * maxFill));
+    }
+
     private double GetZoneIconSize(double rightBoxWidth, double zoneHeight)
     {
-        return System.Math.Min(scaled(UnscaledIconSize), System.Math.Min(rightBoxWidth * 0.82, zoneHeight * 0.78));
+        return GetZoneIconSize(rightBoxWidth, zoneHeight, UnscaledIconSize);
     }
 
     /// <summary>
@@ -331,23 +384,23 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
 
         var rightBoxWidth = scaled(UnscaledRightBoxWidth);
         var dividerX = GetDividerX(rightBoxWidth);
-        var midY = Bounds.OuterHeight / 2;
+        var faceH = Bounds.OuterHeight;
+        var midY = faceH / 2;
 
         ctx.NewPath();
         switch (region)
         {
             case HoverRegion.Left:
-                // Прямоугольник от левого края до вертикального разделителя.
                 ctx.MoveTo(0, 0);
                 ctx.LineTo(dividerX, 0);
-                ctx.LineTo(dividerX, Bounds.OuterHeight);
-                ctx.LineTo(0, Bounds.OuterHeight);
+                ctx.LineTo(dividerX, faceH);
+                ctx.LineTo(0, faceH);
                 break;
             case HoverRegion.RightTop:
                 AppendRightZonePath(ctx, dividerX, rightBoxWidth, 0, midY);
                 break;
             default:
-                AppendRightZonePath(ctx, dividerX, rightBoxWidth, midY, Bounds.OuterHeight);
+                AppendRightZonePath(ctx, dividerX, rightBoxWidth, midY, faceH);
                 break;
         }
 
@@ -383,45 +436,19 @@ public sealed class ClaimHighlightListCell : GuiElementTextBase, IGuiElementCell
             return true;
         }
 
+        var faceH = Bounds.OuterHeight;
         // Правая колонка делится пополам по вертикали: лампочка и корзина.
-        region = posY < Bounds.OuterHeight / 2 ? HoverRegion.RightTop : HoverRegion.RightBottom;
+        region = posY < faceH / 2 ? HoverRegion.RightTop : HoverRegion.RightBottom;
         return true;
     }
 
-    /// <summary>
-    /// Пересчитывает <see cref="ElementBounds.fixedHeight"/> по высоте многострочного текста или фиксированному значению.
-    /// </summary>
+    /// <summary>Высота = FixedHeight (81). Зазор 8px — у CellList.unscaledCellSpacing.</summary>
     public void UpdateCellHeight()
     {
         Bounds.CalcWorldBounds();
-
-        if (FixedHeight != null)
-        {
-            Bounds.fixedHeight = FixedHeight.Value;
-            return;
-        }
-
-        // Перевод отступов и ширины текста в не масштабированные единицы для расчёта высоты шрифта.
-        var unscaledPadding = Bounds.absPaddingY / RuntimeEnv.GUIScale;
-        var boxWidth = Bounds.InnerWidth / RuntimeEnv.GUIScale - UnscaledRightBoxWidth;
-
-        Font = cellEntry.TitleFont;
-        text = cellEntry.Title;
-        titleTextHeight = textUtil.GetMultilineTextHeight(Font, cellEntry.Title, boxWidth) / RuntimeEnv.GUIScale;
-
-        Font = cellEntry.DetailTextFont;
-        text = cellEntry.DetailText;
-        var detailTextHeight = textUtil.GetMultilineTextHeight(Font, cellEntry.DetailText, boxWidth) / RuntimeEnv.GUIScale;
-
-        var topOffset = System.Math.Max(0, cellEntry.LeftOffY);
-        var detailOffset = System.Math.Max(0, cellEntry.DetailTextOffY);
-
-        // Должно совпадать с ComposeButton: верхний отступ + title + detail offset + detail + нижний отступ.
-        Bounds.fixedHeight = unscaledPadding + topOffset + titleTextHeight + detailOffset + detailTextHeight + unscaledPadding;
-        if (Bounds.fixedHeight < UnscaledMinRowHeight)
-        {
-            Bounds.fixedHeight = UnscaledMinRowHeight;
-        }
+        Bounds.fixedPaddingX = 0;
+        Bounds.fixedPaddingY = 0;
+        Bounds.fixedHeight = FixedHeight ?? RowTexH;
     }
 
     /// <summary>

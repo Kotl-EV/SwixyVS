@@ -92,7 +92,16 @@ namespace SwixyQuestBook.Gui
         /// Extra shift to the right so the editor sits over the graph (away from the left sidebar).
         /// </summary>
         public const double QuestEditModalOffsetX = 140;
-        public const double QuestEditModalPadding = 20;
+        /// <summary>
+        /// Left/right inset inside modal.png. Texture is 712px wide and stretched to
+        /// <see cref="QuestEditModalWidth"/>, so the frame is thicker than on smaller modals —
+        /// keep this larger than the branch/player modal pads.
+        /// </summary>
+        public const double QuestEditModalPadX = 56;
+        public const double QuestEditModalPadTop = 40;
+        public const double QuestEditModalPadBottom = 44;
+        /// <summary>Legacy alias — prefer <see cref="QuestEditModalPadX"/>.</summary>
+        public const double QuestEditModalPadding = QuestEditModalPadX;
         public const double QuestEditModalTypeBarHeight = 44;
         public const double QuestEditModalSectionGap = 10;
         public const double QuestEditModalListHeight = 160;
@@ -112,16 +121,23 @@ namespace SwixyQuestBook.Gui
         public const int QuestEditModalPickerColumns = 10;
         public const double QuestEditModalListScrollbarWidth = 8;
 
-        public const double AddBranchModalWidth = 420;
-        public const double AddBranchModalHeight = 400;
-        public const double AddBranchModalItemSlotSize = 36;
+        public const double AddBranchModalWidth = 440;
+        /// <summary>
+        /// Compact form: langs + name + icon preview slot (catalog opens as overlay).
+        /// </summary>
+        public const double AddBranchModalHeight = 420;
+        public const double AddBranchModalLangRowHeight = 28;
+        public const double AddBranchModalLangRowGap = 6;
+        public const double AddBranchModalItemSlotSize = 44;
         public const double AddBranchModalItemSlotGap = 4;
         public const int AddBranchModalItemColumns = 8;
-        public const double AddBranchModalItemGridHeight = 168;
+        public const double AddBranchModalItemGridHeight = 200;
+        public const double AddBranchModalSearchHeight = 28;
+        public const double AddBranchModalPickerHeight = 280;
         /// <summary>Legacy uniform padding (prefer side-specific insets below).</summary>
-        public const double AddBranchModalPadding = 36;
+        public const double AddBranchModalPadding = 40;
         /// <summary>Inset from the modal.png frame on each side (texture border is thick).</summary>
-        public const double AddBranchModalPadX = 36;
+        public const double AddBranchModalPadX = 40;
         public const double AddBranchModalPadTop = 48;
         public const double AddBranchModalPadBottom = 44;
         public const double AddBranchModalInputHeight = 36;
@@ -146,13 +162,21 @@ namespace SwixyQuestBook.Gui
         public const double GraphQuestToQuestSpan = GraphNodeSize + GraphQuestToQuestDistance;
         public const double GraphQuestToCheckpointSpan = GraphNodeSize + GraphQuestToCheckpointDistance;
 
-        // Модальное окно
+        // Модальное окно — coordinates from Questbook-open.svg (1920×1080 design).
+        // Panel origin on screen: (ModalPanelX, ModalPanelY) = (772, 256), size 712×630.
+        public const double ModalPanelX = 772;
+        public const double ModalPanelY = 256;
+        public const double ModalPanelWidth = 712;
+        public const double ModalPanelHeight = 630;
+        /// <summary>Left/right inset from panel frame to content (844 − 772).</summary>
+        public const double ModalPadX = 72;
         public const double ModalWidth = 560;
         public const double ModalHeight = 300;
-        public const double ModalPadding = 24;
+        public const double ModalPadding = ModalPadX;
         public const double ModalIconBoxSize = 72;
-        public const double ModalIconSize = 24;
-        public const double ModalButtonWidth = 567;
+        /// <summary>Item icon size inside goals/rewards boxes (design 64×64).</summary>
+        public const double ModalIconSize = 64;
+        public const double ModalButtonWidth = 568;
         public const double ModalStartButtonWidth = 568;
         public const double ModalButtonHeight = 74;
         public const double ModalQuestStatusX = 893;
@@ -163,6 +187,18 @@ namespace SwixyQuestBook.Gui
         public const double ModalTitleY = 365;
         public const double ModalTitleWidth = 470;
         public const double ModalTitleHeight = 39;
+        /// <summary>Goals / rewards column boxes (design).</summary>
+        public const double ModalGoalsBoxX = 844;
+        public const double ModalGoalsBoxY = 422;
+        public const double ModalGoalsBoxWidth = 272;
+        public const double ModalGoalsBoxHeight = 152;
+        public const double ModalRewardsBoxX = 1140;
+        public const double ModalRewardsBoxY = 421;
+        public const double ModalColumnGap = 24; // 1140 − 844 − 272
+        public const double ModalDescriptionBoxX = 844;
+        public const double ModalDescriptionBoxY = 598;
+        public const double ModalDescriptionBoxWidth = 568;
+        public const double ModalDescriptionBoxHeight = 104;
         public const double ModalStartInfoBoxX = 844;
         public const double ModalStartInfoBoxY = 422;
         public const double ModalStartInfoBoxWidth = 568;

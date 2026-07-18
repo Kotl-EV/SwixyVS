@@ -229,6 +229,9 @@ public static class ClaimAccessActionType
 
     /// <summary>Установить фильтр блоков для права Use.</summary>
     public const int SetUseFilter = 7;
+
+    /// <summary>Установить флаги привата (PvP, защита животных…).</summary>
+    public const int SetClaimFlags = 8;
 }
 
 /// <summary>
@@ -372,6 +375,10 @@ public class ClaimAccessActionPacket
     /// </summary>
     [ProtoMember(8)]
     public string UseFilterCodesRaw { get; set; } = "";
+
+    /// <summary>Битовая маска флагов привата; см. <see cref="ClaimFlagBits"/>.</summary>
+    [ProtoMember(9)]
+    public int ClaimFlags { get; set; }
 }
 
 /// <summary>
@@ -440,6 +447,10 @@ public class ClaimInfoPacket
     /// </summary>
     [ProtoMember(10)]
     public string UseFilterCodesRaw { get; set; } = "";
+
+    /// <summary>Битовая маска флагов привата; см. <see cref="ClaimFlagBits"/>.</summary>
+    [ProtoMember(11)]
+    public int ClaimFlags { get; set; }
 }
 
 /// <summary>Клиент запрашивает снимок фильтров Use (после join / reconnect).</summary>

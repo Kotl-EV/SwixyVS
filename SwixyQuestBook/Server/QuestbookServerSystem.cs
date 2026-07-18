@@ -1589,22 +1589,24 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            string title = request.Title?.Trim() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                SendAdminResponse(fromPlayer, false, "Branch title is required");
-                return;
-            }
-
-            if (title.Length > MaxCategoryTitleLength)
-            {
-                SendAdminResponse(fromPlayer, false, "Branch title is too long");
-                return;
-            }
-
             string lang = GetPlayerLanguageCode(fromPlayer);
+            if (!TryBuildCategoryTitleMaps(
+                    request.Title,
+                    request.TitleI18n,
+                    lang,
+                    existingTitle: null,
+                    existingHeader: null,
+                    out QuestbookLocalizedText titleMap,
+                    out QuestbookLocalizedText headerMap,
+                    out string primaryTitle,
+                    out string error))
+            {
+                SendAdminResponse(fromPlayer, false, error);
+                return;
+            }
+
             string headerKey = string.IsNullOrWhiteSpace(request.HeaderTitle)
-                ? title.ToUpperInvariant()
+                ? primaryTitle.ToUpperInvariant()
                 : request.HeaderTitle.Trim();
 
             if (headerKey.Length > MaxCategoryTitleLength)
@@ -1625,9 +1627,9 @@ namespace SwixyQuestBook.Server
             var newCategory = new QuestbookCategoryData
             {
                 IconItemCode = iconItemCode,
-                Title = new QuestbookLocalizedText(title, lang),
+                Title = titleMap,
                 HeaderTitle = headerKey,
-                Header = new QuestbookLocalizedText(title.ToUpperInvariant(), lang),
+                Header = headerMap,
                 Nodes =
                 [
                     new QuestbookQuestNodeData
@@ -1686,19 +1688,6 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            string title = request.Title?.Trim() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                SendAdminResponse(fromPlayer, false, "Branch title is required");
-                return;
-            }
-
-            if (title.Length > MaxCategoryTitleLength)
-            {
-                SendAdminResponse(fromPlayer, false, "Branch title is too long");
-                return;
-            }
-
             var existingCategory = questDatabase.Categories[categoryIndex];
             string lang = GetPlayerLanguageCode(fromPlayer);
 
@@ -1712,19 +1701,31 @@ namespace SwixyQuestBook.Server
                 return;
             }
 
-            // Keep stable HeaderTitle key; only update language-specific display strings.
-            var titleMap = existingCategory.Title?.Clone() ?? new QuestbookLocalizedText();
-            titleMap.Set(lang, title);
-            var headerMap = existingCategory.Header?.Clone() ?? new QuestbookLocalizedText();
-            string headerDisplay = string.IsNullOrWhiteSpace(request.HeaderTitle)
-                ? title.ToUpperInvariant()
-                : request.HeaderTitle.Trim();
-            if (headerDisplay.Length > MaxCategoryTitleLength)
+            // Keep stable HeaderTitle key; update multi-lang Title/Header maps.
+            if (!TryBuildCategoryTitleMaps(
+                    request.Title,
+                    request.TitleI18n,
+                    lang,
+                    existingCategory.Title,
+                    existingCategory.Header,
+                    out QuestbookLocalizedText titleMap,
+                    out QuestbookLocalizedText headerMap,
+                    out _,
+                    out string error))
             {
-                headerDisplay = headerDisplay[..MaxCategoryTitleLength];
+                SendAdminResponse(fromPlayer, false, error);
+                return;
             }
 
-            headerMap.Set(lang, headerDisplay);
+            // Optional single-lang header override for the player's language (legacy field).
+            if (!string.IsNullOrWhiteSpace(request.HeaderTitle)
+                && (request.TitleI18n == null || request.TitleI18n.Length == 0))
+            {
+                string headerDisplay = request.HeaderTitle.Trim();
+                if (headerDisplay.Length > MaxCategoryTitleLength)
+                    headerDisplay = headerDisplay[..MaxCategoryTitleLength];
+                headerMap.Set(lang, headerDisplay);
+            }
 
             questDatabase.Categories[categoryIndex] = new QuestbookCategoryData
             {
@@ -1742,8 +1743,8 @@ namespace SwixyQuestBook.Server
 
             SendAdminResponse(fromPlayer, true, "Category renamed", existingCategory.HeaderTitle);
             sapi?.Logger.Notification(
-                "[SwixyQuestBook] Admin {0} renamed category display for {1} (lang={2})",
-                fromPlayer.PlayerName, existingCategory.HeaderTitle, lang);
+                "[SwixyQuestBook] Admin {0} renamed category display for {1} (langs={2})",
+                fromPlayer.PlayerName, existingCategory.HeaderTitle, titleMap.Entries.Count);
         }
 
         private void OnAdminDeleteCategory(IServerPlayer fromPlayer, QuestbookAdminDeleteCategoryRequest request)
@@ -2408,6 +2409,91 @@ namespace SwixyQuestBook.Server
 
         private bool IsValidIconItemCode(string iconItemCode) =>
             collectibleSanitizer?.IsValidIconItemCode(iconItemCode) == true;
+
+        /// <summary>
+        /// Builds multi-lang Title + Header maps for a branch.
+        /// When <paramref name="titleI18n"/> is non-empty, it is the source of truth (merged onto existing).
+        /// Otherwise falls back to a single <paramref name="primaryTitle"/> for the player language.
+        /// Header entries are uppercased titles per language.
+        /// </summary>
+        private bool TryBuildCategoryTitleMaps(
+            string? primaryTitle,
+            QuestbookLangTextPacket[]? titleI18n,
+            string playerLang,
+            QuestbookLocalizedText? existingTitle,
+            QuestbookLocalizedText? existingHeader,
+            out QuestbookLocalizedText titleMap,
+            out QuestbookLocalizedText headerMap,
+            out string resolvedPrimary,
+            out string error)
+        {
+            titleMap = existingTitle?.Clone() ?? new QuestbookLocalizedText();
+            headerMap = existingHeader?.Clone() ?? new QuestbookLocalizedText();
+            resolvedPrimary = string.Empty;
+            error = string.Empty;
+
+            bool hasI18n = titleI18n is { Length: > 0 };
+            if (hasI18n)
+            {
+                // Replace with submitted map when full i18n is provided (admin UI).
+                // Empty langs are removed so stale text can be cleared.
+                var submitted = new QuestbookLocalizedText();
+                foreach (QuestbookLangTextPacket entry in titleI18n!)
+                {
+                    if (entry == null || string.IsNullOrWhiteSpace(entry.Lang))
+                        continue;
+                    string lang = QuestbookLocalizedText.NormalizeLang(entry.Lang);
+                    string text = entry.Text?.Trim() ?? string.Empty;
+                    if (text.Length > MaxCategoryTitleLength)
+                    {
+                        error = "Branch title is too long";
+                        return false;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(text))
+                        continue;
+                    submitted.Set(lang, text);
+                }
+
+                if (submitted.IsEmpty)
+                {
+                    error = "Branch title is required";
+                    return false;
+                }
+
+                titleMap = submitted;
+                headerMap = new QuestbookLocalizedText();
+                foreach ((string lang, string text) in titleMap.Entries)
+                    headerMap.Set(lang, text.ToUpperInvariant());
+            }
+            else
+            {
+                string title = primaryTitle?.Trim() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(title))
+                {
+                    error = "Branch title is required";
+                    return false;
+                }
+
+                if (title.Length > MaxCategoryTitleLength)
+                {
+                    error = "Branch title is too long";
+                    return false;
+                }
+
+                titleMap.Set(playerLang, title);
+                headerMap.Set(playerLang, title.ToUpperInvariant());
+            }
+
+            resolvedPrimary = titleMap.Resolve(playerLang);
+            if (string.IsNullOrWhiteSpace(resolvedPrimary))
+            {
+                error = "Branch title is required";
+                return false;
+            }
+
+            return true;
+        }
 
         #endregion
     }

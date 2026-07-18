@@ -49,6 +49,7 @@ public sealed partial class SwixyClaimChunkServerMod
                 serverApi.World.Claims.Remove(claim);
                 ClearCoOwners(claim);
                 ClearUseFilter(claim);
+                ClearClaimFlags(claim);
                 return ClaimActionResult.Success("swixyclaimchunk:claims-message-deleted");
             case ClaimAccessActionType.UpdateMemberAccess:
                 return TryUpdateClaimMemberAccess(claim, packet.PlayerName, packet.PlayerUid, (EnumBlockAccessFlags)packet.AccessFlags);
@@ -71,6 +72,8 @@ public sealed partial class SwixyClaimChunkServerMod
                     codes.Count);
                 return TrySetUseFilter(claim, packet.UseFilterMode, codes);
             }
+            case ClaimAccessActionType.SetClaimFlags:
+                return TrySetClaimFlags(claim, packet.ClaimFlags);
             default:
                 return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }
@@ -179,6 +182,8 @@ public sealed partial class SwixyClaimChunkServerMod
         var oldName = (claim.Description ?? "").Trim();
         claim.Description = claimName;
         MigrateUseFilterAfterRename(claim, oldName);
+        // Name-key for flags follows claim description.
+        RebindClaimFlagsKeys(claim);
         TouchClaim(claim);
         return ClaimActionResult.Success("swixyclaimchunk:claims-message-renamed");
     }

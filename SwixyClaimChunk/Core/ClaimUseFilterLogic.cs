@@ -126,9 +126,26 @@ public static class ClaimUseFilterLogic
             && flags.HasFlag(EnumBlockAccessFlags.BuildOrBreak);
     }
 
+    /// <summary>Есть ли у игрока право Use в этом привате (участник с Use).</summary>
+    public static bool HasUseAccess(LandClaim? claim, string? playerUid)
+    {
+        if (claim?.PermittedPlayerUids == null || string.IsNullOrWhiteSpace(playerUid))
+        {
+            return false;
+        }
+
+        return claim.PermittedPlayerUids.TryGetValue(playerUid, out var flags)
+            && flags.HasFlag(EnumBlockAccessFlags.Use);
+    }
+
     /// <summary>
-    /// Сужает уже разрешённый ванилью Use: whitelist для всех без Build.
-    /// <paramref name="isPrivileged"/> — owner/co-owner (обход фильтра).
+    /// Whitelist Use — <b>дополнительный публичный доступ</b>, не ограничение участников:
+    /// <list type="bullet">
+    /// <item>у игрока есть Use/Build/owner — ванильные права: Use <b>всех</b> блоков;</item>
+    /// <item>блок в whitelist — Use разрешён <b>любому</b> (даже без прав в привате);</item>
+    /// <item>нет whitelist — ничего не меняем.</item>
+    /// </list>
+    /// <paramref name="isPrivileged"/> — owner/co-owner.
     /// </summary>
     public static EnumWorldAccessResponse ApplyUseBlockFilter(
         IWorldAccessor? world,
@@ -149,11 +166,7 @@ public static class ClaimUseFilterLogic
                 return response;
             }
 
-            if (response != EnumWorldAccessResponse.Granted)
-            {
-                return response;
-            }
-
+            // Only Use — Build/Break stay pure vanilla claim rules.
             if (accessType != EnumBlockAccessFlags.Use)
             {
                 return response;
@@ -196,6 +209,10 @@ public static class ClaimUseFilterLogic
                 codesToTest.Add(resolved.AltBlockCode);
             }
 
+            // Only upgrades Denied → Granted for public whitelist blocks.
+            // Never strips Use from claim members.
+            var result = response;
+
             foreach (var activeClaim in claims)
             {
                 if (activeClaim == null)
@@ -203,6 +220,7 @@ public static class ClaimUseFilterLogic
                     continue;
                 }
 
+                // Owner / co-owner / Build / Use — full interaction with all blocks.
                 if (isPrivileged != null && isPrivileged(activeClaim, playerUid))
                 {
                     continue;
@@ -213,7 +231,7 @@ public static class ClaimUseFilterLogic
                     continue;
                 }
 
-                if (HasBuildAccess(activeClaim, playerUid))
+                if (HasBuildAccess(activeClaim, playerUid) || HasUseAccess(activeClaim, playerUid))
                 {
                     continue;
                 }
@@ -224,24 +242,18 @@ public static class ClaimUseFilterLogic
                     continue;
                 }
 
-                var allowed = false;
+                // Stranger: only public whitelist blocks.
                 foreach (var code in codesToTest)
                 {
                     if (ClaimCodeUtil.IsBlockCodeAllowedByUseFilter(code, rule.Codes))
                     {
-                        allowed = true;
+                        result = EnumWorldAccessResponse.Granted;
                         break;
                     }
                 }
-
-                if (!allowed)
-                {
-                    claimant = Lang.Get("swixyclaimchunk:use-filter-denied");
-                    return EnumWorldAccessResponse.DeniedByMod;
-                }
             }
 
-            return response;
+            return result;
         }
         catch (Exception exception)
         {

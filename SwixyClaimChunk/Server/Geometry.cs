@@ -83,6 +83,7 @@ public sealed partial class SwixyClaimChunkServerMod
             serverApi!.World.Claims.Remove(claim);
             ClearCoOwners(claim);
             ClearUseFilter(claim);
+            ClearClaimFlags(claim);
         }
         else
         {
@@ -388,6 +389,7 @@ public sealed partial class SwixyClaimChunkServerMod
 
         // Coord-ключ фильтра зависит от minXYZ areas — перепривязываем после expand/merge.
         RebindUseFilterKeys(claim);
+        RebindClaimFlagsKeys(claim);
     }
 
     /// <summary>Все LandClaim, принадлежащие игроку по UID.</summary>

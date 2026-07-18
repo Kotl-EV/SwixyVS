@@ -1,5 +1,6 @@
 ﻿using SwixyQuestBook.Gui;
 using SwixyQuestBook.Network;
+using SwixyQuestBook.Util.Fonts;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 
@@ -19,6 +20,9 @@ namespace SwixyQuestBook.Client
         {
             base.StartClientSide(api);
             capi = api;
+
+            // Make assets/…/fonts/Montserrat-*.ttf visible to Cairo before any dialog draws.
+            QuestbookFontHelper.EnsureRegistered(api, Mod);
 
             dataManager = new QuestbookClientDataManager(api);
             dialog = new QuestbookDialog(api, dataManager);

@@ -75,6 +75,27 @@ public sealed class UseFilterRuleData
     public List<string> Codes { get; set; } = [];
 }
 
+/// <summary>
+/// Флаги привата (битовая маска).
+/// Default 0: PvP выключен (безопасно), животные не защищены, пока игрок не включит.
+/// </summary>
+public static class ClaimFlagBits
+{
+    /// <summary>Разрешить PvP в привате. Если бит сброшен — урон игрок→игрок блокируется.</summary>
+    public const int AllowPvp = 1 << 0;
+
+    /// <summary>Защищать животных: чужие не могут наносить им урон в привате.</summary>
+    public const int ProtectAnimals = 1 << 1;
+}
+
+/// <summary>Флаги приватов в SaveGame: ключ → bitmask string.</summary>
+[ProtoContract]
+public sealed class ClaimFlagsSaveData
+{
+    [ProtoMember(1)]
+    public Dictionary<string, int> Entries { get; set; } = [];
+}
+
 /// <summary>Фоновый скан блоков привата для UI фильтра Use.</summary>
 public sealed class UseFilterScanJob
 {

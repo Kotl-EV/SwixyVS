@@ -17,6 +17,9 @@ public sealed partial class SwixyClaimChunkClientMod
 
         api.Logger.Notification("Swixy Claim Chunk client side starting.");
 
+        // Montserrat (same as Questbook) before any claim dialog draws.
+        ClaimFontHelper.EnsureRegistered(api, Mod);
+
         clientApi = api;
         clientChannel = ClaimPacketChannel.Register(api.Network.RegisterChannel(ClaimConstants.ChannelName))
             .SetMessageHandler<ClaimMapStatePacket>(OnMapStatePacket)

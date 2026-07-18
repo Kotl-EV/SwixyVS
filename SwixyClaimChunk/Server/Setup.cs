@@ -11,6 +11,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
+// EntityBehaviorClaimProtect is in SwixyClaimChunk namespace (ClaimFlags.cs).
 
 namespace SwixyClaimChunk;
 
@@ -39,12 +40,21 @@ public sealed partial class SwixyClaimChunkServerMod
 
         api.Event.SaveGameLoaded += OnCoOwnersSaveGameLoaded;
         api.Event.SaveGameLoaded += OnUseFiltersSaveGameLoaded;
+        api.Event.SaveGameLoaded += OnClaimFlagsSaveGameLoaded;
         api.Event.GameWorldSave += OnCoOwnersSaveGameSaving;
         api.Event.GameWorldSave += OnUseFiltersSaveGameSaving;
+        api.Event.GameWorldSave += OnClaimFlagsSaveGameSaving;
         api.Event.OnTestBlockAccess += OnServerTestBlockAccess;
         api.Event.OnTestBlockAccessClaim += OnServerTestBlockAccessClaim;
         // После полной загрузки клиента — иначе пакет фильтра может потеряться.
         api.Event.PlayerNowPlaying += OnPlayerJoinSendUseFilters;
+
+        // PvP / animal protection via entity behavior.
+        api.RegisterEntityBehaviorClass(
+            ClaimConstants.ClaimProtectBehaviorCode,
+            typeof(EntityBehaviorClaimProtect));
+        api.Event.OnEntitySpawn += AttachClaimProtectBehavior;
+        api.Event.OnEntityLoaded += AttachClaimProtectBehavior;
 
         serverPlayerChatHandler = (IServerPlayer byPlayer, int channelId, ref string message, ref string data, BoolRef consumed) =>
         {

@@ -728,6 +728,7 @@ public static class SourceSideAnalyzer
         if (n.StartsWith("Util/Audio/", StringComparison.OrdinalIgnoreCase)
             || n.StartsWith("Util/Localization/", StringComparison.OrdinalIgnoreCase)
             || n.StartsWith("Util/Textures/", StringComparison.OrdinalIgnoreCase)
+            || n.StartsWith("Util/Fonts/", StringComparison.OrdinalIgnoreCase)
             || n.Equals("Util/Items/QuestbookItemDisplayHelper.cs", StringComparison.OrdinalIgnoreCase)
             || n.Equals("Util/Items/QuestbookItemIconHelper.cs", StringComparison.OrdinalIgnoreCase))
             return SourceSide.Client;
@@ -868,6 +869,7 @@ public sealed class ProjectRefSet
             RootNamespace = "SwixyClaimChunk",
             VSEssentials = true,
             AlwaysCairo = true, // Content GUI pulled into both sides
+            SkiaSharp = true,   // ClaimMapDialog BitmapCreateFromPng / alpha repair
         },
         "SwixySkyBlock" => new ProjectRefSet
         {

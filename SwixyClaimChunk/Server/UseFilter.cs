@@ -250,7 +250,9 @@ public sealed partial class SwixyClaimChunkServerMod
         EnumWorldAccessResponse response)
         => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, claim, response);
 
-    /// <summary>������ ��� ����������� ������� Use: whitelist ��� ���� ��� Build.</summary>
+    /// <summary>
+    /// Whitelist Use: участники с Use — все блоки; выбранные — публично для любого.
+    /// </summary>
     private EnumWorldAccessResponse ApplyUseBlockFilter(
         IPlayer player,
         BlockSelection? blockSel,

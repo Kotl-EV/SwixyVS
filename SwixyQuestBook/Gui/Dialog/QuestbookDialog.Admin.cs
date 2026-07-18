@@ -36,21 +36,46 @@ namespace SwixyQuestBook.Gui
             isBranchModalPrimaryHovered = false;
             isBranchModalCancelHovered = false;
             isBranchModalTitleFocused = mode != BranchModalMode.DeleteConfirm;
+            branchModalIconSearchFocused = false;
+            branchModalIconSearchText = string.Empty;
+            branchModalIconScrollOffset = 0;
+            isBranchModalItemPickerOpen = false;
+            branchModalIconPreviewHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalIconSearchHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalIconViewportLocal = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPickerPanelLocal = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalItemPickerSlots = [];
+            branchModalLangCodes = [];
+            branchModalLangButtonHitAreas = [];
+            branchModalEditorLang = QuestbookLocalizedText.NormalizeLang(Lang.CurrentLocale);
+            branchModalTitleByLang.Clear();
             if (isBranchModalTitleFocused)
                 ResetTextCaretBlink();
             branchModalTargetHeaderTitle = categories.Length > 0 ? GetSelectedCategory().HeaderTitle : string.Empty;
 
-            branchModalTitleText = mode switch
+            if (mode == BranchModalMode.Rename && categories.Length > 0)
             {
-                BranchModalMode.Rename => GetEditableCategoryTitle(GetSelectedCategory()),
-                _ => string.Empty
-            };
+                QuestbookCategoryDefinition category = GetSelectedCategory();
+                // Need full TitleByLang for multi-language editing.
+                dataManager.EnsureCategoryContentLoaded(category.HeaderTitle, includeI18n: true);
+                category = GetSelectedCategory();
+                foreach ((string lang, string text) in category.TitleByLang)
+                {
+                    if (!string.IsNullOrWhiteSpace(lang) && !string.IsNullOrWhiteSpace(text))
+                        branchModalTitleByLang[QuestbookLocalizedText.NormalizeLang(lang)] = text;
+                }
 
-            branchModalSelectedIconItemCode = mode switch
+                branchModalTitleText = branchModalTitleByLang.TryGetValue(branchModalEditorLang, out string? forLang)
+                    ? forLang
+                    : GetEditableCategoryTitle(category);
+                branchModalSelectedIconItemCode = category.IconItemCode ?? string.Empty;
+            }
+            else
             {
-                BranchModalMode.Rename when categories.Length > 0 => GetSelectedCategory().IconItemCode ?? string.Empty,
-                _ => string.Empty
-            };
+                branchModalTitleText = string.Empty;
+                branchModalSelectedIconItemCode = string.Empty;
+            }
         }
 
         private void OpenQuestEditModal()
@@ -126,6 +151,10 @@ namespace SwixyQuestBook.Gui
             branchModalMode = BranchModalMode.None;
             isBranchModalOpen = false;
             isBranchModalTitleFocused = false;
+            branchModalIconSearchFocused = false;
+            branchModalIconSearchText = string.Empty;
+            branchModalIconScrollOffset = 0;
+            isBranchModalItemPickerOpen = false;
             branchModalTitleText = string.Empty;
             branchModalTargetHeaderTitle = string.Empty;
             isBranchModalPrimaryHovered = false;
@@ -135,14 +164,102 @@ namespace SwixyQuestBook.Gui
             branchModalTitleInputHitArea = new LayoutRect(0, 0, 0, 0);
             branchModalPrimaryButtonHitArea = new LayoutRect(0, 0, 0, 0);
             branchModalCancelButtonHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPreviewHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalIconSearchHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalIconViewportLocal = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPickerPanelLocal = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
             branchModalSelectedIconItemCode = string.Empty;
             branchModalItemPickerSlots = [];
+            branchModalTitleByLang.Clear();
+            branchModalLangCodes = [];
+            branchModalLangButtonHitAreas = [];
+            branchModalEditorLang = "en";
+        }
+
+        private void OpenBranchModalItemPicker()
+        {
+            isBranchModalItemPickerOpen = true;
+            isBranchModalTitleFocused = false;
+            branchModalIconSearchFocused = true;
+            branchModalIconSearchText = string.Empty;
+            branchModalIconScrollOffset = 0;
+            branchModalItemPickerSlots = [];
+            ResetTextCaretBlink();
+        }
+
+        private void CloseBranchModalItemPicker()
+        {
+            isBranchModalItemPickerOpen = false;
+            branchModalIconSearchFocused = false;
+            branchModalIconSearchText = string.Empty;
+            branchModalIconScrollOffset = 0;
+            branchModalItemPickerSlots = [];
+            branchModalIconSearchHitArea = new LayoutRect(0, 0, 0, 0);
+            branchModalIconViewportLocal = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPickerPanelLocal = new LayoutRect(0, 0, 0, 0);
+            branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
         }
 
         private string GetEditableCategoryTitle(QuestbookCategoryDefinition category)
         {
             // Already language-resolved by the server.
             return category.Title;
+        }
+
+        private void FlushBranchModalTitleToLangMap()
+        {
+            string lang = QuestbookLocalizedText.NormalizeLang(branchModalEditorLang);
+            string text = branchModalTitleText?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(text))
+                branchModalTitleByLang.Remove(lang);
+            else
+                branchModalTitleByLang[lang] = text;
+        }
+
+        private void SwitchBranchModalLanguage(string lang)
+        {
+            string next = QuestbookLocalizedText.NormalizeLang(lang);
+            if (string.Equals(next, branchModalEditorLang, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            FlushBranchModalTitleToLangMap();
+            branchModalEditorLang = next;
+            branchModalTitleText = branchModalTitleByLang.TryGetValue(next, out string? text)
+                ? text
+                : string.Empty;
+            isBranchModalTitleFocused = true;
+            branchModalIconSearchFocused = false;
+            ResetTextCaretBlink();
+        }
+
+        private QuestbookLangTextPacket[] BuildBranchTitleI18nPackets()
+        {
+            FlushBranchModalTitleToLangMap();
+            return branchModalTitleByLang
+                .Where(static kv => !string.IsNullOrWhiteSpace(kv.Key) && !string.IsNullOrWhiteSpace(kv.Value))
+                .Select(static kv => new QuestbookLangTextPacket
+                {
+                    Lang = QuestbookLocalizedText.NormalizeLang(kv.Key),
+                    Text = kv.Value.Trim()
+                })
+                .OrderBy(static p => p.Lang, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
+        private string GetPrimaryBranchTitleFromMap()
+        {
+            FlushBranchModalTitleToLangMap();
+            string lang = QuestbookLocalizedText.NormalizeLang(branchModalEditorLang);
+            if (branchModalTitleByLang.TryGetValue(lang, out string? current) && !string.IsNullOrWhiteSpace(current))
+                return current.Trim();
+            foreach (string value in branchModalTitleByLang.Values)
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                    return value.Trim();
+            }
+
+            return branchModalTitleText.Trim();
         }
 
         private void SubmitBranchModal()
@@ -163,10 +280,11 @@ namespace SwixyQuestBook.Gui
 
         private void SubmitAddBranchModal()
         {
-            string title = branchModalTitleText.Trim();
+            string title = GetPrimaryBranchTitleFromMap();
             if (string.IsNullOrWhiteSpace(title))
                 return;
 
+            QuestbookLangTextPacket[] titleI18n = BuildBranchTitleI18nPackets();
             pendingOpenAdminEditor = true;
             adminData.EditorSection = AdminEditorSection.Quests;
             MarkBranchMetadataDirty();
@@ -174,31 +292,31 @@ namespace SwixyQuestBook.Gui
             {
                 Title = title,
                 HeaderTitle = title.ToUpperInvariant(),
-                IconItemCode = branchModalSelectedIconItemCode
+                IconItemCode = branchModalSelectedIconItemCode,
+                TitleI18n = titleI18n
             });
             CloseBranchModal();
         }
 
         private void SubmitRenameBranchModal()
         {
-            string title = branchModalTitleText.Trim();
-            if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(branchModalTargetHeaderTitle))
+            if (string.IsNullOrWhiteSpace(branchModalTargetHeaderTitle))
                 return;
 
-            QuestbookCategoryDefinition category = GetSelectedCategory();
-            bool titleUnchanged = string.Equals(
-                title,
-                GetEditableCategoryTitle(category),
-                StringComparison.Ordinal);
+            string title = GetPrimaryBranchTitleFromMap();
+            if (string.IsNullOrWhiteSpace(title))
+                return;
 
+            QuestbookLangTextPacket[] titleI18n = BuildBranchTitleI18nPackets();
             pendingOpenAdminEditor = false;
             MarkBranchMetadataDirty();
             QuestbookClientSystem.SendAdminRenameCategory(new QuestbookAdminRenameCategoryRequest
             {
                 CategoryHeaderTitle = branchModalTargetHeaderTitle,
-                Title = titleUnchanged ? category.Title : title,
-                HeaderTitle = titleUnchanged ? category.HeaderTitle : title.ToUpperInvariant(),
-                IconItemCode = branchModalSelectedIconItemCode
+                Title = title,
+                HeaderTitle = title.ToUpperInvariant(),
+                IconItemCode = branchModalSelectedIconItemCode,
+                TitleI18n = titleI18n
             });
             CloseBranchModal();
         }
@@ -222,6 +340,62 @@ namespace SwixyQuestBook.Gui
             if (!isBranchModalOpen)
                 return false;
 
+            // Item catalog overlay (opened by clicking the preview icon slot).
+            if (isBranchModalItemPickerOpen)
+            {
+                if (branchModalIconPickerCancelHitArea.Contains(mouseX, mouseY)
+                    || ToScreenRect(branchModalIconPickerCancelHitArea).Contains(mouseX, mouseY))
+                {
+                    CloseBranchModalItemPicker();
+                    ComposeDialog();
+                    return true;
+                }
+
+                if (branchModalIconSearchHitArea.Contains(mouseX, mouseY)
+                    || ToScreenRect(branchModalIconSearchHitArea).Contains(mouseX, mouseY))
+                {
+                    branchModalIconSearchFocused = true;
+                    isBranchModalTitleFocused = false;
+                    ResetTextCaretBlink();
+                    RequestContentRefresh();
+                    return true;
+                }
+
+                foreach ((ItemSlot slot, LayoutRect hitArea, string collectibleCode) in branchModalItemPickerSlots)
+                {
+                    LayoutRect screenHit = ToScreenRect(hitArea);
+                    LayoutRect viewportScreen = branchModalIconViewportLocal.Width > 0
+                        ? ToScreenRect(branchModalIconViewportLocal)
+                        : screenHit;
+                    LayoutRect visible = screenHit.Intersect(viewportScreen);
+                    if (visible.IsEmpty || !visible.Contains(mouseX, mouseY) || slot.Itemstack == null)
+                        continue;
+
+                    branchModalSelectedIconItemCode = collectibleCode;
+                    CloseBranchModalItemPicker();
+                    ComposeDialog();
+                    return true;
+                }
+
+                bool inPickerPanel = branchModalIconPickerPanelLocal.Contains(mouseX, mouseY)
+                    || ToScreenRect(branchModalIconPickerPanelLocal).Contains(mouseX, mouseY);
+                if (inPickerPanel)
+                {
+                    if (branchModalIconSearchFocused)
+                    {
+                        branchModalIconSearchFocused = false;
+                        RequestContentRefresh();
+                    }
+
+                    return true;
+                }
+
+                // Click outside catalog panel: close catalog, keep branch modal.
+                CloseBranchModalItemPicker();
+                ComposeDialog();
+                return true;
+            }
+
             if (branchModalCancelButtonHitArea.Contains(mouseX, mouseY))
             {
                 CloseBranchModal();
@@ -236,21 +410,28 @@ namespace SwixyQuestBook.Gui
                 return true;
             }
 
+            for (int i = 0; i < branchModalLangButtonHitAreas.Length && i < branchModalLangCodes.Length; i++)
+            {
+                if (!branchModalLangButtonHitAreas[i].Contains(mouseX, mouseY))
+                    continue;
+
+                SwitchBranchModalLanguage(branchModalLangCodes[i]);
+                ComposeDialog();
+                return true;
+            }
+
             if (branchModalTitleInputHitArea.Contains(mouseX, mouseY))
             {
                 isBranchModalTitleFocused = true;
+                branchModalIconSearchFocused = false;
                 ResetTextCaretBlink();
                 RequestContentRefresh();
                 return true;
             }
 
-            foreach ((ItemSlot slot, LayoutRect hitArea, string collectibleCode) in branchModalItemPickerSlots)
+            if (branchModalIconPreviewHitArea.Contains(mouseX, mouseY))
             {
-                if (!ToScreenRect(hitArea).Contains(mouseX, mouseY) || slot.Itemstack == null)
-                    continue;
-
-                isBranchModalTitleFocused = false;
-                branchModalSelectedIconItemCode = collectibleCode;
+                OpenBranchModalItemPicker();
                 ComposeDialog();
                 return true;
             }
@@ -262,13 +443,40 @@ namespace SwixyQuestBook.Gui
                 return true;
             }
 
-            // Click elsewhere inside the modal unfocuses the name field.
-            if (isBranchModalTitleFocused)
+            if (isBranchModalTitleFocused || branchModalIconSearchFocused)
             {
                 isBranchModalTitleFocused = false;
+                branchModalIconSearchFocused = false;
                 RequestContentRefresh();
             }
 
+            return true;
+        }
+
+        private bool TryHandleBranchModalMouseWheel(MouseWheelEventArgs args)
+        {
+            if (!isBranchModalOpen || !isBranchModalItemPickerOpen)
+                return false;
+            if (branchModalIconViewportLocal.Width <= 0)
+                return false;
+
+            int mouseX = capi.Input.MouseX;
+            int mouseY = capi.Input.MouseY;
+            if (!ToScreenRect(branchModalIconViewportLocal).Contains(mouseX, mouseY)
+                && !branchModalIconViewportLocal.Contains(mouseX, mouseY)
+                && !ToScreenRect(branchModalIconPickerPanelLocal).Contains(mouseX, mouseY))
+            {
+                return false;
+            }
+
+            float wheelDelta = args.deltaPrecise != 0 ? args.deltaPrecise : args.delta;
+            if (wheelDelta == 0)
+                return false;
+
+            double step = QuestbookGuiLayout.AddBranchModalItemSlotSize * currentFitScale * 0.9;
+            double direction = wheelDelta > 0 ? -1 : 1;
+            branchModalIconScrollOffset = System.Math.Max(0, branchModalIconScrollOffset + (direction * step));
+            RequestContentRefresh();
             return true;
         }
 
@@ -290,7 +498,10 @@ namespace SwixyQuestBook.Gui
 
             if (key == GlKeys.Escape)
             {
-                CloseBranchModal();
+                if (isBranchModalItemPickerOpen)
+                    CloseBranchModalItemPicker();
+                else
+                    CloseBranchModal();
                 ComposeDialog();
                 args.Handled = true;
                 return true;
@@ -298,6 +509,7 @@ namespace SwixyQuestBook.Gui
 
             if (key == GlKeys.Enter || key == GlKeys.KeypadEnter)
             {
+                // Enter in search just confirms selection path via Create/Save.
                 SubmitBranchModal();
                 ComposeDialog();
                 args.Handled = true;
@@ -310,7 +522,8 @@ namespace SwixyQuestBook.Gui
                 return true;
             }
 
-            if (isBranchModalTitleFocused && TryApplyBranchModalTextKey(args))
+            if ((isBranchModalTitleFocused || branchModalIconSearchFocused)
+                && TryApplyBranchModalTextKey(args))
             {
                 args.Handled = true;
                 return true;
@@ -325,7 +538,7 @@ namespace SwixyQuestBook.Gui
             if (!isBranchModalOpen || branchModalMode == BranchModalMode.DeleteConfirm)
                 return false;
 
-            if (!isBranchModalTitleFocused)
+            if (!isBranchModalTitleFocused && !branchModalIconSearchFocused)
                 return true;
 
             if (TryApplyBranchModalTextKey(args))
@@ -340,11 +553,21 @@ namespace SwixyQuestBook.Gui
         private bool TryApplyBranchModalTextKey(KeyEvent args)
         {
             GlKeys key = (GlKeys)args.KeyCode;
+            bool editingSearch = branchModalIconSearchFocused && !isBranchModalTitleFocused;
 
             if (key == GlKeys.Back)
             {
-                if (branchModalTitleText.Length > 0)
+                if (editingSearch)
+                {
+                    if (branchModalIconSearchText.Length > 0)
+                        branchModalIconSearchText = branchModalIconSearchText[..^1];
+                    branchModalIconScrollOffset = 0;
+                }
+                else if (branchModalTitleText.Length > 0)
+                {
                     branchModalTitleText = branchModalTitleText[..^1];
+                }
+
                 ResetTextCaretBlink();
                 RequestContentRefresh();
                 return true;
@@ -355,7 +578,16 @@ namespace SwixyQuestBook.Gui
                 string clipboard = capi.Input.ClipboardText?.Trim() ?? string.Empty;
                 if (!string.IsNullOrEmpty(clipboard))
                 {
-                    branchModalTitleText = TruncateBranchTitle(clipboard);
+                    if (editingSearch)
+                    {
+                        branchModalIconSearchText = clipboard.Length <= 64 ? clipboard : clipboard[..64];
+                        branchModalIconScrollOffset = 0;
+                    }
+                    else
+                    {
+                        branchModalTitleText = TruncateBranchTitle(clipboard);
+                    }
+
                     ResetTextCaretBlink();
                     RequestContentRefresh();
                     return true;
@@ -364,8 +596,17 @@ namespace SwixyQuestBook.Gui
 
             if (args.KeyChar != '\0' && args.KeyChar != '\t' && args.KeyChar != '\n' && args.KeyChar != '\r')
             {
-                if (branchModalTitleText.Length < 80)
+                if (editingSearch)
+                {
+                    if (branchModalIconSearchText.Length < 64)
+                        branchModalIconSearchText += args.KeyChar;
+                    branchModalIconScrollOffset = 0;
+                }
+                else if (branchModalTitleText.Length < 80)
+                {
                     branchModalTitleText += args.KeyChar;
+                }
+
                 ResetTextCaretBlink();
                 RequestContentRefresh();
                 return true;
@@ -389,8 +630,20 @@ namespace SwixyQuestBook.Gui
 
             double modalWidth = QuestbookGuiLayout.AddBranchModalWidth * fitScale;
             double modalHeight = QuestbookGuiLayout.AddBranchModalHeight * fitScale;
-            double modalX = ((QuestbookGuiLayout.BackgroundWidth * fitScale) - modalWidth) / 2;
-            double modalY = (((QuestbookGuiLayout.BackgroundOffsetY + QuestbookGuiLayout.BackgroundHeight) * fitScale) - modalHeight) / 2;
+            // Center over the right graph area (not the full book, which includes the left sidebar).
+            double rightX = QuestbookGuiLayout.GraphViewportX * fitScale;
+            double rightY = QuestbookGuiLayout.GraphViewportY * fitScale;
+            double rightW = QuestbookGuiLayout.GraphViewportWidth * fitScale;
+            double rightH = QuestbookGuiLayout.GraphViewportHeight * fitScale;
+            double modalX = rightX + ((rightW - modalWidth) / 2);
+            double modalY = rightY + ((rightH - modalHeight) / 2);
+            // Keep fully inside the book frame if graph rect is tight.
+            double bookLeft = 0;
+            double bookTop = QuestbookGuiLayout.BackgroundOffsetY * fitScale;
+            double bookRight = QuestbookGuiLayout.BackgroundWidth * fitScale;
+            double bookBottom = (QuestbookGuiLayout.BackgroundOffsetY + QuestbookGuiLayout.BackgroundHeight) * fitScale;
+            modalX = System.Math.Clamp(modalX, bookLeft + (8 * fitScale), System.Math.Max(bookLeft, bookRight - modalWidth - (8 * fitScale)));
+            modalY = System.Math.Clamp(modalY, bookTop + (8 * fitScale), System.Math.Max(bookTop, bookBottom - modalHeight - (8 * fitScale)));
             branchModalPanelHitArea = new LayoutRect(modalX, modalY, modalWidth, modalHeight).Offset(screenX, screenY);
 
             ImageSurface? modalSurface = GetTextureSurface("modal.png");
@@ -420,7 +673,15 @@ namespace SwixyQuestBook.Gui
             if (branchModalMode == BranchModalMode.DeleteConfirm)
             {
                 branchModalTitleInputHitArea = new LayoutRect(0, 0, 0, 0);
+                branchModalIconPreviewHitArea = new LayoutRect(0, 0, 0, 0);
+                branchModalIconSearchHitArea = new LayoutRect(0, 0, 0, 0);
+                branchModalIconViewportLocal = new LayoutRect(0, 0, 0, 0);
+                branchModalIconPickerPanelLocal = new LayoutRect(0, 0, 0, 0);
+                branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
+                branchModalLangCodes = [];
+                branchModalLangButtonHitAreas = [];
                 branchModalItemPickerSlots = [];
+                isBranchModalItemPickerOpen = false;
                 CairoFont messageFont = CreateMontserratFont(13 * fitScale, QuestbookGuiLayout.AdminPanelTextColor);
                 string branchName = GetEditableCategoryTitle(GetSelectedCategory());
                 string message = QuestbookLang.GetLocal("admin.delete_branch.confirm", branchName);
@@ -429,8 +690,15 @@ namespace SwixyQuestBook.Gui
             else
             {
                 CairoFont labelFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminTitleColor);
-                DrawText(ctx, labelFont, QuestbookLang.GetLocal("admin.add_branch.name_label"), contentX, currentY);
+                string nameLabel = QuestbookLang.GetLocal("admin.add_branch.name_label")
+                    + $" [{branchModalEditorLang.ToUpperInvariant()}]";
+                DrawText(ctx, labelFont, nameLabel, contentX, currentY);
                 currentY += (20 * fitScale);
+
+                // Language chips — same idea as quest description i18n.
+                double langRowH = QuestbookGuiLayout.AddBranchModalLangRowHeight * fitScale;
+                currentY = DrawBranchModalLanguageBar(ctx, fitScale, contentX, currentY, contentWidth, langRowH);
+                currentY += (10 * fitScale);
 
                 double inputHeight = QuestbookGuiLayout.AddBranchModalInputHeight * fitScale;
                 branchModalTitleInputHitArea = new LayoutRect(contentX, currentY, contentWidth, inputHeight);
@@ -439,7 +707,6 @@ namespace SwixyQuestBook.Gui
                     DrawImageSurface(ctx, inputSurface, contentX, currentY, contentWidth, inputHeight);
 
                 bool titleEmpty = string.IsNullOrWhiteSpace(branchModalTitleText);
-                // While focused, do not show placeholder under the caret.
                 string displayText = titleEmpty && !isBranchModalTitleFocused
                     ? QuestbookLang.GetLocal("admin.add_branch.name_placeholder")
                     : branchModalTitleText;
@@ -465,19 +732,20 @@ namespace SwixyQuestBook.Gui
                     DrawTextCaret(ctx, inputFont, branchModalTitleText, textX, currentY, inputHeight, inputColor);
                 }
 
-                currentY += inputHeight + (12 * fitScale);
+                currentY += inputHeight + (14 * fitScale);
 
-                currentY = DrawBranchModalItemPicker(ctx, fitScale, contentX, contentWidth, currentY, screenX, screenY);
+                // Icon preview only — full catalog opens on click.
+                currentY = DrawBranchModalIconPreview(ctx, fitScale, contentX, contentWidth, currentY);
             }
 
             double buttonHeight = QuestbookGuiLayout.AddBranchModalButtonHeight * fitScale;
-            currentY = modalY + modalHeight - padBottom - buttonHeight;
+            double buttonY = modalY + modalHeight - padBottom - buttonHeight;
             double buttonGap = QuestbookGuiLayout.AddBranchModalButtonGap * fitScale;
             double buttonWidth = (contentWidth - buttonGap) / 2;
             ImageSurface? barSurface = GetTextureSurface(QuestbookGuiLayout.AdminBarTexture);
 
-            branchModalPrimaryButtonHitArea = new LayoutRect(contentX, currentY, buttonWidth, buttonHeight);
-            branchModalCancelButtonHitArea = new LayoutRect(contentX + buttonWidth + buttonGap, currentY, buttonWidth, buttonHeight);
+            branchModalPrimaryButtonHitArea = new LayoutRect(contentX, buttonY, buttonWidth, buttonHeight);
+            branchModalCancelButtonHitArea = new LayoutRect(contentX + buttonWidth + buttonGap, buttonY, buttonWidth, buttonHeight);
 
             string primaryLabel = branchModalMode switch
             {
@@ -495,57 +763,166 @@ namespace SwixyQuestBook.Gui
                 QuestbookLang.GetLocal("admin.add_branch.cancel"), isBranchModalCancelHovered,
                 QuestbookGuiLayout.AdminClearButtonColor);
 
+            if (isBranchModalItemPickerOpen && branchModalMode != BranchModalMode.DeleteConfirm)
+                DrawBranchModalItemCatalog(ctx, fitScale, modalX, modalY, modalWidth, modalHeight);
+
             if (!branchModalTitleInputHitArea.IsEmpty)
                 branchModalTitleInputHitArea = branchModalTitleInputHitArea.Offset(screenX, screenY);
+            if (!branchModalIconPreviewHitArea.IsEmpty)
+                branchModalIconPreviewHitArea = branchModalIconPreviewHitArea.Offset(screenX, screenY);
+            if (!branchModalIconSearchHitArea.IsEmpty)
+                branchModalIconSearchHitArea = branchModalIconSearchHitArea.Offset(screenX, screenY);
+            if (!branchModalIconPickerCancelHitArea.IsEmpty)
+                branchModalIconPickerCancelHitArea = branchModalIconPickerCancelHitArea.Offset(screenX, screenY);
+            // Picker panel / viewport stay local for ToScreenRect in click/render paths.
+            for (int i = 0; i < branchModalLangButtonHitAreas.Length; i++)
+                branchModalLangButtonHitAreas[i] = branchModalLangButtonHitAreas[i].Offset(screenX, screenY);
             branchModalPrimaryButtonHitArea = branchModalPrimaryButtonHitArea.Offset(screenX, screenY);
             branchModalCancelButtonHitArea = branchModalCancelButtonHitArea.Offset(screenX, screenY);
-
         }
 
-        private double DrawBranchModalItemPicker(
+        private double DrawBranchModalLanguageBar(
+            Cairo.Context ctx,
+            double fitScale,
+            double x,
+            double y,
+            double width,
+            double rowHeight)
+        {
+            string[] langs = GetRegisteredLanguageCodes();
+            if (langs.Length == 0)
+                langs = ["en"];
+
+            foreach (string existing in branchModalTitleByLang.Keys)
+            {
+                string code = QuestbookLocalizedText.NormalizeLang(existing);
+                if (!langs.Contains(code, StringComparer.OrdinalIgnoreCase))
+                    langs = langs.Append(code).OrderBy(static c => c, StringComparer.OrdinalIgnoreCase).ToArray();
+            }
+
+            // Ensure the active editor language is always present as a tab.
+            string active = QuestbookLocalizedText.NormalizeLang(branchModalEditorLang);
+            if (!langs.Contains(active, StringComparer.OrdinalIgnoreCase))
+                langs = langs.Append(active).OrderBy(static c => c, StringComparer.OrdinalIgnoreCase).ToArray();
+
+            branchModalLangCodes = langs;
+            branchModalLangButtonHitAreas = new LayoutRect[langs.Length];
+
+            double gap = 6 * fitScale;
+            int columns = System.Math.Min(langs.Length, 8);
+            double buttonWidth = (width - (gap * System.Math.Max(0, columns - 1))) / System.Math.Max(1, columns);
+            int rows = (int)System.Math.Ceiling(langs.Length / (double)System.Math.Max(1, columns));
+            double rowGap = QuestbookGuiLayout.AddBranchModalLangRowGap * fitScale;
+
+            for (int i = 0; i < langs.Length; i++)
+            {
+                string lang = langs[i];
+                int col = i % columns;
+                int row = i / columns;
+                double bx = x + (col * (buttonWidth + gap));
+                double by = y + (row * (rowHeight + rowGap));
+                LayoutRect rect = new(bx, by, buttonWidth, rowHeight);
+                branchModalLangButtonHitAreas[i] = rect;
+
+                bool isActive = string.Equals(lang, branchModalEditorLang, StringComparison.OrdinalIgnoreCase);
+                bool hasText = branchModalTitleByLang.TryGetValue(lang, out string? text)
+                    && !string.IsNullOrWhiteSpace(text);
+                // Live field for the active language counts as filled while typing.
+                if (isActive && !string.IsNullOrWhiteSpace(branchModalTitleText))
+                    hasText = true;
+
+                double[] bg = isActive
+                    ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
+                    : QuestbookGuiLayout.AdminTileBackgroundColor;
+                double[] border = isActive
+                    ? QuestbookGuiLayout.AdminSaveButtonColor
+                    : QuestbookGuiLayout.AdminTileBorderColor;
+
+                FillRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, 5 * fitScale, bg);
+                StrokeRoundedRectangle(
+                    ctx,
+                    rect.X,
+                    rect.Y,
+                    rect.Width,
+                    rect.Height,
+                    5 * fitScale,
+                    isActive ? 1.8 * fitScale : 1.2 * fitScale,
+                    border);
+
+                string label = lang.ToUpperInvariant();
+                if (hasText && !isActive)
+                    label += " ·";
+
+                double[] color = isActive
+                    ? QuestbookGuiLayout.AdminSaveButtonColor
+                    : QuestbookGuiLayout.AdminPanelTextColor;
+                CairoFont chipFont = CreateMontserratFont(12 * fitScale, color);
+                DrawCenteredText(ctx, chipFont, label, rect);
+            }
+
+            return y + (rows * rowHeight) + (System.Math.Max(0, rows - 1) * rowGap);
+        }
+
+        /// <summary>
+        /// Label + clickable preview slot. Full catalog opens via <see cref="OpenBranchModalItemPicker"/>.
+        /// </summary>
+        private double DrawBranchModalIconPreview(
             Cairo.Context ctx,
             double fitScale,
             double contentX,
             double contentWidth,
-            double startY,
-            double screenX,
-            double screenY)
+            double startY)
         {
-            // Label (left) + selected-icon preview (right) on one row.
+            if (!isBranchModalItemPickerOpen)
+            {
+                branchModalItemPickerSlots = [];
+                branchModalIconSearchHitArea = new LayoutRect(0, 0, 0, 0);
+                branchModalIconViewportLocal = new LayoutRect(0, 0, 0, 0);
+                branchModalIconPickerPanelLocal = new LayoutRect(0, 0, 0, 0);
+                branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
+            }
+
             double previewSize = QuestbookGuiLayout.AddBranchModalItemSlotSize * fitScale;
-            double rowHeight = System.Math.Max(previewSize, 20 * fitScale);
+            double rowHeight = System.Math.Max(previewSize, 22 * fitScale);
             double previewX = contentX + contentWidth - previewSize;
             double previewY = startY + ((rowHeight - previewSize) / 2);
 
             CairoFont labelFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminTitleColor);
-            string iconLabel = QuestbookLang.GetLocal("admin.branch_icon.label");
             DrawText(
                 ctx,
                 labelFont,
-                iconLabel,
+                QuestbookLang.GetLocal("admin.branch_icon.label"),
                 contentX,
-                GetTextBaselineY(labelFont, startY, rowHeight, rowHeight));
+                GetTextBaselineY(labelFont, startY, rowHeight * 0.55, rowHeight * 0.55));
+
+            CairoFont hintFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
+            DrawText(
+                ctx,
+                hintFont,
+                QuestbookLang.GetLocal("admin.branch_icon.hint"),
+                contentX,
+                GetTextBaselineY(hintFont, startY + (rowHeight * 0.45), rowHeight * 0.55, rowHeight * 0.55));
 
             LayoutRect previewRect = new(previewX, previewY, previewSize, previewSize);
-            FillRoundedRectangle(
-                ctx,
-                previewX,
-                previewY,
-                previewSize,
-                previewSize,
-                QuestbookGuiLayout.AdminTileCornerRadius * fitScale,
-                QuestbookGuiLayout.AdminTileBackgroundColor);
-            StrokeRoundedRectangle(
-                ctx,
-                previewX,
-                previewY,
-                previewSize,
-                previewSize,
-                QuestbookGuiLayout.AdminTileCornerRadius * fitScale,
-                1.5 * fitScale,
-                QuestbookGuiLayout.AdminSaveButtonColor);
+            branchModalIconPreviewHitArea = previewRect;
 
-            if (!string.IsNullOrWhiteSpace(branchModalSelectedIconItemCode))
+            double[] slotBg = isBranchModalItemPickerOpen
+                ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
+                : QuestbookGuiLayout.AdminTileBackgroundColor;
+            double[] slotBorder = QuestbookGuiLayout.AdminSaveButtonColor;
+            FillRoundedRectangle(
+                ctx, previewX, previewY, previewSize, previewSize,
+                QuestbookGuiLayout.AdminTileCornerRadius * fitScale, slotBg);
+            StrokeRoundedRectangle(
+                ctx, previewX, previewY, previewSize, previewSize,
+                QuestbookGuiLayout.AdminTileCornerRadius * fitScale,
+                (isBranchModalItemPickerOpen ? 2.0 : 1.5) * fitScale,
+                slotBorder);
+
+            // GL item icons are drawn after Cairo — skip preview while the catalog overlay is open
+            // so it cannot paint on top of the picker panel.
+            if (!isBranchModalItemPickerOpen
+                && !string.IsNullOrWhiteSpace(branchModalSelectedIconItemCode))
             {
                 branchModalIconRenderRequests.Add(new QuestItemIconRenderRequest(
                     branchModalSelectedIconItemCode,
@@ -554,53 +931,178 @@ namespace SwixyQuestBook.Gui
                     0,
                     QuestbookItemIconContext.Modal));
             }
+            else if (string.IsNullOrWhiteSpace(branchModalSelectedIconItemCode))
+            {
+                CairoFont plusFont = CreateMontserratFont(22 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
+                DrawCenteredText(ctx, plusFont, "+", previewRect);
+            }
+
+            return startY + rowHeight;
+        }
+
+        /// <summary>
+        /// Overlay catalog (search + grid) anchored to the branch modal — same data as quest goal picker.
+        /// </summary>
+        private void DrawBranchModalItemCatalog(
+            Cairo.Context ctx,
+            double fitScale,
+            double modalX,
+            double modalY,
+            double modalWidth,
+            double modalHeight)
+        {
+            double pad = 16 * fitScale;
+            double panelH = System.Math.Min(
+                QuestbookGuiLayout.AddBranchModalPickerHeight * fitScale,
+                modalHeight - (pad * 2));
+            double panelW = modalWidth - (pad * 2);
+            double panelX = modalX + pad;
+            double panelY = modalY + modalHeight - pad - panelH;
+            branchModalIconPickerPanelLocal = new LayoutRect(panelX, panelY, panelW, panelH);
+
+            // Dim modal body slightly under the catalog.
+            FillRoundedRectangle(
+                ctx, modalX + (8 * fitScale), modalY + (8 * fitScale),
+                modalWidth - (16 * fitScale), modalHeight - (16 * fitScale),
+                6 * fitScale, [0.05, 0.05, 0.06, 0.45]);
+
+            FillRoundedRectangle(ctx, panelX, panelY, panelW, panelH, 8 * fitScale,
+                QuestbookGuiLayout.AdminTileBackgroundColor);
+            StrokeRoundedRectangle(ctx, panelX, panelY, panelW, panelH, 8 * fitScale, 1.6 * fitScale,
+                QuestbookGuiLayout.AdminSaveButtonColor);
+
+            double innerPad = 12 * fitScale;
+            double titleY = panelY + innerPad;
+            CairoFont titleFont = CreateMontserratFont(13 * fitScale, QuestbookGuiLayout.TopMenuTitleColor);
+            DrawText(ctx, titleFont, QuestbookLang.GetLocal("admin.branch_icon.picker_title"),
+                panelX + innerPad, titleY + (4 * fitScale));
+
+            double cancelW = 88 * fitScale;
+            double cancelH = 26 * fitScale;
+            branchModalIconPickerCancelHitArea = new LayoutRect(
+                panelX + panelW - cancelW - innerPad,
+                titleY,
+                cancelW,
+                cancelH);
+            CairoFont cancelFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminPanelTextColor);
+            DrawCenteredText(
+                ctx,
+                cancelFont,
+                QuestbookLang.GetLocal("admin.branch_icon.picker_close"),
+                branchModalIconPickerCancelHitArea);
+
+            double searchH = QuestbookGuiLayout.AddBranchModalSearchHeight * fitScale;
+            double searchY = titleY + cancelH + (8 * fitScale);
+            double searchX = panelX + innerPad;
+            double searchW = panelW - (innerPad * 2);
+            branchModalIconSearchHitArea = new LayoutRect(searchX, searchY, searchW, searchH);
+            FillRoundedRectangle(ctx, searchX, searchY, searchW, searchH, 4 * fitScale, [0.10, 0.11, 0.13, 0.95]);
+            StrokeRoundedRectangle(
+                ctx, searchX, searchY, searchW, searchH, 4 * fitScale,
+                branchModalIconSearchFocused ? 1.6 * fitScale : 1.1 * fitScale,
+                branchModalIconSearchFocused
+                    ? QuestbookGuiLayout.AdminSaveButtonColor
+                    : QuestbookGuiLayout.AdminTileBorderColor);
+
+            bool searchEmpty = string.IsNullOrEmpty(branchModalIconSearchText);
+            CairoFont searchFont = CreateMontserratFont(
+                12 * fitScale,
+                searchEmpty && !branchModalIconSearchFocused
+                    ? QuestbookGuiLayout.AdminPanelPlaceholderColor
+                    : QuestbookGuiLayout.AdminPanelTextColor);
+            string searchDisplay = searchEmpty && !branchModalIconSearchFocused
+                ? QuestbookLang.GetLocal("admin.quest_edit.item_search_placeholder")
+                : branchModalIconSearchText;
+            double searchTextX = searchX + (8 * fitScale);
+            DrawText(ctx, searchFont, searchDisplay, searchTextX,
+                GetTextBaselineY(searchFont, searchY, searchH, searchH));
+            if (branchModalIconSearchFocused)
+            {
+                DrawTextCaret(ctx, searchFont, branchModalIconSearchText,
+                    searchTextX, searchY, searchH, QuestbookGuiLayout.AdminPanelTextColor);
+            }
 
             double slotSize = QuestbookGuiLayout.AddBranchModalItemSlotSize * fitScale;
             double slotGap = QuestbookGuiLayout.AddBranchModalItemSlotGap * fitScale;
             int columns = QuestbookGuiLayout.AddBranchModalItemColumns;
-            double gridY = startY + rowHeight + (10 * fitScale);
-            double gridHeight = QuestbookGuiLayout.AddBranchModalItemGridHeight * fitScale;
-            double gridBottom = gridY + gridHeight;
+            double gridY = searchY + searchH + (10 * fitScale);
+            double gridBottom = panelY + panelH - innerPad;
+            double gridHeight = System.Math.Max(slotSize, gridBottom - gridY);
+            double listWidth = searchW;
+            double listLeft = searchX;
+            branchModalIconViewportLocal = new LayoutRect(listLeft, gridY, listWidth, gridHeight);
 
-            List<(ItemSlot Slot, LayoutRect HitArea, string CollectibleCode)> pickerSlots = [];
-            IPlayer? player = capi.World.Player;
-            int slotIndex = 0;
+            IReadOnlyList<(string Code, string Label, DummySlot Slot)> catalog =
+                GetItemCatalogEntries(branchModalIconSearchText);
+            int rows = System.Math.Max(1, (int)System.Math.Ceiling(catalog.Count / (double)System.Math.Max(1, columns)));
+            double contentH = (rows * slotSize) + (System.Math.Max(0, rows - 1) * slotGap);
+            double maxScroll = System.Math.Max(0, contentH - gridHeight);
+            branchModalIconScrollOffset = System.Math.Clamp(branchModalIconScrollOffset, 0, maxScroll);
 
-            foreach (InventoryBase inventory in QuestbookInventoryHelper.GetPlayerQuestInventories(player))
+            int firstVisibleRow = System.Math.Max(
+                0,
+                (int)System.Math.Floor(branchModalIconScrollOffset / (slotSize + slotGap)) - 1);
+            int visibleRowCount = (int)System.Math.Ceiling(gridHeight / (slotSize + slotGap)) + 2;
+            int firstIndex = firstVisibleRow * columns;
+            int lastIndex = System.Math.Min(catalog.Count, (firstVisibleRow + visibleRowCount) * columns);
+
+            ctx.Save();
+            ctx.Rectangle(listLeft, gridY, listWidth, gridHeight);
+            ctx.Clip();
+
+            var pickerSlots = new List<(ItemSlot Slot, LayoutRect HitArea, string CollectibleCode)>(
+                System.Math.Max(16, lastIndex - firstIndex));
+
+            for (int i = firstIndex; i < lastIndex; i++)
             {
-                for (int i = 0; i < inventory.Count; i++)
-                {
-                    ItemSlot slot = inventory[i];
-                    if (slot.Itemstack?.Collectible?.Code == null)
-                        continue;
+                int col = i % columns;
+                int row = i / columns;
+                double slotX = listLeft + (col * (slotSize + slotGap));
+                double slotY = gridY + (row * (slotSize + slotGap)) - branchModalIconScrollOffset;
+                if (slotY + slotSize < gridY || slotY > gridY + gridHeight)
+                    continue;
 
-                    int col = slotIndex % columns;
-                    int row = slotIndex / columns;
-                    double slotX = contentX + (col * (slotSize + slotGap));
-                    double slotY = gridY + (row * (slotSize + slotGap));
-                    if (slotY + slotSize > gridBottom)
-                        break;
+                (string collectibleCode, string _, DummySlot slot) = catalog[i];
+                LayoutRect slotRect = new(slotX, slotY, slotSize, slotSize);
+                bool selected = string.Equals(
+                    collectibleCode,
+                    branchModalSelectedIconItemCode,
+                    StringComparison.OrdinalIgnoreCase);
 
-                    string collectibleCode = slot.Itemstack.Collectible.Code.ToString() ?? string.Empty;
-                    LayoutRect slotRect = new(slotX, slotY, slotSize, slotSize);
-                    bool selected = string.Equals(collectibleCode, branchModalSelectedIconItemCode, StringComparison.OrdinalIgnoreCase);
-                    double[] background = selected
-                        ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
-                        : [0.14, 0.16, 0.18, 0.95];
-                    double[] border = selected
-                        ? QuestbookGuiLayout.AdminSaveButtonColor
-                        : QuestbookGuiLayout.AdminTileBorderColor;
+                FillRoundedRectangle(ctx, slotX, slotY, slotSize, slotSize, 4 * fitScale,
+                    selected ? QuestbookGuiLayout.AdminTileActiveBackgroundColor : [0.14, 0.16, 0.18, 0.95]);
+                StrokeRoundedRectangle(
+                    ctx, slotX, slotY, slotSize, slotSize, 4 * fitScale,
+                    (selected ? 2.0 : 1.0) * fitScale,
+                    selected ? QuestbookGuiLayout.AdminSaveButtonColor : QuestbookGuiLayout.AdminTileBorderColor);
 
-                    FillRoundedRectangle(ctx, slotX, slotY, slotSize, slotSize, 4 * fitScale, background);
-                    StrokeRoundedRectangle(ctx, slotX, slotY, slotSize, slotSize, 4 * fitScale, (selected ? 2.0 : 1.0) * fitScale, border);
+                pickerSlots.Add((slot, slotRect, collectibleCode));
+            }
 
-                    pickerSlots.Add((slot, slotRect, collectibleCode));
-                    slotIndex++;
-                }
+            ctx.Restore();
+
+            if (maxScroll > 0)
+            {
+                double trackW = 6 * fitScale;
+                double trackX = listLeft + listWidth - trackW;
+                double thumbH = System.Math.Max(16 * fitScale, gridHeight * (gridHeight / contentH));
+                double thumbY = gridY + ((branchModalIconScrollOffset / maxScroll) * (gridHeight - thumbH));
+                FillRoundedRectangle(ctx, trackX, gridY, trackW, gridHeight, 3 * fitScale, [0.22, 0.24, 0.27, 0.7]);
+                FillRoundedRectangle(ctx, trackX, thumbY, trackW, thumbH, 3 * fitScale,
+                    QuestbookGuiLayout.AdminTileBorderColor);
+            }
+
+            if (catalog.Count == 0)
+            {
+                CairoFont emptyFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
+                DrawCenteredText(
+                    ctx,
+                    emptyFont,
+                    QuestbookLang.GetLocal("admin.quest_edit.item_search_empty"),
+                    new LayoutRect(listLeft, gridY, listWidth, gridHeight));
             }
 
             branchModalItemPickerSlots = pickerSlots.ToArray();
-            return gridBottom;
         }
 
         private void DrawBranchModalButton(
@@ -1358,10 +1860,10 @@ namespace SwixyQuestBook.Gui
             else
                 FillRectangle(ctx, modalX, modalY, modalWidth, modalHeight, QuestbookGuiLayout.ModalBorderColor);
 
-            // Extra inset from the modal frame on all sides (texture border is thick).
-            double padX = 36 * fitScale;
-            double padTop = 36 * fitScale;
-            double padBottom = 40 * fitScale;
+            // Extra inset from the modal frame (texture border scales with the stretched modal.png).
+            double padX = QuestbookGuiLayout.QuestEditModalPadX * fitScale;
+            double padTop = QuestbookGuiLayout.QuestEditModalPadTop * fitScale;
+            double padBottom = QuestbookGuiLayout.QuestEditModalPadBottom * fitScale;
             double contentX = modalX + padX;
             double contentWidth = modalWidth - (padX * 2);
             double currentY = modalY + padTop;
@@ -1802,6 +2304,7 @@ namespace SwixyQuestBook.Gui
             adminEntityPickerHoverLabel = null;
             adminEntityPickerHoverRect = new LayoutRect(0, 0, 0, 0);
             adminEntityPickerSearchHitArea = new LayoutRect(0, 0, 0, 0);
+            adminEntityPickerViewportLocal = new LayoutRect(0, 0, 0, 0);
             entityPickerTooltipCachedText = null;
         }
 
@@ -1871,7 +2374,7 @@ namespace SwixyQuestBook.Gui
             }
 
             // Full creative-style catalog (all items + blocks).
-            double padding = 36 * fitScale;
+            double padding = QuestbookGuiLayout.QuestEditModalPadX * fitScale;
             double contentPadTop = 18 * fitScale;
             double panelHeight = System.Math.Min(modalArea.Height * 0.62, 280 * fitScale);
             double panelWidth = modalArea.Width - (padding * 2);
@@ -2184,7 +2687,7 @@ namespace SwixyQuestBook.Gui
         /// </summary>
         private void DrawAdminEntityPicker(Cairo.Context ctx, double fitScale, LayoutRect modalArea)
         {
-            double padding = 36 * fitScale;
+            double padding = QuestbookGuiLayout.QuestEditModalPadX * fitScale;
             double contentPadTop = 18 * fitScale;
             double panelHeight = System.Math.Min(
                 modalArea.Height * 0.62,

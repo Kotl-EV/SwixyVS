@@ -4,6 +4,7 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <OutputPath>bin\$(Configuration)\Mods\mod\</OutputPath>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <RootNamespace>SwixyClaimChunk</RootNamespace>
         <AssemblyName>SwixyClaimChunk</AssemblyName>
     </PropertyGroup>
@@ -22,6 +23,10 @@
         </Reference>
         <Reference Include="cairo-sharp">
             <HintPath>$(VINTAGE_STORY)/Lib/cairo-sharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="SkiaSharp">
+            <HintPath>$(VINTAGE_STORY)/Lib/SkiaSharp.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>

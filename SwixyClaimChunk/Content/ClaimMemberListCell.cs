@@ -10,6 +10,7 @@
 using System;
 using Cairo;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
@@ -17,22 +18,45 @@ namespace SwixyClaimChunk.Content;
 
 /// <summary>
 /// Ячейка списка участников привата с четырьмя колонками действий справа.
-/// Реализует <see cref="IGuiElementCell"/> для встраивания в список сохранений/участников.
-/// Отрисовка выполняется через Cairo: фон кнопки, текст заголовка, разделители и иконки доступа.
+/// Фон — Group 470.svg / Group 469 (1).png (<c>textures/gui/member_list_row.png</c>, 435×58).
 /// </summary>
 public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
 {
+    /// <summary>Group 470 full row design size.</summary>
+    private const int RowTexW = 435;
+    private const int RowTexH = 58;
+
     /// <summary>Количество колонок в правой панели: владелец, use, build, удаление.</summary>
     private const int ColumnCount = 4;
 
-    /// <summary>Минимальный размер одной квадратной колонки (до масштабирования GUI).</summary>
-    private const int UnscaledMinSquareSize = 56;
+    /// <summary>Квадратные кнопки действий (Group 470: 46×46, step 55).</summary>
+    private const int UnscaledMinSquareSize = 46;
+
+    /// <summary>Зазор между name plate и кнопками / между кнопками (SVG step 55 − 46).</summary>
+    private const int UnscaledBtnGap = 9;
+
+    /// <summary>Name plate width inside texture (face 203 @ x=6).</summary>
+    private const int UnscaledNameFaceW = 203;
 
     /// <summary>Базовый размер иконки в колонке (до масштабирования GUI).</summary>
-    private const int UnscaledIconSize = 40;
+    private const int UnscaledIconSize = 26;
+
+    /// <summary>Высота face внутри текстуры (46); full row includes outer chrome → 58.</summary>
+    private const int UnscaledRowFaceHeight = 46;
+
+    /// <summary>Face top inset inside full 58px texture.</summary>
+    private const int UnscaledFaceTop = 6;
 
     /// <summary>Глубина рельефа кнопочного фона строки.</summary>
-    private static readonly int UnscaledDepth = 4;
+    private static readonly int UnscaledDepth = 2;
+
+    private static readonly double[] ColFace = [0.255, 0.176, 0.114]; // #412D1D
+    private static readonly double[] ColHi = [0.337, 0.243, 0.169];
+    private static readonly double[] ColLo = [0.165, 0.118, 0.078];
+
+    /// <summary>Shared Group 470 / 469(1) row chrome.</summary>
+    private static ImageSurface? rowTexture;
+    private static bool rowTextureMissing;
 
     /// <summary>Запись ячейки списка: заголовок, шрифты, флаг отрисовки как кнопки.</summary>
     public SavegameCellEntry cellEntry;
@@ -77,7 +101,7 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     /// <summary>Колбэк при клике по левой области или колонке владельца (выбор ячейки).</summary>
     public Action<int>? OnMouseDownOnCellLeft;
 
-    /// <summary>Колбэк переключения права use для <see cref="MemberUid"/>.</summary>
+    /// <summary>Колбэк переключения права use для <see cref="MemberUid"/> (ЛКМ по шестерёнке).</summary>
     public Action<string>? OnToggleUse;
 
     /// <summary>Колбэк переключения права build для <see cref="MemberUid"/>.</summary>
@@ -151,11 +175,9 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         buildHighlightTexture = new LoadedTexture(capi);
         deleteHighlightTexture = new LoadedTexture(capi);
 
-        // Шрифты заголовка и деталей по умолчанию, если не заданы в cell
-        cell.TitleFont ??= CairoFont.WhiteSmallishText();
-        cell.DetailTextFont ??= CairoFont.WhiteSmallText();
-        cell.DetailTextFont.Color[3] *= 0.8; // приглушённая альфа для вторичного текста
-        cell.DetailTextFont.LineHeightMultiplier = 1.1;
+        // Group 471 member names: fill #9F795B (same as settings button labels).
+        cell.TitleFont ??= ClaimFontHelper.Create(16, [0x9F / 255.0, 0x79 / 255.0, 0x5B / 255.0, 1.0], bold: true);
+        cell.DetailTextFont ??= ClaimFontHelper.Create(12, ClaimFontHelper.ColorAccent, bold: true);
     }
 
     /// <summary>
@@ -212,59 +234,150 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     /// <summary>Возвращает масштабированный размер одной квадратной колонки справа.</summary>
     private double GetSquareSize() => scaled(UnscaledMinSquareSize);
 
-    /// <summary>Ширина правого блока из четырёх колонок: 4 × размер квадрата.</summary>
-    private double GetRightBoxWidth() => GetSquareSize() * ColumnCount;
+    private double GetBtnGap() => scaled(UnscaledBtnGap);
 
-    /// <summary>X-координата вертикального разделителя между текстом слева и блоком из 4 колонок.</summary>
-    private double GetDividerX(double rightBoxWidth) => Bounds.OuterWidth - rightBoxWidth;
-
-    /// <summary>Ширина одной из четырёх равных колонок в правом блоке.</summary>
-    private double GetColumnWidth(double rightBoxWidth) => rightBoxWidth / ColumnCount;
-
-    /// <summary>Доступная ширина для многострочного заголовка слева (с учётом отступа).</summary>
-    private double GetTextAreaWidth(double rightBoxWidth) => Bounds.OuterWidth - rightBoxWidth - Bounds.absPaddingX;
+    /// <summary>Ширина правого блока: 4 кнопки + 3 промежутка (SVG step 55).</summary>
+    private double GetRightBoxWidth() => GetSquareSize() * ColumnCount + GetBtnGap() * (ColumnCount - 1);
 
     /// <summary>
-    /// Отрисовывает содержимое ячейки-кнопки: фон, заголовок, разделители и иконки в 4 колонках.
+    /// X начала правых кнопок. Group 470: first btn @ x=218 of 435 → scale to cell width.
     /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="pressed">true — состояние нажатой кнопки (смещение и затемнение).</param>
+    private double GetDividerX(double rightBoxWidth)
+    {
+        // Prefer texture ratio so hit zones match chrome (218/435).
+        var fromTex = Bounds.OuterWidth * (218.0 / RowTexW);
+        var fromRight = Bounds.OuterWidth - rightBoxWidth - scaled(6); // right chrome ~6
+        // Prefer the texture anchor when cell is ~full row width.
+        return System.Math.Abs(Bounds.OuterWidth - scaled(RowTexW)) < scaled(8)
+            ? fromTex
+            : fromRight;
+    }
+
+    /// <summary>Шаг колонки = кнопка + gap (последняя без trailing gap).</summary>
+    private double GetColumnStep() => GetSquareSize() + GetBtnGap();
+
+    /// <summary>Доступная ширина name plate слева.</summary>
+    private double GetTextAreaWidth(double rightBoxWidth) =>
+        System.Math.Max(8, GetDividerX(rightBoxWidth) - scaled(16) - Bounds.absPaddingX);
+
+    /// <summary>
+    /// Отрисовывает содержимое ячейки: Group 470 row texture + имя + иконки в 4 колонках.
+    /// </summary>
     private void ComposeButton(Context ctx, bool pressed)
     {
+        EnsureRowTexture(api);
+
+        var drawW = Bounds.OuterWidth;
+        var drawH = Bounds.OuterHeight;
         var rightBoxWidth = GetRightBoxWidth();
+        var faceTop = scaled(UnscaledFaceTop);
+        var faceH = System.Math.Min(scaled(UnscaledRowFaceHeight), drawH - faceTop);
         pressedYOffset = 0;
 
         if (cellEntry.DrawAsButton)
         {
-            RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
-            ctx.SetSourceRGB(GuiStyle.DialogDefaultBgColor[0], GuiStyle.DialogDefaultBgColor[1], GuiStyle.DialogDefaultBgColor[2]);
-            ctx.Fill();
+            if (rowTexture != null)
+            {
+                ctx.Save();
+                ctx.Scale(drawW / rowTexture.Width, drawH / rowTexture.Height);
+                ctx.SetSourceSurface(rowTexture, 0, 0);
+                if (ctx.GetSource() is SurfacePattern pattern)
+                {
+                    pattern.Filter = Filter.Nearest;
+                }
+
+                ctx.Paint();
+                ctx.Restore();
+            }
+            else
+            {
+                // Fallback: name plate + 4 faces (old SVG geometry).
+                var nameW = GetDividerX(rightBoxWidth) - GetBtnGap();
+                DrawSvgFace(ctx, scaled(6), faceTop, nameW, faceH, pressed);
+                var sq = GetSquareSize();
+                var step = GetColumnStep();
+                var bx0 = GetDividerX(rightBoxWidth);
+                for (var i = 0; i < ColumnCount; i++)
+                {
+                    DrawSvgFace(ctx, bx0 + i * step, faceTop, sq, faceH, pressed);
+                }
+            }
 
             if (pressed)
             {
                 pressedYOffset = scaled(UnscaledDepth) / 2;
             }
-
-            EmbossRoundRectangleElement(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, pressed, (int)scaled(UnscaledDepth));
         }
 
-        // Многострочный заголовок (имя участника) — вертикально по центру левой области
         Font = cellEntry.TitleFont;
+        // Name plate content starts ~x=6+pad inside texture.
+        var textLeft = Bounds.absPaddingX + scaled(16);
         var textWidth = GetTextAreaWidth(rightBoxWidth);
         titleTextHeight = textUtil.GetMultilineTextHeight(Font, cellEntry.Title, textWidth);
-        var titleY = (Bounds.OuterHeight - titleTextHeight) / 2 + pressedYOffset;
-        textUtil.AutobreakAndDrawMultilineTextAt(ctx, Font, cellEntry.Title, Bounds.absPaddingX, titleY, textWidth);
+        var titleY = faceTop + (faceH - titleTextHeight) / 2 + pressedYOffset;
+        textUtil.AutobreakAndDrawMultilineTextAt(ctx, Font, cellEntry.Title, textLeft, titleY, textWidth);
 
-        // Вертикальные разделители между 4 колонками и границей с текстом
-        DrawRightBoxDividers(ctx, rightBoxWidth);
-
-        // Иконки доступа в каждой из 4 колонок (корона, шестерёнка, молоток, корзина)
-        DrawAccessIcons(ctx, rightBoxWidth, pressedYOffset);
+        DrawAccessIcons(ctx, rightBoxWidth, faceTop + pressedYOffset, faceH);
 
         if (cellEntry.DrawAsButton && pressed)
         {
-            RoundRectangle(ctx, 0, 0, Bounds.OuterWidthInt, Bounds.OuterHeightInt, 1);
-            ctx.SetSourceRGBA(0, 0, 0, 0.15);
+            ctx.SetSourceRGBA(0, 0, 0, 0.12);
+            ctx.Rectangle(0, 0, drawW, drawH);
+            ctx.Fill();
+        }
+    }
+
+    /// <summary>Loads Group 470 / 469(1) row texture once for all member cells.</summary>
+    private static void EnsureRowTexture(ICoreClientAPI capi)
+    {
+        if (rowTexture != null || rowTextureMissing)
+        {
+            return;
+        }
+
+        try
+        {
+            var asset = capi.Assets.TryGet(new AssetLocation("swixyclaimchunk", "textures/gui/member_list_row.png"));
+            if (asset?.Data == null || asset.Data.Length == 0)
+            {
+                capi.Logger.Warning("[SwixyClaimChunk] member_list_row.png (Group 470) not found");
+                rowTextureMissing = true;
+                return;
+            }
+
+            using var bitmap = capi.Render.BitmapCreateFromPng(asset.Data);
+            rowTexture = GuiElement.getImageSurfaceFromAsset(bitmap);
+        }
+        catch (Exception ex)
+        {
+            capi.Logger.Error("[SwixyClaimChunk] Failed to load member_list_row.png: {0}", ex.Message);
+            rowTextureMissing = true;
+        }
+    }
+
+    private static void DrawSvgFace(Context ctx, double x, double y, double w, double h, bool pressed)
+    {
+        ctx.SetSourceRGB(ColFace[0], ColFace[1], ColFace[2]);
+        ctx.Rectangle(x, y, w, h);
+        ctx.Fill();
+
+        var bevel = 2.0;
+        ctx.SetSourceRGB(ColHi[0], ColHi[1], ColHi[2]);
+        ctx.Rectangle(x, y, w, bevel);
+        ctx.Fill();
+        ctx.Rectangle(x, y, bevel, h);
+        ctx.Fill();
+
+        ctx.SetSourceRGB(ColLo[0], ColLo[1], ColLo[2]);
+        ctx.Rectangle(x, y + h - bevel, w, bevel);
+        ctx.Fill();
+        ctx.Rectangle(x + w - bevel, y, bevel, h);
+        ctx.Fill();
+
+        if (pressed)
+        {
+            ctx.SetSourceRGBA(0, 0, 0, 0.12);
+            ctx.Rectangle(x, y, w, h);
             ctx.Fill();
         }
     }
@@ -277,7 +390,10 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
 
         var rightBoxWidth = GetRightBoxWidth();
         var dividerX = GetDividerX(rightBoxWidth);
-        var columnWidth = GetColumnWidth(rightBoxWidth);
+        var sq = GetSquareSize();
+        var step = GetColumnStep();
+        var faceTop = scaled(UnscaledFaceTop);
+        var faceH = System.Math.Min(scaled(UnscaledRowFaceHeight), Bounds.OuterHeight - faceTop);
         var columnIndex = region switch
         {
             HoverRegion.Owner => 0,
@@ -286,116 +402,38 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
             _ => 3
         };
 
-        var x1 = dividerX + columnIndex * columnWidth;
-        var x2 = x1 + columnWidth;
-        ctx.NewPath();
-        ctx.MoveTo(x1, 0);
-        ctx.LineTo(x2, 0);
-        ctx.LineTo(x2, Bounds.OuterHeight);
-        ctx.LineTo(x1, Bounds.OuterHeight);
-        ctx.ClosePath();
+        var x1 = dividerX + columnIndex * step;
+        ctx.Rectangle(x1, faceTop, sq, faceH);
         ctx.SetSourceRGBA(0, 0, 0, 0.15);
         ctx.Fill();
         generateTexture(surface, ref texture);
     }
 
     /// <summary>
-    /// Рисует вертикальные разделители правого блока: граница с текстом и три линии между 4 колонками.
-    /// Каждая линия — пара штрихов (тёмный + светлый) для объёмного эффекта.
+    /// Отрисовывает иконки в четырёх кнопках справа: владелец, use, build, удаление.
     /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="rightBoxWidth">Ширина блока из четырёх колонок.</param>
-    private void DrawRightBoxDividers(Context ctx, double rightBoxWidth)
+    private void DrawAccessIcons(Context ctx, double rightBoxWidth, double faceTop, double faceH)
     {
         var dividerX = GetDividerX(rightBoxWidth);
-        var columnWidth = GetColumnWidth(rightBoxWidth);
-        ctx.LineWidth = scaled(1);
+        var sq = GetSquareSize();
+        var step = GetColumnStep();
+        var iconSize = System.Math.Min(scaled(UnscaledIconSize), sq * 0.72);
+        var iconY = faceTop + (faceH - iconSize) / 2;
 
-        // Левая граница правого блока (отделяет текст от колонок) — тёмная тень
-        ctx.SetSourceRGBA(0, 0, 0, 0.4);
-        ctx.NewPath();
-        ctx.MoveTo(dividerX, scaled(1));
-        ctx.LineTo(dividerX, Bounds.OuterHeight - scaled(2));
-        ctx.ClosePath();
-        ctx.Stroke();
-
-        // Светлая кромка справа от тёмной линии (имитация рельефа)
-        ctx.SetSourceRGBA(1, 1, 1, 0.3);
-        ctx.NewPath();
-        ctx.MoveTo(dividerX + scaled(1), scaled(1));
-        ctx.LineTo(dividerX + scaled(1), Bounds.OuterHeight - scaled(2));
-        ctx.ClosePath();
-        ctx.Stroke();
-
-        // Внутренние разделители между колонками 0|1, 1|2, 2|3 (всего ColumnCount - 1 линий)
-        for (var column = 1; column < ColumnCount; column++)
-        {
-            var x = dividerX + column * columnWidth;
-
-            // Тёмная линия между соседними колонками
-            ctx.SetSourceRGBA(0, 0, 0, 0.35);
-            ctx.NewPath();
-            ctx.MoveTo(x, scaled(1));
-            ctx.LineTo(x, Bounds.OuterHeight - scaled(2));
-            ctx.ClosePath();
-            ctx.Stroke();
-
-            // Светлая кромка для объёма
-            ctx.SetSourceRGBA(1, 1, 1, 0.22);
-            ctx.NewPath();
-            ctx.MoveTo(x + scaled(1), scaled(1));
-            ctx.LineTo(x + scaled(1), Bounds.OuterHeight - scaled(2));
-            ctx.ClosePath();
-            ctx.Stroke();
-        }
-    }
-
-    /// <summary>
-    /// Отрисовывает иконки в четырёх колонках справа: владелец, use, build, удаление.
-    /// Иконки центрируются по горизонтали в своей колонке и по вертикали в ячейке.
-    /// </summary>
-    /// <param name="ctx">Контекст Cairo.</param>
-    /// <param name="rightBoxWidth">Ширина правого блока (4 колонки).</param>
-    /// <param name="yOffset">Вертикальное смещение при нажатой кнопке.</param>
-    private void DrawAccessIcons(Context ctx, double rightBoxWidth, double yOffset)
-    {
-        var dividerX = GetDividerX(rightBoxWidth);
-        var columnWidth = GetColumnWidth(rightBoxWidth);
-
-        // Размер иконки ограничен 90% ширины колонки, чтобы не выходить за границы hit region
-        var iconSize = System.Math.Min(scaled(UnscaledIconSize), columnWidth * 0.9);
-        var iconY = (Bounds.OuterHeight - iconSize) / 2 + yOffset;
-
-        // Колонка 0: корона владельца
-        DrawColumnIcon(ctx, GetIconX(dividerX, columnWidth, 0, iconSize), iconY, iconSize, HoverRegion.Owner);
-
-        // Колонка 1: шестерёнка права use
-        DrawColumnIcon(ctx, GetIconX(dividerX, columnWidth, 1, iconSize), iconY, iconSize, HoverRegion.Use);
-
-        // Колонка 2: молоток права build
-        DrawColumnIcon(ctx, GetIconX(dividerX, columnWidth, 2, iconSize), iconY, iconSize, HoverRegion.Build);
-
-        // Колонка 3: корзина удаления (destructive-стиль, если не владелец)
+        DrawColumnIcon(ctx, GetIconX(dividerX, step, sq, 0, iconSize), iconY, iconSize, HoverRegion.Owner);
+        DrawColumnIcon(ctx, GetIconX(dividerX, step, sq, 1, iconSize), iconY, iconSize, HoverRegion.Use);
+        DrawColumnIcon(ctx, GetIconX(dividerX, step, sq, 2, iconSize), iconY, iconSize, HoverRegion.Build);
         ClaimCairoIcons.DrawTrash(
             ctx,
-            GetIconX(dividerX, columnWidth, 3, iconSize),
+            GetIconX(dividerX, step, sq, 3, iconSize),
             iconY,
             iconSize,
             destructive: !IsOwner);
     }
 
-    /// <summary>
-    /// Вычисляет левую X-координату иконки для центрирования в колонке с заданным индексом (0..3).
-    /// </summary>
-    /// <param name="dividerX">X начала правого блока из 4 колонок.</param>
-    /// <param name="columnWidth">Ширина одной колонки.</param>
-    /// <param name="columnIndex">Индекс колонки: 0 — owner, 1 — use, 2 — build, 3 — delete.</param>
-    /// <param name="iconSize">Сторона квадрата иконки.</param>
-    /// <returns>Координата левого верхнего угла иконки по X.</returns>
-    private static double GetIconX(double dividerX, double columnWidth, int columnIndex, double iconSize)
+    private static double GetIconX(double dividerX, double step, double square, int columnIndex, double iconSize)
     {
-        var columnCenter = dividerX + (columnIndex + 0.5) * columnWidth;
-        return columnCenter - iconSize * 0.5;
+        return dividerX + columnIndex * step + (square - iconSize) * 0.5;
     }
 
     /// <summary>
@@ -435,20 +473,25 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     {
         var rightBoxWidth = GetRightBoxWidth();
         var dividerX = GetDividerX(rightBoxWidth);
+        var faceTop = scaled(UnscaledFaceTop);
+        var faceH = System.Math.Min(scaled(UnscaledRowFaceHeight), Bounds.OuterHeight - faceTop);
+        if (posY < faceTop || posY > faceTop + faceH)
+        {
+            region = HoverRegion.Left;
+            return false;
+        }
 
-        // Hit region: левая текстовая область
+        // Hit region: левая name plate
         if (posX < dividerX)
         {
             region = HoverRegion.Left;
             return true;
         }
 
-        // Hit region: одна из 4 колонок по горизонтали
-        var columnWidth = GetColumnWidth(rightBoxWidth);
+        var sq = GetSquareSize();
+        var step = GetColumnStep();
         var localX = posX - dividerX;
-        var columnIndex = (int)(localX / columnWidth);
-
-        // Ограничение индекса в пределах 0..3
+        var columnIndex = (int)(localX / step);
         if (columnIndex < 0)
         {
             columnIndex = 0;
@@ -458,12 +501,20 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
             columnIndex = ColumnCount - 1;
         }
 
+        // Click only counts if inside the square button, not the gap.
+        var inBtn = localX - columnIndex * step;
+        if (inBtn < 0 || inBtn > sq)
+        {
+            region = HoverRegion.Left;
+            return false;
+        }
+
         region = columnIndex switch
         {
-            0 => HoverRegion.Owner,   // колонка 0
-            1 => HoverRegion.Use,     // колонка 1
-            2 => HoverRegion.Build,   // колонка 2
-            _ => HoverRegion.Delete   // колонка 3
+            0 => HoverRegion.Owner,
+            1 => HoverRegion.Use,
+            2 => HoverRegion.Build,
+            _ => HoverRegion.Delete
         };
         return true;
     }
@@ -475,6 +526,8 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     public void UpdateCellHeight()
     {
         Bounds.CalcWorldBounds();
+        Bounds.fixedPaddingX = 0;
+        Bounds.fixedPaddingY = 0;
 
         if (FixedHeight != null)
         {
@@ -565,6 +618,11 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         }
 
         args.Handled = true;
+        if (args.Button != EnumMouseButton.Left)
+        {
+            return;
+        }
+
         HandleRegionClick(region, elementIndex);
     }
 

@@ -2706,20 +2706,25 @@ public sealed class ClaimMapDialog : GuiDialog
             ctx.Fill();
         }
 
-        // Tab labels: UPPERCASE, large, centered. Active = white, inactive = grey text only.
+        // Tab labels: UPPERCASE Montserrat, centered in plate, nudged slightly down.
+        // «ПРИВАТЫ» is wider than «КАРТА» — slight +X so ink sits in the visual center of the plate.
         var mapActive = activePage == PageMap;
-        DrawCenteredLabelSurface(
+        DrawTabLabel(
             ctx,
             Lang.Get("swixyclaimchunk:claim-map-tab-map").ToUpperInvariant(),
             TabMapX * s, TabY * s, TabMapW * s, TabH * s,
             FontTab,
-            mapActive ? ColTabActive : ColTabInactive);
-        DrawCenteredLabelSurface(
+            mapActive ? ColTabActive : ColTabInactive,
+            s,
+            nudgeXDesign: 0);
+        DrawTabLabel(
             ctx,
             Lang.Get("swixyclaimchunk:claim-map-tab-claims").ToUpperInvariant(),
             TabClaimsX * s, TabY * s, TabClaimsW * s, TabH * s,
             FontTab,
-            mapActive ? ColTabInactive : ColTabActive);
+            mapActive ? ColTabInactive : ColTabActive,
+            s,
+            nudgeXDesign: 6);
         // ☰ Fixed/Movable (vanilla title-bar menu) + ✕ close — Cairo on right plate.
         // White when Movable (откреплено / можно таскать), #9F795B when Fixed (закреплено).
         DrawMenuIcon(ctx, PinBtnX * s, TabY * s, PinBtnW * s, TabH * s, isMovable ? ColIconPinned : ColIcon);
@@ -3187,11 +3192,13 @@ public sealed class ClaimMapDialog : GuiDialog
         }
     }
 
+    /// <summary>Общий размер иконки вкладки (☰ / ✕) — один квадрат в hit-area.</summary>
+    private static double GetTabActionIconSize(double w, double h) => Math.Min(w, h) * 0.38;
+
     /// <summary>Крестик закрытия — Cairo, цвет #9F795B как на SVG.</summary>
     private static void DrawCloseIcon(Context ctx, double x, double y, double w, double h, double[] color)
     {
-        // Icon box ~28px centered in hit area (SVG X spans ~892–919, 26–53 → ~27×27).
-        var size = Math.Min(w, h) * 0.38;
+        var size = GetTabActionIconSize(w, h);
         var cx = x + w * 0.5;
         var cy = y + h * 0.5;
         var half = size * 0.5;
@@ -3210,15 +3217,20 @@ public sealed class ClaimMapDialog : GuiDialog
         ctx.Restore();
     }
 
-    /// <summary>Иконка меню/pin: 3 горизонтальные полоски (как title bar VS).</summary>
+    /// <summary>
+    /// ☰ pin/detach: 3 bars in the same square as the close ✕ (equal size, even spacing).
+    /// </summary>
     private static void DrawMenuIcon(Context ctx, double x, double y, double w, double h, double[] color)
     {
-        var lineW = Math.Min(w, h) * 0.42;
-        var thickness = Math.Max(2.2, lineW * 0.14);
-        var gap = thickness * 2.1;
+        // Match close icon bounding square so both glyphs align on the action plate.
+        var size = GetTabActionIconSize(w, h);
+        var thickness = Math.Max(2.5, size * 0.18);
         var cx = x + w * 0.5;
         var cy = y + h * 0.5;
-        var left = cx - lineW * 0.5;
+        var left = cx - size * 0.5;
+        // Centers of top/mid/bottom bars evenly fill the square (outer edges = size).
+        var span = size - thickness; // first center → last center
+        var gap = span * 0.5;        // three lines: -gap, 0, +gap
 
         ctx.Save();
         ctx.SetSourceRGBA(color[0], color[1], color[2], color.Length > 3 ? color[3] : 1.0);
@@ -3228,7 +3240,7 @@ public sealed class ClaimMapDialog : GuiDialog
         {
             var ly = cy + i * gap;
             ctx.MoveTo(left, ly);
-            ctx.LineTo(left + lineW, ly);
+            ctx.LineTo(left + size, ly);
             ctx.Stroke();
         }
 
@@ -3982,9 +3994,41 @@ public sealed class ClaimMapDialog : GuiDialog
 
         ClaimFontHelper.SetupMontserrat(ctx, designFontSize, color, bold: true);
         var extents = ctx.TextExtents(text);
-        // True center of the tab plate (horizontal + vertical).
+        var fe = ctx.FontExtents;
+        // Horizontal + vertical center via baseline (ascent/descent), not YBearing alone.
         var tx = x + (width - extents.Width) * 0.5 - extents.XBearing;
-        var ty = y + (height - extents.Height) * 0.5 - extents.YBearing;
+        var ty = y + (height - fe.Height) * 0.5 + fe.Ascent;
+        ctx.MoveTo(tx, ty);
+        ctx.ShowText(text);
+    }
+
+    /// <summary>
+    /// Tab plate label: Montserrat Bold, truly centered, slight downward nudge (wood plate optics).
+    /// </summary>
+    private static void DrawTabLabel(
+        Context ctx,
+        string text,
+        double x,
+        double y,
+        double width,
+        double height,
+        double designFontSize,
+        double[] color,
+        double s,
+        double nudgeXDesign = 0)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        ClaimFontHelper.SetupMontserrat(ctx, designFontSize, color, bold: true);
+        var extents = ctx.TextExtents(text);
+        var fe = ctx.FontExtents;
+        // Optical center: baseline mid of ascent/descent box, then nudge down on wood plate.
+        const double nudgeDownDesign = 9;
+        var tx = x + (width - extents.Width) * 0.5 - extents.XBearing + nudgeXDesign * s;
+        var ty = y + (height - fe.Height) * 0.5 + fe.Ascent + nudgeDownDesign * s;
         ctx.MoveTo(tx, ty);
         ctx.ShowText(text);
     }

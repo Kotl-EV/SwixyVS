@@ -7,7 +7,7 @@ using Vintagestory.API.Common;
     "swixyclaimchunk",
     Website = "https://github.com/tehtelev/Swixy",
     Description = "Chunk claim map interface.",
-    Version = "1.0.4",
+    Version = "1.0.5",
     Authors =
     [
         "Tehtelev",

@@ -25,18 +25,24 @@ public sealed partial class SwixyClaimChunkServerMod
             return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }
 
+        if (chunks.Count > ClaimConstants.MaxBatchChunks)
+        {
+            return ClaimActionResult.Error("swixyclaimchunk:error-batch-truncated", ClaimConstants.MaxBatchChunks);
+        }
+
         var envError = ValidateClaimEnvironment(player);
         if (envError != null)
         {
             return envError.Value;
         }
 
-        // Разделяем чанки по состоянию карты
+        // Разделяем чанки по состоянию карты (один BuildCell на чанк).
         var freeChunks = new List<(int ChunkX, int ChunkZ)>();
         var ownChunks = new List<(int ChunkX, int ChunkZ)>();
         var otherChunks = new List<(int ChunkX, int ChunkZ)>();
         var seen = new HashSet<long>();
         var adminUnclaim = CanAdminUnclaimOthers(player);
+        var allClaims = serverApi?.World.Claims?.All?.ToList() ?? [];
 
         foreach (var chunk in chunks)
         {
@@ -46,7 +52,8 @@ public sealed partial class SwixyClaimChunkServerMod
                 continue;
             }
 
-            switch (BuildCell(player, chunk.ChunkX, chunk.ChunkZ).State)
+            var cell = BuildCell(player, chunk.ChunkX, chunk.ChunkZ, allClaims);
+            switch (cell.State)
             {
                 case ClaimChunkCellState.Free:
                     freeChunks.Add((chunk.ChunkX, chunk.ChunkZ));
@@ -61,8 +68,7 @@ public sealed partial class SwixyClaimChunkServerMod
                     }
                     else
                     {
-                        var ownerName = BuildCell(player, chunk.ChunkX, chunk.ChunkZ).OwnerName;
-                        return ClaimActionResult.Error("swixyclaimchunk:error-owned-by-other", ownerName ?? "?");
+                        return ClaimActionResult.Error("swixyclaimchunk:error-owned-by-other", cell.OwnerName ?? "?");
                     }
                     break;
                 default:

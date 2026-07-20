@@ -15,6 +15,69 @@ internal static class ClaimCairoIcons
     // Shared 24×24 icon mapping (matches white rect / Lucide-style wells in SVG).
     private static double Map(double v, double size) => v * (size / 24.0);
 
+    /// <summary>
+    /// Иконка «хранилище на земле» (groundstorage) — невидимый блок в мире,
+    /// в GUI рисуем условный «настил с предметами».
+    /// </summary>
+    public static void DrawGroundStorage(Context ctx, double x, double y, double size)
+    {
+        double X(double v) => x + Map(v, size);
+        double Y(double v) => y + Map(v, size);
+
+        // Soft plate
+        ctx.Save();
+        ctx.NewPath();
+        RoundRect(ctx, X(3), Y(4), Map(18, size), Map(16, size), Map(2.5, size));
+        ctx.SetSourceRGBA(0.22, 0.17, 0.12, 0.95);
+        ctx.FillPreserve();
+        ctx.SetSourceRGBA(0.55, 0.42, 0.28, 0.9);
+        ctx.LineWidth = Math.Max(1, Map(1.2, size));
+        ctx.Stroke();
+
+        // Three “item” squares on the mat
+        DrawMiniItem(ctx, X(5.5), Y(7), Map(5, size), 0.72, 0.55, 0.28);
+        DrawMiniItem(ctx, X(11.5), Y(8.5), Map(4.5, size), 0.45, 0.55, 0.7);
+        DrawMiniItem(ctx, X(9), Y(12.5), Map(5.5, size), 0.6, 0.45, 0.35);
+
+        // Soft shadow under
+        ctx.SetSourceRGBA(0, 0, 0, 0.2);
+        ctx.NewPath();
+        ctx.Save();
+        ctx.Translate(X(12), Y(20.5));
+        ctx.Scale(1.0, 0.28);
+        ctx.Arc(0, 0, Map(7, size), 0, Math.PI * 2);
+        ctx.Restore();
+        ctx.Fill();
+        ctx.Restore();
+    }
+
+    private static void DrawMiniItem(Context ctx, double x, double y, double s, double r, double g, double b)
+    {
+        ctx.NewPath();
+        RoundRect(ctx, x, y, s, s, s * 0.15);
+        ctx.SetSourceRGBA(r, g, b, 0.95);
+        ctx.FillPreserve();
+        ctx.SetSourceRGBA(1, 1, 1, 0.22);
+        ctx.LineWidth = Math.Max(0.8, s * 0.08);
+        ctx.Stroke();
+    }
+
+    private static void RoundRect(Context ctx, double x, double y, double w, double h, double r)
+    {
+        r = Math.Min(r, Math.Min(w, h) * 0.5);
+        ctx.NewPath();
+        ctx.MoveTo(x + r, y);
+        ctx.LineTo(x + w - r, y);
+        ctx.CurveTo(x + w, y, x + w, y, x + w, y + r);
+        ctx.LineTo(x + w, y + h - r);
+        ctx.CurveTo(x + w, y + h, x + w, y + h, x + w - r, y + h);
+        ctx.LineTo(x + r, y + h);
+        ctx.CurveTo(x, y + h, x, y + h, x, y + h - r);
+        ctx.LineTo(x, y + r);
+        ctx.CurveTo(x, y, x, y, x + r, y);
+        ctx.ClosePath();
+    }
+
     public static void DrawHighlight(Context ctx, double x, double y, double size, bool active)
     {
         // Keep bulb for claim-list light (not in Group 470).

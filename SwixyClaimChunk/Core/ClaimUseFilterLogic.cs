@@ -139,12 +139,9 @@ public static class ClaimUseFilterLogic
     }
 
     /// <summary>
-    /// Whitelist Use — <b>дополнительный публичный доступ</b>, не ограничение участников:
-    /// <list type="bullet">
-    /// <item>у игрока есть Use/Build/owner — ванильные права: Use <b>всех</b> блоков;</item>
-    /// <item>блок в whitelist — Use разрешён <b>любому</b> (даже без прав в привате);</item>
-    /// <item>нет whitelist — ничего не меняем.</item>
-    /// </list>
+    /// Whitelist Use — публичный доступ к дверям/инвентарям из списка.
+    /// Только <see cref="EnumBlockAccessFlags.Use"/> (открыть дверь, сундук, полку…).
+    /// Build/Break (поставить фонарь, кучу на земле) — ванильные права привата.
     /// <paramref name="isPrivileged"/> — owner/co-owner.
     /// </summary>
     public static EnumWorldAccessResponse ApplyUseBlockFilter(
@@ -166,7 +163,7 @@ public static class ClaimUseFilterLogic
                 return response;
             }
 
-            // Only Use — Build/Break stay pure vanilla claim rules.
+            // Только Use: двери, сундуки, полки. Не Build (стройка).
             if (accessType != EnumBlockAccessFlags.Use)
             {
                 return response;
@@ -210,7 +207,6 @@ public static class ClaimUseFilterLogic
             }
 
             // Only upgrades Denied → Granted for public whitelist blocks.
-            // Never strips Use from claim members.
             var result = response;
 
             foreach (var activeClaim in claims)
@@ -220,7 +216,6 @@ public static class ClaimUseFilterLogic
                     continue;
                 }
 
-                // Owner / co-owner / Build / Use — full interaction with all blocks.
                 if (isPrivileged != null && isPrivileged(activeClaim, playerUid))
                 {
                     continue;
@@ -242,14 +237,23 @@ public static class ClaimUseFilterLogic
                     continue;
                 }
 
-                // Stranger: only public whitelist blocks.
                 foreach (var code in codesToTest)
                 {
+                    if (!IsPublicUseFurnitureCode(world, code, lookupPos))
+                    {
+                        continue;
+                    }
+
                     if (ClaimCodeUtil.IsBlockCodeAllowedByUseFilter(code, rule.Codes))
                     {
                         result = EnumWorldAccessResponse.Granted;
                         break;
                     }
+                }
+
+                if (result == EnumWorldAccessResponse.Granted)
+                {
+                    break;
                 }
             }
 
@@ -259,6 +263,34 @@ public static class ClaimUseFilterLogic
         {
             logError?.Invoke($"[SwixyClaimChunk] ApplyUseBlockFilter failed: {exception}");
             return response;
+        }
+    }
+
+    /// <summary>Дверь/калитка, инвентарь или держатель факела.</summary>
+    private static bool IsPublicUseFurnitureCode(IWorldAccessor world, string code, BlockPos pos)
+    {
+        if (ClaimCodeUtil.IsDoorOrGateCode(code)
+            || ClaimCodeUtil.IsInventoryPathCode(code)
+            || ClaimCodeUtil.IsTorchHolderCode(code))
+        {
+            return true;
+        }
+
+        try
+        {
+            var blk = world.BlockAccessor.GetBlock(pos);
+            if (blk == null || blk.Id == 0)
+            {
+                return false;
+            }
+
+            return ClaimCodeUtil.IsDoorOrGateBlock(blk)
+                   || ClaimCodeUtil.IsTorchHolderBlock(blk)
+                   || ClaimCodeUtil.IsInventoryContainerBlock(world, blk, pos);
+        }
+        catch
+        {
+            return false;
         }
     }
 

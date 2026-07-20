@@ -216,12 +216,25 @@ public sealed partial class SwixyClaimChunkServerMod
         return player.HasPrivilege(Privilege.controlserver);
     }
 
-    /// <summary>Лимит объёма приватов (роль + extra).</summary>
-    private static long GetLandClaimAllowance(IServerPlayer player)
+    /// <summary>
+    /// Лимит объёма приватов в <b>блоках</b> для сравнения с claim.SizeXYZ.
+    /// В serverconfig / роли поле LandClaimAllowance хранит <b>чанки</b>
+    /// (см. <see cref="MigrateLandClaimAllowanceToChunks"/>).
+    /// </summary>
+    private long GetLandClaimAllowance(IServerPlayer player)
     {
-        var roleAllowance = player.Role?.LandClaimAllowance ?? 0;
-        var extraAllowance = player.ServerData?.ExtraLandClaimAllowance ?? 0;
-        return (long)roleAllowance + extraAllowance;
+        // Конфиг: чанки
+        var roleChunks = player.Role?.LandClaimAllowance ?? 0;
+        var extraChunks = player.ServerData?.ExtraLandClaimAllowance ?? 0;
+        var chunks = (long)roleChunks + extraChunks;
+        if (chunks <= 0)
+        {
+            // 0 = без лимита (как раньше для volume)
+            return 0;
+        }
+
+        var (chunkSize, mapSizeY) = GetWorldChunkDims();
+        return ClaimVolumeUtil.ChunksToBlockVolume(chunks, chunkSize, mapSizeY);
     }
 
     /// <summary>Проверяет, что добавление additionalVolume не превысит квоту игрока.</summary>

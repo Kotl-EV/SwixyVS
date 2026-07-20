@@ -1,13 +1,26 @@
-# Split client/server build (all Swixy mods)
+# Build packages (all Swixy mods)
 
 Each mod stays **one** `.csproj` for IDE/Debug.  
-`CakeBuild` scans sources and emits two packages with separate DLLs.
+`CakeBuild` produces **three** packages per mod.
 
 ```powershell
 .\build.ps1
 ```
 
+## Output (`Releases/`)
+
+| Package | Zip | Contents | Use |
+|---------|-----|----------|-----|
+| **Full** (universal) | `{modid}_{version}.zip` | One DLL with client+server code + assets | Singleplayer / one Mods folder |
+| **Server** | `{modid}_server_{version}.zip` | Server.dll + Shared.dll (+ lang) | Dedicated server only |
+| **Client** | `{modid}_client_{version}.zip` | Client.dll + Shared.dll + assets | Player clients |
+
+Install **only one** package type per Mods folder.  
+Do **not** mix FULL + server/client, or server + client together (same modid).
+
 ## Layout conventions (Cake `SourceSideAnalyzer`)
+
+Used for server/client split only. Full package builds the main `.csproj` as-is.
 
 | Path | Package |
 |------|---------|
@@ -22,12 +35,6 @@ Mod entry points after refactor:
 | ClaimChunk | `SwixyClaimChunkServerMod` | `SwixyClaimChunkClientMod` |
 | SkyBlock | `SwixySkyBlockServerMod` | `SwixySkyBlockClientMod` |
 | QuestBook | `QuestbookServerSystem` | `QuestbookClientSystem` + `QuestbookMod` |
+| PermissionManager | `SwixyPermissionManagerServerMod` | `SwixyPermissionManagerClientMod` |
 
 Shared gets `InternalsVisibleTo(*.Server)` / `InternalsVisibleTo(*.Client)`.
-
-## Output (`Releases/`)
-
-- `{modid}_server_{version}.zip` — Server.dll + Shared.dll (+ server extras)
-- `{modid}_client_{version}.zip` — Client.dll + Shared.dll (+ assets)
-
-Do **not** install both zips into one Mods folder.

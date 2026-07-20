@@ -41,6 +41,8 @@ public sealed partial class SwixyClaimChunkServerMod
         api.Event.SaveGameLoaded += OnCoOwnersSaveGameLoaded;
         api.Event.SaveGameLoaded += OnUseFiltersSaveGameLoaded;
         api.Event.SaveGameLoaded += OnClaimFlagsSaveGameLoaded;
+        // LandClaimAllowance в serverconfig = чанки (миграция legacy-блоков через reflection)
+        api.Event.SaveGameLoaded += OnLandClaimAllowanceSaveGameLoaded;
         api.Event.GameWorldSave += OnCoOwnersSaveGameSaving;
         api.Event.GameWorldSave += OnUseFiltersSaveGameSaving;
         api.Event.GameWorldSave += OnClaimFlagsSaveGameSaving;
@@ -49,12 +51,15 @@ public sealed partial class SwixyClaimChunkServerMod
         // После полной загрузки клиента — иначе пакет фильтра может потеряться.
         api.Event.PlayerNowPlaying += OnPlayerJoinSendUseFilters;
 
-        // PvP / animal protection via entity behavior.
+        // PvP / animal protection via entity behavior (must run BEFORE health).
         api.RegisterEntityBehaviorClass(
             ClaimConstants.ClaimProtectBehaviorCode,
             typeof(EntityBehaviorClaimProtect));
         api.Event.OnEntitySpawn += AttachClaimProtectBehavior;
         api.Event.OnEntityLoaded += AttachClaimProtectBehavior;
+        // Players store separately from chunks — also attach on join / after load.
+        api.Event.PlayerNowPlaying += OnPlayerJoinAttachClaimProtect;
+        api.Event.SaveGameLoaded += OnSaveGameLoadedAttachClaimProtectToPlayers;
 
         serverPlayerChatHandler = (IServerPlayer byPlayer, int channelId, ref string message, ref string data, BoolRef consumed) =>
         {

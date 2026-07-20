@@ -40,7 +40,7 @@ public sealed partial class SwixyClaimChunkServerMod
     private ClaimActionResult TrySetClaimFlags(LandClaim claim, int flags)
     {
         // Keep only known bits.
-        flags &= ClaimFlagBits.AllowPvp | ClaimFlagBits.ProtectAnimals;
+        flags &= ClaimFlagBits.AllKnown;
 
         var keys = ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList();
         if (keys.Count == 0)
@@ -48,6 +48,7 @@ public sealed partial class SwixyClaimChunkServerMod
             return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }
 
+        // flags==0 = safe defaults (no PvP, animals protected) — can drop keys.
         if (flags == 0)
         {
             foreach (var key in keys)
@@ -166,6 +167,9 @@ public sealed partial class SwixyClaimChunkServerMod
             return;
         }
 
+        // v0: bit1 = ProtectAnimals (opt-in protect). v1: bit1 = AllowAnimalDamage (opt-in hurt).
+        var legacy = saved.Version < 1;
+
         foreach (var entry in saved.Entries)
         {
             if (string.IsNullOrWhiteSpace(entry.Key) || entry.Value == 0)
@@ -173,8 +177,24 @@ public sealed partial class SwixyClaimChunkServerMod
                 continue;
             }
 
-            claimFlagsByClaimKey[entry.Key] = entry.Value
-                & (ClaimFlagBits.AllowPvp | ClaimFlagBits.ProtectAnimals);
+            var flags = entry.Value & ClaimFlagBits.AllKnown;
+            if (legacy)
+            {
+                // Invert animal bit: was "protect when set" → now "allow damage when set".
+                if ((flags & ClaimFlagBits.AllowAnimalDamage) != 0)
+                {
+                    flags &= ~ClaimFlagBits.AllowAnimalDamage; // was protect → still protect
+                }
+                else
+                {
+                    flags |= ClaimFlagBits.AllowAnimalDamage; // was unprotected → allow damage
+                }
+            }
+
+            if (flags != 0)
+            {
+                claimFlagsByClaimKey[entry.Key] = flags;
+            }
         }
     }
 
@@ -187,7 +207,7 @@ public sealed partial class SwixyClaimChunkServerMod
             return;
         }
 
-        var payload = new ClaimFlagsSaveData();
+        var payload = new ClaimFlagsSaveData { Version = 1 };
         foreach (var entry in claimFlagsByClaimKey)
         {
             if (entry.Value == 0)
@@ -213,28 +233,103 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
-    /// <summary>Attach lightweight damage filter behavior to every living entity.</summary>
+    /// <summary>
+    /// Attach damage filter — MUST run before EntityBehaviorHealth
+    /// (health applies Health -= damage inside its own OnEntityReceiveDamage).
+    /// </summary>
     private void AttachClaimProtectBehavior(Entity entity)
     {
-        if (entity == null || !entity.Alive)
+        if (entity == null || entity.World?.Side != EnumAppSide.Server)
         {
             return;
         }
 
-        if (entity.HasBehavior(ClaimConstants.ClaimProtectBehaviorCode))
+        var list = entity.SidedProperties?.Behaviors;
+        if (list == null)
         {
             return;
         }
 
         try
         {
-            entity.AddBehavior(new EntityBehaviorClaimProtect(entity));
+            var existing = entity.GetBehavior(ClaimConstants.ClaimProtectBehaviorCode);
+            if (existing != null)
+            {
+                // Already before health?
+                var idx = list.IndexOf(existing);
+                var healthIdx = IndexOfBehavior(list, "health");
+                if (idx >= 0 && (healthIdx < 0 || idx < healthIdx))
+                {
+                    return;
+                }
+
+                entity.RemoveBehavior(existing);
+            }
+
+            var behavior = new EntityBehaviorClaimProtect(entity);
+            var insertAt = IndexOfBehavior(list, "health");
+            if (insertAt < 0)
+            {
+                insertAt = 0;
+            }
+
+            list.Insert(insertAt, behavior);
+            entity.CacheServerBehaviors();
         }
         catch
         {
             // ignore entities that reject behaviors
         }
     }
+
+    private static int IndexOfBehavior(IList<EntityBehavior> list, string propertyName)
+    {
+        for (var i = 0; i < list.Count; i++)
+        {
+            try
+            {
+                if (string.Equals(list[i]?.PropertyName(), propertyName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return i;
+                }
+            }
+            catch
+            {
+                // next
+            }
+        }
+
+        return -1;
+    }
+
+    /// <summary>Ensure online players always have protect behavior (join / already online).</summary>
+    private void EnsurePlayersHaveClaimProtect(IServerPlayer? player = null)
+    {
+        if (serverApi == null)
+        {
+            return;
+        }
+
+        if (player?.Entity != null)
+        {
+            AttachClaimProtectBehavior(player.Entity);
+            return;
+        }
+
+        foreach (var p in serverApi.World.AllOnlinePlayers)
+        {
+            if (p?.Entity != null)
+            {
+                AttachClaimProtectBehavior(p.Entity);
+            }
+        }
+    }
+
+    private void OnPlayerJoinAttachClaimProtect(IServerPlayer byPlayer)
+        => EnsurePlayersHaveClaimProtect(byPlayer);
+
+    private void OnSaveGameLoadedAttachClaimProtectToPlayers()
+        => EnsurePlayersHaveClaimProtect();
 
     /// <summary>
     /// Server authority for claim flags on damage.
@@ -243,6 +338,17 @@ public sealed partial class SwixyClaimChunkServerMod
     internal bool ShouldCancelDamageInClaim(Entity target, DamageSource damageSource, ref float damage)
     {
         if (serverApi == null || damage <= 0 || target?.World == null)
+        {
+            return false;
+        }
+
+        if (damageSource == null)
+        {
+            return false;
+        }
+
+        // Heal never blocked.
+        if (damageSource.Type == EnumDamageType.Heal)
         {
             return false;
         }
@@ -266,7 +372,14 @@ public sealed partial class SwixyClaimChunkServerMod
             return false;
         }
 
-        IPlayer? attackerPlayer = (attacker as EntityPlayer)?.Player;
+        IPlayer? attackerPlayer = null;
+        if (attacker is EntityPlayer ep)
+        {
+            attackerPlayer = ep.Player ?? serverApi.World.PlayerByUid(ep.PlayerUID);
+        }
+
+        var targetIsPlayer = target is EntityPlayer;
+        var attackerIsPlayer = attacker is EntityPlayer || attackerPlayer != null;
 
         foreach (var claim in claims)
         {
@@ -277,27 +390,32 @@ public sealed partial class SwixyClaimChunkServerMod
 
             var flags = GetClaimFlags(claim);
 
-            // --- PvP ---
+            // --- PvP (default OFF when AllowPvp bit is clear) ---
             if ((flags & ClaimFlagBits.AllowPvp) == 0
-                && target is EntityPlayer
-                && attacker is EntityPlayer)
+                && targetIsPlayer
+                && attackerIsPlayer
+                && !ReferenceEquals(target, attacker))
             {
-                // Friendly fire / self: still block? Allow self-damage (void, etc. has no attacker).
-                // PvP: cancel player→player.
-                if (!ReferenceEquals(target, attacker))
+                if (target is EntityPlayer tp
+                    && attacker is EntityPlayer ap
+                    && !string.IsNullOrEmpty(tp.PlayerUID)
+                    && string.Equals(tp.PlayerUID, ap.PlayerUID, StringComparison.Ordinal))
                 {
-                    NotifyDamageBlocked(attackerPlayer, "swixyclaimchunk:claim-flags-pvp-blocked");
-                    return true;
+                    continue;
                 }
+
+                NotifyDamageBlocked(attackerPlayer, "swixyclaimchunk:claim-flags-pvp-blocked");
+                return true;
             }
 
-            // --- Animals ---
-            if ((flags & ClaimFlagBits.ProtectAnimals) != 0
+            // --- Animals (default ON: protected unless AllowAnimalDamage) ---
+            if (ClaimFlagBits.AreAnimalsProtected(flags)
                 && IsProtectableAnimal(target)
-                && attacker is EntityPlayer)
+                && attackerIsPlayer)
             {
-                var uid = attackerPlayer?.PlayerUID;
-                // Owner / co-owner / Build may still kill animals (farming).
+                var uid = attackerPlayer?.PlayerUID
+                          ?? (attacker as EntityPlayer)?.PlayerUID;
+                // Owner / co-owner / Build may still kill (farming). Strangers cannot.
                 if (!IsClaimOwner(claim, uid)
                     && !IsCoOwner(claim, uid)
                     && !ClaimUseFilterLogic.HasBuildAccess(claim, uid))
@@ -339,16 +457,20 @@ public sealed partial class SwixyClaimChunkServerMod
             return null;
         }
 
-        // Melee: SourceEntity is attacker. Projectiles: CauseEntity is thrower.
-        if (damageSource.CauseEntity != null)
+        // Official helper: projectile → thrower; melee → SourceEntity.
+        var cause = damageSource.GetCauseEntity();
+        if (cause != null)
         {
-            return damageSource.CauseEntity;
+            return cause;
         }
 
-        return damageSource.SourceEntity;
+        return damageSource.SourceEntity ?? damageSource.CauseEntity;
     }
 
-    /// <summary>Passive / farm creatures — not players, not common hostiles.</summary>
+    /// <summary>
+    /// Creatures worth protecting in a claim: farm/passive animals, pets.
+    /// Not players, hostiles, traders, or utility entities.
+    /// </summary>
     internal static bool IsProtectableAnimal(Entity entity)
     {
         if (entity is EntityPlayer || entity is not EntityAgent)
@@ -356,6 +478,7 @@ public sealed partial class SwixyClaimChunkServerMod
             return false;
         }
 
+        // Projectiles / items / falling blocks are not agents with meaningful codes usually.
         var path = entity.Code?.Path ?? "";
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -366,14 +489,19 @@ public sealed partial class SwixyClaimChunkServerMod
         if (path.Contains("trader", StringComparison.OrdinalIgnoreCase)
             || path.Contains("armorstand", StringComparison.OrdinalIgnoreCase)
             || path.Contains("strawdummy", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("mannequin", StringComparison.OrdinalIgnoreCase)
             || path.Contains("boat", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("raft", StringComparison.OrdinalIgnoreCase)
             || path.Contains("humanoid", StringComparison.OrdinalIgnoreCase)
-            || path.Contains("echochamber", StringComparison.OrdinalIgnoreCase))
+            || path.Contains("echochamber", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("projectile", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("item", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("thrown", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        // Known hostiles / temporal.
+        // Hostiles / temporal / predators — always killable in claim.
         if (path.Contains("drifter", StringComparison.OrdinalIgnoreCase)
             || path.Contains("locust", StringComparison.OrdinalIgnoreCase)
             || path.Contains("bell", StringComparison.OrdinalIgnoreCase)
@@ -381,14 +509,20 @@ public sealed partial class SwixyClaimChunkServerMod
             || path.Contains("bowtorn", StringComparison.OrdinalIgnoreCase)
             || path.Contains("eidolon", StringComparison.OrdinalIgnoreCase)
             || path.Contains("boreworm", StringComparison.OrdinalIgnoreCase)
-            || path.Contains("wolf", StringComparison.OrdinalIgnoreCase) // wild predators
+            || path.Contains("wolf", StringComparison.OrdinalIgnoreCase)
             || path.Contains("bear", StringComparison.OrdinalIgnoreCase)
             || path.Contains("hyena", StringComparison.OrdinalIgnoreCase)
-            || path.Contains("fox", StringComparison.OrdinalIgnoreCase))
+            || path.Contains("fox", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("shark", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("piranha", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("moose", StringComparison.OrdinalIgnoreCase) // aggressive wild
+            || path.Contains("eidolon", StringComparison.OrdinalIgnoreCase)
+            || path.Contains("drifter", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
+        // Everything else living (chicken, pig, sheep, goat, hare, deer, bee?, butterfly…) is protected.
         return true;
     }
 }
@@ -418,6 +552,7 @@ public sealed class EntityBehaviorClaimProtect : EntityBehavior
             return;
         }
 
+        // Zero damage BEFORE EntityBehaviorHealth runs (this behavior is inserted at index 0).
         if (mod.ShouldCancelDamageInClaim(entity, damageSource, ref damage))
         {
             damage = 0;

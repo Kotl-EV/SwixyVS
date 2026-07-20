@@ -35,7 +35,12 @@ public sealed partial class SwixyClaimChunkServerMod
             case ClaimAccessActionType.Refresh:
                 return ClaimActionResult.Success();
             case ClaimAccessActionType.AddPlayer:
-                return TryAddClaimMember(player, claim, packet.PlayerName, packet.PlayerUid, (EnumBlockAccessFlags)packet.AccessFlags);
+                return TryAddClaimMember(
+                    player,
+                    claim,
+                    packet.PlayerName,
+                    packet.PlayerUid,
+                    SanitizeAccessFlags(packet.AccessFlags));
             case ClaimAccessActionType.RemovePlayer:
                 return TryRemoveClaimMember(claim, packet.PlayerName, packet.PlayerUid);
             case ClaimAccessActionType.RenameClaim:
@@ -52,7 +57,11 @@ public sealed partial class SwixyClaimChunkServerMod
                 ClearClaimFlags(claim);
                 return ClaimActionResult.Success("swixyclaimchunk:claims-message-deleted");
             case ClaimAccessActionType.UpdateMemberAccess:
-                return TryUpdateClaimMemberAccess(claim, packet.PlayerName, packet.PlayerUid, (EnumBlockAccessFlags)packet.AccessFlags);
+                return TryUpdateClaimMemberAccess(
+                    claim,
+                    packet.PlayerName,
+                    packet.PlayerUid,
+                    SanitizeAccessFlags(packet.AccessFlags));
             case ClaimAccessActionType.GrantCoOwnership:
                 if (!IsClaimOwner(claim, player.PlayerUID))
                 {
@@ -62,14 +71,7 @@ public sealed partial class SwixyClaimChunkServerMod
                 return TryToggleCoOwnership(claim, packet.PlayerName, packet.PlayerUid);
             case ClaimAccessActionType.SetUseFilter:
             {
-                // Коды идут строкой UseFilterCodesRaw (protobuf List мог не доходить).
-                var codes = ClaimUseFilterCodesCodec.Split(packet.UseFilterCodesRaw);
-                serverApi.Logger.Notification(
-                    "[SwixyClaimChunk] SetUseFilter request claimId={0} mode={1} codesRawLen={2} codes={3}",
-                    packet.ClaimId,
-                    packet.UseFilterMode,
-                    packet.UseFilterCodesRaw?.Length ?? 0,
-                    codes.Count);
+                var codes = SanitizeUseFilterCodes(ClaimUseFilterCodesCodec.Split(packet.UseFilterCodesRaw));
                 return TrySetUseFilter(claim, packet.UseFilterMode, codes);
             }
             case ClaimAccessActionType.SetClaimFlags:
@@ -173,7 +175,7 @@ public sealed partial class SwixyClaimChunkServerMod
     /// <summary>Меняет Description привата (отображаемое имя).</summary>
     private ClaimActionResult TryRenameClaim(LandClaim claim, string claimName)
     {
-        claimName = claimName.Trim();
+        claimName = SanitizeShortString(claimName, ClaimConstants.MaxClaimNameLength);
         if (string.IsNullOrWhiteSpace(claimName))
         {
             return ClaimActionResult.Error("swixyclaimchunk:claims-error-empty-name");

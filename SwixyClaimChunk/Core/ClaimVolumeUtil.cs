@@ -1,9 +1,11 @@
 // =============================================================================
 // ClaimVolumeUtil.cs
 // -----------------------------------------------------------------------------
-// Утилита пересчёта объёма привата из блоков в количество чанков.
-// Используется при отображении лимитов и статистики: сервер и клиент могут
-// оперировать блоками, а карта приватов — чанками фиксированного размера.
+// Пересчёт объёма привата: блоки ↔ чанки.
+//
+// В serverconfig (PlayerRole.LandClaimAllowance / ExtraLandClaimAllowance)
+// SwixyClaimChunk хранит и читает КОЛИЧЕСТВО ЧАНКОВ, не блоков.
+// При проверке квоты чанки умножаются на объём столбца (size² × MapSizeY).
 // =============================================================================
 
 namespace SwixyClaimChunk.Core;
@@ -13,13 +15,34 @@ namespace SwixyClaimChunk.Core;
 /// </summary>
 public static class ClaimVolumeUtil
 {
+    public const int DefaultChunkSize = 32;
+    public const int DefaultMapSizeY = 256;
+
+    /// <summary>
+    /// Порог: значения LandClaimAllowance ≥ этого числа считаются «старыми» (в блоках)
+    /// и один раз конвертируются в чанки при загрузке мира.
+    /// </summary>
+    public const int LegacyBlocksThreshold = 10_000;
+
+    /// <summary>Объём одного чанк-столбца в блоках: chunkSize² × mapSizeY.</summary>
+    public static long ChunkColumnVolume(int chunkSize, int mapSizeY)
+    {
+        if (chunkSize <= 0)
+        {
+            chunkSize = DefaultChunkSize;
+        }
+
+        if (mapSizeY <= 0)
+        {
+            mapSizeY = DefaultMapSizeY;
+        }
+
+        return (long)chunkSize * chunkSize * mapSizeY;
+    }
+
     /// <summary>
     /// Переводит объём в блоках в эквивалентное количество чанков (округление вверх).
     /// </summary>
-    /// <param name="blockVolume">Объём в блоках; неположительные значения дают 0 чанков.</param>
-    /// <param name="chunkSize">Горизонтальный размер чанка (X и Z); при невалидном значении возвращается исходный blockVolume.</param>
-    /// <param name="mapSizeY">Высота мира в блоках (ось Y); участвует в объёме одного чанка.</param>
-    /// <returns>Минимальное целое число чанков, покрывающее заданный объём блоков.</returns>
     public static long BlocksToChunkCount(long blockVolume, int chunkSize, int mapSizeY)
     {
         if (blockVolume <= 0)
@@ -27,17 +50,35 @@ public static class ClaimVolumeUtil
             return 0;
         }
 
-        if (chunkSize <= 0 || mapSizeY <= 0)
-        {
-            return blockVolume;
-        }
-
-        var chunkVolume = (long)chunkSize * chunkSize * mapSizeY;
+        var chunkVolume = ChunkColumnVolume(chunkSize, mapSizeY);
         if (chunkVolume <= 0)
         {
             return blockVolume;
         }
 
         return (blockVolume + chunkVolume - 1) / chunkVolume;
+    }
+
+    /// <summary>Чанки → объём в блоках для сравнения с claim.SizeXYZ.</summary>
+    public static long ChunksToBlockVolume(long chunks, int chunkSize, int mapSizeY)
+    {
+        if (chunks <= 0)
+        {
+            return 0;
+        }
+
+        var chunkVolume = ChunkColumnVolume(chunkSize, mapSizeY);
+        if (chunkVolume <= 0)
+        {
+            return chunks;
+        }
+
+        // защита от overflow
+        if (chunks > long.MaxValue / chunkVolume)
+        {
+            return long.MaxValue;
+        }
+
+        return chunks * chunkVolume;
     }
 }

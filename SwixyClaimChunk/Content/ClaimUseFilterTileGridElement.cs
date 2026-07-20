@@ -1,13 +1,14 @@
 // =============================================================================
 // ClaimUseFilterTileGridElement.cs
 // -----------------------------------------------------------------------------
-// Virtualized creative-style tile grid for Use-filter (selected + catalog).
-// Only visible tiles are laid out / rendered — full creative catalogs stay smooth.
+// Virtualized creative-style tile grid for Use-filter.
+// Icons rendered like vanilla inventory slots (GuiElementPassiveItemSlot).
 // =============================================================================
 
 using System;
 using System.Collections.Generic;
 using Cairo;
+using SwixyClaimChunk.Core;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -20,8 +21,12 @@ namespace SwixyClaimChunk.Content;
 /// </summary>
 public sealed class ClaimUseFilterTileGridElement : GuiElement
 {
-    public const double UnscaledTile = 42;
+    public const double UnscaledTile = 48; // same as GuiElementPassiveItemSlot.unscaledSlotSize
     public const double UnscaledGap = 4;
+
+    private static readonly double UnscaledSlotSize = GuiElementPassiveItemSlot.unscaledSlotSize;
+    private static readonly double UnscaledItemSize = GuiElementPassiveItemSlot.unscaledItemSize;
+    private static readonly double ItemToSlotRatio = UnscaledItemSize / UnscaledSlotSize;
 
     public Action<string>? OnTileClick;
     public System.Func<string, bool>? IsSelected;
@@ -38,9 +43,23 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
     private LoadedTexture selectedTileTex;
     private LoadedTexture hoverTileTex;
     private LoadedTexture emptyHintTex;
+    private LoadedTexture tooltipTex;
+    private LoadedTexture groundStorageIconTex;
     private string emptyHintCached = "";
     private int emptyHintW;
     private int emptyHintH;
+    private string tooltipCachedText = "";
+    private string hoverTooltipLabel = "";
+    private double hoverTileX;
+    private double hoverTileY;
+    private double hoverTileSize;
+
+    /// <summary>
+    /// Slot from DummyInventory — some blocks (EP machines etc.) call MarkDirty
+    /// during GUI render and need a real inventory slot, not a free DummySlot.
+    /// </summary>
+    private readonly DummyInventory renderInventory;
+    private readonly ItemSlot renderSlot;
 
     public override bool Focusable => true;
 
@@ -72,6 +91,12 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
         selectedTileTex = new LoadedTexture(capi);
         hoverTileTex = new LoadedTexture(capi);
         emptyHintTex = new LoadedTexture(capi);
+        tooltipTex = new LoadedTexture(capi);
+        groundStorageIconTex = new LoadedTexture(capi);
+
+        renderInventory = new DummyInventory(capi, 1);
+        renderInventory.OnAcquireTransitionSpeed += static (_, _, _) => 0f;
+        renderSlot = renderInventory[0];
     }
 
     public void SetEntries(IReadOnlyList<(string Code, string Label, DummySlot Slot)>? list)
@@ -89,8 +114,6 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
     {
         Bounds.CalcWorldBounds();
         EnsureTileTextures();
-        // Panel chrome is drawn every frame in RenderInteractiveElements so it stays
-        // visible even if the static composer layer is covered/reordered.
     }
 
     private void EnsureTileTextures()
@@ -113,7 +136,6 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
         RoundRectangle(ctx, 0, 0, size, size, 3);
         if (selected)
         {
-            // Bright green so selected tiles read clearly on the brown panel.
             ctx.SetSourceRGBA(0.22, 0.48, 0.26, 0.98);
         }
         else
@@ -204,8 +226,6 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
             return;
         }
 
-        // No full-area plate under tiles — only individual tile cells + empty hint.
-
         if (entries.Count == 0)
         {
             EnsureEmptyHintTexture();
@@ -241,6 +261,7 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
         var mouseX = api.Input.MouseX;
         var mouseY = api.Input.MouseY;
         var insideViewport = IsPositionInside(mouseX, mouseY);
+        hoverTooltipLabel = "";
 
         api.Render.PushScissor(Bounds, true);
 
@@ -267,31 +288,16 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
                 (float)tile,
                 (float)tile);
 
-            var slot = entries[i].Slot;
-            if (slot.Itemstack?.Collectible != null)
+            // groundstorage — невидимый shape; 3D-иконка пустая → Cairo.
+            if (ClaimCodeUtil.NeedsCairoIcon(code)
+                || entries[i].Slot?.Itemstack?.Collectible == null
+                   && code.Contains("groundstorage", StringComparison.OrdinalIgnoreCase))
             {
-                var centerX = cellX + tile / 2;
-                var centerY = cellY + tile / 2;
-                var renderSize = (float)(tile * (GuiElementPassiveItemSlot.unscaledItemSize
-                    / GuiElementPassiveItemSlot.unscaledSlotSize) * 0.9);
-
-                var tileBounds = ElementBounds.Fixed(0, 0, UnscaledTile, UnscaledTile);
-                tileBounds.ParentBounds = api.Gui.WindowBounds;
-                tileBounds.CalcWorldBounds();
-                tileBounds.absFixedX = cellX;
-                tileBounds.absFixedY = cellY;
-                tileBounds.absInnerWidth = tile;
-                tileBounds.absInnerHeight = tile;
-
-                api.Render.PushScissor(tileBounds, true);
-                api.Render.RenderItemstackToGui(
-                    slot,
-                    centerX,
-                    centerY,
-                    100,
-                    renderSize,
-                    ColorUtil.WhiteArgb);
-                api.Render.PopScissor();
+                RenderGroundStorageIcon(cellX, cellY, tile);
+            }
+            else
+            {
+                RenderStackIcon(entries[i].Slot, cellX, cellY, tile, deltaTime);
             }
 
             if (insideViewport
@@ -310,11 +316,245 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
                         (float)cellY,
                         (float)tile,
                         (float)tile);
+
+                    // Подсказка: имя + code (как QuestBook).
+                    var label = entries[i].Label;
+                    if (ClaimCodeUtil.IsUnknownLabel(label) || string.IsNullOrWhiteSpace(label))
+                    {
+                        label = ClaimCodeUtil.GetFriendlyBlockLabel(code, entries[i].Slot?.Itemstack);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(code)
+                        && !string.Equals(label, code, StringComparison.OrdinalIgnoreCase)
+                        && !label.Contains(code, StringComparison.OrdinalIgnoreCase))
+                    {
+                        label = label + "\n" + code;
+                    }
+
+                    hoverTooltipLabel = label;
+                    hoverTileX = cellX;
+                    hoverTileY = cellY;
+                    hoverTileSize = tile;
                 }
             }
         }
 
         api.Render.PopScissor();
+
+        // Tooltip AFTER all tiles; Z above Itemstack (450).
+        if (!string.IsNullOrWhiteSpace(hoverTooltipLabel))
+        {
+            RenderHoverTooltip(hoverTooltipLabel, hoverTileX, hoverTileY, hoverTileSize);
+        }
+    }
+
+    private void RenderGroundStorageIcon(double cellX, double cellY, double tile)
+    {
+        EnsureGroundStorageIcon((int)Math.Ceiling(tile));
+        if (groundStorageIconTex.TextureId <= 0)
+        {
+            return;
+        }
+
+        var pad = tile * 0.08;
+        api.Render.Render2DTexturePremultipliedAlpha(
+            groundStorageIconTex.TextureId,
+            (float)(cellX + pad),
+            (float)(cellY + pad),
+            (float)(tile - pad * 2),
+            (float)(tile - pad * 2),
+            100f);
+    }
+
+    private void EnsureGroundStorageIcon(int size)
+    {
+        if (groundStorageIconTex.TextureId != 0)
+        {
+            return;
+        }
+
+        size = Math.Max(24, size);
+        using var surface = new ImageSurface(Format.Argb32, size, size);
+        using var ctx = genContext(surface);
+        ClaimCairoIcons.DrawGroundStorage(ctx, 0, 0, size);
+        generateTexture(surface, ref groundStorageIconTex);
+    }
+
+    /// <summary>Hover name like QuestBook admin picker (TextBackground fill).</summary>
+    private void RenderHoverTooltip(string text, double tileX, double tileY, double tileSize)
+    {
+        try
+        {
+            if (!string.Equals(text, tooltipCachedText, StringComparison.Ordinal))
+            {
+                var font = CairoFont.WhiteSmallText();
+                var background = new TextBackground
+                {
+                    HorPadding = 10,
+                    VerPadding = 4,
+                    Radius = 4,
+                    BorderWidth = 1.5,
+                    FillColor = [0.07, 0.08, 0.10, 0.96],
+                    BorderColor = [0.55, 0.48, 0.35, 1.0],
+                    Shade = true
+                };
+                var util = new TextTextureUtil(api);
+                util.GenOrUpdateTextTexture(text, font, ref tooltipTex, background);
+                tooltipCachedText = text;
+            }
+
+            if (tooltipTex.TextureId <= 0)
+            {
+                return;
+            }
+
+            var boxW = tooltipTex.Width;
+            var boxH = tooltipTex.Height;
+            var boxX = tileX + (tileSize - boxW) * 0.5;
+            var boxY = tileY - boxH - 6;
+            if (boxY < 4)
+            {
+                boxY = tileY + tileSize + 6;
+            }
+
+            if (boxX < 4)
+            {
+                boxX = 4;
+            }
+
+            if (boxX + boxW > api.Render.FrameWidth - 4)
+            {
+                boxX = api.Render.FrameWidth - boxW - 4;
+            }
+
+            if (boxY + boxH > api.Render.FrameHeight - 4)
+            {
+                boxY = api.Render.FrameHeight - boxH - 4;
+            }
+
+            // Itemstack uses posZ≈450 — tooltip must be higher or it sits under icons.
+            api.Render.Render2DTexturePremultipliedAlpha(
+                tooltipTex.TextureId,
+                (float)boxX,
+                (float)boxY,
+                boxW,
+                boxH,
+                800f);
+        }
+        catch
+        {
+            // tooltip is non-critical
+        }
+    }
+
+    /// <summary>
+    /// Same path as <see cref="GuiElementPassiveItemSlot"/>:
+    /// center of slot + scaled(unscaledItemSize) size, scissor = full slot.
+    /// </summary>
+    private void RenderStackIcon(DummySlot sourceSlot, double cellX, double cellY, double tile, float deltaTime)
+    {
+        var source = sourceSlot?.Itemstack;
+        if (source?.Collectible == null)
+        {
+            return;
+        }
+
+        try
+        {
+            if (renderSlot.Itemstack == null
+                || renderSlot.Itemstack.Collectible != source.Collectible
+                || !ItemStackAttributesEqual(renderSlot.Itemstack, source))
+            {
+                renderSlot.Itemstack = source.Clone();
+                if (renderSlot.Itemstack != null)
+                {
+                    renderSlot.Itemstack.StackSize = 1;
+                }
+            }
+        }
+        catch
+        {
+            return;
+        }
+
+        if (renderSlot.Itemstack?.Collectible == null)
+        {
+            return;
+        }
+
+        // Vanilla slot: center = slot origin + scaled(slotSize)/2, size = scaled(itemSize).
+        // For a non-48 tile, scale item size proportionally to keep inventory-like centering.
+        var scale = tile / scaled(UnscaledSlotSize);
+        var centerX = cellX + tile / 2.0;
+        var centerY = cellY + tile / 2.0;
+        var renderSize = (float)(scaled(UnscaledItemSize) * scale);
+
+        // Scissor = full tile (like inventory slot Bounds), not a tighter box —
+        // tight scissor clips EP multi-block meshes asymmetrically → "shifted" look.
+        var scissor = ElementBounds.Fixed(0, 0, UnscaledTile, UnscaledTile);
+        scissor.ParentBounds = api.Gui.WindowBounds;
+        scissor.CalcWorldBounds();
+        scissor.absFixedX = cellX;
+        scissor.absFixedY = cellY;
+        scissor.absInnerWidth = tile;
+        scissor.absInnerHeight = tile;
+
+        api.Render.PushScissor(scissor, true);
+        try
+        {
+            // color -1 like PassiveItemSlot; dt for proper transform.
+            api.Render.RenderItemstackToGui(
+                renderSlot,
+                centerX,
+                centerY,
+                450,
+                renderSize,
+                -1,
+                deltaTime);
+        }
+        catch
+        {
+            // bad collectible mesh — skip frame
+        }
+        finally
+        {
+            api.Render.PopScissor();
+        }
+    }
+
+    /// <summary>Creative stacks often differ by attributes (EP / lanterns).</summary>
+    private static bool ItemStackAttributesEqual(ItemStack a, ItemStack b)
+    {
+        if (ReferenceEquals(a, b))
+        {
+            return true;
+        }
+
+        if (a.Collectible != b.Collectible)
+        {
+            return false;
+        }
+
+        try
+        {
+            var aa = a.Attributes;
+            var ba = b.Attributes;
+            if (aa == null && ba == null)
+            {
+                return true;
+            }
+
+            if (aa == null || ba == null)
+            {
+                return false;
+            }
+
+            return aa.Equals(ba);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public override void OnMouseDownOnElement(ICoreClientAPI capi, MouseEvent args)
@@ -410,7 +650,6 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
         return Math.Max(0f, (float)(contentH - Bounds.InnerHeight));
     }
 
-    /// <summary>Thumb geometry in unscaled design coords relative to this element's fixedY.</summary>
     public void GetScrollThumbDesign(double trackDesignY, double trackDesignH, out double thumbY, out double thumbH)
     {
         var max = GetMaxScroll();
@@ -433,5 +672,15 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
         selectedTileTex.Dispose();
         hoverTileTex.Dispose();
         emptyHintTex.Dispose();
+        tooltipTex.Dispose();
+        groundStorageIconTex.Dispose();
+        try
+        {
+            renderSlot.Itemstack = null;
+        }
+        catch
+        {
+            // ignore
+        }
     }
 }

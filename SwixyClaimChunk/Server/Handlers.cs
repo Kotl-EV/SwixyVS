@@ -22,13 +22,16 @@ public sealed partial class SwixyClaimChunkServerMod
     {
         try
         {
-            serverApi?.Logger.Notification(
-                "[SwixyClaimChunk] Server received map request from {0} center={1},{2} radius={3}",
-                fromPlayer.PlayerName,
-                packet.CenterChunkX,
-                packet.CenterChunkZ,
-                packet.Radius);
-            SendState(fromPlayer, packet.CenterChunkX, packet.CenterChunkZ, packet.Radius, "", 0);
+            if (!TryConsumePacketRate(fromPlayer, "map", ClaimConstants.RateMapRequestMs))
+            {
+                return;
+            }
+
+            var cx = packet.CenterChunkX;
+            var cz = packet.CenterChunkZ;
+            var r = packet.Radius;
+            SanitizeMapWindow(ref cx, ref cz, ref r);
+            SendState(fromPlayer, cx, cz, r, "", 0);
         }
         catch (Exception exception)
         {
@@ -39,16 +42,20 @@ public sealed partial class SwixyClaimChunkServerMod
     /// <summary>Клик по одному чанку на карте — toggle claim/unclaim.</summary>
     private void OnChunkAction(IServerPlayer fromPlayer, ClaimChunkActionPacket packet)
     {
-        serverApi?.Logger.Notification(
-            "[SwixyClaimChunk] Server received ClaimChunkActionPacket from {0} chunk={1},{2}",
-            fromPlayer.PlayerName,
-            packet.ChunkX,
-            packet.ChunkZ);
-
         try
         {
+            if (!TryConsumePacketRate(fromPlayer, "chunk", ClaimConstants.RateChunkActionMs))
+            {
+                return;
+            }
+
+            var cx = packet.CenterChunkX;
+            var cz = packet.CenterChunkZ;
+            var r = packet.Radius;
+            SanitizeMapWindow(ref cx, ref cz, ref r);
+
             var result = ToggleChunkClaim(fromPlayer, packet.ChunkX, packet.ChunkZ);
-            SendState(fromPlayer, packet.CenterChunkX, packet.CenterChunkZ, packet.Radius, result);
+            SendState(fromPlayer, cx, cz, r, result);
         }
         catch (Exception exception)
         {
@@ -59,15 +66,29 @@ public sealed partial class SwixyClaimChunkServerMod
     /// <summary>Выделение нескольких чанков — пакетный claim и/или unclaim.</summary>
     private void OnChunksBatchAction(IServerPlayer fromPlayer, ClaimChunksBatchActionPacket packet)
     {
-        serverApi?.Logger.Notification(
-            "[SwixyClaimChunk] Server received ClaimChunksBatchActionPacket from {0} chunks={1}",
-            fromPlayer.PlayerName,
-            packet.Chunks?.Count ?? 0);
-
         try
         {
-            var result = ProcessChunksBatch(fromPlayer, packet.Chunks ?? []);
-            SendState(fromPlayer, packet.CenterChunkX, packet.CenterChunkZ, packet.Radius, result);
+            if (!TryConsumePacketRate(fromPlayer, "batch", ClaimConstants.RateBatchMs))
+            {
+                return;
+            }
+
+            var chunks = SanitizeBatchChunks(packet.Chunks, out var truncated);
+            var cx = packet.CenterChunkX;
+            var cz = packet.CenterChunkZ;
+            var r = packet.Radius;
+            SanitizeMapWindow(ref cx, ref cz, ref r);
+
+            var result = ProcessChunksBatch(fromPlayer, chunks);
+            if (truncated && result.MessageType == 0)
+            {
+                // Soft note: only first MaxBatchChunks processed.
+                result = ClaimActionResult.SuccessComposite(
+                    result.Resolve(fromPlayer) + " "
+                    + Lang.GetL(fromPlayer.LanguageCode, "swixyclaimchunk:error-batch-truncated", ClaimConstants.MaxBatchChunks));
+            }
+
+            SendState(fromPlayer, cx, cz, r, result);
         }
         catch (Exception exception)
         {
@@ -78,12 +99,22 @@ public sealed partial class SwixyClaimChunkServerMod
     /// <summary>Клиент запросил список своих приватов.</summary>
     private void OnClaimListRequest(IServerPlayer fromPlayer, ClaimListRequestPacket packet)
     {
+        if (!TryConsumePacketRate(fromPlayer, "list", ClaimConstants.RateClaimListMs))
+        {
+            return;
+        }
+
         SendClaimList(fromPlayer, "", 0);
     }
 
     /// <summary>Вкл/выкл подсветку границ привата в мире для игрока.</summary>
     private void OnClaimShowRequest(IServerPlayer fromPlayer, ClaimShowRequestPacket packet)
     {
+        if (!TryConsumePacketRate(fromPlayer, "show", ClaimConstants.RateShowMs))
+        {
+            return;
+        }
+
         if (packet.Clear)
         {
             SendClaimShowCleared(fromPlayer, packet.ClaimId);
@@ -98,6 +129,17 @@ public sealed partial class SwixyClaimChunkServerMod
     {
         try
         {
+            if (!TryConsumePacketRate(fromPlayer, "access", ClaimConstants.RateAccessActionMs))
+            {
+                return;
+            }
+
+            if (packet == null)
+            {
+                return;
+            }
+
+            SanitizeAccessActionPacket(packet);
             var result = ProcessClaimAccessAction(fromPlayer, packet);
             SendClaimList(fromPlayer, result);
         }
@@ -107,5 +149,4 @@ public sealed partial class SwixyClaimChunkServerMod
             SendClaimList(fromPlayer, ClaimActionResult.Error("swixyclaimchunk:error-unknown"));
         }
     }
-
 }

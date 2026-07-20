@@ -77,39 +77,73 @@ public sealed class UseFilterRuleData
 
 /// <summary>
 /// Флаги привата (битовая маска).
-/// Default 0: PvP выключен (безопасно), животные не защищены, пока игрок не включит.
+/// Default 0 (безопасно): PvP выключен, животные защищены.
 /// </summary>
 public static class ClaimFlagBits
 {
     /// <summary>Разрешить PvP в привате. Если бит сброшен — урон игрок→игрок блокируется.</summary>
     public const int AllowPvp = 1 << 0;
 
-    /// <summary>Защищать животных: чужие не могут наносить им урон в привате.</summary>
-    public const int ProtectAnimals = 1 << 1;
+    /// <summary>
+    /// Разрешить урон животным чужим игрокам.
+    /// Если бит сброшен (default) — животные в привате защищены.
+    /// (Старое имя ProtectAnimals: opt-in защита; v1 save инвертирует бит при загрузке.)
+    /// </summary>
+    public const int AllowAnimalDamage = 1 << 1;
+
+    /// <summary>Устаревший алиас (v0 save: бит = «защищать»). Не использовать в новой логике.</summary>
+    public const int ProtectAnimals = AllowAnimalDamage;
+
+    public const int AllKnown = AllowPvp | AllowAnimalDamage;
+
+    /// <summary>Животные защищены, если не разрешён урон.</summary>
+    public static bool AreAnimalsProtected(int flags) => (flags & AllowAnimalDamage) == 0;
 }
 
-/// <summary>Флаги приватов в SaveGame: ключ → bitmask string.</summary>
+/// <summary>Флаги приватов в SaveGame: ключ → bitmask.</summary>
 [ProtoContract]
 public sealed class ClaimFlagsSaveData
 {
     [ProtoMember(1)]
     public Dictionary<string, int> Entries { get; set; } = [];
+
+    /// <summary>
+    /// 0 = legacy: bit1 = ProtectAnimals (opt-in protect).
+    /// 1+ = bit1 = AllowAnimalDamage (opt-in hurt; default protect).
+    /// </summary>
+    [ProtoMember(2)]
+    public int Version { get; set; }
 }
 
-/// <summary>Фоновый скан блоков привата для UI фильтра Use.</summary>
+/// <summary>Фоновый скан блоков привата для UI фильтра Use (чанковый, с time-budget).</summary>
 public sealed class UseFilterScanJob
 {
     public required IServerPlayer Player { get; init; }
     public required int ClaimId { get; init; }
     public required LandClaim Claim { get; init; }
     public required List<Cuboidi> Areas { get; init; }
-    public int AreaIndex { get; set; }
-    public int NextX { get; set; }
-    public int NextZ { get; set; }
-    public bool StartedArea { get; set; }
+    /// <summary>Чанки (cx,cy,cz), пересекающие areas привата.</summary>
+    public required List<(int Cx, int Cy, int Cz)> Chunks { get; init; }
+    /// <summary>Ключ кэша (storage key + signature areas).</summary>
+    public required string CacheKey { get; init; }
+    public long AreasSignature { get; init; }
+
+    /// <summary>0 = BlockEntities, 1 = block ids в чанках.</summary>
+    public int Phase { get; set; }
+    public int ChunkIndex { get; set; }
+    /// <summary>Локальный индекс внутри текущего чанка (phase 1).</summary>
+    public int LocalIndex { get; set; }
+
     public int Scanned { get; set; }
     public HashSet<int> SeenBlockIds { get; } = [];
     public Dictionary<string, string> InterestingPreferred { get; } = new(StringComparer.OrdinalIgnoreCase);
-    public Dictionary<string, string> TerrainPreferred { get; } = new(StringComparer.OrdinalIgnoreCase);
-    public Dictionary<string, string>? CreativeByPrefix { get; set; }
+}
+
+/// <summary>Кэш результата скана use-filter по привату.</summary>
+public sealed class UseFilterScanCacheEntry
+{
+    public long AreasSignature { get; init; }
+    public string CodesRaw { get; init; } = "";
+    public int CodeCount { get; init; }
+    public int ScannedBlocks { get; init; }
 }

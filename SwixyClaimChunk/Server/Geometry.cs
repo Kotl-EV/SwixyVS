@@ -390,6 +390,8 @@ public sealed partial class SwixyClaimChunkServerMod
         // Coord-ключ фильтра зависит от minXYZ areas — перепривязываем после expand/merge.
         RebindUseFilterKeys(claim);
         RebindClaimFlagsKeys(claim);
+        // Состав блоков/areas мог измениться — кэш скана use-filter сбрасываем.
+        InvalidateUseFilterScanCache(claim);
     }
 
     /// <summary>Все LandClaim, принадлежащие игроку по UID.</summary>

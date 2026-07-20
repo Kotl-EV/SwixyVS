@@ -162,18 +162,16 @@ public sealed partial class SwixyClaimChunkServerMod
             return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }
 
-        // �� �������� TouchClaim: �� �������� claim � ����� All � ������ ClaimId.
-        var normalized = NormalizeUseFilterCodes(codes);
+        // Не трогаем TouchClaim: не двигаем claim в списке All и индекс ClaimId.
+        var normalized = SanitizeUseFilterCodes(codes);
         if (mode == ClaimUseFilterMode.Whitelist && normalized.Count == 0)
         {
-            serverApi?.Logger.Warning("[SwixyClaimChunk] SetUseFilter: empty whitelist rejected");
             return ClaimActionResult.Error("swixyclaimchunk:use-filter-error-empty");
         }
 
         var keys = ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList();
         if (keys.Count == 0)
         {
-            serverApi?.Logger.Warning("[SwixyClaimChunk] SetUseFilter: no storage keys for claim");
             return ClaimActionResult.Error("swixyclaimchunk:claims-error-not-found");
         }
 
@@ -182,21 +180,12 @@ public sealed partial class SwixyClaimChunkServerMod
             ClearUseFilterKeysOnly(claim);
             PersistUseFiltersNow();
             BroadcastUseFiltersSync();
-            serverApi?.Logger.Notification(
-                "[SwixyClaimChunk] Use filter cleared keys={0}",
-                string.Join(", ", keys));
             return ClaimActionResult.Success("swixyclaimchunk:use-filter-message-saved");
         }
 
         WriteUseFilter(claim, ClaimUseFilterMode.Whitelist, normalized);
         PersistUseFiltersNow();
         BroadcastUseFiltersSync();
-
-        serverApi?.Logger.Notification(
-            "[SwixyClaimChunk] Use filter saved keys=[{0}] codes={1} sample={2}",
-            string.Join(" | ", keys),
-            normalized.Count,
-            normalized.Count > 0 ? normalized[0] : "");
 
         return ClaimActionResult.Success("swixyclaimchunk:use-filter-message-saved");
     }
@@ -324,11 +313,12 @@ public sealed partial class SwixyClaimChunkServerMod
 
     private void OnUseFiltersRequestPacket(IServerPlayer fromPlayer, ClaimUseFiltersRequestPacket packet)
     {
+        if (!TryConsumePacketRate(fromPlayer, "usefilters", ClaimConstants.RateUseFiltersRequestMs))
+        {
+            return;
+        }
+
         BroadcastUseFiltersSync(fromPlayer);
-        serverApi?.Logger.Notification(
-            "[SwixyClaimChunk] Use filters requested by {0}, sent {1} keys",
-            fromPlayer.PlayerName,
-            useFiltersByClaimKey.Count);
     }
 
     private void OnUseFiltersSaveGameLoaded()
@@ -449,13 +439,23 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    // ── Use-filter scan: cache + chunk pass + time budget (без лага сервера) ──
+
+    /// <summary>Бюджет одного тика скана (мс). Безопасно для dedicated.</summary>
+    private const int UseFilterScanBudgetMs = 2;
+
     /// <summary>
-    /// Запускает фоновый скан blocks привата (не блокирует тик).
-    /// Уникальность по Block.Id — быстро; creative-маппинг один раз в конце.
+    /// Запускает быстрый фоновый скан: кэш → BlockEntities → уникальные block id в чанках.
+    /// Не блокирует тик (time-budget ~2 ms/шаг).
     /// </summary>
     private void OnUseFilterScanRequestPacket(IServerPlayer fromPlayer, ClaimUseFilterScanRequestPacket packet)
     {
         if (serverApi == null || serverChannel == null)
+        {
+            return;
+        }
+
+        if (!TryConsumePacketRate(fromPlayer, "usefilterscan", ClaimConstants.RateUseFilterScanMs))
         {
             return;
         }
@@ -481,28 +481,211 @@ public sealed partial class SwixyClaimChunkServerMod
             return;
         }
 
+        EnsureUseFilterScanLookups();
+
+        var areasList = areas.ToList();
+        var signature = ComputeAreasSignature(areasList);
+        var cacheKey = BuildClaimStorageKey(claim);
+        if (string.IsNullOrWhiteSpace(cacheKey))
+        {
+            cacheKey = "claim:" + packet.ClaimId;
+        }
+
+        // Мгновенный ответ из кэша (повторное открытие UI / другой игрок).
+        if (useFilterScanCache.TryGetValue(cacheKey, out var cached)
+            && cached.AreasSignature == signature)
+        {
+            serverChannel.SendPacket(new ClaimUseFilterScanResultPacket
+            {
+                ClaimId = packet.ClaimId,
+                CodesRaw = cached.CodesRaw,
+                CodeCount = cached.CodeCount,
+                ScannedBlocks = cached.ScannedBlocks,
+                Message = cached.CodeCount == 0
+                    ? Lang.GetL(fromPlayer.LanguageCode, "swixyclaimchunk:use-filter-scan-empty")
+                    : Lang.GetL(fromPlayer.LanguageCode, "swixyclaimchunk:use-filter-scan-ok", cached.CodeCount)
+            }, fromPlayer);
+            return;
+        }
+
         var jobKey = fromPlayer.PlayerUID + ":" + packet.ClaimId;
-        // Не запускаем второй скан, пока первый не закончен (анти-spam kick).
         if (activeUseFilterScans.ContainsKey(jobKey))
         {
             return;
         }
 
+        var chunks = BuildIntersectingChunkCoords(areasList);
         activeUseFilterScans[jobKey] = new UseFilterScanJob
         {
             Player = fromPlayer,
             ClaimId = packet.ClaimId,
             Claim = claim,
-            Areas = areas.ToList(),
-            CreativeByPrefix = BuildCreativeDisplayCodeCache()
+            Areas = areasList,
+            Chunks = chunks,
+            CacheKey = cacheKey,
+            AreasSignature = signature,
+            Phase = 0,
+            ChunkIndex = 0,
+            LocalIndex = 0
         };
 
-        // Первый шаг сразу, дальше — по тикам.
         serverApi.Event.EnqueueMainThreadTask(() => ProcessUseFilterScanStep(jobKey), "swixy-usefilter-scan");
     }
 
+    private void InvalidateUseFilterScanCache(LandClaim claim)
+    {
+        var key = BuildClaimStorageKey(claim);
+        if (!string.IsNullOrWhiteSpace(key))
+        {
+            useFilterScanCache.Remove(key);
+        }
+    }
+
+    private static long ComputeAreasSignature(IReadOnlyList<Cuboidi> areas)
+    {
+        unchecked
+        {
+            long h = areas.Count * 397L;
+            for (var i = 0; i < areas.Count; i++)
+            {
+                var a = areas[i];
+                h = (h * 31) + a.X1;
+                h = (h * 31) + a.Y1;
+                h = (h * 31) + a.Z1;
+                h = (h * 31) + a.X2;
+                h = (h * 31) + a.Y2;
+                h = (h * 31) + a.Z2;
+            }
+
+            return h;
+        }
+    }
+
+    /// <summary>Все (cx,cy,cz) чанки, пересекающие cuboid areas.</summary>
+    private List<(int Cx, int Cy, int Cz)> BuildIntersectingChunkCoords(IReadOnlyList<Cuboidi> areas)
+    {
+        var set = new HashSet<(int, int, int)>();
+        if (serverApi == null)
+        {
+            return [];
+        }
+
+        var cs = serverApi.WorldManager.ChunkSize;
+        if (cs <= 0)
+        {
+            cs = 32;
+        }
+
+        foreach (var area in areas)
+        {
+            var x1 = Math.Min(area.X1, area.X2);
+            var x2 = Math.Max(area.X1, area.X2) - 1;
+            var y1 = Math.Min(area.Y1, area.Y2);
+            var y2 = Math.Max(area.Y1, area.Y2) - 1;
+            var z1 = Math.Min(area.Z1, area.Z2);
+            var z2 = Math.Max(area.Z1, area.Z2) - 1;
+            if (x2 < x1 || y2 < y1 || z2 < z1)
+            {
+                continue;
+            }
+
+            var cx0 = FloorDiv(x1, cs);
+            var cx1 = FloorDiv(x2, cs);
+            var cy0 = FloorDiv(y1, cs);
+            var cy1 = FloorDiv(y2, cs);
+            var cz0 = FloorDiv(z1, cs);
+            var cz1 = FloorDiv(z2, cs);
+
+            for (var cx = cx0; cx <= cx1; cx++)
+            {
+                for (var cy = cy0; cy <= cy1; cy++)
+                {
+                    for (var cz = cz0; cz <= cz1; cz++)
+                    {
+                        set.Add((cx, cy, cz));
+                    }
+                }
+            }
+        }
+
+        return set.OrderBy(t => t.Item1).ThenBy(t => t.Item3).ThenBy(t => t.Item2).ToList();
+    }
+
+    /// <summary>Таблицы skip-id и creative-кодов — один раз на мир.</summary>
+    private void EnsureUseFilterScanLookups()
+    {
+        if (serverApi == null || useFilterSkipBlockIds != null)
+        {
+            return;
+        }
+
+        var skip = new HashSet<int>();
+        var creative = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var b in serverApi.World.Blocks)
+        {
+            if (b == null)
+            {
+                continue;
+            }
+
+            if (b.Id == 0 || b.Code == null)
+            {
+                skip.Add(b.Id);
+                continue;
+            }
+
+            // Террейн без EntityClass/Use-behavior — не трогаем (O(1) skip по id).
+            var mat = b.BlockMaterial;
+            var noEntity = string.IsNullOrWhiteSpace(b.EntityClass);
+            if (noEntity
+                && IsTerrainMaterial(mat)
+                && !HasUseInteractiveBehavior(b)
+                && !IsUseInteractivePath(b.Code.ToString())
+                && !IsUseInteractiveName(b.GetType().Name))
+            {
+                skip.Add(b.Id);
+            }
+
+            if (!HasCreativeDisplay(b))
+            {
+                continue;
+            }
+
+            var full = ClaimCodeUtil.NormalizeCollectibleCode(b.Code.ToString());
+            if (string.IsNullOrWhiteSpace(full) || ClaimCodeUtil.IsMultiblockStubCode(full))
+            {
+                continue;
+            }
+
+            var groupKey = ClaimCodeUtil.GetCatalogGroupKey(full);
+            if (string.IsNullOrWhiteSpace(groupKey))
+            {
+                groupKey = ClaimCodeUtil.StripVariantSuffixes(full);
+            }
+
+            if (string.IsNullOrWhiteSpace(groupKey))
+            {
+                groupKey = full;
+            }
+
+            if (!creative.TryGetValue(groupKey, out var existing)
+                || ScoreDisplayBlockCode(full, b) > ScoreDisplayBlockCode(existing, null))
+            {
+                creative[groupKey] = full;
+            }
+        }
+
+        useFilterSkipBlockIds = skip;
+        useFilterCreativeCache = creative;
+        serverApi.Logger.Notification(
+            "[SwixyClaimChunk] Use-filter scan lookups: skipIds={0} creativeGroups={1}",
+            skip.Count, creative.Count);
+    }
+
     /// <summary>
-    /// Один «квант» скана: несколько XZ-колонок. Не подвешивает сервер.
+    /// Один квант: phase0 = BlockEntities чанка, phase1 = block ids (Data).
+    /// Лимит ~2 ms — сервер не подвисает.
     /// </summary>
     private void ProcessUseFilterScanStep(string jobKey)
     {
@@ -518,120 +701,142 @@ public sealed partial class SwixyClaimChunkServerMod
 
         try
         {
-            // Больше колонок за тик — полный скан большого привата быстрее (список без обрезки).
-            const int columnsPerStep = 128;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var accessor = serverApi.World.BlockAccessor;
-            var columnsDone = 0;
+            var cs = serverApi.WorldManager.ChunkSize;
+            if (cs <= 0)
+            {
+                cs = 32;
+            }
+
+            var blocksPerChunk = cs * cs * cs;
             var done = false;
 
-            while (columnsDone < columnsPerStep && !done)
+            while (sw.ElapsedMilliseconds < UseFilterScanBudgetMs && !done)
             {
-                if (job.AreaIndex >= job.Areas.Count)
+                if (job.ChunkIndex >= job.Chunks.Count)
                 {
+                    if (job.Phase == 0)
+                    {
+                        // После BE — проход по block ids.
+                        job.Phase = 1;
+                        job.ChunkIndex = 0;
+                        job.LocalIndex = 0;
+                        if (job.Chunks.Count == 0)
+                        {
+                            done = true;
+                        }
+
+                        continue;
+                    }
+
                     done = true;
                     break;
                 }
 
-                var area = job.Areas[job.AreaIndex];
-                var x1 = Math.Min(area.X1, area.X2);
-                var x2 = Math.Max(area.X1, area.X2);
-                var y1 = Math.Min(area.Y1, area.Y2);
-                var y2 = Math.Max(area.Y1, area.Y2);
-                var z1 = Math.Min(area.Z1, area.Z2);
-                var z2 = Math.Max(area.Z1, area.Z2);
-
-                if (!job.StartedArea)
+                var (cx, cy, cz) = job.Chunks[job.ChunkIndex];
+                var chunk = accessor.GetChunk(cx, cy, cz);
+                if (chunk == null || chunk.Disposed)
                 {
-                    job.NextX = x1;
-                    job.NextZ = z1;
-                    job.StartedArea = true;
-                }
-
-                if (job.NextX >= x2)
-                {
-                    job.AreaIndex++;
-                    job.StartedArea = false;
+                    job.ChunkIndex++;
+                    job.LocalIndex = 0;
                     continue;
                 }
 
-                // Одна XZ-колонка: Y сверху вниз, step=1 (ничего не пропускаем).
-                var x = job.NextX;
-                var z = job.NextZ;
-                for (var y = y2 - 1; y >= y1; y--)
+                if (job.Phase == 0)
                 {
-                    job.Scanned++;
-                    var pos = new BlockPos(x, y, z);
-                    var block = accessor.GetBlock(pos);
-                    if (block == null || block.Id == 0)
-                    {
-                        continue;
-                    }
+                    // Phase 0: только BlockEntities — почти free, ловит сундуки/машины/двери.
+                    CollectUseFilterFromChunkEntities(job, chunk, accessor);
+                    job.ChunkIndex++;
+                    job.LocalIndex = 0;
+                    continue;
+                }
 
-                    // Multiblock-stub → control (двери / EP).
-                    IMultiblockOffset? mb = block as IMultiblockOffset
-                        ?? block.GetInterface<IMultiblockOffset>(serverApi.World, pos);
-                    if (mb != null)
+                // Phase 1: уникальные block id внутри пересечения claim ∩ chunk.
+                try
+                {
+                    chunk.Unpack_ReadOnly();
+                }
+                catch
+                {
+                    job.ChunkIndex++;
+                    job.LocalIndex = 0;
+                    continue;
+                }
+
+                // Границы чанка в блоках.
+                var baseX = cx * cs;
+                var baseY = cy * cs;
+                var baseZ = cz * cs;
+
+                // Быстрый путь: полный чанк внутри claim → идём по всем id без AABB-check.
+                var fullInside = IsChunkFullyInsideAnyArea(job.Areas, baseX, baseY, baseZ, cs);
+
+                while (job.LocalIndex < blocksPerChunk
+                       && sw.ElapsedMilliseconds < UseFilterScanBudgetMs)
+                {
+                    var i = job.LocalIndex++;
+                    job.Scanned++;
+
+                    int blockId;
+                    try
                     {
-                        var controlPos = mb.GetControlBlockPos(pos);
-                        if (controlPos != null)
+                        blockId = chunk.UnpackAndReadBlock(i, 0);
+                    }
+                    catch
+                    {
+                        // fallback: Data indexer if available
+                        try
                         {
-                            block = accessor.GetBlock(controlPos);
-                            if (block == null || block.Id == 0)
-                            {
-                                continue;
-                            }
+                            blockId = chunk.Data?[i] ?? 0;
+                        }
+                        catch
+                        {
+                            blockId = 0;
                         }
                     }
 
-                    // Уже видели этот тип — O(1), без строк/creative.
-                    if (!job.SeenBlockIds.Add(block.Id))
+                    if (blockId == 0
+                        || (useFilterSkipBlockIds != null && useFilterSkipBlockIds.Contains(blockId)))
                     {
                         continue;
                     }
 
-                    var code = ClaimCodeUtil.NormalizeCollectibleCode(block.Code?.ToString());
-                    if (string.IsNullOrWhiteSpace(code) || ClaimCodeUtil.IsMultiblockStubCode(code))
+                    if (!fullInside)
+                    {
+                        // local: (y * cs + z) * cs + x
+                        var lx = i % cs;
+                        var t = i / cs;
+                        var lz = t % cs;
+                        var ly = t / cs;
+                        if (!IsBlockInsideAnyArea(job.Areas, baseX + lx, baseY + ly, baseZ + lz))
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (!job.SeenBlockIds.Add(blockId))
                     {
                         continue;
                     }
 
-                    var groupKey = ClaimCodeUtil.StripVariantSuffixes(code);
-                    if (string.IsNullOrWhiteSpace(groupKey))
-                    {
-                        groupKey = code;
-                    }
-
-                    // Только блоки, с которыми можно взаимодействовать (Use),
-                    // без земли/камня/руды и «просто декора».
-                    if (!IsUseInteractableForScan(serverApi.World, block, code, groupKey, pos))
-                    {
-                        continue;
-                    }
-
-                    var displayCode = PreferCreativeInventoryCodeCached(job.CreativeByPrefix, block, code);
-                    if (!job.InterestingPreferred.TryGetValue(groupKey, out var existing)
-                        || IsBetterDisplayBlockCode(serverApi.World, displayCode, existing, block))
-                    {
-                        job.InterestingPreferred[groupKey] = displayCode;
-                    }
+                    // Новый id — один раз классифицируем (без GetBlockEntity на каждой клетке).
+                    TryRegisterUseFilterBlockId(job, blockId);
                 }
 
-                columnsDone++;
-                job.NextZ++;
-                if (job.NextZ >= z2)
+                if (job.LocalIndex >= blocksPerChunk)
                 {
-                    job.NextZ = z1;
-                    job.NextX++;
+                    job.ChunkIndex++;
+                    job.LocalIndex = 0;
                 }
             }
 
-            if (done || job.AreaIndex >= job.Areas.Count)
+            if (done)
             {
                 FinishUseFilterScan(jobKey, job);
                 return;
             }
 
-            // Следующий квант на следующем тике.
             serverApi.Event.RegisterCallback(_ => ProcessUseFilterScanStep(jobKey), 1);
         }
         catch (Exception exception)
@@ -653,6 +858,262 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    private void CollectUseFilterFromChunkEntities(
+        UseFilterScanJob job,
+        IWorldChunk chunk,
+        IBlockAccessor accessor)
+    {
+        if (serverApi == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var bes = chunk.BlockEntities;
+            if (bes == null)
+            {
+                return;
+            }
+
+            // Dictionary<BlockPos, BlockEntity> или массив / IEnumerable
+            if (bes is System.Collections.IDictionary dict)
+            {
+                foreach (System.Collections.DictionaryEntry entry in dict)
+                {
+                    if (entry.Value is not BlockEntity be)
+                    {
+                        continue;
+                    }
+
+                    RegisterUseFilterFromBlockEntity(job, be, accessor);
+                }
+
+                return;
+            }
+
+            if (bes is System.Collections.IEnumerable enumerable)
+            {
+                foreach (var item in enumerable)
+                {
+                    if (item is BlockEntity be)
+                    {
+                        RegisterUseFilterFromBlockEntity(job, be, accessor);
+                    }
+                    else if (item is System.Collections.DictionaryEntry de
+                             && de.Value is BlockEntity be2)
+                    {
+                        RegisterUseFilterFromBlockEntity(job, be2, accessor);
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // chunk BE shape may vary
+        }
+    }
+
+    private void RegisterUseFilterFromBlockEntity(
+        UseFilterScanJob job,
+        BlockEntity be,
+        IBlockAccessor accessor)
+    {
+        if (serverApi == null || be == null)
+        {
+            return;
+        }
+
+        BlockPos? pos = null;
+        try
+        {
+            pos = be.Pos;
+        }
+        catch
+        {
+            // ignore
+        }
+
+        if (pos == null || !IsBlockInsideAnyArea(job.Areas, pos.X, pos.Y, pos.Z))
+        {
+            return;
+        }
+
+        Block? block = null;
+        try
+        {
+            block = be.Block ?? accessor.GetBlock(pos);
+        }
+        catch
+        {
+            return;
+        }
+
+        if (block == null || block.Id == 0)
+        {
+            return;
+        }
+
+        job.Scanned++;
+        if (!job.SeenBlockIds.Add(block.Id))
+        {
+            // Уже классифицировали id — но BE-тип всё равно Use-кандидат.
+            // Если id был skip — не попадёт; если уже interesting — ок.
+        }
+
+        TryRegisterUseFilterBlock(job, block, pos);
+    }
+
+    private void TryRegisterUseFilterBlockId(UseFilterScanJob job, int blockId)
+    {
+        if (serverApi == null)
+        {
+            return;
+        }
+
+        Block? block;
+        try
+        {
+            block = serverApi.World.GetBlock(blockId);
+        }
+        catch
+        {
+            return;
+        }
+
+        if (block == null)
+        {
+            return;
+        }
+
+        // Без позиции: дешёвая классификация по типу (BE уже собраны в phase 0).
+        TryRegisterUseFilterBlock(job, block, pos: null);
+    }
+
+    private void TryRegisterUseFilterBlock(UseFilterScanJob job, Block block, BlockPos? pos)
+    {
+        if (serverApi == null || block == null)
+        {
+            return;
+        }
+
+        if (useFilterSkipBlockIds != null && useFilterSkipBlockIds.Contains(block.Id))
+        {
+            return;
+        }
+
+        var code = ClaimCodeUtil.NormalizeCollectibleCode(block.Code?.ToString());
+        if (string.IsNullOrWhiteSpace(code) || ClaimCodeUtil.IsMultiblockStubCode(code))
+        {
+            // Multiblock stub: если есть pos — control block.
+            if (pos != null)
+            {
+                try
+                {
+                    IMultiblockOffset? mb = block as IMultiblockOffset
+                        ?? block.GetInterface<IMultiblockOffset>(serverApi.World, pos);
+                    if (mb != null)
+                    {
+                        var controlPos = mb.GetControlBlockPos(pos);
+                        if (controlPos != null)
+                        {
+                            var control = serverApi.World.BlockAccessor.GetBlock(controlPos);
+                            if (control != null && control.Id != 0 && job.SeenBlockIds.Add(control.Id))
+                            {
+                                TryRegisterUseFilterBlock(job, control, controlPos);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            return;
+        }
+
+        var groupKey = ClaimCodeUtil.GetCatalogGroupKey(code);
+        if (string.IsNullOrWhiteSpace(groupKey))
+        {
+            groupKey = ClaimCodeUtil.StripVariantSuffixes(code);
+        }
+
+        if (string.IsNullOrWhiteSpace(groupKey))
+        {
+            groupKey = code;
+        }
+
+        if (!IsUseInteractableForScan(serverApi.World, block, code, groupKey, pos))
+        {
+            return;
+        }
+
+        var displayCode = PreferCreativeInventoryCodeCached(useFilterCreativeCache, block, code);
+        if (string.IsNullOrWhiteSpace(displayCode))
+        {
+            displayCode = code;
+        }
+
+        if (!job.InterestingPreferred.TryGetValue(groupKey, out var existing)
+            || IsBetterDisplayBlockCode(serverApi.World, displayCode, existing, block))
+        {
+            job.InterestingPreferred[groupKey] = displayCode;
+        }
+    }
+
+    private static bool IsChunkFullyInsideAnyArea(
+        IReadOnlyList<Cuboidi> areas,
+        int baseX,
+        int baseY,
+        int baseZ,
+        int cs)
+    {
+        var x2 = baseX + cs;
+        var y2 = baseY + cs;
+        var z2 = baseZ + cs;
+        for (var i = 0; i < areas.Count; i++)
+        {
+            var a = areas[i];
+            var ax1 = Math.Min(a.X1, a.X2);
+            var ax2 = Math.Max(a.X1, a.X2);
+            var ay1 = Math.Min(a.Y1, a.Y2);
+            var ay2 = Math.Max(a.Y1, a.Y2);
+            var az1 = Math.Min(a.Z1, a.Z2);
+            var az2 = Math.Max(a.Z1, a.Z2);
+            if (ax1 <= baseX && ax2 >= x2
+                && ay1 <= baseY && ay2 >= y2
+                && az1 <= baseZ && az2 >= z2)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsBlockInsideAnyArea(IReadOnlyList<Cuboidi> areas, int x, int y, int z)
+    {
+        for (var i = 0; i < areas.Count; i++)
+        {
+            var a = areas[i];
+            var ax1 = Math.Min(a.X1, a.X2);
+            var ax2 = Math.Max(a.X1, a.X2);
+            var ay1 = Math.Min(a.Y1, a.Y2);
+            var ay2 = Math.Max(a.Y1, a.Y2);
+            var az1 = Math.Min(a.Z1, a.Z2);
+            var az2 = Math.Max(a.Z1, a.Z2);
+            // Cuboidi в VS обычно [min, max) по осям areas claim.
+            if (x >= ax1 && x < ax2 && y >= ay1 && y < ay2 && z >= az1 && z < az2)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void FinishUseFilterScan(string jobKey, UseFilterScanJob job)
     {
         activeUseFilterScans.Remove(jobKey);
@@ -661,16 +1122,24 @@ public sealed partial class SwixyClaimChunkServerMod
             return;
         }
 
-        // Только «игровые» блоки — без террейна/руд.
         var codes = job.InterestingPreferred.Values
             .OrderBy(static c => c, StringComparer.OrdinalIgnoreCase)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+        var codesRaw = ClaimUseFilterCodesCodec.Join(codes);
+        useFilterScanCache[job.CacheKey] = new UseFilterScanCacheEntry
+        {
+            AreasSignature = job.AreasSignature,
+            CodesRaw = codesRaw,
+            CodeCount = codes.Count,
+            ScannedBlocks = job.Scanned
+        };
+
         serverChannel.SendPacket(new ClaimUseFilterScanResultPacket
         {
             ClaimId = job.ClaimId,
-            CodesRaw = ClaimUseFilterCodesCodec.Join(codes),
+            CodesRaw = codesRaw,
             CodeCount = codes.Count,
             ScannedBlocks = job.Scanned,
             Message = codes.Count == 0
@@ -679,54 +1148,12 @@ public sealed partial class SwixyClaimChunkServerMod
         }, job.Player);
 
         serverApi.Logger.Notification(
-            "[SwixyClaimChunk] Use filter scan done claimId={0} by {1}: unique={2} scanned={3}",
+            "[SwixyClaimChunk] Use filter scan done claimId={0} by {1}: unique={2} scanned={3} chunks={4}",
             job.ClaimId,
             job.Player.PlayerName,
             codes.Count,
-            job.Scanned);
-    }
-
-    /// <summary>
-    /// Один проход по world.Blocks: groupKey (без ориентации) → лучший creative-код.
-    /// Важно: windmillrotor-wood и windmillrotor-metal — разные ключи,
-    /// иначе обычный ротор подменяется металлическим.
-    /// Lantern: material в attributes creative-стека, не в code — берём *-up со stacks.
-    /// </summary>
-    private Dictionary<string, string> BuildCreativeDisplayCodeCache()
-    {
-        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (serverApi == null)
-        {
-            return map;
-        }
-
-        foreach (var b in serverApi.World.Blocks)
-        {
-            if (b?.Code == null || !HasCreativeDisplay(b))
-            {
-                continue;
-            }
-
-            var full = ClaimCodeUtil.NormalizeCollectibleCode(b.Code.ToString());
-            if (string.IsNullOrWhiteSpace(full) || ClaimCodeUtil.IsMultiblockStubCode(full))
-            {
-                continue;
-            }
-
-            var groupKey = ClaimCodeUtil.StripVariantSuffixes(full);
-            if (string.IsNullOrWhiteSpace(groupKey))
-            {
-                groupKey = full;
-            }
-
-            if (!map.TryGetValue(groupKey, out var existing)
-                || ScoreDisplayBlockCode(full, b) > ScoreDisplayBlockCode(existing, null))
-            {
-                map[groupKey] = full;
-            }
-        }
-
-        return map;
+            job.Scanned,
+            job.Chunks.Count);
     }
 
     /// <summary>
@@ -764,8 +1191,13 @@ public sealed partial class SwixyClaimChunkServerMod
             return worldCode;
         }
 
-        // Только creative-вариант той же «семьи» (материал/тип), не всего firstPart.
-        var groupKey = ClaimCodeUtil.StripVariantSuffixes(worldCode);
+        // Семья каталога (first-part / fruit / coal) — как ключи creative-кэша.
+        var groupKey = ClaimCodeUtil.GetCatalogGroupKey(worldCode);
+        if (string.IsNullOrWhiteSpace(groupKey))
+        {
+            groupKey = ClaimCodeUtil.StripVariantSuffixes(worldCode);
+        }
+
         if (string.IsNullOrWhiteSpace(groupKey))
         {
             groupKey = worldCode;
@@ -878,82 +1310,21 @@ public sealed partial class SwixyClaimChunkServerMod
     }
 
     /// <summary>
-    /// Блок, с которым use-only игрок реально может взаимодействовать
-    /// (ПКМ: открыть, повесить факел, положить инструмент…), не террейн.
+    /// В каталог Use: только двери/калитки и блоки с инвентарём.
     /// </summary>
     private static bool IsUseInteractableForScan(
         IWorldAccessor world,
         Block block,
         string code,
         string groupKey,
-        BlockPos pos)
-    {
-        // 0) Явные path (torchholder / toolrack / door…) — до terrain-фильтров.
-        if (IsUseInteractivePath(code) || IsUseInteractivePath(groupKey))
-        {
-            return true;
-        }
-
-        // 1) Имя class / EntityClass (BlockTorchHolder, TorchHolder, …).
-        if (IsUseInteractiveName(block.GetType().Name)
-            || IsUseInteractiveName(block.EntityClass))
-        {
-            return true;
-        }
-
-        // 2) Террейн / руды — не в список (после явных interactable).
-        if (IsTerrainLikeCode(groupKey) || IsTerrainLikeCode(code))
-        {
-            return false;
-        }
-
-        // 3) EntityClass (машины EP, сундуки…).
-        if (!string.IsNullOrWhiteSpace(block.EntityClass)
-            && !IsTerrainEntityClass(block.EntityClass))
-        {
-            return true;
-        }
-
-        // 4) Behaviors: Container, Door, HorizontalAttachable (holder/полка), Multiblock…
-        if (HasUseInteractiveBehavior(block))
-        {
-            return true;
-        }
-
-        // 5) BE на позиции.
-        try
-        {
-            var be = world.BlockAccessor.GetBlockEntity(pos);
-            if (be == null)
-            {
-                return false;
-            }
-
-            if (be is IBlockEntityContainer)
-            {
-                return true;
-            }
-
-            if (IsUseInteractiveName(be.GetType().Name))
-            {
-                return true;
-            }
-
-            foreach (var bh in be.Behaviors)
-            {
-                if (bh != null && IsUseInteractiveName(bh.GetType().Name))
-                {
-                    return true;
-                }
-            }
-        }
-        catch
-        {
-            // ignore
-        }
-
-        return false;
-    }
+        BlockPos? pos)
+        => ClaimCodeUtil.IsUseFilterCatalogCandidate(world, block, pos)
+           || ((ClaimCodeUtil.IsDoorOrGateCode(code)
+                || ClaimCodeUtil.IsDoorOrGateCode(groupKey)
+                || ClaimCodeUtil.IsInventoryPathCode(code)
+                || ClaimCodeUtil.IsInventoryPathCode(groupKey))
+               && !ClaimCodeUtil.IsUseFilterCatalogExcluded(code)
+               && !ClaimCodeUtil.IsUseFilterCatalogExcluded(groupKey));
 
     private static bool IsTerrainEntityClass(string entityClass)
     {
@@ -1138,7 +1509,7 @@ public sealed partial class SwixyClaimChunkServerMod
             || path.Contains("displaycase")
             || path.Contains("crock")
             || path.Contains("hopper")
-            || path.Contains("chute")
+            // chute/жёлоб не в Use UI (см. IsTerrainLikeCode)
             || path.Contains("furnace")
             || path.Contains("workbench")
             || path.Contains("generator")

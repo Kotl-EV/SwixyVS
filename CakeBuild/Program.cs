@@ -38,6 +38,7 @@ public class BuildContext : FrostingContext
         "SwixyClaimChunk",
         "SwixySkyBlock",
         "SwixyQuestBook",
+        "SwixyPermissionManager",
     ];
 
     public BuildContext(ICakeContext context) : base(context)
@@ -61,7 +62,7 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
 
         foreach (var projectName in context.ProjectNames)
         {
-            context.Information("=== {0} (analyze client/server) ===", projectName);
+            context.Information("=== {0} (full + client/server) ===", projectName);
             try
             {
                 ValidateJsonAssets(context, projectName);
@@ -259,15 +260,109 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
         context.Information("  CLIENT: {0}", string.Join(", ", DllNames(clientDir)));
         context.Information("  → {0}", Path.GetFullPath(clientZip));
 
+        // ── FULL (universal) package — one assembly, no client/server split ──
+        PackageFullUniversal(context, projectName, projectRoot, modInfo, vsPath);
+
         File.WriteAllText(
             $"../Releases/{modInfo.ModID}_SPLIT_README.txt",
             BuildReadme(modInfo, analysis, useSharedDll),
             Encoding.UTF8);
     }
 
+    /// <summary>
+    /// Собирает основной .csproj (IDE/Debug) в один universal-мод:
+    /// один DLL + assets + modinfo (side=Universal). Для SP / одной папки Mods.
+    /// </summary>
+    static void PackageFullUniversal(
+        BuildContext context,
+        string projectName,
+        string projectRoot,
+        ModInfo modInfo,
+        string vsPath)
+    {
+        var mainCsproj = ResolveMainCsproj(projectRoot, projectName);
+        context.Information("  build Full (universal)… {0}", Path.GetFileName(mainCsproj));
+        DotNetBuild(context, mainCsproj, vsPath);
+
+        var fullOut = Path.Combine(projectRoot, "bin", context.BuildConfiguration, "Mods", "mod");
+        if (!Directory.Exists(fullOut))
+            throw new DirectoryNotFoundException("Full build output missing: " + fullOut);
+
+        var mainDll = Path.Combine(fullOut, projectName + ".dll");
+        if (!File.Exists(mainDll))
+        {
+            // Fallback: any non-split dll named like the project / assembly
+            mainDll = Directory.GetFiles(fullOut, "*.dll")
+                .FirstOrDefault(f =>
+                {
+                    var n = Path.GetFileNameWithoutExtension(f);
+                    return n.Equals(projectName, StringComparison.OrdinalIgnoreCase)
+                           || !n.Contains('.', StringComparison.Ordinal); // SwixyClaimChunk not *.Server
+                })
+                ?? throw new FileNotFoundException("Universal DLL not found in " + fullOut);
+        }
+
+        var fullDir = $"../Releases/{modInfo.ModID}";
+        ResetDir(context, fullDir);
+
+        // Copy entire mod output, skip split-side leftovers and deps noise
+        foreach (var file in Directory.GetFiles(fullOut, "*", SearchOption.AllDirectories))
+        {
+            var name = Path.GetFileName(file);
+            if (name.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
+                continue;
+            if (name.Contains(".Server.", StringComparison.OrdinalIgnoreCase)
+                || name.Contains(".Client.", StringComparison.OrdinalIgnoreCase)
+                || name.Contains(".Shared.", StringComparison.OrdinalIgnoreCase)
+                || name.EndsWith(".Server.dll", StringComparison.OrdinalIgnoreCase)
+                || name.EndsWith(".Client.dll", StringComparison.OrdinalIgnoreCase)
+                || name.EndsWith(".Shared.dll", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var rel = Path.GetRelativePath(fullOut, file);
+            var dest = Path.Combine(fullDir, rel);
+            Directory.CreateDirectory(Path.GetDirectoryName(dest)!);
+            File.Copy(file, dest, true);
+        }
+
+        // Ensure assets / extras even if Content copy was incomplete
+        CopyIfExists(Path.Combine(projectRoot, "assets"), Path.Combine(fullDir, "assets"), context);
+        CopyIfExists(Path.Combine(projectRoot, "Data", "quests"),
+            Path.Combine(fullDir, "swixyquestbook", "quests"), context);
+        CopyFileIfExists(Path.Combine(projectRoot, "worldconfig.json"),
+            Path.Combine(fullDir, "worldconfig.json"));
+        CopyFileIfExists(Path.Combine(projectRoot, "modicon.png"),
+            Path.Combine(fullDir, "modicon.png"));
+
+        var fullModInfoSrc = FirstExisting(
+            Path.Combine(projectRoot, "modinfo.json"),
+            Path.Combine(fullOut, "modinfo.json"));
+        WriteSideModInfo(fullModInfoSrc, Path.Combine(fullDir, "modinfo.json"), "Universal", " [FULL]");
+
+        var fullZip = $"../Releases/{modInfo.ModID}_{modInfo.Version}.zip";
+        ZipFolder(context, fullDir, fullZip);
+        context.Information("  FULL:   {0}", string.Join(", ", DllNames(fullDir)));
+        context.Information("  → {0}", Path.GetFullPath(fullZip));
+    }
+
+    static string ResolveMainCsproj(string projectRoot, string projectName)
+    {
+        var preferred = Path.Combine(projectRoot, projectName + ".csproj");
+        if (File.Exists(preferred))
+            return preferred;
+
+        var found = Directory.GetFiles(projectRoot, "*.csproj")
+            .Where(p => !Path.GetFileName(p).StartsWith("Generated.", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(p => Path.GetFileName(p), StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (found.Count == 0)
+            throw new FileNotFoundException("No .csproj in " + projectRoot);
+        return found[0];
+    }
+
     static string BuildReadme(ModInfo m, SourceAnalysis a, bool shared) =>
         $"""
-        {m.Name} ({m.ModID}) v{m.Version} — auto-split by CakeBuild
+        {m.Name} ({m.ModID}) v{m.Version} — CakeBuild packages
         ============================================================
         Shared files : {a.Shared.Count}
         Server-only  : {a.ServerOnly.Count}
@@ -275,12 +370,20 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
         Both sides   : {a.BothSides.Count}
         Server+Client pulls: {a.ServerExtraFromClient.Count}
 
-        SERVER zip: {m.ModID}_server_{m.Version}.zip
-          → dedicated server Mods/
-        CLIENT zip: {m.ModID}_client_{m.Version}.zip
-          → players / public
+        THREE packages:
 
-        Same modid. Do not install both zips in one Mods folder.
+        1) FULL (universal) zip: {m.ModID}_{m.Version}.zip
+           → one DLL (client+server code). Singleplayer / one Mods folder.
+           Folder: Releases/{m.ModID}/
+
+        2) SERVER zip: {m.ModID}_server_{m.Version}.zip
+           → dedicated server Mods/ only
+
+        3) CLIENT zip: {m.ModID}_client_{m.Version}.zip
+           → players / public client Mods/
+
+        Same modid. Install ONLY ONE package type per Mods folder
+        (do not mix FULL + server/client, or server+client together).
         Classification: {a.ProjectName}/obj/cake-split/classification.txt
         """;
 
@@ -877,6 +980,13 @@ public sealed class ProjectRefSet
             VSSurvivalMod = true,
             VSEssentials = true,
             AlwaysCairo = true,
+        },
+        "SwixyPermissionManager" => new ProjectRefSet
+        {
+            RootNamespace = "SwixyPermissionManager",
+            VSEssentials = true,
+            AlwaysCairo = true,
+            SkiaSharp = true,
         },
         _ => new ProjectRefSet { RootNamespace = projectName },
     };

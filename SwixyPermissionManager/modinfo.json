@@ -1,0 +1,14 @@
+{
+  "type": "code",
+  "modid": "swixypermissionmanager",
+  "name": "SwixyPermissionManager",
+  "authors": [
+    "Tehtelev",
+    "Kotl"
+  ],
+  "description": "Permission groups and rights manager for Swixy mods.",
+  "version": "1.0.0",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}

@@ -16,6 +16,7 @@ using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
 
 using SwixyClaimChunk.Core;
 // ClaimFlagBits lives in root SwixyClaimChunk (Types.cs).
@@ -389,7 +390,7 @@ public sealed class ClaimMapDialog : GuiDialog
 
     private int useFilterDraftMode = ClaimUseFilterMode.AllowAll;
     private readonly HashSet<string> useFilterDraftCodes = new(StringComparer.OrdinalIgnoreCase);
-    /// <summary>Full creative catalog (built once, DummySlot for GL icon render).</summary>
+    /// <summary>Блоки, найденные сканом привата (не весь creative).</summary>
     private List<(string Code, string Label, DummySlot Slot)> useFilterCatalog = [];
     /// <summary>Visible tiles: selected first, then the rest (search-filtered).</summary>
     private List<(string Code, string Label, DummySlot Slot)> useFilterEntries = [];
@@ -398,6 +399,12 @@ public sealed class ClaimMapDialog : GuiDialog
     private ClaimUseFilterTileGridElement? useFilterGrid;
     private ElementBounds? useFilterViewportBounds;
     private float useFilterScroll;
+    /// <summary>Идёт фоновый скан areas привата на клиенте.</summary>
+    private bool useFilterScanning;
+    /// <summary>ClaimId текущего клиентского скана каталога Use.</summary>
+    private int useFilterScanClaimId;
+    /// <summary>Клиентский скан привата (без сервера) — только для UI выбора блоков.</summary>
+    private ClaimUseFilterClientScanner? useFilterClientScanner;
 
     #endregion
 
@@ -441,17 +448,11 @@ public sealed class ClaimMapDialog : GuiDialog
             radius = requestRadius;
         }
 
-        clientApi.Logger.Notification(
-            "[SwixyClaimChunk] Sending map request center={0},{1} radius={2}",
-            requestCenterX,
-            requestCenterZ,
-            requestRadius);
-
         channel.SendPacket(new ClaimMapRequestPacket
         {
             CenterChunkX = requestCenterX,
             CenterChunkZ = requestCenterZ,
-            Radius = requestRadius
+            Radius = Math.Clamp(requestRadius, 1, ClaimConstants.MaxRadius)
         });
     }
 
@@ -824,7 +825,8 @@ public sealed class ClaimMapDialog : GuiDialog
             .AddDynamicText(
                 claimListState?.Message ?? "",
                 bodyFont,
-                ElementBounds.Fixed(MembersX, MembersY + MembersH + 4, MembersW + ClaimsCardGap + MembersScrollW, 24),
+                // +30px right so "Use restriction saved" / status sits clearer under the members panel.
+                ElementBounds.Fixed(MembersX + 30, MembersY + MembersH + 4, MembersW + ClaimsCardGap + MembersScrollW - 30, 24),
                 "claimsMessage");
     }
 
@@ -876,8 +878,12 @@ public sealed class ClaimMapDialog : GuiDialog
         useFilterGrid = new ClaimUseFilterTileGridElement(clientApi, useFilterViewportBounds)
         {
             OnTileClick = ToggleUseFilterCode,
-            IsSelected = code => useFilterDraftCodes.Contains(NormalizeUseFilterCode(code)),
-            EmptyHint = Lang.Get("swixyclaimchunk:use-filter-catalog-empty"),
+            IsSelected = code =>
+            {
+                var n = NormalizeUseFilterCode(code);
+                return useFilterDraftCodes.Any(c => ClaimCodeUtil.SameCatalogGroup(c, n));
+            },
+            EmptyHint = GetUseFilterEmptyHint(),
             OnScrollChanged = () =>
             {
                 useFilterScroll = useFilterGrid?.ScrollOffset ?? 0f;
@@ -987,23 +993,21 @@ public sealed class ClaimMapDialog : GuiDialog
 
         try
         {
+            // Cap client-side so we don't flood the server with huge selections.
+            var limited = chunks.Count > ClaimConstants.MaxBatchChunks
+                ? chunks.Take(ClaimConstants.MaxBatchChunks).ToList()
+                : chunks;
             channel.SendPacket(new ClaimChunksBatchActionPacket
             {
-                Chunks = chunks.Select(chunk => new ClaimChunkCoordPacket
+                Chunks = limited.Select(chunk => new ClaimChunkCoordPacket
                 {
                     ChunkX = chunk.ChunkX,
                     ChunkZ = chunk.ChunkZ
                 }).ToList(),
                 CenterChunkX = centerChunkX,
                 CenterChunkZ = centerChunkZ,
-                Radius = radius
+                Radius = Math.Clamp(radius, 1, ClaimConstants.MaxRadius)
             });
-            clientApi.Logger.Notification(
-                "[SwixyClaimChunk] Sent ClaimChunksBatchActionPacket chunks={0} center={1},{2} radius={3}",
-                chunks.Count,
-                centerChunkX,
-                centerChunkZ,
-                radius);
         }
         catch (Exception exception)
         {
@@ -1186,13 +1190,33 @@ public sealed class ClaimMapDialog : GuiDialog
         // Mode is automatic: any selected codes → public Use whitelist.
         useFilterDraftMode = ClaimUseFilterMode.AllowAll;
         useFilterDraftCodes.Clear();
+        // groupKey → display code (сливаем fence-oak + fence-birch из старых сейвов).
+        var draftByGroup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var code in ClaimUseFilterCodesCodec.Split(claim.UseFilterCodesRaw))
         {
-            var n = NormalizeUseFilterCode(code);
-            if (!string.IsNullOrWhiteSpace(n))
+            // К стандартному виду (без ориентации из старых сейвов).
+            var n = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, NormalizeUseFilterCode(code));
+            if (string.IsNullOrWhiteSpace(n))
             {
-                useFilterDraftCodes.Add(n);
+                continue;
             }
+
+            var gk = ClaimCodeUtil.GetCatalogGroupKey(n);
+            if (string.IsNullOrWhiteSpace(gk))
+            {
+                gk = n;
+            }
+
+            if (!draftByGroup.ContainsKey(gk)
+                || n.Length < draftByGroup[gk].Length)
+            {
+                draftByGroup[gk] = n;
+            }
+        }
+
+        foreach (var n in draftByGroup.Values)
+        {
+            useFilterDraftCodes.Add(n);
         }
 
         if (useFilterDraftCodes.Count > 0)
@@ -1203,11 +1227,12 @@ public sealed class ClaimMapDialog : GuiDialog
         useFilterSearch = "";
         useFilterEntriesFilterKey = "\0";
         useFilterScroll = 0;
-        // Full creative catalog (items + blocks). Cache for subsequent opens in the same session.
-        if (useFilterCatalog.Count == 0)
-        {
-            useFilterCatalog = BuildUseFilterCreativeCatalog();
-        }
+        // Сразу показываем уже включённые в Use (даже если дальше ±10).
+        // Near-scan (±10) потом допишет остальные рядом.
+        useFilterCatalog = BuildUseFilterCatalogFromCodes(useFilterDraftCodes, stacksByCode: null);
+        useFilterEntries = [];
+        useFilterScanning = true;
+        useFilterScanClaimId = claim.ClaimId;
 
         RefreshUseFilterEntryLists();
         claimsRightMode = ClaimsRightUseFilter;
@@ -1215,14 +1240,102 @@ public sealed class ClaimMapDialog : GuiDialog
         SyncClaimFlagSwitches(claim);
         SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
         SingleComposer?.GetTextInput("useFilterSearch")?.SetValue(useFilterSearch, true);
+
+        useFilterClientScanner ??= new ClaimUseFilterClientScanner(clientApi);
+        useFilterClientScanner.Start(
+            claim.ClaimId,
+            OnClientUseFilterScanComplete,
+            ClaimUseFilterClientScanner.DefaultRadius);
         return true;
     }
 
     private bool CloseUseFilterPanel()
     {
+        useFilterClientScanner?.Cancel();
+        useFilterScanning = false;
         claimsRightMode = ClaimsRightSettings;
         ComposeDialog();
         return true;
+    }
+
+    /// <summary>Клиент закончил скан рядом — обновляем плитки (стеки с attributes для фонарей).</summary>
+    private void OnClientUseFilterScanComplete(
+        int claimId,
+        IReadOnlyList<string> codes,
+        int scannedBlocks,
+        IReadOnlyDictionary<string, ItemStack> stacksByCode)
+    {
+        if (!IsOpened() || claimsRightMode != ClaimsRightUseFilter)
+        {
+            return;
+        }
+
+        if (claimId != useFilterScanClaimId && claimId != selectedClaimId)
+        {
+            return;
+        }
+
+        useFilterScanning = false;
+
+        // Nearby (±10) + always-include selected whitelist (any distance).
+        useFilterCatalog = BuildUseFilterCatalogMerged(codes, stacksByCode);
+        useFilterEntriesFilterKey = "\0";
+        useFilterScroll = 0;
+        RefreshUseFilterEntryLists();
+
+        if (useFilterGrid != null)
+        {
+            useFilterGrid.EmptyHint = GetUseFilterEmptyHint();
+            useFilterGrid.SetEntries(useFilterEntries);
+            useFilterGrid.ScrollOffset = 0;
+        }
+
+        SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
+        SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
+
+        clientApi.Logger.Notification(
+            "[SwixyClaimChunk] Use-filter catalog (near scan): {0} codes (scanned={1}, selected={2})",
+            useFilterCatalog.Count,
+            scannedBlocks,
+            useFilterDraftCodes.Count);
+    }
+
+    /// <summary>
+    /// Nearby scan codes + draft whitelist. Selected Use blocks stay in the list
+    /// even when farther than the scan radius.
+    /// </summary>
+    private List<(string Code, string Label, DummySlot Slot)> BuildUseFilterCatalogMerged(
+        IEnumerable<string>? nearCodes,
+        IReadOnlyDictionary<string, ItemStack>? stacksByCode)
+    {
+        var found = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (nearCodes != null)
+        {
+            foreach (var code in nearCodes)
+            {
+                var n = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, NormalizeUseFilterCode(code));
+                if (!string.IsNullOrWhiteSpace(n))
+                {
+                    found.Add(n);
+                }
+            }
+        }
+
+        foreach (var code in useFilterDraftCodes)
+        {
+            var n = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, NormalizeUseFilterCode(code));
+            if (string.IsNullOrWhiteSpace(n))
+            {
+                n = NormalizeUseFilterCode(code);
+            }
+
+            if (!string.IsNullOrWhiteSpace(n))
+            {
+                found.Add(n);
+            }
+        }
+
+        return BuildUseFilterCatalogFromCodes(found, stacksByCode);
     }
 
     private bool SaveUseFilterPanel()
@@ -1237,11 +1350,12 @@ public sealed class ClaimMapDialog : GuiDialog
         var mode = useFilterDraftCodes.Count > 0
             ? ClaimUseFilterMode.Whitelist
             : ClaimUseFilterMode.AllowAll;
+        // Один код на семью (first-part match на сервере покрывает все варианты).
         var codes = mode == ClaimUseFilterMode.Whitelist
-            ? useFilterDraftCodes
-                .Select(NormalizeUseFilterCode)
-                .Where(static c => !string.IsNullOrWhiteSpace(c))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
+            ? CollapseUseFilterCodesByGroup(
+                    useFilterDraftCodes
+                        .Select(c => ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, NormalizeUseFilterCode(c)))
+                        .Where(static c => !string.IsNullOrWhiteSpace(c)))
                 .OrderBy(static c => c, StringComparer.OrdinalIgnoreCase)
                 .ToList()
             : [];
@@ -1259,10 +1373,62 @@ public sealed class ClaimMapDialog : GuiDialog
         return true;
     }
 
-    /// <summary>Legacy scan hook (каталог из креатива; скан не нужен).</summary>
+    /// <summary>
+    /// Каталог Use: usable-блоки из привата (клиентский скан)
+    /// + уже выбранные в whitelist (даже если блока уже нет).
+    /// Серверный scan-пакет тоже принимаем (совместимость), но UI больше его не запрашивает.
+    /// </summary>
     public void ApplyUseFilterScanResult(ClaimUseFilterScanResultPacket packet)
     {
-        // no-op
+        if (claimsRightMode != ClaimsRightUseFilter)
+        {
+            return;
+        }
+
+        if (packet.ClaimId != useFilterScanClaimId
+            && packet.ClaimId != selectedClaimId)
+        {
+            return;
+        }
+
+        useFilterScanning = false;
+
+        useFilterCatalog = BuildUseFilterCatalogMerged(
+            ClaimUseFilterCodesCodec.Split(packet.CodesRaw),
+            stacksByCode: null);
+        useFilterEntriesFilterKey = "\0";
+        useFilterScroll = 0;
+        RefreshUseFilterEntryLists();
+
+        if (useFilterGrid != null)
+        {
+            useFilterGrid.EmptyHint = GetUseFilterEmptyHint();
+            useFilterGrid.SetEntries(useFilterEntries);
+            useFilterGrid.ScrollOffset = 0;
+        }
+
+        SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
+        SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
+
+        clientApi.Logger.Notification(
+            "[SwixyClaimChunk] Use-filter catalog (server scan packet): {0} codes (scanned={1})",
+            useFilterCatalog.Count,
+            packet.ScannedBlocks);
+    }
+
+    private string GetUseFilterEmptyHint()
+    {
+        if (useFilterScanning)
+        {
+            return Lang.Get("swixyclaimchunk:use-filter-scan-loading");
+        }
+
+        if (useFilterCatalog.Count == 0)
+        {
+            return Lang.Get("swixyclaimchunk:use-filter-scan-empty");
+        }
+
+        return Lang.Get("swixyclaimchunk:use-filter-catalog-empty");
     }
 
     private void OnUseFilterSearchChanged(string text)
@@ -1282,6 +1448,11 @@ public sealed class ClaimMapDialog : GuiDialog
 
     private string BuildUseFilterSelectedText()
     {
+        if (useFilterScanning)
+        {
+            return Lang.Get("swixyclaimchunk:use-filter-scan-loading");
+        }
+
         if (useFilterDraftCodes.Count == 0)
         {
             return Lang.Get("swixyclaimchunk:use-filter-selected-all");
@@ -1292,15 +1463,20 @@ public sealed class ClaimMapDialog : GuiDialog
 
     private void ToggleUseFilterCode(string code)
     {
-        code = NormalizeUseFilterCode(code);
+        code = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, NormalizeUseFilterCode(code));
         if (string.IsNullOrWhiteSpace(code))
         {
             return;
         }
 
-        if (!useFilterDraftCodes.Add(code))
+        // Toggle by family: fence-oak selected covers fence-birch tile and vice versa.
+        var wasSelected = useFilterDraftCodes.Any(c => ClaimCodeUtil.SameCatalogGroup(c, code));
+        useFilterDraftCodes.RemoveWhere(c => ClaimCodeUtil.SameCatalogGroup(c, code));
+        if (!wasSelected)
         {
-            useFilterDraftCodes.Remove(code);
+            useFilterDraftCodes.Add(code);
+            // Keep selected tile in catalog even if the block later leaves the ±10 radius.
+            EnsureUseFilterCatalogHasCode(code);
         }
 
         useFilterDraftMode = useFilterDraftCodes.Count > 0
@@ -1322,25 +1498,74 @@ public sealed class ClaimMapDialog : GuiDialog
         SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
     }
 
+    /// <summary>Добавляет код в каталог, если его ещё нет (семья GetCatalogGroupKey).</summary>
+    private void EnsureUseFilterCatalogHasCode(string code)
+    {
+        code = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, NormalizeUseFilterCode(code));
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return;
+        }
+
+        var gk = ClaimCodeUtil.GetCatalogGroupKey(code);
+        if (string.IsNullOrWhiteSpace(gk))
+        {
+            gk = code;
+        }
+
+        foreach (var entry in useFilterCatalog)
+        {
+            if (ClaimCodeUtil.SameCatalogGroup(entry.Code, code))
+            {
+                return;
+            }
+        }
+
+        if (TryResolveUseFilterEntry(code, out var resolved))
+        {
+            useFilterCatalog.Add(resolved);
+        }
+        else
+        {
+            useFilterCatalog.Add((code, ClaimCodeUtil.GetFriendlyBlockLabel(code), new DummySlot(null)));
+        }
+    }
+
     /// <summary>
-    /// Builds visible tiles: selected first (top of grid), then the rest of creative catalog.
+    /// Builds visible tiles: selected first, then other blocks found in this claim.
     /// Search filters both groups by label/code.
     /// </summary>
     private void RefreshUseFilterEntryLists()
     {
         var filter = (useFilterSearch ?? "").Trim();
-        // Include selection set in cache key so toggle rebuilds order.
-        var cacheKey = "A|" + filter + "|" + useFilterDraftCodes.Count + "|" + string.Join(",", useFilterDraftCodes);
+        // Include selection set + catalog size in cache key so scan/toggle rebuilds order.
+        var cacheKey = "C|" + filter + "|" + useFilterCatalog.Count + "|"
+                       + useFilterDraftCodes.Count + "|" + string.Join(",", useFilterDraftCodes);
         if (string.Equals(cacheKey, useFilterEntriesFilterKey, StringComparison.Ordinal)
             && useFilterEntries.Count > 0)
         {
             return;
         }
 
+        // Пока скан идёт и ещё нет даже выбранных — пустой список (EmptyHint = loading).
+        // Если Use уже включён на блоках — показываем их сразу (даже дальше ±10).
+        if (useFilterScanning && useFilterCatalog.Count == 0 && useFilterDraftCodes.Count == 0)
+        {
+            useFilterEntriesFilterKey = cacheKey;
+            useFilterEntries = [];
+            return;
+        }
+
         useFilterEntriesFilterKey = cacheKey;
         var selected = new List<(string Code, string Label, DummySlot Slot)>(useFilterDraftCodes.Count);
-        var rest = new List<(string Code, string Label, DummySlot Slot)>(Math.Max(64, useFilterCatalog.Count));
-        var want = new HashSet<string>(useFilterDraftCodes, StringComparer.OrdinalIgnoreCase);
+        var rest = new List<(string Code, string Label, DummySlot Slot)>(Math.Max(16, useFilterCatalog.Count));
+        // Match selection by catalog family (fence-oak ↔ fence-birch).
+        var wantGroups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var c in useFilterDraftCodes)
+        {
+            var gk = ClaimCodeUtil.GetCatalogGroupKey(c);
+            wantGroups.Add(string.IsNullOrWhiteSpace(gk) ? c : gk);
+        }
 
         foreach (var entry in useFilterCatalog)
         {
@@ -1351,7 +1576,13 @@ public sealed class ClaimMapDialog : GuiDialog
                 continue;
             }
 
-            if (want.Remove(entry.Code))
+            var eg = ClaimCodeUtil.GetCatalogGroupKey(entry.Code);
+            if (string.IsNullOrWhiteSpace(eg))
+            {
+                eg = entry.Code;
+            }
+
+            if (wantGroups.Remove(eg))
             {
                 selected.Add(entry);
             }
@@ -1361,154 +1592,518 @@ public sealed class ClaimMapDialog : GuiDialog
             }
         }
 
-        // Legacy codes not present in creative catalog still show at the top.
-        foreach (var code in want)
+        // Выбранные коды, которых нет в каталоге (старый whitelist / блок убрали).
+        foreach (var code in useFilterDraftCodes)
         {
-            if (filter.Length > 0 && code.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+            var gk = ClaimCodeUtil.GetCatalogGroupKey(code);
+            if (string.IsNullOrWhiteSpace(gk))
             {
-                continue;
+                gk = code;
             }
 
-            selected.Add((code, code, new DummySlot(null)));
+            if (!wantGroups.Contains(gk))
+            {
+                continue; // already represented by a catalog tile
+            }
+
+            wantGroups.Remove(gk);
+            if (TryResolveUseFilterEntry(code, out var entry))
+            {
+                if (filter.Length > 0
+                    && entry.Label.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0
+                    && entry.Code.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    continue;
+                }
+
+                selected.Add(entry);
+            }
+            else
+            {
+                var label = ClaimCodeUtil.GetFriendlyBlockLabel(code);
+                if (filter.Length > 0
+                    && label.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0
+                    && code.IndexOf(filter, StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    continue;
+                }
+
+                selected.Add((code, label, new DummySlot(null)));
+            }
         }
 
         selected.AddRange(rest);
         useFilterEntries = selected;
     }
 
-    /// <summary>Creative catalog (items + blocks), same sources as the creative menu.</summary>
-    private List<(string Code, string Label, DummySlot Slot)> BuildUseFilterCreativeCatalog()
+    /// <summary>Один display-код на семью каталога (first-part / fruit / coal).</summary>
+    private static List<string> CollapseUseFilterCodesByGroup(IEnumerable<string> codes)
     {
-        var result = new List<(string Code, string Label, DummySlot Slot)>(2048);
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        void TryAddStack(ItemStack? stack)
+        var byGroup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var raw in codes)
         {
-            if (stack?.Collectible?.Code == null)
+            if (string.IsNullOrWhiteSpace(raw))
             {
-                return;
+                continue;
             }
 
-            var code = NormalizeUseFilterCode(stack.Collectible.Code.ToString());
-            if (string.IsNullOrWhiteSpace(code) || !seen.Add(code))
+            var gk = ClaimCodeUtil.GetCatalogGroupKey(raw);
+            if (string.IsNullOrWhiteSpace(gk))
             {
-                return;
+                gk = raw;
             }
 
-            var path = stack.Collectible.Code.Path ?? "";
-            if (path.Equals("air", StringComparison.OrdinalIgnoreCase)
-                || path.Equals("unknown", StringComparison.OrdinalIgnoreCase)
-                || path.StartsWith("creature-", StringComparison.OrdinalIgnoreCase)
-                || path.Contains("-dead", StringComparison.OrdinalIgnoreCase)
-                || path.Contains("armorstand", StringComparison.OrdinalIgnoreCase)
-                || path.Contains("strawdummy", StringComparison.OrdinalIgnoreCase))
+            if (!byGroup.TryGetValue(gk, out var existing)
+                || PreferCatalogDisplayCode(raw, existing, stacksByCode: null))
             {
-                return;
+                byGroup[gk] = raw;
             }
-
-            ItemStack display;
-            try
-            {
-                display = stack.Clone();
-                display.StackSize = 1;
-            }
-            catch
-            {
-                return;
-            }
-
-            string label;
-            try
-            {
-                label = display.GetName();
-            }
-            catch
-            {
-                label = code;
-            }
-
-            if (string.IsNullOrWhiteSpace(label))
-            {
-                label = code;
-            }
-
-            result.Add((code, label, new DummySlot(display)));
         }
 
-        void TryAddCollectible(CollectibleObject? col)
+        return byGroup.Values.ToList();
+    }
+
+    /// <summary>
+    /// Выбор представителя семьи для иконки: есть стек → короче → oak.
+    /// </summary>
+    private static bool PreferCatalogDisplayCode(
+        string candidate,
+        string existing,
+        IReadOnlyDictionary<string, ItemStack>? stacksByCode)
+    {
+        if (string.IsNullOrWhiteSpace(candidate) || string.Equals(candidate, existing, StringComparison.OrdinalIgnoreCase))
         {
-            if (col?.Code == null || col.Id == 0)
+            return false;
+        }
+
+        var candHasStack = stacksByCode != null
+                           && stacksByCode.TryGetValue(candidate, out var cs)
+                           && cs?.Collectible != null;
+        var existHasStack = stacksByCode != null
+                            && stacksByCode.TryGetValue(existing, out var es)
+                            && es?.Collectible != null;
+        if (candHasStack && !existHasStack)
+        {
+            return true;
+        }
+
+        if (!candHasStack && existHasStack)
+        {
+            return false;
+        }
+
+        if (candidate.Length < existing.Length)
+        {
+            return true;
+        }
+
+        if (candidate.Contains("-oak", StringComparison.OrdinalIgnoreCase)
+            && !existing.Contains("-oak", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>Собирает плитки только по кодам, найденным в привате (или в whitelist).</summary>
+    private List<(string Code, string Label, DummySlot Slot)> BuildUseFilterCatalogFromCodes(
+        IEnumerable<string> codes,
+        IReadOnlyDictionary<string, ItemStack>? stacksByCode)
+    {
+        var result = new List<(string Code, string Label, DummySlot Slot)>(64);
+        // Deduplicate by family: fence-oak + fence-birch → one tile.
+        var seenGroups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var preferredByGroup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var raw in codes)
+        {
+            var code = NormalizeUseFilterCode(raw);
+            if (string.IsNullOrWhiteSpace(code))
             {
-                return;
+                continue;
             }
 
-            var hasTabs = col.CreativeInventoryTabs is { Length: > 0 };
-            var hasStacks = col.CreativeInventoryStacks is { Length: > 0 };
-            if (!hasTabs && !hasStacks)
+            var gk = ClaimCodeUtil.GetCatalogGroupKey(code);
+            if (string.IsNullOrWhiteSpace(gk))
             {
-                return;
+                gk = code;
             }
 
-            if (hasStacks)
+            if (!preferredByGroup.TryGetValue(gk, out var existing)
+                || PreferCatalogDisplayCode(code, existing, stacksByCode))
             {
-                foreach (var tab in col.CreativeInventoryStacks!)
+                preferredByGroup[gk] = code;
+            }
+        }
+
+        foreach (var code in preferredByGroup.Values)
+        {
+            var gk = ClaimCodeUtil.GetCatalogGroupKey(code);
+            if (string.IsNullOrWhiteSpace(gk))
+            {
+                gk = code;
+            }
+
+            if (!seenGroups.Add(gk))
+            {
+                continue;
+            }
+
+            // Стек со скана (фонарь с material) — приоритет.
+            if (stacksByCode != null
+                && stacksByCode.TryGetValue(code, out var scanStack)
+                && scanStack?.Collectible != null)
+            {
+                var label = ClaimCodeUtil.GetFriendlyBlockLabel(code, scanStack);
+                try
                 {
-                    if (tab?.Stacks == null)
-                    {
-                        continue;
-                    }
+                    var clone = scanStack.Clone();
+                    clone.StackSize = 1;
+                    result.Add((code, label, new DummySlot(clone)));
+                    continue;
+                }
+                catch
+                {
+                    // fall through to resolve
+                }
+            }
 
-                    foreach (var js in tab.Stacks)
-                    {
-                        if (js == null)
-                        {
-                            continue;
-                        }
+            // groundstorage — без 3D, Cairo в grid.
+            if (ClaimCodeUtil.NeedsCairoIcon(code))
+            {
+                var gsLabel = ClaimCodeUtil.GetFriendlyBlockLabel(code);
+                result.Add((code, gsLabel, new DummySlot(null)));
+                continue;
+            }
 
-                        try
-                        {
-                            if (js.ResolvedItemstack == null)
-                            {
-                                js.Resolve(clientApi.World, "swixyclaimchunk use-filter", col.Code);
-                            }
+            // coalpile / charcoalpile — GetName() часто «Unknown»; иконка = item coal/charcoal.
+            if (ClaimCodeUtil.IsCoalOrCharcoalPile(code))
+            {
+                var pileLabel = ClaimCodeUtil.GetFriendlyBlockLabel(code);
+                var pileStack = TryBuildCoalPileDisplayStack(code);
+                result.Add((code, pileLabel, pileStack != null ? new DummySlot(pileStack) : new DummySlot(null)));
+                continue;
+            }
 
-                            if (js.ResolvedItemstack != null)
-                            {
-                                TryAddStack(js.ResolvedItemstack);
-                            }
-                        }
-                        catch
-                        {
-                            // skip
-                        }
-                    }
+            // Фруктовое дерево / куст
+            if (ClaimCodeUtil.IsFruitTreeOrBush(code))
+            {
+                var fruitCode = ClaimCodeUtil.GetFruitTreeWhitelistCode(code);
+                var fruitLabel = ClaimCodeUtil.GetFriendlyBlockLabel(fruitCode);
+                ItemStack? fruitStack = null;
+                if (stacksByCode != null)
+                {
+                    stacksByCode.TryGetValue(code, out fruitStack);
+                    fruitStack ??= stacksByCode.TryGetValue(fruitCode, out var fs) ? fs : null;
                 }
 
-                return;
+                fruitStack ??= TryResolveItemStack("game:fruit-redapple")
+                               ?? TryResolveItemStack("fruit-redapple");
+                result.Add((fruitCode, fruitLabel, fruitStack != null ? new DummySlot(fruitStack) : new DummySlot(null)));
+                continue;
             }
 
-            try
+            // armorstand — item/entity, не блок
+            if (code.Contains("armorstand", StringComparison.OrdinalIgnoreCase)
+                || code.Contains("strawdummy", StringComparison.OrdinalIgnoreCase))
             {
-                TryAddStack(new ItemStack(col, 1));
+                ItemStack? standStack = null;
+                if (stacksByCode != null && stacksByCode.TryGetValue(code, out var ss))
+                {
+                    standStack = ss;
+                }
+
+                standStack ??= TryResolveItemStack(code) ?? TryResolveItemStack("game:armorstand");
+                var standLabel = ClaimCodeUtil.GetFriendlyBlockLabel(code, standStack);
+                if (ClaimCodeUtil.IsUnknownLabel(standLabel))
+                {
+                    standLabel = Lang.Get("swixyclaimchunk:use-filter-armorstand");
+                }
+
+                result.Add((code, standLabel, standStack != null ? new DummySlot(standStack) : new DummySlot(null)));
+                continue;
             }
-            catch
+
+            if (TryResolveUseFilterEntry(code, out var entry))
             {
-                // skip
+                // Подменить Unknown на lang.
+                if (ClaimCodeUtil.IsUnknownLabel(entry.Label))
+                {
+                    entry = (entry.Code, ClaimCodeUtil.GetFriendlyBlockLabel(entry.Code, entry.Slot?.Itemstack), entry.Slot);
+                }
+
+                result.Add(entry);
             }
-        }
-
-        foreach (var item in clientApi.World.Items)
-        {
-            TryAddCollectible(item);
-        }
-
-        foreach (var block in clientApi.World.Blocks)
-        {
-            TryAddCollectible(block);
+            else
+            {
+                result.Add((code, ClaimCodeUtil.GetFriendlyBlockLabel(code), new DummySlot(null)));
+            }
         }
 
         result.Sort(static (a, b) => string.Compare(a.Label, b.Label, StringComparison.OrdinalIgnoreCase));
         return result;
+    }
+
+    /// <summary>Резолв кода в ItemStack/название для иконки плитки.</summary>
+    private bool TryResolveUseFilterEntry(
+        string code,
+        out (string Code, string Label, DummySlot Slot) entry)
+    {
+        entry = default;
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            return false;
+        }
+
+        ItemStack? stack = null;
+        try
+        {
+            var loc = new AssetLocation(code);
+            var block = clientApi.World.GetBlock(loc);
+            if (block != null && block.Id != 0)
+            {
+                // Multiblock/EP: иконка только с creative-варианта (*-south) —
+                // GuiTransform origin под него. Иначе меш «уезжает» в плитке.
+                var standardCode = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, block);
+                if (!string.IsNullOrWhiteSpace(standardCode))
+                {
+                    try
+                    {
+                        var stdBlock = clientApi.World.GetBlock(new AssetLocation(standardCode));
+                        if (stdBlock != null && stdBlock.Id != 0)
+                        {
+                            block = stdBlock;
+                            code = standardCode;
+                        }
+                    }
+                    catch
+                    {
+                        // keep original block
+                    }
+                }
+
+                stack = ClaimCodeUtil.TryGetFamilyCreativeStack(clientApi.World, block)
+                        ?? TryGetPreferredCreativeStack(block)
+                        ?? new ItemStack(block, 1);
+                // Фонарь без attributes не рендерится — defaults.
+                EnsureLanternDefaultAttributes(stack);
+            }
+            else
+            {
+                var item = clientApi.World.GetItem(loc);
+                if (item != null && item.Id != 0)
+                {
+                    stack = TryGetPreferredCreativeStack(item) ?? new ItemStack(item, 1);
+                }
+            }
+        }
+        catch
+        {
+            return false;
+        }
+
+        if (stack?.Collectible == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            stack = stack.Clone();
+            stack.StackSize = 1;
+        }
+        catch
+        {
+            return false;
+        }
+
+        var label = ClaimCodeUtil.GetFriendlyBlockLabel(code, stack);
+        entry = (code, label, new DummySlot(stack));
+        return true;
+    }
+
+    private ItemStack? TryResolveItemStack(string code)
+    {
+        try
+        {
+            var item = clientApi.World.GetItem(new AssetLocation(code));
+            if (item != null && item.Id != 0)
+            {
+                return new ItemStack(item, 1);
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return null;
+    }
+
+    /// <summary>Иконка кучи угля/древесного угля — item, т.к. у блока нет нормального mesh.</summary>
+    private ItemStack? TryBuildCoalPileDisplayStack(string code)
+    {
+        var path = code;
+        var colon = code.IndexOf(':');
+        if (colon >= 0 && colon + 1 < code.Length)
+        {
+            path = code[(colon + 1)..];
+        }
+
+        // Prefer items that always render in inventory.
+        string[] itemCodes = path.Contains("charcoal", StringComparison.OrdinalIgnoreCase)
+            ? ["game:charcoal", "charcoal"]
+            : ["game:ore-bituminouscoal", "game:ore-lignite", "game:ore-anthracite", "game:charcoal", "charcoal"];
+
+        foreach (var ic in itemCodes)
+        {
+            try
+            {
+                var item = clientApi.World.GetItem(new AssetLocation(ic));
+                if (item != null && item.Id != 0)
+                {
+                    return new ItemStack(item, 1);
+                }
+            }
+            catch
+            {
+                // next
+            }
+        }
+
+        // Fallback: block itself
+        try
+        {
+            var block = clientApi.World.GetBlock(new AssetLocation(code));
+            if (block != null && block.Id != 0)
+            {
+                return new ItemStack(block, 1);
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Стек как в креативе/инвентаре (с attributes) — иначе EP-машины рисуются со смещением.
+    /// Ищет по самому collectible и по «родственным» блокам той же группы.
+    /// </summary>
+    private ItemStack? TryGetPreferredCreativeStack(CollectibleObject col)
+    {
+        var fromSelf = TryCreativeStacksOn(col);
+        if (fromSelf != null)
+        {
+            return fromSelf;
+        }
+
+        // World-oriented block may lack stacks; look up standard-facing sibling.
+        if (col is Block block && block.Code != null)
+        {
+            var standardCode = ClaimCodeUtil.ResolveStandardDisplayCode(clientApi.World, block);
+            if (!string.IsNullOrWhiteSpace(standardCode)
+                && !string.Equals(standardCode, block.Code.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    var sibling = clientApi.World.GetBlock(new AssetLocation(standardCode));
+                    var fromSibling = TryCreativeStacksOn(sibling);
+                    if (fromSibling != null)
+                    {
+                        return fromSibling;
+                    }
+
+                    if (sibling != null && sibling.Id != 0)
+                    {
+                        return new ItemStack(sibling, 1);
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private ItemStack? TryCreativeStacksOn(CollectibleObject? col)
+    {
+        if (col is Block b)
+        {
+            return ClaimCodeUtil.TryGetFamilyCreativeStack(clientApi.World, b);
+        }
+
+        if (col?.CreativeInventoryStacks is not { Length: > 0 })
+        {
+            return null;
+        }
+
+        foreach (var tab in col.CreativeInventoryStacks)
+        {
+            if (tab?.Stacks == null)
+            {
+                continue;
+            }
+
+            foreach (var js in tab.Stacks)
+            {
+                if (js == null)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    if (js.ResolvedItemstack == null)
+                    {
+                        js.Resolve(clientApi.World, "swixyclaimchunk use-filter", col.Code);
+                    }
+
+                    var stack = js.ResolvedItemstack;
+                    if (stack?.Collectible != null)
+                    {
+                        return stack.Clone();
+                    }
+                }
+                catch
+                {
+                    // next
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static void EnsureLanternDefaultAttributes(ItemStack stack)
+    {
+        var path = stack.Collectible?.Code?.Path ?? "";
+        if (!path.Contains("lantern", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        stack.Attributes ??= new TreeAttribute();
+        if (!stack.Attributes.HasAttribute("material"))
+        {
+            stack.Attributes.SetString("material", "copper");
+        }
+
+        if (!stack.Attributes.HasAttribute("lining"))
+        {
+            stack.Attributes.SetString("lining", "plain");
+        }
+
+        if (!stack.Attributes.HasAttribute("glass"))
+        {
+            stack.Attributes.SetString("glass", "quartz");
+        }
     }
 
     private static string NormalizeUseFilterCode(string? raw)
@@ -2482,7 +3077,11 @@ public sealed class ClaimMapDialog : GuiDialog
             return true;
         }
 
-        ToggleClaimFlag(ClaimFlagBits.ProtectAnimals, (claim.ClaimFlags & ClaimFlagBits.ProtectAnimals) == 0);
+        // Checkbox = «защищать животных». Внутри: AllowAnimalDamage (инверсия).
+        // Сейчас защищены → снять защиту (включить AllowAnimalDamage).
+        // Сейчас не защищены → защитить (сбросить AllowAnimalDamage).
+        var protectedNow = ClaimFlagBits.AreAnimalsProtected(claim.ClaimFlags);
+        ToggleClaimFlag(ClaimFlagBits.AllowAnimalDamage, enabled: protectedNow);
         SyncClaimFlagSwitches(claim);
         return true;
     }
@@ -2522,7 +3121,8 @@ public sealed class ClaimMapDialog : GuiDialog
 
     private void DrawClaimFlagAnimalsChip(Context ctx, ImageSurface surface, ElementBounds bounds)
     {
-        var on = (GetSelectedClaim()?.ClaimFlags & ClaimFlagBits.ProtectAnimals) != 0;
+        // Галочка = животные защищены (default ON when flags == 0).
+        var on = ClaimFlagBits.AreAnimalsProtected(GetSelectedClaim()?.ClaimFlags ?? 0);
         DrawFlagChipWithCheckbox(ctx, bounds, on);
     }
 

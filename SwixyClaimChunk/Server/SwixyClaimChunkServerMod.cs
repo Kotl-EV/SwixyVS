@@ -20,6 +20,12 @@ public sealed partial class SwixyClaimChunkServerMod : ModSystem
     private readonly Dictionary<string, UseFilterRuleData> useFiltersByClaimKey = new(StringComparer.Ordinal);
     /// <summary>Активные фоновые сканы use-filter (не блокируем тик одним проходом).</summary>
     private readonly Dictionary<string, UseFilterScanJob> activeUseFilterScans = new(StringComparer.Ordinal);
+    /// <summary>Кэш результатов скана: storageKey → коды (инвалидируется при TouchClaim).</summary>
+    private readonly Dictionary<string, UseFilterScanCacheEntry> useFilterScanCache = new(StringComparer.Ordinal);
+    /// <summary>groupKey → creative display code (один раз на мир).</summary>
+    private Dictionary<string, string>? useFilterCreativeCache;
+    /// <summary>Block.Id которые точно не Use (террайн/воздух) — O(1) skip.</summary>
+    private HashSet<int>? useFilterSkipBlockIds;
     /// <summary>Флаги привата (PvP, защита животных) по storage-ключу.</summary>
     private readonly Dictionary<string, int> claimFlagsByClaimKey = new(StringComparer.Ordinal);
     /// <summary>Анти-спам сообщений о блокировке урона (uid → elapsed ms).</summary>
@@ -34,12 +40,15 @@ public sealed partial class SwixyClaimChunkServerMod : ModSystem
             serverApi.Event.SaveGameLoaded -= OnCoOwnersSaveGameLoaded;
             serverApi.Event.SaveGameLoaded -= OnUseFiltersSaveGameLoaded;
             serverApi.Event.SaveGameLoaded -= OnClaimFlagsSaveGameLoaded;
+            serverApi.Event.SaveGameLoaded -= OnLandClaimAllowanceSaveGameLoaded;
             serverApi.Event.GameWorldSave -= OnCoOwnersSaveGameSaving;
             serverApi.Event.GameWorldSave -= OnUseFiltersSaveGameSaving;
             serverApi.Event.GameWorldSave -= OnClaimFlagsSaveGameSaving;
             serverApi.Event.OnTestBlockAccess -= OnServerTestBlockAccess;
             serverApi.Event.OnTestBlockAccessClaim -= OnServerTestBlockAccessClaim;
             serverApi.Event.PlayerNowPlaying -= OnPlayerJoinSendUseFilters;
+            serverApi.Event.PlayerNowPlaying -= OnPlayerJoinAttachClaimProtect;
+            serverApi.Event.SaveGameLoaded -= OnSaveGameLoadedAttachClaimProtectToPlayers;
             serverApi.Event.OnEntitySpawn -= AttachClaimProtectBehavior;
             serverApi.Event.OnEntityLoaded -= AttachClaimProtectBehavior;
             if (serverPlayerChatHandler != null)

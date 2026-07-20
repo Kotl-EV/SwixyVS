@@ -32,7 +32,8 @@ public sealed partial class SwixyClaimChunkServerMod
             return;
         }
 
-        radius = Math.Clamp(radius <= 0 ? ClaimConstants.DefaultRadius : radius, 1, ClaimConstants.MaxRadius);
+        SanitizeMapWindow(ref centerChunkX, ref centerChunkZ, ref radius);
+        message = SanitizePacketMessage(message);
         var packet = BuildStatePacket(player, centerChunkX, centerChunkZ, radius, message, messageType);
         if (packet.Chunks.Count == 0)
         {
@@ -42,11 +43,6 @@ public sealed partial class SwixyClaimChunkServerMod
 
         try
         {
-            serverApi.Logger.Notification(
-                "[SwixyClaimChunk] Sending state to {0}: {1} chunks, message='{2}'",
-                player.PlayerName,
-                packet.Chunks.Count,
-                message);
             serverChannel.SendPacket(packet, [player]);
         }
         catch (Exception exception)
@@ -205,7 +201,7 @@ public sealed partial class SwixyClaimChunkServerMod
     {
         var packet = new ClaimListStatePacket
         {
-            Message = message ?? "",
+            Message = SanitizePacketMessage(message),
             MessageType = messageType
         };
 

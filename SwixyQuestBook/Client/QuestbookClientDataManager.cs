@@ -236,24 +236,70 @@ namespace SwixyQuestBook.Client
         {
             if (response == null || !response.Success) return;
 
+            // Optimistic UI; server progress packet will overwrite AvailableAgainAt accurately.
             string key = $"{response.CategoryHeaderTitle}:{response.NodeId}";
-            if (!CompletedQuestsMap.ContainsKey(key))
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            long availableAgainAt = 0;
+            QuestbookQuestNodeDefinition? node = FindNode(response.CategoryHeaderTitle, response.NodeId);
+            if (node != null)
             {
-                CompletedQuestsMap[key] = new QuestbookSyncCompletedQuestPacket
-                {
-                    CategoryHeaderTitle = response.CategoryHeaderTitle,
-                    NodeId = response.NodeId,
-                    CompletedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    CompletionOrder = TotalQuestsCompleted + 1
-                };
-                TotalQuestsCompleted++;
-                ProgressUpdated?.Invoke();
+                availableAgainAt = QuestbookRepeatMode.ComputeAvailableAgainAt(
+                    node.RepeatMode, node.CooldownSeconds, now);
             }
+
+            if (!CompletedQuestsMap.ContainsKey(key))
+                TotalQuestsCompleted++;
+
+            CompletedQuestsMap[key] = new QuestbookSyncCompletedQuestPacket
+            {
+                CategoryHeaderTitle = response.CategoryHeaderTitle,
+                NodeId = response.NodeId,
+                CompletedAt = now,
+                CompletionOrder = TotalQuestsCompleted,
+                AvailableAgainAt = availableAgainAt
+            };
+            ProgressUpdated?.Invoke();
         }
 
+        private QuestbookQuestNodeDefinition? FindNode(string categoryHeaderTitle, int nodeId)
+        {
+            foreach (QuestbookCategoryDefinition c in Categories)
+            {
+                if (!string.Equals(c.HeaderTitle, categoryHeaderTitle, StringComparison.Ordinal))
+                    continue;
+                foreach (QuestbookQuestNodeDefinition n in c.Nodes)
+                {
+                    if (n.Id == nodeId)
+                        return n;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>Entry exists (parent unlock stays after cooldown).</summary>
+        public bool HasEverCompleted(string categoryHeaderTitle, int nodeId) =>
+            CompletedQuestsMap.ContainsKey($"{categoryHeaderTitle}:{nodeId}");
+
+        /// <summary>Currently completed (once forever, or still inside cooldown).</summary>
         public bool IsQuestCompleted(string categoryHeaderTitle, int nodeId)
         {
-            return CompletedQuestsMap.ContainsKey($"{categoryHeaderTitle}:{nodeId}");
+            if (!CompletedQuestsMap.TryGetValue($"{categoryHeaderTitle}:{nodeId}", out QuestbookSyncCompletedQuestPacket? entry))
+                return false;
+
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return QuestbookRepeatMode.IsCurrentlyCompleted(entry.AvailableAgainAt, now);
+        }
+
+        /// <summary>Unix ms remaining until quest reopens; 0 if available or permanent.</summary>
+        public long GetCooldownRemainingMs(string categoryHeaderTitle, int nodeId)
+        {
+            if (!CompletedQuestsMap.TryGetValue($"{categoryHeaderTitle}:{nodeId}", out QuestbookSyncCompletedQuestPacket? entry))
+                return 0;
+            if (entry.AvailableAgainAt <= 0)
+                return 0;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return System.Math.Max(0, entry.AvailableAgainAt - now);
         }
 
         /// <summary>
@@ -403,7 +449,9 @@ namespace SwixyQuestBook.Client
                     n.RequiredItems,
                     n.RewardItems,
                     descriptionByLang: prev.DescriptionByLang,
-                    consumeRequiredItems: n.ConsumeRequiredItems);
+                    consumeRequiredItems: n.ConsumeRequiredItems,
+                    repeatMode: n.RepeatMode,
+                    cooldownSeconds: n.CooldownSeconds);
             }).ToArray();
 
             return new QuestbookCategoryDefinition(
@@ -421,6 +469,13 @@ namespace SwixyQuestBook.Client
                 hasFullI18n: true);
         }
 
+        /// <summary>Re-apply completed/available from progress (e.g. when cooldowns expire).</summary>
+        public void RefreshNodeCompletionStates()
+        {
+            UpdateNodeStatesFromProgress();
+            ProgressUpdated?.Invoke();
+        }
+
         private void UpdateNodeStatesFromProgress()
         {
             for (int i = 0; i < Categories.Length; i++)
@@ -433,6 +488,8 @@ namespace SwixyQuestBook.Client
                 {
                     if (IsQuestCompleted(category.HeaderTitle, node.Id))
                         node.MarkCompleted();
+                    else
+                        node.MarkAvailable();
                 }
             }
         }
@@ -463,7 +520,9 @@ namespace SwixyQuestBook.Client
                             i.CollectibleCode, i.Count)).ToArray(),
                         nodeType: ConvertIntToNodeType(n.NodeType),
                         descriptionByLang: ToLangMap(n.DescriptionI18n, n.Description),
-                        consumeRequiredItems: n.ConsumeRequiredItems);
+                        consumeRequiredItems: n.ConsumeRequiredItems,
+                        repeatMode: n.RepeatMode,
+                        cooldownSeconds: n.CooldownSeconds);
                 }).ToArray();
 
             if (!isStub)
@@ -472,6 +531,8 @@ namespace SwixyQuestBook.Client
                 {
                     if (IsQuestCompleted(packet.HeaderTitle, node.Id))
                         node.MarkCompleted();
+                    else
+                        node.MarkAvailable();
                 }
             }
 

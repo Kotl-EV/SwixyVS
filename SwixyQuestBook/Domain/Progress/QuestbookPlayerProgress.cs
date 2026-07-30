@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using SwixyQuestBook.Domain.Models;
 
 namespace SwixyQuestBook.Domain.Progress
 {
@@ -16,14 +17,27 @@ namespace SwixyQuestBook.Domain.Progress
         [JsonPropertyName("completionOrder")]
         public int CompletionOrder { get; set; }
 
+        /// <summary>
+        /// Unix ms when the quest may be claimed again.
+        /// <c>0</c> = permanent (once). For instant/cooldown: timestamp; if <c>now &gt;=</c> this, quest is open again.
+        /// </summary>
+        [JsonPropertyName("availableAgainAt")]
+        public long AvailableAgainAt { get; set; }
+
         public QuestbookCompletedQuestEntry() { }
 
-        public QuestbookCompletedQuestEntry(string categoryHeaderTitle, int nodeId, long completedAt, int completionOrder)
+        public QuestbookCompletedQuestEntry(
+            string categoryHeaderTitle,
+            int nodeId,
+            long completedAt,
+            int completionOrder,
+            long availableAgainAt = 0)
         {
             CategoryHeaderTitle = categoryHeaderTitle;
             NodeId = nodeId;
             CompletedAt = completedAt;
             CompletionOrder = completionOrder;
+            AvailableAgainAt = availableAgainAt;
         }
     }
 
@@ -108,8 +122,27 @@ namespace SwixyQuestBook.Domain.Progress
         public static string KillKey(string categoryHeaderTitle, int nodeId, string entityCode) =>
             CraftKey(categoryHeaderTitle, nodeId, entityCode);
 
-        public bool IsQuestCompleted(string categoryHeaderTitle, int nodeId) =>
+        /// <summary>Entry exists (used for parent unlock on the graph).</summary>
+        public bool HasEverCompleted(string categoryHeaderTitle, int nodeId) =>
             CompletedQuestsMap.ContainsKey($"{categoryHeaderTitle}:{nodeId}");
+
+        /// <summary>
+        /// Currently locked as completed: permanent once, or still inside cooldown window.
+        /// </summary>
+        public bool IsQuestCompleted(string categoryHeaderTitle, int nodeId)
+        {
+            if (!CompletedQuestsMap.TryGetValue($"{categoryHeaderTitle}:{nodeId}", out QuestbookCompletedQuestEntry? entry))
+                return false;
+
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return QuestbookRepeatMode.IsCurrentlyCompleted(entry.AvailableAgainAt, now);
+        }
+
+        public QuestbookCompletedQuestEntry? GetCompletedEntry(string categoryHeaderTitle, int nodeId)
+        {
+            CompletedQuestsMap.TryGetValue($"{categoryHeaderTitle}:{nodeId}", out QuestbookCompletedQuestEntry? entry);
+            return entry;
+        }
 
         public int GetCraftCount(string categoryHeaderTitle, int nodeId, string collectibleCode)
         {
@@ -213,16 +246,27 @@ namespace SwixyQuestBook.Domain.Progress
             KillProgress = KillProgressMap.Values.ToArray();
         }
 
-        public void AddCompletedQuest(string categoryHeaderTitle, int nodeId)
+        /// <param name="availableAgainAt">
+        /// <c>0</c> = once (never again). Otherwise unix ms when the quest reopens.
+        /// </param>
+        public void AddCompletedQuest(string categoryHeaderTitle, int nodeId, long availableAgainAt = 0)
         {
             string key = $"{categoryHeaderTitle}:{nodeId}";
-            if (CompletedQuestsMap.ContainsKey(key))
-                return;
-
-            TotalQuestsCompleted++;
             long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            var entry = new QuestbookCompletedQuestEntry(categoryHeaderTitle, nodeId, now, TotalQuestsCompleted);
-            CompletedQuestsMap[key] = entry;
+            TotalQuestsCompleted++;
+
+            if (CompletedQuestsMap.TryGetValue(key, out QuestbookCompletedQuestEntry? existing))
+            {
+                existing.CompletedAt = now;
+                existing.AvailableAgainAt = availableAgainAt;
+                existing.CompletionOrder = TotalQuestsCompleted;
+            }
+            else
+            {
+                CompletedQuestsMap[key] = new QuestbookCompletedQuestEntry(
+                    categoryHeaderTitle, nodeId, now, TotalQuestsCompleted, availableAgainAt);
+            }
+
             CompletedQuests = CompletedQuestsMap.Values
                 .OrderBy(e => e.CompletionOrder)
                 .ToArray();

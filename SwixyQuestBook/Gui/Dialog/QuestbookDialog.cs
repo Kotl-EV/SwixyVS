@@ -72,6 +72,9 @@ namespace SwixyQuestBook.Gui
         }
 
         private const string ComposerKey = "swixyquestbook-main-dialog";
+        /// <summary>VS clickable pointer cursor (assets/game/textures/gui/cursors/linkselect.png).</summary>
+        private const string ClickableCursor = "linkselect";
+
         private const double ScreenMargin = 64;
         private static string TopMenuTitleText => QuestbookLang.GetLocal("title");
         private const string TopMenuSeparatorText = ">";
@@ -110,6 +113,9 @@ namespace SwixyQuestBook.Gui
         private double graphPanX;
         private double graphPanY;
         private bool shouldCenterOnStartNode = true;
+        /// <summary>Last mouse position in screen space (for link rubber-band preview).</summary>
+        private int lastMouseScreenX;
+        private int lastMouseScreenY;
         private double dragStartMouseX;
         private double dragStartMouseY;
         private double dragStartGraphPanX;
@@ -178,7 +184,6 @@ namespace SwixyQuestBook.Gui
         private readonly QuestbookAdminData adminData = new();
         private QuestbookCategoryDefinition[]? preAdminSnapshot;
         private LayoutRect adminSettingsButtonHitArea = new(0, 0, 0, 0);
-        private LayoutRect adminSidebarEditButtonHitArea = new(0, 0, 0, 0);
         private string? pendingSelectCategoryHeaderTitle;
         private bool pendingOpenAdminEditor;
         private LayoutRect adminToolSelectHitArea = new(0, 0, 0, 0);
@@ -195,6 +200,10 @@ namespace SwixyQuestBook.Gui
         private LayoutRect adminTypeQuestHitArea = new(0, 0, 0, 0);
         private LayoutRect adminTypeCheckpointHitArea = new(0, 0, 0, 0);
         private LayoutRect adminTypeKillHitArea = new(0, 0, 0, 0);
+        private LayoutRect adminRepeatOnceHitArea = new(0, 0, 0, 0);
+        private LayoutRect adminRepeatCooldownHitArea = new(0, 0, 0, 0);
+        private LayoutRect adminRepeatInstantHitArea = new(0, 0, 0, 0);
+        private LayoutRect adminRepeatHoursHitArea = new(0, 0, 0, 0);
 
         private LayoutRect[] adminInputFieldHitAreas = [];
         private bool isAdminInputFocused = false;
@@ -215,7 +224,7 @@ namespace SwixyQuestBook.Gui
         private LayoutRect adminBranchListViewportHitArea = new(0, 0, 0, 0);
         private LayoutRect[] adminBranchCardHitAreas = [];
         private double adminBranchListScrollOffset;
-        private bool isAdminSidebarEditHovered = false;
+        private bool isAdminSettingsButtonHovered = false;
         private bool isAdminModeBranchesHovered = false;
         private bool isAdminModeQuestsHovered = false;
         private bool isAdminBranchAddHovered = false;
@@ -270,6 +279,12 @@ namespace SwixyQuestBook.Gui
         private LayoutRect[] goalsCraftToggleHitAreas = [];
         private LayoutRect[] goalsKillToggleHitAreas = [];
         private LayoutRect[] goalsTakeToggleHitAreas = [];
+        private LayoutRect[] awardsTakeToggleHitAreas = [];
+        /// <summary>Cached Group 767 border polygons (design space 950×87), loaded once from assets.</summary>
+        private float[][]? group767BorderPolys;
+        private float group767BorderSrcW = 950f;
+        private float group767BorderSrcH = 87f;
+        private bool group767BorderLoadAttempted;
         private AdminItemPickerTarget? adminItemPickerTarget;
         private LayoutRect adminItemPickerPanelHitArea = new(0, 0, 0, 0);
         private LayoutRect adminItemPickerCancelHitArea = new(0, 0, 0, 0);
@@ -550,7 +565,17 @@ namespace SwixyQuestBook.Gui
             if (key == GlKeys.Tab)
             {
                 AdminFormFieldRef nextField = adminData.GetNextFieldRef(field);
-                if (!nextField.IsNone && nextField.IsCount && adminData.GetFieldValue(nextField) == "0")
+                if (field.Kind == AdminFormFieldKind.CooldownMinutes
+                    && nextField.Kind != AdminFormFieldKind.CooldownMinutes)
+                    adminData.CommitCooldownMinutesDraft();
+
+                if (nextField.Kind == AdminFormFieldKind.CooldownMinutes
+                    && adminData.CooldownMinutesDraft == null)
+                    adminData.CooldownMinutesDraft = adminData.GetFieldValue(nextField);
+
+                if (!nextField.IsNone && nextField.IsCount
+                    && nextField.Kind != AdminFormFieldKind.CooldownMinutes
+                    && adminData.GetFieldValue(nextField) == "0")
                     adminData.SetFieldValue(nextField, "0");
 
                 adminData.FocusedField = nextField;
@@ -563,6 +588,8 @@ namespace SwixyQuestBook.Gui
 
             if (key == GlKeys.Escape)
             {
+                if (field.Kind == AdminFormFieldKind.CooldownMinutes)
+                    adminData.CommitCooldownMinutesDraft();
                 adminData.FocusedField = AdminFormFieldRef.None;
                 ComposeDialog();
                 args.Handled = true;
@@ -777,7 +804,9 @@ namespace SwixyQuestBook.Gui
 
             if (isQuestModalOpen)
             {
-                questModalOverlayHitArea = GetQuestModalPanelRect(currentDialogX, currentDialogY, currentFitScale);
+                bool infoLayout = GetSelectedQuestNode()?.UsesInfoModalLayout == true;
+                questModalOverlayHitArea = GetQuestModalPanelRect(
+                    currentDialogX, currentDialogY, currentFitScale, infoLayout);
             }
             else
             {
@@ -828,6 +857,11 @@ namespace SwixyQuestBook.Gui
                 // Goals / rewards inside the quest modal (ClipToRightPanel == false).
                 RenderQueuedItemIcons(questItemIconRenderRequests, deltaTime, clipToRightPanelFilter: false);
             }
+
+            // GuiManager reads GuiDialog.MouseOverCursor after OnRenderGUI and applies it via
+            // Platform.UseMouseCursor. Base OnRenderGUI copies composer → dialog; we render the
+            // composer ourselves, so set the dialog field here from our hit-tested controls.
+            UpdateHoverCursor(capi.Input.MouseX, capi.Input.MouseY);
         }
 
         private bool IconIntersectsOpenModal(LayoutRect screenRect)
@@ -881,7 +915,7 @@ namespace SwixyQuestBook.Gui
                 return;
             }
 
-            if (TryHandleAdminSidebarEditClick(args.X, args.Y))
+            if (TryHandleAdminSettingsClick(args.X, args.Y))
             {
                 args.Handled = true;
                 return;
@@ -910,17 +944,28 @@ namespace SwixyQuestBook.Gui
                     }
 
                     if (args.Button == EnumMouseButton.Right
-                        && nodeIdAtMouse is int rightClickNodeId
                         && adminData.ToolMode == AdminToolMode.LinkQuests)
                     {
-                        HandleLinkToolRightClick(rightClickNodeId);
+                        // Pending link (source picked): RMB cancels rubber-band.
+                        // Otherwise RMB on a node removes one of its connections.
+                        if (adminData.LinkSourceNodeId != null)
+                        {
+                            CancelLinkToolPending();
+                        }
+                        else if (nodeIdAtMouse is int rightClickNodeId)
+                        {
+                            HandleLinkToolRightClick(rightClickNodeId);
+                        }
+
                         args.Handled = true;
                         return;
                     }
 
                     if (args.Button == EnumMouseButton.Left
                         && nodeIdAtMouse != null
-                        && adminData.ToolMode is AdminToolMode.LinkQuests or AdminToolMode.DeleteNode)
+                        && adminData.ToolMode is AdminToolMode.EditQuest
+                            or AdminToolMode.LinkQuests
+                            or AdminToolMode.DeleteNode)
                     {
                         TryHandleAdminGraphToolClick(args.X, args.Y);
                         args.Handled = true;
@@ -1032,6 +1077,9 @@ namespace SwixyQuestBook.Gui
                 return;
             }
 
+            lastMouseScreenX = args.X;
+            lastMouseScreenY = args.Y;
+
             if (isDraggingRightPanel)
             {
                 graphPanX = dragStartGraphPanX + (args.X - dragStartMouseX);
@@ -1039,6 +1087,15 @@ namespace SwixyQuestBook.Gui
                 RequestContentRefresh();
                 args.Handled = true;
                 return;
+            }
+
+            // Rubber-band link line follows the cursor after picking the source node.
+            if (adminData.IsAdminPanelOpen
+                && adminData.EditorSection == AdminEditorSection.Quests
+                && adminData.ToolMode == AdminToolMode.LinkQuests
+                && adminData.LinkSourceNodeId != null)
+            {
+                RequestContentRefresh();
             }
 
             if (isQuestModalOpen)
@@ -1070,6 +1127,141 @@ namespace SwixyQuestBook.Gui
             }
 
             base.OnMouseMove(args);
+        }
+
+        /// <summary>
+        /// Set <see cref="GuiDialog.MouseOverCursor"/> for clickable hit areas.
+        /// Must run at the end of <see cref="OnRenderGUI"/> — that is when GuiManager samples it.
+        /// </summary>
+        private void UpdateHoverCursor(int mouseX, int mouseY)
+        {
+            MouseOverCursor = IsOverClickableControl(mouseX, mouseY) ? ClickableCursor : null;
+        }
+
+        private bool IsOverClickableControl(int mouseX, int mouseY)
+        {
+            static bool Hit(LayoutRect r, int x, int y) =>
+                r.Width > 0 && r.Height > 0 && r.Contains(x, y);
+
+            static bool HitAny(IEnumerable<LayoutRect> rects, int x, int y)
+            {
+                foreach (LayoutRect r in rects)
+                {
+                    if (Hit(r, x, y))
+                        return true;
+                }
+
+                return false;
+            }
+
+            // Top menu
+            if (Hit(closeButtonHitArea, mouseX, mouseY)
+                || Hit(detachButtonHitArea, mouseX, mouseY))
+                return true;
+
+            // Sidebar branch cards + scrollbar (player and admin)
+            if (!adminData.IsAdminPanelOpen && HitAny(sidebarCardHitAreas, mouseX, mouseY))
+                return true;
+            if (Hit(sidebarScrollbarHandleHitArea, mouseX, mouseY)
+                || Hit(sidebarScrollbarVisualHandleHitArea, mouseX, mouseY))
+                return true;
+
+            // Quest nodes on the graph (open / select / tools)
+            if (!isQuestModalOpen && !isQuestEditModalOpen && !isBranchModalOpen
+                && HitAny(questCardHitAreas, mouseX, mouseY))
+                return true;
+
+            // Player quest modal
+            if (isQuestModalOpen)
+            {
+                if (Hit(questModalCloseHitArea, mouseX, mouseY)
+                    || Hit(questModalSubmitButtonHitArea, mouseX, mouseY))
+                    return true;
+            }
+
+            // Admin pickaxe
+            if (IsPlayerAdmin() && Hit(adminSettingsButtonHitArea, mouseX, mouseY))
+                return true;
+
+            // Admin left panel
+            if (adminData.IsAdminPanelOpen)
+            {
+                if (Hit(adminModeBranchesHitArea, mouseX, mouseY)
+                    || Hit(adminModeQuestsHitArea, mouseX, mouseY)
+                    || Hit(adminBranchAddHitArea, mouseX, mouseY)
+                    || Hit(adminBranchRenameHitArea, mouseX, mouseY)
+                    || Hit(adminBranchDeleteHitArea, mouseX, mouseY)
+                    || Hit(adminBranchCloseHitArea, mouseX, mouseY)
+                    || Hit(adminToolSelectHitArea, mouseX, mouseY)
+                    || Hit(adminToolQuestHitArea, mouseX, mouseY)
+                    || Hit(adminToolLinkHitArea, mouseX, mouseY)
+                    || Hit(adminToolDeleteHitArea, mouseX, mouseY)
+                    || Hit(adminToolSaveHitArea, mouseX, mouseY)
+                    || Hit(adminToolClearHitArea, mouseX, mouseY)
+                    || Hit(adminToolCloseHitArea, mouseX, mouseY)
+                    || Hit(adminToolGridHitArea, mouseX, mouseY)
+                    || HitAny(adminBranchCardHitAreas, mouseX, mouseY))
+                    return true;
+            }
+
+            // Branch modal
+            if (isBranchModalOpen)
+            {
+                if (Hit(branchModalPrimaryButtonHitArea, mouseX, mouseY)
+                    || Hit(branchModalCancelButtonHitArea, mouseX, mouseY)
+                    || Hit(branchModalIconPreviewHitArea, mouseX, mouseY)
+                    || Hit(branchModalIconSearchHitArea, mouseX, mouseY)
+                    || Hit(branchModalIconPickerCancelHitArea, mouseX, mouseY)
+                    || Hit(branchModalTitleInputHitArea, mouseX, mouseY)
+                    || HitAny(branchModalLangButtonHitAreas, mouseX, mouseY))
+                    return true;
+
+                foreach ((ItemSlot _, LayoutRect hit, string _) in branchModalItemPickerSlots)
+                {
+                    if (Hit(ToScreenRect(hit), mouseX, mouseY))
+                        return true;
+                }
+            }
+
+            // Quest edit modal
+            if (isQuestEditModalOpen)
+            {
+                if (Hit(questEditModalSaveButtonHitArea, mouseX, mouseY)
+                    || Hit(goalsAddButtonHitArea, mouseX, mouseY)
+                    || Hit(awardsAddButtonHitArea, mouseX, mouseY)
+                    || Hit(adminTypeStartHitArea, mouseX, mouseY)
+                    || Hit(adminTypeQuestHitArea, mouseX, mouseY)
+                    || Hit(adminTypeCheckpointHitArea, mouseX, mouseY)
+                    || Hit(adminTypeKillHitArea, mouseX, mouseY)
+                    || Hit(adminRepeatOnceHitArea, mouseX, mouseY)
+                    || Hit(adminRepeatCooldownHitArea, mouseX, mouseY)
+                    || Hit(adminRepeatInstantHitArea, mouseX, mouseY)
+                    || Hit(adminRepeatHoursHitArea, mouseX, mouseY)
+                    || Hit(adminItemPickerCancelHitArea, mouseX, mouseY)
+                    || Hit(adminEntityPickerSearchHitArea, mouseX, mouseY)
+                    || HitAny(questEditLangButtonHitAreas, mouseX, mouseY)
+                    || HitAny(goalsRemoveHitAreas, mouseX, mouseY)
+                    || HitAny(awardsRemoveHitAreas, mouseX, mouseY)
+                    || HitAny(goalsItemPickHitAreas, mouseX, mouseY)
+                    || HitAny(awardsItemPickHitAreas, mouseX, mouseY)
+                    || HitAny(goalsCraftToggleHitAreas, mouseX, mouseY)
+                    || HitAny(goalsTakeToggleHitAreas, mouseX, mouseY)
+                    || HitAny(awardsTakeToggleHitAreas, mouseX, mouseY)
+                    || HitAny(goalsMatchToggleHitAreas, mouseX, mouseY)
+                    || HitAny(awardsMatchToggleHitAreas, mouseX, mouseY)
+                    || HitAny(goalsKillToggleHitAreas, mouseX, mouseY)
+                    || HitAny(adminInputFieldHitAreas, mouseX, mouseY))
+                    return true;
+
+                // Item/entity picker tiles
+                foreach ((ItemSlot _, LayoutRect hit, string _, string _) in adminItemPickerSlots)
+                {
+                    if (Hit(hit, mouseX, mouseY) || Hit(ToScreenRect(hit), mouseX, mouseY))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public override void OnMouseUp(MouseEvent args)
@@ -1112,17 +1304,10 @@ namespace SwixyQuestBook.Gui
 
             if (isDraggingQuestNode && args.Button == EnumMouseButton.Left)
             {
-                bool shouldOpenModal = !questNodePressMoved
-                    && adminData.ToolMode == AdminToolMode.Select
-                    && adminData.HasSelectedNode;
+                // SELECT tool: drag to move only. Opening the editor is EDIT tool's job.
                 isDraggingQuestNode = false;
                 draggedQuestNodeId = -1;
-                if (shouldOpenModal)
-                {
-                    OpenQuestEditModal();
-                    ComposeDialog();
-                }
-
+                ComposeDialog();
                 args.Handled = true;
                 return;
             }
@@ -1258,6 +1443,42 @@ namespace SwixyQuestBook.Gui
         private bool IsNodeCompleted(QuestbookQuestNodeDefinition node)
         {
             return node.State == QuestbookQuestNodeState.Completed;
+        }
+
+        /// <summary>Button label when the node is completed (or on cooldown).</summary>
+        private string GetCompletedOrCooldownButtonText(QuestbookQuestNodeDefinition node)
+        {
+            string cat = GetSelectedCategory().HeaderTitle;
+            long remainMs = dataManager.GetCooldownRemainingMs(cat, node.Id);
+            if (remainMs > 0)
+                return QuestbookLang.GetLocal("modal.repeat_in", FormatCooldown(remainMs));
+
+            if (QuestbookRepeatMode.IsRepeatable(node.RepeatMode)
+                && !dataManager.IsQuestCompleted(cat, node.Id))
+            {
+                return QuestbookLang.GetLocal("modal.repeat_ready");
+            }
+
+            if (string.Equals(node.RepeatMode, QuestbookRepeatMode.Instant, StringComparison.OrdinalIgnoreCase))
+                return QuestbookLang.GetLocal("modal.repeat_instant");
+
+            return QuestbookLang.GetLocal("modal.received");
+        }
+
+        private static string FormatCooldown(long remainMs)
+        {
+            if (remainMs <= 0)
+                return "0m";
+
+            long totalSec = remainMs / 1000;
+            long days = totalSec / 86400;
+            long hours = (totalSec % 86400) / 3600;
+            long mins = (totalSec % 3600) / 60;
+            if (days > 0)
+                return $"{days}d {hours}h";
+            if (hours > 0)
+                return $"{hours}h {mins}m";
+            return $"{System.Math.Max(1, mins)}m";
         }
 
         private int GetNodeCurrentCount(QuestbookQuestNodeDefinition node)
@@ -1459,6 +1680,22 @@ namespace SwixyQuestBook.Gui
             }
 
             inventoryRefreshTimer += deltaTime;
+            // Cooldown UI: refresh when a timed quest reopens (or timer label ticks).
+            if (isQuestModalOpen)
+            {
+                QuestbookQuestNodeDefinition? modalNode = GetSelectedQuestNode();
+                if (modalNode != null)
+                {
+                    long remain = dataManager.GetCooldownRemainingMs(GetSelectedCategory().HeaderTitle, modalNode.Id);
+                    if (remain > 0 || (modalNode.State == QuestbookQuestNodeState.Completed
+                        && QuestbookRepeatMode.IsRepeatable(modalNode.RepeatMode)))
+                    {
+                        dataManager.RefreshNodeCompletionStates();
+                        RequestContentRefresh();
+                    }
+                }
+            }
+
             if (inventoryRefreshTimer < InventoryRefreshIntervalSeconds)
             {
                 return;
@@ -1519,7 +1756,14 @@ namespace SwixyQuestBook.Gui
                 }
 
                 QuestbookQuestNodeDefinition? parentNode = GetNodeById(category, connection.StartNodeId);
-                if (parentNode == null || !IsNodeCompleted(parentNode))
+                if (parentNode == null)
+                {
+                    return false;
+                }
+
+                // Parent completed once unlocks children even after cooldown reset.
+                if (!IsNodeCompleted(parentNode)
+                    && !dataManager.HasEverCompleted(category.HeaderTitle, parentNode.Id))
                 {
                     return false;
                 }
@@ -2214,12 +2458,6 @@ namespace SwixyQuestBook.Gui
             return lineBoxY + ((actualLineHeight - fontExtents.Height) / 2) + fontExtents.Ascent;
         }
 
-        private static double GetTextVisualCenterY(CairoFont font, double baselineY)
-        {
-            FontExtents fontExtents = font.GetFontExtents();
-            return baselineY - fontExtents.Ascent + (fontExtents.Height / 2);
-        }
-
         private static void DrawText(Cairo.Context ctx, CairoFont font, string text, double x, double y)
         {
             ctx.Operator = Operator.Over;
@@ -2595,7 +2833,8 @@ namespace SwixyQuestBook.Gui
             double fitScale,
             LayoutRect area,
             int progressPercent,
-            bool isCompleted)
+            bool isCompleted,
+            double? designFontSize = null)
         {
             string questPrefix = QuestbookLang.GetLocal("modal.quest_prefix");
             string statusText = isCompleted
@@ -2603,14 +2842,18 @@ namespace SwixyQuestBook.Gui
                 : $"{progressPercent}%".ToUpperInvariant();
             double[] statusColor = GetModalProgressStatusColor(progressPercent, isCompleted);
 
-            CairoFont prefixFont = CreateMontserratFont(32 * fitScale, QuestbookGuiLayout.ModalQuestLabelColor);
-            CairoFont statusFont = CreateMontserratFont(32 * fitScale, statusColor);
+            // Group 1213: status glyph height ≈ 21 → design font 16. Start panel uses larger band.
+            double statusFontSize = designFontSize.HasValue
+                ? designFontSize.Value * fitScale
+                : System.Math.Clamp(area.Height * 0.72, 12 * fitScale, 32 * fitScale);
+            CairoFont prefixFont = CreateMontserratFont(statusFontSize, QuestbookGuiLayout.ModalQuestLabelColor);
+            CairoFont statusFont = CreateMontserratFont(statusFontSize, statusColor);
 
             double prefixWidth = MeasureTextWidth(prefixFont, questPrefix);
             double statusWidth = MeasureTextWidth(statusFont, statusText);
             double totalWidth = prefixWidth + statusWidth;
             double startX = area.X + ((area.Width - totalWidth) / 2);
-            double baselineY = GetTextBaselineY(prefixFont, area.Y, area.Height, 32 * fitScale);
+            double baselineY = GetTextBaselineY(prefixFont, area.Y, area.Height, statusFontSize);
 
             DrawText(ctx, prefixFont, questPrefix, startX, baselineY);
             DrawText(ctx, statusFont, statusText, startX + prefixWidth, baselineY);
@@ -2633,9 +2876,12 @@ namespace SwixyQuestBook.Gui
                 FillRectangle(ctx, cardRect.X, cardRect.Y, cardRect.Width, cardRect.Height, QuestbookGuiLayout.ModalBorderColor);
             }
 
-            double iconSize = QuestbookGuiLayout.SidebarIconSize * scale;
+            // Group 671: 24×24 icon at (8,8) in the 40px card (vertically centered if scale changes).
+            double iconSize = System.Math.Min(
+                QuestbookGuiLayout.SidebarIconSize * scale,
+                System.Math.Max(1, cardRect.Height - (2 * scale)));
             double iconX = cardRect.X + (QuestbookGuiLayout.SidebarIconOffsetX * scale);
-            double iconY = cardRect.Y + (QuestbookGuiLayout.SidebarIconOffsetY * scale);
+            double iconY = cardRect.Y + ((cardRect.Height - iconSize) * 0.5);
             LayoutRect iconRect = new(iconX, iconY, iconSize, iconSize);
             if (!string.IsNullOrWhiteSpace(entry.IconItemCode))
             {
@@ -2663,7 +2909,7 @@ namespace SwixyQuestBook.Gui
             CairoFont sidebarFont = CreateMontserratFont(QuestbookGuiLayout.SidebarFontSize * scale, QuestbookGuiLayout.SidebarTitleColor);
             string progressText = $"{entry.ProgressPercent}%";
             double progressWidth = MeasureTextWidth(sidebarFont, progressText);
-            double titleX = cardRect.X + (QuestbookGuiLayout.SidebarTitleOffsetX * scale);
+            double titleX = iconX + iconSize + (QuestbookGuiLayout.SidebarTitleGap * scale);
             double progressX = cardRect.X + cardRect.Width - (QuestbookGuiLayout.SidebarProgressRightPadding * scale) - progressWidth;
             double textBaselineY = GetTextBaselineY(sidebarFont, cardRect.Y, cardRect.Height, QuestbookGuiLayout.SidebarLineHeight * scale);
 
@@ -2784,21 +3030,72 @@ namespace SwixyQuestBook.Gui
             DrawConnectionLine(ctx, startX, startY, endX, endY, startNodeState, endNodeState, graphScale);
         }
 
-        private static LayoutRect GetQuestModalPanelRect(double dialogX, double dialogY, double fitScale)
+        /// <summary>
+        /// While the Link tool has a source node, draw a live line from that node to the cursor.
+        /// </summary>
+        private void DrawLinkRubberBand(
+            Cairo.Context ctx,
+            QuestbookCategoryDefinition category,
+            LayoutRect viewportRect,
+            double graphScale,
+            double screenX,
+            double screenY)
         {
-            // Coordinates from ТЗ (1920x1080) - relative to main GUI
-            double baseDialogX = (1920 - QuestbookGuiLayout.BackgroundWidth) / 2;
-            double baseDialogY = (1080 - QuestbookGuiLayout.BackgroundHeight) / 2 - QuestbookGuiLayout.BackgroundOffsetY;
-            double ToScreenX(double baseX) => dialogX + (baseX - baseDialogX) * fitScale;
-            double ToScreenY(double baseY) => dialogY + (baseY - baseDialogY - 28) * fitScale;
-            double ToScreenSize(double baseSize) => baseSize * fitScale;
+            if (!adminData.IsAdminPanelOpen
+                || adminData.EditorSection != AdminEditorSection.Quests
+                || adminData.ToolMode != AdminToolMode.LinkQuests
+                || adminData.LinkSourceNodeId == null)
+            {
+                return;
+            }
+
+            QuestbookQuestNodeDefinition? source = GetCachedNodeById(adminData.LinkSourceNodeId.Value)
+                ?? GetNodeById(category, adminData.LinkSourceNodeId.Value);
+            if (source == null)
+                return;
+
+            (double startX, double startY) = GetNodeScreenCenter(
+                source, viewportRect.X, viewportRect.Y, graphPanX, graphPanY, graphScale);
+
+            // Mouse is screen-space; graph drawing uses dialog-local coords.
+            double endX = lastMouseScreenX - screenX;
+            double endY = lastMouseScreenY - screenY;
+
+            // Soft clamp to viewport so the band doesn't draw across the whole book.
+            endX = System.Math.Clamp(endX, viewportRect.X, viewportRect.X + viewportRect.Width);
+            endY = System.Math.Clamp(endY, viewportRect.Y, viewportRect.Y + viewportRect.Height);
+
+            double dx = endX - startX;
+            double dy = endY - startY;
+            if ((dx * dx) + (dy * dy) < 4.0)
+                return;
+
+            // Active-style line so the rubber-band matches available connections.
+            DrawConnectionLine(
+                ctx,
+                startX,
+                startY,
+                endX,
+                endY,
+                QuestNodeVisualState.Active,
+                QuestNodeVisualState.Active,
+                graphScale);
+        }
+
+        private static LayoutRect GetQuestModalPanelRect(double dialogX, double dialogY, double fitScale, bool infoLayout = false)
+        {
+            // Same Group 1213 shell for quest and start/checkpoint — centered in the graph area.
+            _ = infoLayout;
+            double pw = QuestbookGuiLayout.ModalPanelWidth;
+            double ph = QuestbookGuiLayout.ModalPanelHeight;
+            double px = QuestbookGuiLayout.ModalPanelX;
+            double py = QuestbookGuiLayout.ModalPanelY;
 
             return new LayoutRect(
-                ToScreenX(QuestbookGuiLayout.ModalPanelX),
-                ToScreenY(QuestbookGuiLayout.ModalPanelY),
-                ToScreenSize(QuestbookGuiLayout.ModalPanelWidth),
-                ToScreenSize(QuestbookGuiLayout.ModalPanelHeight)
-            );
+                dialogX + (px * fitScale),
+                dialogY + (py * fitScale),
+                pw * fitScale,
+                ph * fitScale);
         }
 
         private LayoutRect DrawQuestModal(
@@ -2816,7 +3113,7 @@ namespace SwixyQuestBook.Gui
             bool isStartNode = node.NodeType == QuestbookQuestNodeType.Start;
             bool isCheckpointNode = node.NodeType == QuestbookQuestNodeType.Checkpoint;
 
-            LayoutRect panelRect = GetQuestModalPanelRect(0, 0, fitScale);
+            LayoutRect panelRect = GetQuestModalPanelRect(0, 0, fitScale, usesInfoModalLayout);
             questModalOverlayHitArea = panelRect.Offset(screenX, screenY);
 
             double panelX = panelRect.X;
@@ -2824,20 +3121,10 @@ namespace SwixyQuestBook.Gui
             double panelWidth = panelRect.Width;
             double panelHeight = panelRect.Height;
 
-            // Questbook-open.svg layout — all positions relative to panel (772, 256).
-            double RelX(double absX) => panelX + ((absX - QuestbookGuiLayout.ModalPanelX) * fitScale);
-            double RelY(double absY) => panelY + ((absY - QuestbookGuiLayout.ModalPanelY) * fitScale);
+            // All layout constants below are panel-local for the active modal skin.
+            double LocX(double localX) => panelX + (localX * fitScale);
+            double LocY(double localY) => panelY + (localY * fitScale);
             double S(double v) => v * fitScale;
-
-            double padX = S(QuestbookGuiLayout.ModalPadX);
-            double contentX = panelX + padX;
-            double contentW = panelWidth - (padX * 2); // 568
-
-            double buttonH = S(QuestbookGuiLayout.ModalButtonHeight);
-            double buttonW = S(QuestbookGuiLayout.ModalStartButtonWidth);
-            double buttonX = RelX(QuestbookGuiLayout.ModalStartButtonX);
-            double buttonY = RelY(QuestbookGuiLayout.ModalStartButtonY);
-            double closeSize = S(QuestbookGuiLayout.ModalCloseSize);
 
             int totalRequiredCount = GetNodeRequiredTotalCount(node);
             double percent = totalRequiredCount <= 0
@@ -2845,11 +3132,12 @@ namespace SwixyQuestBook.Gui
                 : ((double)currentCount / System.Math.Max(1, totalRequiredCount)) * 100;
             int progressPercent = (int)System.Math.Clamp(System.Math.Round(percent, MidpointRounding.AwayFromZero), 0, 100);
 
+            // Same Group 1212 button skins for quest and start/checkpoint shells.
             string buttonTextureFileName = isCompleted
-                ? "button_completed.png"
+                ? QuestbookGuiLayout.ModalQuestButtonCompletedTexture
                 : canSubmit && !isSubmitPending
-                    ? "button_active.png"
-                    : "button_notactive.png";
+                    ? QuestbookGuiLayout.ModalQuestButtonActiveTexture
+                    : QuestbookGuiLayout.ModalQuestButtonTexture;
 
             string buttonText;
             if (isStartNode)
@@ -2871,7 +3159,7 @@ namespace SwixyQuestBook.Gui
             else
             {
                 buttonText = isCompleted
-                    ? QuestbookLang.GetLocal("modal.received")
+                    ? GetCompletedOrCooldownButtonText(node)
                     : isSubmitPending
                         ? QuestbookLang.GetLocal("modal.processing")
                         : QuestbookLang.GetLocal("modal.claim_reward");
@@ -2879,14 +3167,14 @@ namespace SwixyQuestBook.Gui
 
             double[] buttonTextColor = isCompleted || (canSubmit && !isSubmitPending)
                 ? QuestbookGuiLayout.TopMenuTitleColor
-                : [102.0 / 255.0, 102.0 / 255.0, 102.0 / 255.0, 1.0];
+                : QuestbookGuiLayout.ModalButtonIdleTextColor;
             if (usesInfoModalLayout && isStartNode && canSubmit && !isSubmitPending && !isCompleted)
             {
                 buttonTextColor = QuestbookGuiLayout.ModalStartButtonTextColor;
             }
 
-            // Panel background (no full-window dimming by design request).
-            ImageSurface? modalSurface = GetTextureSurface("modal.png");
+            // Shared Group 1213 dark frame for quest, start and checkpoint.
+            ImageSurface? modalSurface = GetTextureSurface(QuestbookGuiLayout.ModalQuestTexture);
             if (modalSurface != null)
             {
                 DrawImageSurface(ctx, modalSurface, panelX, panelY, panelWidth, panelHeight);
@@ -2896,121 +3184,148 @@ namespace SwixyQuestBook.Gui
                 FillRectangle(ctx, panelX, panelY, panelWidth, panelHeight, QuestbookGuiLayout.ModalBackgroundColor);
             }
 
-            // Close — exact SVG position (1368, 340), no nudge.
-            double closeButtonX = RelX(QuestbookGuiLayout.ModalCloseX);
-            double closeButtonY = RelY(QuestbookGuiLayout.ModalCloseY);
-            string closeButtonTextureFileName = isQuestModalCloseButtonHovered ? "close_active.png" : "close.png";
-            ImageSurface? closeButtonSurface = GetTextureSurface(closeButtonTextureFileName);
-            if (closeButtonSurface != null)
-            {
-                DrawImageSurface(ctx, closeButtonSurface, closeButtonX, closeButtonY, closeSize, closeSize);
-            }
+            // Shared chrome: close, button, status, title positions.
+            double closeButtonX = LocX(QuestbookGuiLayout.ModalCloseX);
+            double closeButtonY = LocY(QuestbookGuiLayout.ModalCloseY);
+            double closeSize = S(QuestbookGuiLayout.ModalCloseSize);
+            double buttonX = LocX(QuestbookGuiLayout.ModalQuestButtonX);
+            double buttonY = LocY(QuestbookGuiLayout.ModalQuestButtonY);
+            double buttonW = S(QuestbookGuiLayout.ModalButtonWidth);
+            double buttonH = S(QuestbookGuiLayout.ModalButtonHeight);
+            double goalBoxX = 0, goalBoxY = 0, goalBoxWidth = 0, goalBoxHeight = 0;
 
-            // Status «КВЕСТ: N%» — design rect 893,320 470×39 (centered band).
-            LayoutRect questLabelRect = new(
-                RelX(QuestbookGuiLayout.ModalQuestStatusX),
-                RelY(QuestbookGuiLayout.ModalQuestStatusY),
+            LayoutRect statusRect = new(
+                LocX(QuestbookGuiLayout.ModalQuestStatusX),
+                LocY(QuestbookGuiLayout.ModalQuestStatusY),
                 S(QuestbookGuiLayout.ModalQuestStatusWidth),
                 S(QuestbookGuiLayout.ModalQuestStatusHeight));
-            DrawCenteredQuestStatusLine(ctx, fitScale, questLabelRect, progressPercent, isCompleted);
+            DrawCenteredQuestStatusLine(
+                ctx,
+                fitScale,
+                statusRect,
+                progressPercent,
+                isCompleted,
+                QuestbookGuiLayout.ModalQuestStatusFontSize);
 
-            // Title — design rect 893,365 470×39.
-            string displayTitle = isStartNode
-                ? GetCategoryHeaderDisplay(GetSelectedCategory())
-                : isCheckpointNode
-                    ? (string.IsNullOrWhiteSpace(node.Description)
-                        ? GetCategoryHeaderDisplay(GetSelectedCategory())
-                        : node.Description)
-                    : (node.RequiredItems.Length > 0
-                        ? (GetQuestItemSlot(node.RequiredItems[0].CollectibleCode)?.Itemstack?.GetName()
-                            ?? node.RequiredItems[0].CollectibleCode)
-                        : "");
-            if (displayTitle.Length > 28)
+            string displayTitle;
+            if (isStartNode)
             {
-                displayTitle = displayTitle[..25] + "...";
+                displayTitle = GetCategoryHeaderDisplay(GetSelectedCategory());
             }
+            else if (isCheckpointNode)
+            {
+                displayTitle = string.IsNullOrWhiteSpace(node.Description)
+                    ? GetCategoryHeaderDisplay(GetSelectedCategory())
+                    : node.Description;
+            }
+            else
+            {
+                displayTitle = node.RequiredItems.Length > 0
+                    ? (GetQuestItemSlot(node.RequiredItems[0].CollectibleCode)?.Itemstack?.GetName()
+                        ?? node.RequiredItems[0].CollectibleCode)
+                    : "";
+            }
+            if (displayTitle.Length > 28)
+                displayTitle = displayTitle[..25] + "...";
 
-            CairoFont titleFont = CreateMontserratFont(28 * fitScale, [1.0, 1.0, 1.0, 1.0]);
-            LayoutRect titleRect = new(
-                RelX(QuestbookGuiLayout.ModalTitleX),
-                RelY(QuestbookGuiLayout.ModalTitleY),
+            CairoFont titleFont = CreateMontserratFont(
+                QuestbookGuiLayout.ModalTitleFontSize * fitScale,
+                [1.0, 1.0, 1.0, 1.0]);
+            DrawCenteredText(ctx, titleFont, displayTitle, new LayoutRect(
+                LocX(QuestbookGuiLayout.ModalTitleX),
+                LocY(QuestbookGuiLayout.ModalTitleY),
                 S(QuestbookGuiLayout.ModalTitleWidth),
-                S(QuestbookGuiLayout.ModalTitleHeight));
-            DrawCenteredText(ctx, titleFont, displayTitle, titleRect);
-
-            double goalBoxX = 0, goalBoxY = 0, goalBoxWidth = 0, goalBoxHeight = 0;
-            ImageSurface? modalBoxSurface = GetTextureSurface("modalbox.png");
-            ImageSurface? modalTextBoxSurface = GetTextureSurface("modaltextbox.png");
+                S(QuestbookGuiLayout.ModalTitleHeight)));
 
             if (usesInfoModalLayout)
             {
+                // ── Start / checkpoint — large text body over goals+awards+desc band ──
                 questModalGoalsViewportHitArea = new LayoutRect(0, 0, 0, 0);
                 questModalRewardsViewportHitArea = new LayoutRect(0, 0, 0, 0);
                 questModalGoalsMaxScroll = 0;
                 questModalRewardsMaxScroll = 0;
 
-                // Start / checkpoint — single info box (design 844,422 568×280).
-                double infoBoxX = RelX(QuestbookGuiLayout.ModalStartInfoBoxX);
-                double infoBoxY = RelY(QuestbookGuiLayout.ModalStartInfoBoxY);
-                double infoBoxW = S(QuestbookGuiLayout.ModalStartInfoBoxWidth);
-                double infoBoxH = S(QuestbookGuiLayout.ModalStartInfoBoxHeight);
+                double infoBoxX = LocX(QuestbookGuiLayout.ModalInfoBoxX);
+                double infoBoxY = LocY(QuestbookGuiLayout.ModalInfoBoxY);
+                double infoBoxW = S(QuestbookGuiLayout.ModalInfoBoxWidth);
+                double infoBoxH = S(QuestbookGuiLayout.ModalInfoBoxHeight);
+                DrawGroup767BorderCairo(ctx, infoBoxX, infoBoxY, infoBoxW, infoBoxH);
 
-                if (modalBoxSurface != null)
-                {
-                    DrawImageSurface(ctx, modalBoxSurface, infoBoxX, infoBoxY, infoBoxW, infoBoxH);
-                }
-
-                double textPad = 16 * fitScale;
+                double textPadX = S(QuestbookGuiLayout.ModalInfoPadX);
+                double textPadY = S(QuestbookGuiLayout.ModalInfoPadY);
                 LayoutRect infoRect = new(
-                    infoBoxX + textPad,
-                    infoBoxY + textPad,
-                    infoBoxW - (textPad * 2),
-                    infoBoxH - (textPad * 2));
-
-                CairoFont infoFont = CreateMontserratFont(16 * fitScale, QuestbookGuiLayout.ModalStartInfoTextColor);
+                    infoBoxX + textPadX,
+                    infoBoxY + textPadY,
+                    infoBoxW - (textPadX * 2),
+                    infoBoxH - (textPadY * 2));
+                CairoFont infoFont = CreateMontserratFont(
+                    QuestbookGuiLayout.ModalInfoFontSize * fitScale,
+                    QuestbookGuiLayout.ModalDescriptionTextColor);
                 string infoText = string.IsNullOrWhiteSpace(node.Description)
                     ? QuestbookLang.GetLocal("modal.info_placeholder")
                     : node.Description;
-                DrawWrappedInfoText(ctx, infoFont, infoText, infoRect, QuestbookGuiLayout.ModalStartDescriptionMaxLength, 24 * fitScale);
+                DrawWrappedInfoText(
+                    ctx,
+                    infoFont,
+                    infoText,
+                    infoRect,
+                    QuestbookGuiLayout.ModalStartDescriptionMaxLength,
+                    QuestbookGuiLayout.ModalInfoLineHeight * fitScale);
             }
             else
             {
-                // Goals | Rewards — fixed design boxes 272×152, gap 24.
+                // ── Quest / kill — Goals | Awards + description ───────────────
                 goalBoxWidth = S(QuestbookGuiLayout.ModalGoalsBoxWidth);
                 goalBoxHeight = S(QuestbookGuiLayout.ModalGoalsBoxHeight);
-                goalBoxX = RelX(QuestbookGuiLayout.ModalGoalsBoxX);
-                goalBoxY = RelY(QuestbookGuiLayout.ModalGoalsBoxY);
-                double rewardBoxX = RelX(QuestbookGuiLayout.ModalRewardsBoxX);
-                double rewardBoxY = RelY(QuestbookGuiLayout.ModalRewardsBoxY);
+                goalBoxX = LocX(QuestbookGuiLayout.ModalGoalsBoxX);
+                goalBoxY = LocY(QuestbookGuiLayout.ModalGoalsBoxY);
+                double rewardBoxX = LocX(QuestbookGuiLayout.ModalRewardsBoxX);
+                double rewardBoxY = LocY(QuestbookGuiLayout.ModalRewardsBoxY);
+                double rewardBoxWidth = S(QuestbookGuiLayout.ModalRewardsBoxWidth);
 
-                if (modalBoxSurface != null)
-                {
-                    DrawImageSurface(ctx, modalBoxSurface, goalBoxX, goalBoxY, goalBoxWidth, goalBoxHeight);
-                    DrawImageSurface(ctx, modalBoxSurface, rewardBoxX, rewardBoxY, goalBoxWidth, goalBoxHeight);
-                }
+                // One shared wavy frame around Goals|Awards + vertical wave divider (Group 1213).
+                double sectionsX = LocX(QuestbookGuiLayout.ModalSectionsFrameX);
+                double sectionsY = LocY(QuestbookGuiLayout.ModalSectionsFrameY);
+                double sectionsW = S(QuestbookGuiLayout.ModalSectionsFrameWidth);
+                double sectionsH = S(QuestbookGuiLayout.ModalSectionsFrameHeight);
+                DrawGroup767BorderCairo(ctx, sectionsX, sectionsY, sectionsW, sectionsH);
+                DrawModalSectionsWaveDivider(
+                    ctx,
+                    fitScale,
+                    LocX(QuestbookGuiLayout.ModalSectionsDividerX),
+                    sectionsY,
+                    sectionsH);
 
-                double labelH = 24 * fitScale;
-                double goalsHintH = 16 * fitScale;
-                CairoFont sectionLeftFont = CreateMontserratFont(20 * fitScale, [85.0 / 255.0, 255.0 / 255.0, 255.0 / 255.0, 1.0]);
-                CairoFont sectionRightFont = CreateMontserratFont(20 * fitScale, [255.0 / 255.0, 170.0 / 255.0, 0.0, 1.0]);
+                double labelH = S(QuestbookGuiLayout.ModalSectionLabelHeight);
+                double hintH = S(QuestbookGuiLayout.ModalSectionHintHeight);
+                double labelY = goalBoxY + S(QuestbookGuiLayout.ModalSectionLabelOffsetY);
+                double hintY = goalBoxY + S(QuestbookGuiLayout.ModalSectionHintOffsetY);
+
+                // Goals #55FFFF / Awards #FFAA00 — SVG glyph h≈17.5 → font 14, y=176.5.
+                double sectionFs = QuestbookGuiLayout.ModalSectionHeaderFontSize * fitScale;
+                CairoFont sectionLeftFont = CreateMontserratFont(sectionFs, QuestbookGuiLayout.ModalGoalsHeaderColor);
+                CairoFont sectionRightFont = CreateMontserratFont(sectionFs, QuestbookGuiLayout.ModalAwardsHeaderColor);
                 DrawCenteredText(ctx, sectionLeftFont, QuestbookLang.GetLocal("modal.goals"),
-                    new LayoutRect(goalBoxX, goalBoxY + (6 * fitScale), goalBoxWidth, labelH));
+                    new LayoutRect(goalBoxX, labelY, goalBoxWidth, labelH));
                 DrawCenteredText(ctx, sectionRightFont, QuestbookLang.GetLocal("modal.rewards"),
-                    new LayoutRect(rewardBoxX, rewardBoxY + (6 * fitScale), goalBoxWidth, labelH));
+                    new LayoutRect(rewardBoxX, labelY, rewardBoxWidth, labelH));
 
                 string goalsHint = BuildGoalsActionHint(node);
                 if (!string.IsNullOrWhiteSpace(goalsHint))
                 {
-                    CairoFont hintFont = CreateMontserratFont(11 * fitScale, [0.75, 0.82, 0.88, 0.95]);
+                    // Hint under Goals — SVG y=199.8 h≈12 → font 11.
+                    CairoFont hintFont = CreateMontserratFont(
+                        QuestbookGuiLayout.ModalSectionHintFontSize * fitScale,
+                        QuestbookGuiLayout.ModalSectionHintColor);
                     DrawCenteredText(
                         ctx,
                         hintFont,
                         goalsHint,
-                        new LayoutRect(goalBoxX + (6 * fitScale), goalBoxY + labelH + (2 * fitScale), goalBoxWidth - (12 * fitScale), goalsHintH));
+                        new LayoutRect(goalBoxX + (6 * fitScale), hintY, goalBoxWidth - (12 * fitScale), hintH));
                 }
 
-                double iconAreaTop = goalBoxY + labelH + goalsHintH + (8 * fitScale);
-                double iconAreaH = goalBoxHeight - labelH - goalsHintH - (14 * fitScale);
+                double iconAreaTop = goalBoxY + S(QuestbookGuiLayout.ModalSectionIconOffsetY);
+                double iconAreaH = System.Math.Max(8, goalBoxY + goalBoxHeight - iconAreaTop - (8 * fitScale));
                 double iconSize = S(QuestbookGuiLayout.ModalIconSize);
 
                 if (node.SupportsItemIcon)
@@ -3034,7 +3349,7 @@ namespace SwixyQuestBook.Gui
                         node.RewardItems,
                         rewardBoxX,
                         iconAreaTop,
-                        goalBoxWidth,
+                        rewardBoxWidth,
                         iconAreaH,
                         iconSize,
                         fitScale,
@@ -3051,31 +3366,60 @@ namespace SwixyQuestBook.Gui
                     questModalRewardsMaxScroll = 0;
                 }
 
-                // Description — fixed 844,598 568×104.
-                double textBoxX = RelX(QuestbookGuiLayout.ModalDescriptionBoxX);
-                double textBoxY = RelY(QuestbookGuiLayout.ModalDescriptionBoxY);
+                double textBoxX = LocX(QuestbookGuiLayout.ModalDescriptionBoxX);
+                double textBoxY = LocY(QuestbookGuiLayout.ModalDescriptionBoxY);
                 double textBoxW = S(QuestbookGuiLayout.ModalDescriptionBoxWidth);
                 double textBoxH = S(QuestbookGuiLayout.ModalDescriptionBoxHeight);
+                DrawGroup767BorderCairo(ctx, textBoxX, textBoxY, textBoxW, textBoxH);
 
-                if (modalTextBoxSurface != null)
-                {
-                    DrawImageSurface(ctx, modalTextBoxSurface, textBoxX, textBoxY, textBoxW, textBoxH);
-                }
-
-                double textPad = 14 * fitScale;
+                // Description body SVG x=93 y=330.8 w≈593 h≈84 → pad 12/10, font 12, line 15.
+                double textPadX = S(QuestbookGuiLayout.ModalDescriptionPadX);
+                double textPadY = S(QuestbookGuiLayout.ModalDescriptionPadY);
                 LayoutRect infoRect = new(
-                    textBoxX + textPad,
-                    textBoxY + textPad,
-                    textBoxW - (textPad * 2),
-                    textBoxH - (textPad * 2));
-                CairoFont infoFont = CreateMontserratFont(15 * fitScale, [1.0, 1.0, 0.3333333333, 1.0]);
+                    textBoxX + textPadX,
+                    textBoxY + textPadY,
+                    textBoxW - (textPadX * 2),
+                    textBoxH - (textPadY * 2));
+                CairoFont infoFont = CreateMontserratFont(
+                    QuestbookGuiLayout.ModalDescriptionFontSize * fitScale,
+                    QuestbookGuiLayout.ModalDescriptionTextColor);
                 string infoText = string.IsNullOrWhiteSpace(node.Description)
                     ? QuestbookLang.GetLocal("modal.info_placeholder")
                     : node.Description;
-                DrawWrappedInfoText(ctx, infoFont, infoText, infoRect, 220, 22 * fitScale);
+                DrawWrappedInfoText(
+                    ctx,
+                    infoFont,
+                    infoText,
+                    infoRect,
+                    320,
+                    QuestbookGuiLayout.ModalDescriptionLineHeight * fitScale);
             }
 
-            // Action button — design 844,748 568×74.
+            // Close button
+            string closeButtonTextureFileName = isQuestModalCloseButtonHovered ? "close_active.png" : "close.png";
+            ImageSurface? closeButtonSurface = GetTextureSurface(closeButtonTextureFileName);
+            if (closeButtonSurface != null)
+            {
+                DrawImageSurface(ctx, closeButtonSurface, closeButtonX, closeButtonY, closeSize, closeSize);
+            }
+            else
+            {
+                double[] xColor = isQuestModalCloseButtonHovered
+                    ? QuestbookGuiLayout.TopMenuCloseHoverColor
+                    : [0x40 / 255.0, 0x40 / 255.0, 0x40 / 255.0, 1.0];
+                ctx.SetSourceRGBA(xColor[0], xColor[1], xColor[2], xColor[3]);
+                ctx.LineWidth = System.Math.Max(2.0, 3 * fitScale);
+                ctx.LineCap = Cairo.LineCap.Square;
+                double pad = closeSize * 0.28;
+                ctx.NewPath();
+                ctx.MoveTo(closeButtonX + pad, closeButtonY + pad);
+                ctx.LineTo(closeButtonX + closeSize - pad, closeButtonY + closeSize - pad);
+                ctx.MoveTo(closeButtonX + closeSize - pad, closeButtonY + pad);
+                ctx.LineTo(closeButtonX + pad, closeButtonY + closeSize - pad);
+                ctx.Stroke();
+            }
+
+            // Action button
             LayoutRect buttonRect = new(buttonX, buttonY, buttonW, buttonH);
             ImageSurface? buttonSurface = GetTextureSurface(buttonTextureFileName);
             if (buttonSurface != null)
@@ -3087,7 +3431,9 @@ namespace SwixyQuestBook.Gui
                 FillRectangle(ctx, buttonRect.X, buttonRect.Y, buttonRect.Width, buttonRect.Height, QuestbookGuiLayout.ModalButtonDisabledColor);
             }
 
-            CairoFont buttonFont = CreateMontserratFont(28 * fitScale, buttonTextColor);
+            CairoFont buttonFont = CreateMontserratFont(
+                QuestbookGuiLayout.ModalQuestButtonFontSize * fitScale,
+                buttonTextColor);
             DrawCenteredText(ctx, buttonFont, buttonText, buttonRect);
 
             questModalCloseHitArea = new LayoutRect(closeButtonX, closeButtonY, closeSize, closeSize)
@@ -3099,6 +3445,36 @@ namespace SwixyQuestBook.Gui
             return usesInfoModalLayout
                 ? new LayoutRect(0, 0, 0, 0)
                 : new LayoutRect(goalBoxX, goalBoxY, goalBoxWidth, goalBoxHeight);
+        }
+
+        /// <summary>
+        /// Vertical wavy strip that splits Goals | Awards inside the shared Group 1213 frame.
+        /// </summary>
+        private void DrawModalSectionsWaveDivider(
+            Cairo.Context ctx,
+            double fitScale,
+            double dividerCenterX,
+            double sectionsY,
+            double sectionsH)
+        {
+            double texW = QuestbookGuiLayout.ModalSectionsDividerWidth * fitScale;
+            double inset = QuestbookGuiLayout.ModalSectionsDividerInsetY * fitScale;
+            double x = dividerCenterX - (texW * 0.5);
+            double y = sectionsY + inset;
+            double h = System.Math.Max(4, sectionsH - (inset * 2));
+
+            ImageSurface? strip = GetTextureSurface(QuestbookGuiLayout.ModalSectionsDividerTexture);
+            if (strip == null)
+                strip = GetTextureSurface("wave_divider.png");
+
+            if (strip != null)
+            {
+                DrawImageSurface(ctx, strip, x, y, texW, h);
+                return;
+            }
+
+            // Fallback: thin #2D2D2D bar if textures missing.
+            FillRectangle(ctx, x, y, texW, h, [0x2D / 255.0, 0x2D / 255.0, 0x2D / 255.0, 1.0]);
         }
 
         private void DrawWrappedInfoText(
@@ -3263,20 +3639,27 @@ namespace SwixyQuestBook.Gui
             }
 
             int itemCount = items.Length;
-            double gap = 8 * fitScale;
+            // Group 1213: 64 icons with 6px gap; stack counts render on the mesh itself.
+            double gap = QuestbookGuiLayout.ModalIconGap * fitScale;
             double hPad = 8 * fitScale;
             double scrollbarGap = 4 * fitScale;
             double scrollbarWidth = QuestbookGuiLayout.QuestEditModalListScrollbarWidth * fitScale;
             double availableHeight = System.Math.Max(8, boxHeight);
 
-            // Goals reserve space under each icon for action label + progress.
-            double actionLabelH = isGoal ? 13 * fitScale : 0;
-            double progressLabelH = isGoal ? 12 * fitScale : 0;
-            double labelGap = isGoal ? 2 * fitScale : 0;
-            double cellExtra = isGoal ? (actionLabelH + progressLabelH + labelGap + (4 * fitScale)) : 0;
+            // Compact Group 1213 layout: no under-icon labels (hint sits in section header).
+            // Keep tiny progress/action only when the row is tall enough for 64 + labels.
+            bool showGoalMeta = isGoal && availableHeight >= (baseIconSize + 28 * fitScale);
+            double actionLabelH = showGoalMeta ? 12 * fitScale : 0;
+            double progressLabelH = showGoalMeta ? 11 * fitScale : 0;
+            double labelGap = showGoalMeta ? 2 * fitScale : 0;
+            double cellExtra = showGoalMeta ? (actionLabelH + progressLabelH + labelGap + (2 * fitScale)) : 0;
 
-            // Keep a readable icon size; extra items wrap into more rows and scroll.
-            double iconSize = System.Math.Clamp(baseIconSize, 26 * fitScale, isGoal ? 42 * fitScale : 48 * fitScale);
+            // Prefer design size (64); only shrink when the cell is cramped.
+            double iconSize = System.Math.Clamp(baseIconSize, 26 * fitScale, 64 * fitScale);
+            if (iconSize + cellExtra > availableHeight && availableHeight > 26 * fitScale)
+            {
+                iconSize = System.Math.Max(26 * fitScale, availableHeight - cellExtra);
+            }
             double cellHeight = iconSize + cellExtra;
             double contentWidth = System.Math.Max(8, boxWidth - (hPad * 2));
             // Columns = how many fit by width, but never more than the item count
@@ -3378,7 +3761,7 @@ namespace SwixyQuestBook.Gui
                     DrawMissingIcon(ctx, itemRect.X, itemRect.Y, itemRect.Width);
                 }
 
-                if (!isGoal)
+                if (!showGoalMeta)
                 {
                     continue;
                 }
@@ -4157,14 +4540,16 @@ namespace SwixyQuestBook.Gui
 
                     double closeHotkeyX = topMenuWidth - topMenuRightPadding - closeHotkeyWidth;
                     double closeTextX = closeHotkeyX - topMenuCloseGap - closeWidth;
-                    // Align detach control to the same vertical center as top-menu text (ЗАКРЫТЬ).
-                    // Optical nudge: menuicon SVG has bottom-heavy padding vs Montserrat caps.
-                    const double detachOpticalNudgeUp = 2;
-                    double closeTextCenterY = GetTextVisualCenterY(closeFont, topTextBaselineY);
+                    // Align detach icon to the same vertical mid-line as top-menu text (ЗАКРЫТЬ).
+                    // Line-box center + small optical drop: menuicon SVG sits high vs Minecraft caps.
+                    const double detachOpticalNudgeDown = 1.5;
+                    double topMenuLineBoxY = (topMenuHeight - topMenuLineHeight) / 2;
+                    double topMenuTextMidY = topMenuLineBoxY + (topMenuLineHeight / 2)
+                        + (detachOpticalNudgeDown * fitScale);
                     double detachButtonX = closeTextX - topMenuDetachGap - topMenuDetachButtonSize;
-                    double detachButtonY = closeTextCenterY - (topMenuDetachButtonSize / 2) - (detachOpticalNudgeUp * fitScale);
+                    double detachButtonY = topMenuTextMidY - (topMenuDetachButtonSize / 2);
                     double detachIconX = detachButtonX + ((topMenuDetachButtonSize - topMenuDetachIconSize) / 2);
-                    double detachIconY = closeTextCenterY - (topMenuDetachIconSize / 2) - (detachOpticalNudgeUp * fitScale);
+                    double detachIconY = topMenuTextMidY - (topMenuDetachIconSize / 2);
 
                     topMenuDragHitArea = new LayoutRect(0, 0, topMenuWidth, topMenuHeight).Offset(screenX, screenY);
                     detachButtonHitArea = new LayoutRect(
@@ -4196,13 +4581,6 @@ namespace SwixyQuestBook.Gui
                     );
                     sidebarViewportHitArea = sidebarViewportRect.Offset(screenX, screenY);
 
-                    double sidebarListOffsetY = 0;
-                    if (IsPlayerAdmin() && !adminData.IsAdminPanelOpen)
-                    {
-                        DrawAdminSidebarEditButton(ctx, fitScale, screenX, screenY);
-                        sidebarListOffsetY = GetSidebarAdminButtonsOffset(fitScale);
-                    }
-
                     if (adminData.IsAdminPanelOpen)
                     {
                         DrawAdminPanel(ctx, fitScale);
@@ -4211,9 +4589,9 @@ namespace SwixyQuestBook.Gui
                     {
                         LayoutRect sidebarListViewportRect = new(
                             sidebarViewportRect.X,
-                            sidebarViewportRect.Y + sidebarListOffsetY,
+                            sidebarViewportRect.Y,
                             sidebarViewportRect.Width,
-                            System.Math.Max(0, sidebarViewportRect.Height - sidebarListOffsetY)
+                            sidebarViewportRect.Height
                         );
 
                         ctx.Save();
@@ -4224,12 +4602,6 @@ namespace SwixyQuestBook.Gui
                         {
                             SidebarQuestEntry entry = CreateSidebarEntry(categories[index], index == selectedCategoryIndex);
                             LayoutRect localCardRect = CreateSidebarCardLayout(index, fitScale, sidebarScrollOffset);
-                            localCardRect = new LayoutRect(
-                                localCardRect.X,
-                                localCardRect.Y + sidebarListOffsetY,
-                                localCardRect.Width,
-                                localCardRect.Height
-                            );
                             // Hit-test only the visible portion; draw full card so layout
                             // (icon/text) stays correct — Cairo clip + GL scissor handle overflow.
                             LayoutRect clippedCardRect = localCardRect.Intersect(sidebarListViewportRect);
@@ -4329,6 +4701,15 @@ namespace SwixyQuestBook.Gui
                                 viewportRect.X, viewportRect.Y, graphScale, viewportRect);
                         }
 
+                        // Link tool: rubber-band from source node to cursor until second click.
+                        DrawLinkRubberBand(
+                            ctx,
+                            selectedCategory,
+                            viewportRect,
+                            graphScale,
+                            screenX,
+                            screenY);
+
                         questCardHitAreas = new LayoutRect[selectedCategory.Nodes.Length];
                         for (int index = 0; index < selectedCategory.Nodes.Length; index++)
                         {
@@ -4391,6 +4772,9 @@ namespace SwixyQuestBook.Gui
                     }
 
                     ctx.Restore();
+
+                    // Admin entry: bottom-right pickaxe button (above graph, under modals).
+                    DrawAdminSettingsButton(ctx, fitScale, screenX, screenY);
 
                     if (isQuestModalOpen)
                     {

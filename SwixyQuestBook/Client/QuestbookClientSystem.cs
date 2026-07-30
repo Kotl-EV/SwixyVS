@@ -21,7 +21,7 @@ namespace SwixyQuestBook.Client
             base.StartClientSide(api);
             capi = api;
 
-            // Make assets/…/fonts/Montserrat-*.ttf visible to Cairo before any dialog draws.
+            // Make assets/…/fonts/minecraft.ttf + MinecraftTitle.ttf visible to Cairo before any dialog draws.
             QuestbookFontHelper.EnsureRegistered(api, Mod);
 
             dataManager = new QuestbookClientDataManager(api);

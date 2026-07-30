@@ -68,6 +68,14 @@ namespace SwixyQuestBook.Domain.Models
         [JsonPropertyName("consumeRequiredItems")]
         public bool ConsumeRequiredItems { get; set; } = true;
 
+        /// <summary><c>once</c> | <c>cooldown</c> | <c>instant</c>. See <see cref="QuestbookRepeatMode"/>.</summary>
+        [JsonPropertyName("repeatMode")]
+        public string RepeatMode { get; set; } = QuestbookRepeatMode.Once;
+
+        /// <summary>Seconds until the quest can be claimed again (cooldown mode only).</summary>
+        [JsonPropertyName("cooldownSeconds")]
+        public int CooldownSeconds { get; set; }
+
         public QuestbookQuestNodeData() { }
     }
 

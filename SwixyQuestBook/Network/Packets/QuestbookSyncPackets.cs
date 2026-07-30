@@ -65,6 +65,9 @@ namespace SwixyQuestBook.Network
         public QuestbookSyncItemPacket[] RequiredItems = [];
         public QuestbookSyncItemPacket[] RewardItems = [];
         public bool ConsumeRequiredItems = true;
+        /// <summary><c>once</c> | <c>cooldown</c> | <c>instant</c></summary>
+        public string RepeatMode = "once";
+        public int CooldownSeconds;
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

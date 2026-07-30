@@ -23,6 +23,8 @@ namespace SwixyQuestBook.Network
         public int NodeId;
         public long CompletedAt;
         public int CompletionOrder;
+        /// <summary>0 = permanent. Else unix ms when the quest reopens.</summary>
+        public long AvailableAgainAt;
     }
 
     [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]

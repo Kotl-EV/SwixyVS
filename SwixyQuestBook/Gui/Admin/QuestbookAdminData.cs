@@ -4,9 +4,12 @@ namespace SwixyQuestBook.Gui
     public enum AdminToolMode
     {
         None,
+        /// <summary>Select and drag quest nodes (does not open the editor).</summary>
         Select,
         NewQuest,
         LinkQuests,
+        /// <summary>Click a quest node to open its editor.</summary>
+        EditQuest,
         DeleteNode
     }
 
@@ -23,7 +26,9 @@ namespace SwixyQuestBook.Gui
         GoalId,
         GoalCount,
         AwardId,
-        AwardCount
+        AwardCount,
+        /// <summary>Repeat cooldown length in minutes (integer).</summary>
+        CooldownMinutes
     }
 
     public readonly record struct AdminItemPickerTarget(bool IsGoals, int ListIndex);
@@ -34,7 +39,9 @@ namespace SwixyQuestBook.Gui
 
         public bool IsNone => Kind == AdminFormFieldKind.None;
 
-        public bool IsCount => Kind is AdminFormFieldKind.GoalCount or AdminFormFieldKind.AwardCount;
+        public bool IsCount => Kind is AdminFormFieldKind.GoalCount
+            or AdminFormFieldKind.AwardCount
+            or AdminFormFieldKind.CooldownMinutes;
     }
 
     public sealed class QuestbookAdminItemEntry
@@ -73,6 +80,15 @@ namespace SwixyQuestBook.Gui
         public int SelectedCategoryIndex { get; set; } = -1;
         public int SelectedNodeId { get; set; } = -1;
         public QuestbookQuestNodeType EditedNodeType { get; set; } = QuestbookQuestNodeType.Quest;
+        /// <summary><see cref="Domain.Models.QuestbookRepeatMode"/> for the edited node.</summary>
+        public string EditedRepeatMode { get; set; } = "once";
+        /// <summary>Cooldown length in seconds (used when mode is cooldown).</summary>
+        public int EditedCooldownSeconds { get; set; } = 60; // default 1 minute
+        /// <summary>
+        /// Draft text for the minutes box while typing (null = show from <see cref="EditedCooldownSeconds"/>).
+        /// Allows clearing the field without snapping back to "1".
+        /// </summary>
+        public string? CooldownMinutesDraft { get; set; }
 
         public AdminToolMode ToolMode { get; set; } = AdminToolMode.None;
         public int? LinkSourceNodeId { get; set; }
@@ -117,6 +133,9 @@ namespace SwixyQuestBook.Gui
         {
             SelectedNodeId = -1;
             EditedNodeType = QuestbookQuestNodeType.Quest;
+            EditedRepeatMode = "once";
+            EditedCooldownSeconds = 60;
+            CooldownMinutesDraft = null;
             ClearFormFields();
         }
 
@@ -128,6 +147,9 @@ namespace SwixyQuestBook.Gui
             FocusedField = AdminFormFieldRef.None;
             Goals.Clear();
             Awards.Clear();
+            EditedRepeatMode = "once";
+            EditedCooldownSeconds = 60;
+            CooldownMinutesDraft = null;
         }
 
         public void ClearFields()
@@ -140,6 +162,9 @@ namespace SwixyQuestBook.Gui
         {
             SelectedNodeId = node.Id;
             EditedNodeType = node.NodeType;
+            EditedRepeatMode = node.RepeatMode ?? "once";
+            EditedCooldownSeconds = node.CooldownSeconds > 0 ? node.CooldownSeconds : 60;
+            CooldownMinutesDraft = null;
             FocusedField = AdminFormFieldRef.None;
             Goals.Clear();
             Awards.Clear();
@@ -230,10 +255,11 @@ namespace SwixyQuestBook.Gui
             if (Awards.Count >= MaxItemEntries)
                 return;
 
+            // Rewards always use the exact picked variant (no "all types").
             Awards.Add(new QuestbookAdminItemEntry
             {
                 Count = 1,
-                MatchAllVariants = true
+                MatchAllVariants = false
             });
             FocusedField = AdminFormFieldRef.None;
         }
@@ -284,6 +310,12 @@ namespace SwixyQuestBook.Gui
             for (int i = 0; i < Awards.Count; i++)
                 order.Add(new AdminFormFieldRef(AdminFormFieldKind.AwardCount, i));
 
+            if (IsQuestTypeEdited
+                && string.Equals(EditedRepeatMode, Domain.Models.QuestbookRepeatMode.Cooldown, StringComparison.OrdinalIgnoreCase))
+            {
+                order.Add(new AdminFormFieldRef(AdminFormFieldKind.CooldownMinutes));
+            }
+
             order.Add(new AdminFormFieldRef(AdminFormFieldKind.Information));
             return order;
         }
@@ -300,6 +332,8 @@ namespace SwixyQuestBook.Gui
                     => StripIdPrefix(Awards[field.ListIndex].CollectibleCode),
                 AdminFormFieldKind.AwardCount when field.ListIndex >= 0 && field.ListIndex < Awards.Count
                     => Awards[field.ListIndex].Count.ToString(),
+                AdminFormFieldKind.CooldownMinutes =>
+                    CooldownMinutesDraft ?? Domain.Models.QuestbookRepeatMode.SecondsToMinutes(EditedCooldownSeconds).ToString(),
                 AdminFormFieldKind.Information => InformationText,
                 _ => string.Empty
             };
@@ -323,6 +357,16 @@ namespace SwixyQuestBook.Gui
                     if (int.TryParse(value, out int awardCount) && awardCount >= 0 && awardCount <= 9999)
                         Awards[field.ListIndex].Count = awardCount;
                     break;
+                case AdminFormFieldKind.CooldownMinutes:
+                    // Keep draft so the box can be empty while typing.
+                    CooldownMinutesDraft = value ?? string.Empty;
+                    if (int.TryParse(CooldownMinutesDraft, out int minutes)
+                        && minutes >= 1
+                        && minutes <= 365 * 24 * 60)
+                    {
+                        EditedCooldownSeconds = Domain.Models.QuestbookRepeatMode.MinutesToSeconds(minutes);
+                    }
+                    break;
                 case AdminFormFieldKind.Information:
                     InformationText = value;
                     FlushInformationTextToLangMap();
@@ -330,8 +374,33 @@ namespace SwixyQuestBook.Gui
             }
         }
 
+        /// <summary>Flush minutes draft into seconds (min 1) before save / apply.</summary>
+        public void CommitCooldownMinutesDraft()
+        {
+            if (CooldownMinutesDraft == null)
+                return;
+
+            if (int.TryParse(CooldownMinutesDraft.Trim(), out int minutes) && minutes >= 1)
+                EditedCooldownSeconds = Domain.Models.QuestbookRepeatMode.MinutesToSeconds(minutes);
+            else if (EditedCooldownSeconds < 60)
+                EditedCooldownSeconds = 60;
+
+            CooldownMinutesDraft = null;
+        }
+
         public void AppendToField(AdminFormFieldRef field, char c)
         {
+            if (field.Kind == AdminFormFieldKind.CooldownMinutes)
+            {
+                if (!char.IsDigit(c))
+                    return;
+                string current = GetFieldValue(field);
+                string newStr = current + c;
+                if (newStr.Length <= 6 && int.TryParse(newStr, out int val) && val <= 525600)
+                    SetFieldValue(field, newStr);
+                return;
+            }
+
             if (field.IsCount)
             {
                 if (!char.IsDigit(c))
@@ -339,7 +408,7 @@ namespace SwixyQuestBook.Gui
 
                 string current = GetFieldValue(field);
                 string newStr = current == "0" ? c.ToString() : current + c;
-                if (int.TryParse(newStr, out int val) && val >= 1 && val <= 9999)
+                if (int.TryParse(newStr, out int val) && val >= 0 && val <= 9999)
                     SetFieldValue(field, newStr);
                 return;
             }
@@ -354,6 +423,13 @@ namespace SwixyQuestBook.Gui
 
         public void BackspaceField(AdminFormFieldRef field)
         {
+            if (field.Kind == AdminFormFieldKind.CooldownMinutes)
+            {
+                string current = GetFieldValue(field);
+                SetFieldValue(field, current.Length > 0 ? current[..^1] : string.Empty);
+                return;
+            }
+
             if (field.IsCount)
             {
                 string current = GetFieldValue(field);

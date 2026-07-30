@@ -671,7 +671,8 @@ namespace SwixyQuestBook.Server
                     CategoryHeaderTitle = q.CategoryHeaderTitle,
                     NodeId = q.NodeId,
                     CompletedAt = q.CompletedAt,
-                    CompletionOrder = q.CompletionOrder
+                    CompletionOrder = q.CompletionOrder,
+                    AvailableAgainAt = q.AvailableAgainAt
                 }).ToArray(),
                 CraftProgress = progress.CraftProgress.Select(c => new QuestbookSyncCraftProgressPacket
                 {
@@ -711,7 +712,8 @@ namespace SwixyQuestBook.Server
                         CategoryHeaderTitle = entry.CategoryHeaderTitle,
                         NodeId = entry.NodeId,
                         CompletedAt = entry.CompletedAt,
-                        CompletionOrder = entry.CompletionOrder
+                        CompletionOrder = entry.CompletionOrder,
+                        AvailableAgainAt = entry.AvailableAgainAt
                     }
                 ],
                 CraftProgress = progress.CraftProgress.Select(c => new QuestbookSyncCraftProgressPacket
@@ -742,6 +744,7 @@ namespace SwixyQuestBook.Server
 
             var progress = GetOrCreatePlayerProgress(serverPlayer);
             bool changed = false;
+            int totalAdded = 0;
 
             foreach (QuestbookCategoryData category in questDatabase.Categories)
             {
@@ -753,6 +756,8 @@ namespace SwixyQuestBook.Server
                     if (!IsNodeUnlockedForPlayer(category, node, progress))
                         continue;
 
+                    // Each open craft goal on this node gets up to `quantity` credit
+                    // (same craft can satisfy multiple goals / quests).
                     foreach (QuestbookQuestItemData req in node.RequiredItems ?? [])
                     {
                         if (!QuestbookGoalObjective.IsCraft(req.Objective))
@@ -768,8 +773,12 @@ namespace SwixyQuestBook.Server
                             continue;
 
                         int add = Math.Min(quantity, req.Count - have);
+                        if (add <= 0)
+                            continue;
+
                         // Store the real crafted code (not the pattern).
                         progress.AddCraftCount(category.HeaderTitle, node.Id, collectibleCode, add);
+                        totalAdded += add;
                         changed = true;
                     }
                 }
@@ -786,8 +795,8 @@ namespace SwixyQuestBook.Server
             SavePlayerProgress(progress);
             SendProgressToPlayer(serverPlayer, progress, fullSync: true);
             sapi?.Logger.Notification(
-                "[SwixyQuestBook] Craft progress +{0} {1} for {2}",
-                quantity, collectibleCode, serverPlayer.PlayerName);
+                "[SwixyQuestBook] Craft progress +{0} (event x{1}) {2} for {3}",
+                totalAdded, quantity, collectibleCode, serverPlayer.PlayerName);
         }
 
         /// <summary>Entity died — if a player caused it, count toward open kill goals.</summary>
@@ -1055,10 +1064,21 @@ namespace SwixyQuestBook.Server
 
             if (success)
             {
+                long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                string repeatMode = QuestbookRepeatMode.Normalize(node.RepeatMode);
+                // Start / Checkpoint always permanent.
+                if (isInfoNode)
+                    repeatMode = QuestbookRepeatMode.Once;
+
+                long availableAgainAt = QuestbookRepeatMode.ComputeAvailableAgainAt(
+                    repeatMode,
+                    node.CooldownSeconds,
+                    now);
+
                 sapi?.Logger.Debug(
-                    "[SwixyQuestBook] Quest completed by {0}: {1}:{2}",
-                    fromPlayer.PlayerName, category.HeaderTitle, node.Id);
-                progress.AddCompletedQuest(category.HeaderTitle, node.Id);
+                    "[SwixyQuestBook] Quest completed by {0}: {1}:{2} repeat={3} againAt={4}",
+                    fromPlayer.PlayerName, category.HeaderTitle, node.Id, repeatMode, availableAgainAt);
+                progress.AddCompletedQuest(category.HeaderTitle, node.Id, availableAgainAt);
                 SavePlayerProgress(progress);
 
                 string progressKey = $"{category.HeaderTitle}:{node.Id}";
@@ -1159,7 +1179,8 @@ namespace SwixyQuestBook.Server
                     continue;
                 }
 
-                if (!progress.IsQuestCompleted(category.HeaderTitle, connection.StartNodeId))
+                // Parent must have been completed at least once (stays unlocked after cooldown reset).
+                if (!progress.HasEverCompleted(category.HeaderTitle, connection.StartNodeId))
                 {
                     return false;
                 }
@@ -1555,7 +1576,9 @@ namespace SwixyQuestBook.Server
                     Description = description,
                     RequiredItems = node.RequiredItems,
                     RewardItems = node.RewardItems,
-                    ConsumeRequiredItems = node.ConsumeRequiredItems
+                    ConsumeRequiredItems = node.ConsumeRequiredItems,
+                    RepeatMode = QuestbookRepeatMode.Normalize(node.RepeatMode),
+                    CooldownSeconds = node.CooldownSeconds
                 });
             }
 
@@ -1910,6 +1933,13 @@ namespace SwixyQuestBook.Server
                     : new QuestbookLocalizedText(description, QuestbookLocalizedText.DefaultLang);
 
                 bool isObjectiveNode = nodeType is "Quest" or "Kill";
+                string repeatMode = isObjectiveNode
+                    ? QuestbookRepeatMode.Normalize(n.RepeatMode)
+                    : QuestbookRepeatMode.Once;
+                int cooldownSeconds = repeatMode == QuestbookRepeatMode.Cooldown
+                    ? QuestbookRepeatMode.ClampCooldownSeconds(n.CooldownSeconds > 0 ? n.CooldownSeconds : 60)
+                    : 0;
+
                 nodes.Add(new QuestbookQuestNodeData
                 {
                     Id = n.Id,
@@ -1922,7 +1952,9 @@ namespace SwixyQuestBook.Server
                     RewardItems = rewards.Select(i => new QuestbookQuestItemData(
                         i.CollectibleCode, i.Count, QuestbookGoalObjective.Have)).ToArray(),
                     ConsumeRequiredItems = !isObjectiveNode
-                        || required.Any(static i => i.Consume)
+                        || required.Any(static i => i.Consume),
+                    RepeatMode = repeatMode,
+                    CooldownSeconds = cooldownSeconds
                 });
             }
 

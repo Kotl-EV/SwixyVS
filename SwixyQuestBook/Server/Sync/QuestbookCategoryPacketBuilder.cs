@@ -69,7 +69,11 @@ namespace SwixyQuestBook.Server.Sync
                     }).ToArray(),
                     ConsumeRequiredItems = (n.RequiredItems ?? []).Any(i =>
                         QuestbookGoalObjective.ShouldConsume(i.Objective))
-                        || ((n.RequiredItems == null || n.RequiredItems.Length == 0) && n.ConsumeRequiredItems)
+                        || ((n.RequiredItems == null || n.RequiredItems.Length == 0) && n.ConsumeRequiredItems),
+                    RepeatMode = QuestbookRepeatMode.Normalize(n.RepeatMode),
+                    CooldownSeconds = QuestbookRepeatMode.Normalize(n.RepeatMode) == QuestbookRepeatMode.Cooldown
+                        ? QuestbookRepeatMode.ClampCooldownSeconds(n.CooldownSeconds > 0 ? n.CooldownSeconds : 60)
+                        : 0
                 }).ToArray(),
                 Connections = category.Connections.Select(conn => new QuestbookSyncConnectionPacket
                 {

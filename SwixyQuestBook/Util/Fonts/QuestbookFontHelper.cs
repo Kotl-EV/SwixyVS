@@ -9,13 +9,32 @@ using IOPath = System.IO.Path;
 namespace SwixyQuestBook.Util.Fonts
 {
     /// <summary>
-    /// Ensures Montserrat (shipped under assets/…/fonts) is visible to Cairo/fontconfig.
+    /// Ensures shipped questbook TTFs under assets/…/fonts are visible to Cairo/fontconfig.
     /// Vintage Story only auto-installs <c>game:fonts</c>; mod fonts are otherwise ignored.
+    /// Body UI: <see cref="BodyFamilyName"/> (minecraft.ttf). Titles: <see cref="TitleFamilyName"/> (MinecraftTitle.ttf).
     /// </summary>
     public static class QuestbookFontHelper
     {
-        /// <summary>True OpenType/CSS family name (not the file / PostScript name).</summary>
-        public const string FamilyName = "Montserrat";
+        /// <summary>Body / general UI family from minecraft.ttf.</summary>
+        public const string BodyFamilyName = "Minecraft Rus";
+
+        /// <summary>Title / top-menu family from MinecraftTitle.ttf.</summary>
+        public const string TitleFamilyName = "Minecraft Five";
+
+        /// <summary>Legacy alias — body family.</summary>
+        public const string FamilyName = BodyFamilyName;
+
+        private static readonly string[] BodyFontFileNames =
+        [
+            "minecraft.ttf",
+            "Minecraft.ttf"
+        ];
+
+        private static readonly string[] TitleFontFileNames =
+        [
+            "MinecraftTitle.ttf",
+            "minecrafttitle.ttf"
+        ];
 
         private const uint FrPrivate = 0x10;
         private static bool registered;
@@ -28,7 +47,7 @@ namespace SwixyQuestBook.Util.Fonts
         private static extern bool RemoveFontResourceExW(string lpszFilename, uint fl, IntPtr pdv);
 
         /// <summary>
-        /// Register mod + game Montserrat TTFs so <see cref="CairoFont"/> SelectFontFace finds them.
+        /// Register mod Minecraft TTFs so <see cref="CairoFont"/> SelectFontFace finds them.
         /// Safe to call multiple times.
         /// </summary>
         public static void EnsureRegistered(ICoreClientAPI api, Mod? mod = null)
@@ -51,16 +70,17 @@ namespace SwixyQuestBook.Util.Fonts
                 {
                     activeSourcePath = registeredFiles[0];
                     api.Logger.Notification(
-                        "[SwixyQuestBook] Registered {0} font file(s) for family '{1}' (e.g. {2})",
+                        "[SwixyQuestBook] Registered {0} font file(s) (body '{1}', title '{2}'; e.g. {3})",
                         registeredFiles.Count,
-                        FamilyName,
+                        BodyFamilyName,
+                        TitleFamilyName,
                         activeSourcePath);
                 }
                 else
                 {
                     api.Logger.Warning(
-                        "[SwixyQuestBook] No Montserrat .ttf found to register. UI will fall back to system fonts. " +
-                        "Expected assets/{0}/fonts/Montserrat-*.ttf or game fonts.",
+                        "[SwixyQuestBook] No Minecraft .ttf found to register. UI will fall back to system fonts. " +
+                        "Expected assets/{0}/fonts/minecraft.ttf and MinecraftTitle.ttf.",
                         api.ModLoader.GetMod("swixyquestbook")?.Info?.ModID ?? "swixyquestbook");
                 }
             }
@@ -70,24 +90,38 @@ namespace SwixyQuestBook.Util.Fonts
             }
         }
 
-        public static CairoFont Create(double renderSize, double[] color, bool bold = true)
+        /// <summary>Body UI font (minecraft.ttf / Minecraft Rus).</summary>
+        public static CairoFont Create(double renderSize, double[] color, bool bold = false)
+        {
+            return CreateWithFamily(BodyFamilyName, renderSize, color, bold);
+        }
+
+        /// <summary>Title font (MinecraftTitle.ttf / Minecraft Five) for the top menu bar.</summary>
+        public static CairoFont CreateTopMenu(double fitScale, double[] color)
+        {
+            double renderSize = QuestbookGuiLayout.TopMenuFontSize * fitScale;
+            return CreateWithFamily(TitleFamilyName, renderSize, color, bold: false).WithRenderTwice();
+        }
+
+        /// <summary>Explicit title family at an arbitrary size (modals, section headers).</summary>
+        public static CairoFont CreateTitle(double renderSize, double[] color)
+        {
+            return CreateWithFamily(TitleFamilyName, renderSize, color, bold: false);
+        }
+
+        private static CairoFont CreateWithFamily(string family, double renderSize, double[] color, bool bold)
         {
             // UnscaledFontsize is multiplied by RuntimeEnv.GUIScale inside CairoFont.SetupContext.
             float unscaled = (float)(renderSize / Math.Max(0.01, RuntimeEnv.GUIScale));
+            // Minecraft faces are single-weight; requesting Bold often misses the face in Cairo.
             var font = new CairoFont
             {
-                Fontname = FamilyName,
+                Fontname = family,
                 UnscaledFontsize = unscaled,
                 FontWeight = bold ? FontWeight.Bold : FontWeight.Normal,
                 Color = color
             };
             return font;
-        }
-
-        public static CairoFont CreateTopMenu(double fitScale, double[] color)
-        {
-            double renderSize = QuestbookGuiLayout.TopMenuFontSize * fitScale;
-            return Create(renderSize, color, bold: true).WithRenderTwice();
         }
 
         private static IEnumerable<string> EnumerateCandidateFontFiles(ICoreClientAPI api, Mod? mod)
@@ -107,54 +141,42 @@ namespace SwixyQuestBook.Util.Fonts
             // 1) Mod folder / zip-extracted cache next to SourceIOPath.
             string? source = mod?.SourcePath
                 ?? api.ModLoader.GetMod("swixyquestbook")?.SourcePath;
-            if (!string.IsNullOrWhiteSpace(source))
+            if (!string.IsNullOrWhiteSpace(source) && Directory.Exists(source))
             {
-                if (Directory.Exists(source))
+                string assetsRoot = IOPath.Combine(source, "assets");
+                if (Directory.Exists(assetsRoot))
                 {
-                    foreach (string file in Directory.EnumerateFiles(
-                                 IOPath.Combine(source, "assets"),
-                                 "Montserrat*.ttf",
-                                 SearchOption.AllDirectories))
+                    foreach (string pattern in new[] { "minecraft.ttf", "MinecraftTitle.ttf", "Minecraft*.ttf" })
                     {
-                        foreach (string p in YieldIfExists(file))
-                            yield return p;
+                        foreach (string file in Directory.EnumerateFiles(
+                                     assetsRoot,
+                                     pattern,
+                                     SearchOption.AllDirectories))
+                        {
+                            foreach (string p in YieldIfExists(file))
+                                yield return p;
+                        }
                     }
                 }
             }
 
             // 2) Assets API (works when the pack is loaded as loose files or extracted).
-            foreach (string fileName in new[]
-                     {
-                         "Montserrat-Bold.ttf",
-                         "Montserrat-Regular.ttf",
-                         "Montserrat-Italic.ttf"
-                     })
+            foreach (string fileName in BodyFontFileNames.Concat(TitleFontFileNames))
             {
                 string? extracted = TryExtractAssetFont(api, $"fonts/{fileName}");
                 foreach (string p in YieldIfExists(extracted))
                     yield return p;
             }
 
-            // 3) Vanilla game fonts (same family VS uses for UI).
-            string gameFonts = IOPath.Combine(GamePaths.AssetsPath, "game", "fonts");
-            if (Directory.Exists(gameFonts))
-            {
-                foreach (string file in Directory.EnumerateFiles(gameFonts, "Montserrat*.ttf"))
-                {
-                    foreach (string p in YieldIfExists(file))
-                        yield return p;
-                }
-            }
-
-            // 4) Already-installed user fonts (VS copies game fonts here on first run).
+            // 3) Already-installed user fonts from a previous run of this mod.
             string userFonts = IOPath.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Microsoft", "Windows", "Fonts");
             if (Directory.Exists(userFonts))
             {
-                foreach (string file in Directory.EnumerateFiles(userFonts, "Montserrat*.ttf"))
+                foreach (string fileName in BodyFontFileNames.Concat(TitleFontFileNames))
                 {
-                    foreach (string p in YieldIfExists(file))
+                    foreach (string p in YieldIfExists(IOPath.Combine(userFonts, fileName)))
                         yield return p;
                 }
             }

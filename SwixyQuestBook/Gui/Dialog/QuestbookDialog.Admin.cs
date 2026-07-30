@@ -1,4 +1,5 @@
-﻿using Cairo;
+﻿using System.IO;
+using Cairo;
 using SwixyQuestBook.Client;
 using SwixyQuestBook.Domain.Models;
 using SwixyQuestBook.Network;
@@ -19,10 +20,10 @@ namespace SwixyQuestBook.Gui
             DeleteConfirm
         }
 
-        private bool TryHandleAdminSidebarEditClick(double mouseX, double mouseY)
+        private bool TryHandleAdminSettingsClick(double mouseX, double mouseY)
         {
             if (!IsPlayerAdmin() || adminData.IsAdminPanelOpen) return false;
-            if (!adminSidebarEditButtonHitArea.Contains(mouseX, mouseY)) return false;
+            if (!adminSettingsButtonHitArea.Contains(mouseX, mouseY)) return false;
 
             OpenAdminEditor();
             ComposeDialog();
@@ -103,6 +104,7 @@ namespace SwixyQuestBook.Gui
 
         private void SaveAndCloseQuestEditModal()
         {
+            adminData.CommitCooldownMinutesDraft();
             ApplyFormToSelectedNode();
             HandleAdminSave();
             CloseQuestEditModal();
@@ -110,6 +112,7 @@ namespace SwixyQuestBook.Gui
 
         private void DismissQuestEditModal()
         {
+            adminData.CommitCooldownMinutesDraft();
             ApplyFormToSelectedNode();
             CloseQuestEditModal();
         }
@@ -136,10 +139,18 @@ namespace SwixyQuestBook.Gui
             awardsItemPickHitAreas = [];
             goalsMatchToggleHitAreas = [];
             awardsMatchToggleHitAreas = [];
+            goalsTakeToggleHitAreas = [];
+            awardsTakeToggleHitAreas = [];
+            goalsCraftToggleHitAreas = [];
+            goalsKillToggleHitAreas = [];
             CloseAdminItemPicker();
             adminInputFieldHitAreas = [];
             adminInputFieldRefs = [];
             adminTypeStartHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatOnceHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatCooldownHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatInstantHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatHoursHitArea = new LayoutRect(0, 0, 0, 0);
             adminTypeQuestHitArea = new LayoutRect(0, 0, 0, 0);
             adminTypeCheckpointHitArea = new LayoutRect(0, 0, 0, 0);
             adminTypeKillHitArea = new LayoutRect(0, 0, 0, 0);
@@ -285,8 +296,9 @@ namespace SwixyQuestBook.Gui
                 return;
 
             QuestbookLangTextPacket[] titleI18n = BuildBranchTitleI18nPackets();
-            pendingOpenAdminEditor = true;
-            adminData.EditorSection = AdminEditorSection.Quests;
+            // Stay on Branches after create — do not jump into quest-edit tools.
+            pendingOpenAdminEditor = false;
+            adminData.EditorSection = AdminEditorSection.Branches;
             MarkBranchMetadataDirty();
             QuestbookClientSystem.SendAdminAddCategory(new QuestbookAdminAddCategoryRequest
             {
@@ -390,7 +402,8 @@ namespace SwixyQuestBook.Gui
                     return true;
                 }
 
-                // Click outside catalog panel: close catalog, keep branch modal.
+                // Click on langs / outside picker region: close catalog, keep branch modal.
+                // Language chips still work after close on next click; this click only dismisses picker.
                 CloseBranchModalItemPicker();
                 ComposeDialog();
                 return true;
@@ -628,47 +641,59 @@ namespace SwixyQuestBook.Gui
 
             branchModalOverlayHitArea = GetQuestbookDialogContentRect();
 
-            double modalWidth = QuestbookGuiLayout.AddBranchModalWidth * fitScale;
-            double modalHeight = QuestbookGuiLayout.AddBranchModalHeight * fitScale;
-            // Center over the right graph area (not the full book, which includes the left sidebar).
+            // Group 1208: fixed design size 558×484 (group_1192.png frame).
+            double designW = QuestbookGuiLayout.AddBranchModalWidth;
+            double designH = QuestbookGuiLayout.AddBranchModalHeight;
+            double modalWidth = designW * fitScale;
+            double modalHeight = designH * fitScale;
+            double unit = modalWidth / designW;
+            double D(double v) => v * unit;
+
+            // Centered in the right-hand quest graph area.
             double rightX = QuestbookGuiLayout.GraphViewportX * fitScale;
             double rightY = QuestbookGuiLayout.GraphViewportY * fitScale;
             double rightW = QuestbookGuiLayout.GraphViewportWidth * fitScale;
             double rightH = QuestbookGuiLayout.GraphViewportHeight * fitScale;
             double modalX = rightX + ((rightW - modalWidth) / 2);
             double modalY = rightY + ((rightH - modalHeight) / 2);
-            // Keep fully inside the book frame if graph rect is tight.
-            double bookLeft = 0;
-            double bookTop = QuestbookGuiLayout.BackgroundOffsetY * fitScale;
-            double bookRight = QuestbookGuiLayout.BackgroundWidth * fitScale;
-            double bookBottom = (QuestbookGuiLayout.BackgroundOffsetY + QuestbookGuiLayout.BackgroundHeight) * fitScale;
-            modalX = System.Math.Clamp(modalX, bookLeft + (8 * fitScale), System.Math.Max(bookLeft, bookRight - modalWidth - (8 * fitScale)));
-            modalY = System.Math.Clamp(modalY, bookTop + (8 * fitScale), System.Math.Max(bookTop, bookBottom - modalHeight - (8 * fitScale)));
             branchModalPanelHitArea = new LayoutRect(modalX, modalY, modalWidth, modalHeight).Offset(screenX, screenY);
 
-            ImageSurface? modalSurface = GetTextureSurface("modal.png");
+            ImageSurface? modalSurface = GetTextureSurface(QuestbookGuiLayout.AddBranchModalTexture);
             if (modalSurface != null)
                 DrawImageSurface(ctx, modalSurface, modalX, modalY, modalWidth, modalHeight);
             else
                 FillRectangle(ctx, modalX, modalY, modalWidth, modalHeight, QuestbookGuiLayout.ModalBorderColor);
 
-            // Extra inset from the modal frame on all sides (texture border is thick).
-            double padX = QuestbookGuiLayout.AddBranchModalPadX * fitScale;
-            double padTop = QuestbookGuiLayout.AddBranchModalPadTop * fitScale;
-            double padBottom = QuestbookGuiLayout.AddBranchModalPadBottom * fitScale;
-            double contentX = modalX + padX;
-            double contentWidth = modalWidth - (padX * 2);
-            double currentY = modalY + padTop;
-
-            CairoFont titleFont = CreateMontserratFont(18 * fitScale, QuestbookGuiLayout.TopMenuTitleColor);
+            // Title — centered (Group 1208 ~y70–91).
             string modalTitle = branchModalMode switch
             {
                 BranchModalMode.Rename => QuestbookLang.GetLocal("admin.rename_branch.title"),
                 BranchModalMode.DeleteConfirm => QuestbookLang.GetLocal("admin.delete_branch.title"),
                 _ => QuestbookLang.GetLocal("admin.add_branch.title")
             };
-            DrawText(ctx, titleFont, modalTitle, contentX, currentY);
-            currentY += (28 * fitScale);
+            CairoFont titleFont = CreateMontserratFont(D(18), QuestbookGuiLayout.AdminModalTitleColor);
+            double titleW = MeasureTextWidth(titleFont, modalTitle);
+            DrawText(
+                ctx,
+                titleFont,
+                modalTitle,
+                modalX + ((modalWidth - titleW) / 2),
+                GetTextBaselineY(titleFont, modalY + D(QuestbookGuiLayout.AddBranchModalTitleY), D(22), D(22)));
+
+            // Subtitle under title — Group 1208 #555555 “Name [RU]” with active editor language.
+            if (branchModalMode != BranchModalMode.DeleteConfirm)
+            {
+                string langCode = QuestbookLocalizedText.NormalizeLang(branchModalEditorLang).ToUpperInvariant();
+                string subtitle = $"Name: [{langCode}]";
+                CairoFont subtitleFont = CreateMontserratFont(D(13), [0x55 / 255.0, 0x55 / 255.0, 0x55 / 255.0, 1.0]);
+                double subW = MeasureTextWidth(subtitleFont, subtitle);
+                DrawText(
+                    ctx,
+                    subtitleFont,
+                    subtitle,
+                    modalX + ((modalWidth - subW) / 2),
+                    GetTextBaselineY(subtitleFont, modalY + D(QuestbookGuiLayout.AddBranchModalSubtitleY), D(16), D(16)));
+            }
 
             if (branchModalMode == BranchModalMode.DeleteConfirm)
             {
@@ -682,89 +707,146 @@ namespace SwixyQuestBook.Gui
                 branchModalLangButtonHitAreas = [];
                 branchModalItemPickerSlots = [];
                 isBranchModalItemPickerOpen = false;
-                CairoFont messageFont = CreateMontserratFont(13 * fitScale, QuestbookGuiLayout.AdminPanelTextColor);
+                CairoFont messageFont = CreateMontserratFont(D(14), QuestbookGuiLayout.AdminModalChipTextColor);
                 string branchName = GetEditableCategoryTitle(GetSelectedCategory());
                 string message = QuestbookLang.GetLocal("admin.delete_branch.confirm", branchName);
-                DrawText(ctx, messageFont, message, contentX, currentY);
+                double msgW = MeasureTextWidth(messageFont, message);
+                DrawText(
+                    ctx,
+                    messageFont,
+                    message,
+                    modalX + ((modalWidth - msgW) / 2),
+                    GetTextBaselineY(messageFont, modalY + D(220), D(20), D(20)));
             }
             else
             {
-                CairoFont labelFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminTitleColor);
-                string nameLabel = QuestbookLang.GetLocal("admin.add_branch.name_label")
-                    + $" [{branchModalEditorLang.ToUpperInvariant()}]";
-                DrawText(ctx, labelFont, nameLabel, contentX, currentY);
-                currentY += (20 * fitScale);
+                // Language chips — always visible (Group 1208).
+                double langOriginX = modalX + D(QuestbookGuiLayout.AddBranchModalLangX);
+                double langOriginY = modalY + D(QuestbookGuiLayout.AddBranchModalLangY);
+                DrawBranchModalLanguageBar(ctx, unit, langOriginX, langOriginY);
 
-                // Language chips — same idea as quest description i18n.
-                double langRowH = QuestbookGuiLayout.AddBranchModalLangRowHeight * fitScale;
-                currentY = DrawBranchModalLanguageBar(ctx, fitScale, contentX, currentY, contentWidth, langRowH);
-                currentY += (10 * fitScale);
+                DrawGroup767BorderCairo(
+                    ctx,
+                    modalX + D(QuestbookGuiLayout.AddBranchModalLangFrameX),
+                    modalY + D(QuestbookGuiLayout.AddBranchModalLangFrameY),
+                    D(QuestbookGuiLayout.AddBranchModalLangFrameW),
+                    D(QuestbookGuiLayout.AddBranchModalLangFrameH),
+                    QuestbookGuiLayout.AddBranchModalLangFrameThickness);
 
-                double inputHeight = QuestbookGuiLayout.AddBranchModalInputHeight * fitScale;
-                branchModalTitleInputHitArea = new LayoutRect(contentX, currentY, contentWidth, inputHeight);
-                ImageSurface? inputSurface = GetTextureSurface(QuestbookGuiLayout.AdminQvestBoxModalBoxTexture);
-                if (inputSurface != null)
-                    DrawImageSurface(ctx, inputSurface, contentX, currentY, contentWidth, inputHeight);
-
-                bool titleEmpty = string.IsNullOrWhiteSpace(branchModalTitleText);
-                string displayText = titleEmpty && !isBranchModalTitleFocused
-                    ? QuestbookLang.GetLocal("admin.add_branch.name_placeholder")
-                    : branchModalTitleText;
-                double[] inputColor = titleEmpty && !isBranchModalTitleFocused
-                    ? QuestbookGuiLayout.AdminPanelPlaceholderColor
-                    : QuestbookGuiLayout.AdminPanelTextColor;
-                CairoFont inputFont = CreateMontserratFont(13 * fitScale, inputColor);
-                double textX = contentX + (8 * fitScale);
-                DrawText(ctx, inputFont, displayText, textX,
-                    GetTextBaselineY(inputFont, currentY, inputHeight, 18 * fitScale));
-
-                if (isBranchModalTitleFocused)
+                if (isBranchModalItemPickerOpen)
                 {
-                    StrokeRoundedRectangle(
-                        ctx,
-                        contentX,
-                        currentY,
-                        contentWidth,
-                        inputHeight,
-                        4 * fitScale,
-                        1.5 * fitScale,
-                        QuestbookGuiLayout.AdminSaveButtonColor);
-                    DrawTextCaret(ctx, inputFont, branchModalTitleText, textX, currentY, inputHeight, inputColor);
+                    // Icon picker replaces name field + CREATE/CANCEL in-place (no separate overlay).
+                    branchModalTitleInputHitArea = new LayoutRect(0, 0, 0, 0);
+                    branchModalIconPreviewHitArea = new LayoutRect(0, 0, 0, 0);
+                    branchModalPrimaryButtonHitArea = new LayoutRect(0, 0, 0, 0);
+                    branchModalCancelButtonHitArea = new LayoutRect(0, 0, 0, 0);
+                    isBranchModalTitleFocused = false;
+
+                    // Region from name-label Y down to bottom of buttons (+30 design px taller).
+                    double pickerX = modalX + D(QuestbookGuiLayout.AddBranchModalNameX);
+                    double pickerY = modalY + D(QuestbookGuiLayout.AddBranchModalNameLabelY);
+                    double pickerW = D(QuestbookGuiLayout.AddBranchModalLangFrameW);
+                    double pickerBottom = modalY + D(QuestbookGuiLayout.AddBranchModalButtonY
+                        + QuestbookGuiLayout.AddBranchModalButtonHeight);
+                    double pickerH = System.Math.Max(D(120), pickerBottom - pickerY) + D(30);
+                    // Keep inside modal frame.
+                    double maxBottom = modalY + modalHeight - D(28);
+                    if (pickerY + pickerH > maxBottom)
+                        pickerH = System.Math.Max(D(120), maxBottom - pickerY);
+                    DrawBranchModalItemCatalogInPlace(ctx, unit, pickerX, pickerY, pickerW, pickerH);
                 }
+                else
+                {
+                    branchModalItemPickerSlots = [];
+                    branchModalIconSearchHitArea = new LayoutRect(0, 0, 0, 0);
+                    branchModalIconViewportLocal = new LayoutRect(0, 0, 0, 0);
+                    branchModalIconPickerPanelLocal = new LayoutRect(0, 0, 0, 0);
+                    branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
 
-                currentY += inputHeight + (14 * fitScale);
+                    // Name field + icon slot (71.5 / 447.5, y=314.5) — positions first for label align.
+                    double nameX = modalX + D(QuestbookGuiLayout.AddBranchModalNameX);
+                    double nameY = modalY + D(QuestbookGuiLayout.AddBranchModalNameY);
+                    double nameW = D(QuestbookGuiLayout.AddBranchModalNameWidth);
+                    double nameH = D(QuestbookGuiLayout.AddBranchModalNameHeight);
+                    double iconX = modalX + D(QuestbookGuiLayout.AddBranchModalIconX);
+                    double iconSize = D(QuestbookGuiLayout.AddBranchModalIconSize);
 
-                // Icon preview only — full catalog opens on click.
-                currentY = DrawBranchModalIconPreview(ctx, fitScale, contentX, contentWidth, currentY);
+                    // Labels — muted gray #AEAEAE: name left-aligned, icon hint right-aligned to slot.
+                    double[] labelGray = [0xAE / 255.0, 0xAE / 255.0, 0xAE / 255.0, 1.0];
+                    CairoFont labelFont = CreateMontserratFont(D(12), labelGray);
+                    double labelY = modalY + D(QuestbookGuiLayout.AddBranchModalNameLabelY);
+                    double labelBaseline = GetTextBaselineY(labelFont, labelY, D(14), D(14));
+                    string nameLabel = QuestbookLang.GetLocal("admin.add_branch.name_label");
+                    string iconLabel = QuestbookLang.GetLocal("admin.branch_icon.label");
+                    DrawText(ctx, labelFont, nameLabel, nameX, labelBaseline);
+                    double iconLabelW = MeasureTextWidth(labelFont, iconLabel);
+                    DrawText(ctx, labelFont, iconLabel, iconX + iconSize - iconLabelW, labelBaseline);
+                    branchModalTitleInputHitArea = new LayoutRect(nameX, nameY, nameW, nameH);
+
+                    DrawQuestEditTextField(ctx, nameX, nameY, nameW, nameH, D(5.5), System.Math.Max(1.0, unit),
+                        isBranchModalTitleFocused);
+
+                    bool titleEmpty = string.IsNullOrWhiteSpace(branchModalTitleText);
+                    string displayText = titleEmpty && !isBranchModalTitleFocused
+                        ? QuestbookLang.GetLocal("admin.add_branch.name_placeholder")
+                        : branchModalTitleText;
+                    double[] inputColor = titleEmpty && !isBranchModalTitleFocused
+                        ? QuestbookGuiLayout.AdminPanelPlaceholderColor
+                        : QuestbookGuiLayout.AdminModalChipTextColor;
+                    CairoFont inputFont = CreateMontserratFont(D(13), inputColor);
+                    double textX = nameX + D(10);
+                    DrawText(ctx, inputFont, displayText, textX,
+                        GetTextBaselineY(inputFont, nameY, nameH, nameH));
+                    if (isBranchModalTitleFocused)
+                    {
+                        DrawTextCaret(ctx, inputFont, branchModalTitleText, textX, nameY, nameH, inputColor);
+                    }
+
+                    DrawBranchModalIconSlot(ctx, unit, modalX, modalY);
+
+                    // CREATE / CANCEL — group_714.png at (71,374) and (284,374), 203×40.
+                    ImageSurface? btnTex = GetTextureSurface(QuestbookGuiLayout.AddBranchModalButtonTexture);
+                    double btnY = modalY + D(QuestbookGuiLayout.AddBranchModalButtonY);
+                    double btnW = D(QuestbookGuiLayout.AddBranchModalButtonWidth);
+                    double btnH = D(QuestbookGuiLayout.AddBranchModalButtonHeight);
+                    branchModalPrimaryButtonHitArea = new LayoutRect(
+                        modalX + D(QuestbookGuiLayout.AddBranchModalPrimaryButtonX), btnY, btnW, btnH);
+                    branchModalCancelButtonHitArea = new LayoutRect(
+                        modalX + D(QuestbookGuiLayout.AddBranchModalCancelButtonX), btnY, btnW, btnH);
+
+                    string primaryLabel = branchModalMode switch
+                    {
+                        BranchModalMode.Rename => QuestbookLang.GetLocal("admin.rename_branch.save"),
+                        _ => QuestbookLang.GetLocal("admin.add_branch.create")
+                    };
+
+                    DrawBranchModalButton(ctx, unit, btnTex, branchModalPrimaryButtonHitArea, primaryLabel,
+                        isBranchModalPrimaryHovered, QuestbookGuiLayout.AdminSaveButtonColor);
+                    DrawBranchModalButton(ctx, unit, btnTex, branchModalCancelButtonHitArea,
+                        QuestbookLang.GetLocal("admin.add_branch.cancel"), isBranchModalCancelHovered,
+                        QuestbookGuiLayout.AdminClearButtonColor);
+                }
             }
 
-            double buttonHeight = QuestbookGuiLayout.AddBranchModalButtonHeight * fitScale;
-            double buttonY = modalY + modalHeight - padBottom - buttonHeight;
-            double buttonGap = QuestbookGuiLayout.AddBranchModalButtonGap * fitScale;
-            double buttonWidth = (contentWidth - buttonGap) / 2;
-            ImageSurface? barSurface = GetTextureSurface(QuestbookGuiLayout.AdminBarTexture);
-
-            branchModalPrimaryButtonHitArea = new LayoutRect(contentX, buttonY, buttonWidth, buttonHeight);
-            branchModalCancelButtonHitArea = new LayoutRect(contentX + buttonWidth + buttonGap, buttonY, buttonWidth, buttonHeight);
-
-            string primaryLabel = branchModalMode switch
+            // Delete-confirm still needs CREATE/CANCEL buttons below the message.
+            if (branchModalMode == BranchModalMode.DeleteConfirm)
             {
-                BranchModalMode.DeleteConfirm => QuestbookLang.GetLocal("admin.delete_branch.confirm_button"),
-                BranchModalMode.Rename => QuestbookLang.GetLocal("admin.rename_branch.save"),
-                _ => QuestbookLang.GetLocal("admin.add_branch.create")
-            };
-            double[]? primaryAccent = branchModalMode == BranchModalMode.DeleteConfirm
-                ? QuestbookGuiLayout.AdminClearButtonColor
-                : QuestbookGuiLayout.AdminSaveButtonColor;
+                ImageSurface? btnTex = GetTextureSurface(QuestbookGuiLayout.AddBranchModalButtonTexture);
+                double btnY = modalY + D(QuestbookGuiLayout.AddBranchModalButtonY);
+                double btnW = D(QuestbookGuiLayout.AddBranchModalButtonWidth);
+                double btnH = D(QuestbookGuiLayout.AddBranchModalButtonHeight);
+                branchModalPrimaryButtonHitArea = new LayoutRect(
+                    modalX + D(QuestbookGuiLayout.AddBranchModalPrimaryButtonX), btnY, btnW, btnH);
+                branchModalCancelButtonHitArea = new LayoutRect(
+                    modalX + D(QuestbookGuiLayout.AddBranchModalCancelButtonX), btnY, btnW, btnH);
 
-            DrawBranchModalButton(ctx, fitScale, barSurface, branchModalPrimaryButtonHitArea, primaryLabel,
-                isBranchModalPrimaryHovered, primaryAccent);
-            DrawBranchModalButton(ctx, fitScale, barSurface, branchModalCancelButtonHitArea,
-                QuestbookLang.GetLocal("admin.add_branch.cancel"), isBranchModalCancelHovered,
-                QuestbookGuiLayout.AdminClearButtonColor);
-
-            if (isBranchModalItemPickerOpen && branchModalMode != BranchModalMode.DeleteConfirm)
-                DrawBranchModalItemCatalog(ctx, fitScale, modalX, modalY, modalWidth, modalHeight);
+                DrawBranchModalButton(ctx, unit, btnTex, branchModalPrimaryButtonHitArea,
+                    QuestbookLang.GetLocal("admin.delete_branch.confirm_button"),
+                    isBranchModalPrimaryHovered, QuestbookGuiLayout.AdminClearButtonColor);
+                DrawBranchModalButton(ctx, unit, btnTex, branchModalCancelButtonHitArea,
+                    QuestbookLang.GetLocal("admin.add_branch.cancel"), isBranchModalCancelHovered,
+                    QuestbookGuiLayout.AdminClearButtonColor);
+            }
 
             if (!branchModalTitleInputHitArea.IsEmpty)
                 branchModalTitleInputHitArea = branchModalTitleInputHitArea.Offset(screenX, screenY);
@@ -774,20 +856,14 @@ namespace SwixyQuestBook.Gui
                 branchModalIconSearchHitArea = branchModalIconSearchHitArea.Offset(screenX, screenY);
             if (!branchModalIconPickerCancelHitArea.IsEmpty)
                 branchModalIconPickerCancelHitArea = branchModalIconPickerCancelHitArea.Offset(screenX, screenY);
-            // Picker panel / viewport stay local for ToScreenRect in click/render paths.
             for (int i = 0; i < branchModalLangButtonHitAreas.Length; i++)
                 branchModalLangButtonHitAreas[i] = branchModalLangButtonHitAreas[i].Offset(screenX, screenY);
             branchModalPrimaryButtonHitArea = branchModalPrimaryButtonHitArea.Offset(screenX, screenY);
             branchModalCancelButtonHitArea = branchModalCancelButtonHitArea.Offset(screenX, screenY);
         }
 
-        private double DrawBranchModalLanguageBar(
-            Cairo.Context ctx,
-            double fitScale,
-            double x,
-            double y,
-            double width,
-            double rowHeight)
+        /// <summary>Language chip grid — Group 1208: 46×28, step 49×31, 8 columns.</summary>
+        private void DrawBranchModalLanguageBar(Cairo.Context ctx, double unit, double originX, double originY)
         {
             string[] langs = GetRegisteredLanguageCodes();
             if (langs.Length == 0)
@@ -800,7 +876,6 @@ namespace SwixyQuestBook.Gui
                     langs = langs.Append(code).OrderBy(static c => c, StringComparer.OrdinalIgnoreCase).ToArray();
             }
 
-            // Ensure the active editor language is always present as a tab.
             string active = QuestbookLocalizedText.NormalizeLang(branchModalEditorLang);
             if (!langs.Contains(active, StringComparer.OrdinalIgnoreCase))
                 langs = langs.Append(active).OrderBy(static c => c, StringComparer.OrdinalIgnoreCase).ToArray();
@@ -808,70 +883,52 @@ namespace SwixyQuestBook.Gui
             branchModalLangCodes = langs;
             branchModalLangButtonHitAreas = new LayoutRect[langs.Length];
 
-            double gap = 6 * fitScale;
-            int columns = System.Math.Min(langs.Length, 8);
-            double buttonWidth = (width - (gap * System.Math.Max(0, columns - 1))) / System.Math.Max(1, columns);
-            int rows = (int)System.Math.Ceiling(langs.Length / (double)System.Math.Max(1, columns));
-            double rowGap = QuestbookGuiLayout.AddBranchModalLangRowGap * fitScale;
+            double chipW = QuestbookGuiLayout.AddBranchModalLangChipWidth * unit;
+            double chipH = QuestbookGuiLayout.AddBranchModalLangChipHeight * unit;
+            double stepX = QuestbookGuiLayout.AddBranchModalLangStepX * unit;
+            double stepY = QuestbookGuiLayout.AddBranchModalLangStepY * unit;
+            int columns = QuestbookGuiLayout.AddBranchModalLangColumns;
+            double radius = 5.5 * unit;
+            double borderW = System.Math.Max(1.0, unit);
 
             for (int i = 0; i < langs.Length; i++)
             {
                 string lang = langs[i];
                 int col = i % columns;
                 int row = i / columns;
-                double bx = x + (col * (buttonWidth + gap));
-                double by = y + (row * (rowHeight + rowGap));
-                LayoutRect rect = new(bx, by, buttonWidth, rowHeight);
+                double bx = originX + (col * stepX);
+                double by = originY + (row * stepY);
+                LayoutRect rect = new(bx, by, chipW, chipH);
                 branchModalLangButtonHitAreas[i] = rect;
 
                 bool isActive = string.Equals(lang, branchModalEditorLang, StringComparison.OrdinalIgnoreCase);
                 bool hasText = branchModalTitleByLang.TryGetValue(lang, out string? text)
                     && !string.IsNullOrWhiteSpace(text);
-                // Live field for the active language counts as filled while typing.
                 if (isActive && !string.IsNullOrWhiteSpace(branchModalTitleText))
                     hasText = true;
 
-                double[] bg = isActive
-                    ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
-                    : QuestbookGuiLayout.AdminTileBackgroundColor;
-                double[] border = isActive
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminTileBorderColor;
-
-                FillRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, 5 * fitScale, bg);
-                StrokeRoundedRectangle(
-                    ctx,
-                    rect.X,
-                    rect.Y,
-                    rect.Width,
-                    rect.Height,
-                    5 * fitScale,
-                    isActive ? 1.8 * fitScale : 1.2 * fitScale,
-                    border);
+                FillRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, radius,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, radius,
+                    isActive ? borderW * 1.6 : borderW,
+                    isActive
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
 
                 string label = lang.ToUpperInvariant();
                 if (hasText && !isActive)
                     label += " ·";
 
                 double[] color = isActive
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminPanelTextColor;
-                CairoFont chipFont = CreateMontserratFont(12 * fitScale, color);
+                    ? QuestbookGuiLayout.AdminTileActiveContentColor
+                    : QuestbookGuiLayout.AdminModalChipTextColor;
+                CairoFont chipFont = CreateMontserratFont(System.Math.Clamp(chipH * 0.42, 10 * unit, 13 * unit), color);
                 DrawCenteredText(ctx, chipFont, label, rect);
             }
-
-            return y + (rows * rowHeight) + (System.Math.Max(0, rows - 1) * rowGap);
         }
 
-        /// <summary>
-        /// Label + clickable preview slot. Full catalog opens via <see cref="OpenBranchModalItemPicker"/>.
-        /// </summary>
-        private double DrawBranchModalIconPreview(
-            Cairo.Context ctx,
-            double fitScale,
-            double contentX,
-            double contentWidth,
-            double startY)
+        /// <summary>Icon slot next to name field (Group 1208: 35×35 at 447.5, 314.5).</summary>
+        private void DrawBranchModalIconSlot(Cairo.Context ctx, double unit, double modalX, double modalY)
         {
             if (!isBranchModalItemPickerOpen)
             {
@@ -882,45 +939,39 @@ namespace SwixyQuestBook.Gui
                 branchModalIconPickerCancelHitArea = new LayoutRect(0, 0, 0, 0);
             }
 
-            double previewSize = QuestbookGuiLayout.AddBranchModalItemSlotSize * fitScale;
-            double rowHeight = System.Math.Max(previewSize, 22 * fitScale);
-            double previewX = contentX + contentWidth - previewSize;
-            double previewY = startY + ((rowHeight - previewSize) / 2);
-
-            CairoFont labelFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminTitleColor);
-            DrawText(
-                ctx,
-                labelFont,
-                QuestbookLang.GetLocal("admin.branch_icon.label"),
-                contentX,
-                GetTextBaselineY(labelFont, startY, rowHeight * 0.55, rowHeight * 0.55));
-
-            CairoFont hintFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
-            DrawText(
-                ctx,
-                hintFont,
-                QuestbookLang.GetLocal("admin.branch_icon.hint"),
-                contentX,
-                GetTextBaselineY(hintFont, startY + (rowHeight * 0.45), rowHeight * 0.55, rowHeight * 0.55));
-
-            LayoutRect previewRect = new(previewX, previewY, previewSize, previewSize);
+            double size = QuestbookGuiLayout.AddBranchModalIconSize * unit;
+            double px = modalX + QuestbookGuiLayout.AddBranchModalIconX * unit;
+            double py = modalY + QuestbookGuiLayout.AddBranchModalIconY * unit;
+            LayoutRect previewRect = new(px, py, size, size);
             branchModalIconPreviewHitArea = previewRect;
 
-            double[] slotBg = isBranchModalItemPickerOpen
-                ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
-                : QuestbookGuiLayout.AdminTileBackgroundColor;
-            double[] slotBorder = QuestbookGuiLayout.AdminSaveButtonColor;
-            FillRoundedRectangle(
-                ctx, previewX, previewY, previewSize, previewSize,
-                QuestbookGuiLayout.AdminTileCornerRadius * fitScale, slotBg);
-            StrokeRoundedRectangle(
-                ctx, previewX, previewY, previewSize, previewSize,
-                QuestbookGuiLayout.AdminTileCornerRadius * fitScale,
-                (isBranchModalItemPickerOpen ? 2.0 : 1.5) * fitScale,
-                slotBorder);
+            double radius = 5.5 * unit;
+            double borderW = System.Math.Max(1.0, unit);
+            FillRoundedRectangle(ctx, px, py, size, size, radius, QuestbookGuiLayout.AdminTileBackgroundColor);
+            StrokeRoundedRectangle(ctx, px, py, size, size, radius,
+                isBranchModalItemPickerOpen ? borderW * 1.8 : borderW,
+                isBranchModalItemPickerOpen
+                    ? QuestbookGuiLayout.AdminTileActiveContentColor
+                    : QuestbookGuiLayout.AdminTileBorderColor);
 
-            // GL item icons are drawn after Cairo — skip preview while the catalog overlay is open
-            // so it cannot paint on top of the picker panel.
+            // Plus cross (SVG small + inside slot).
+            if (string.IsNullOrWhiteSpace(branchModalSelectedIconItemCode) || isBranchModalItemPickerOpen)
+            {
+                double[] plusColor = QuestbookGuiLayout.AdminTileBorderColor;
+                ctx.SetSourceRGBA(plusColor[0], plusColor[1], plusColor[2], plusColor[3]);
+                ctx.LineWidth = System.Math.Max(1.5, unit * 1.5);
+                ctx.LineCap = Cairo.LineCap.Round;
+                double cx = px + size / 2;
+                double cy = py + size / 2;
+                double arm = size * 0.18;
+                ctx.NewPath();
+                ctx.MoveTo(cx - arm, cy);
+                ctx.LineTo(cx + arm, cy);
+                ctx.MoveTo(cx, cy - arm);
+                ctx.LineTo(cx, cy + arm);
+                ctx.Stroke();
+            }
+
             if (!isBranchModalItemPickerOpen
                 && !string.IsNullOrWhiteSpace(branchModalSelectedIconItemCode))
             {
@@ -931,123 +982,108 @@ namespace SwixyQuestBook.Gui
                     0,
                     QuestbookItemIconContext.Modal));
             }
-            else if (string.IsNullOrWhiteSpace(branchModalSelectedIconItemCode))
-            {
-                CairoFont plusFont = CreateMontserratFont(22 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
-                DrawCenteredText(ctx, plusFont, "+", previewRect);
-            }
-
-            return startY + rowHeight;
         }
 
         /// <summary>
-        /// Overlay catalog (search + grid) anchored to the branch modal — same data as quest goal picker.
+        /// Icon catalog drawn in-place where name field + CREATE/CANCEL normally sit.
+        /// Same chrome as quest item picker (search + CANCEL + grid + scrollbar).
         /// </summary>
-        private void DrawBranchModalItemCatalog(
+        private void DrawBranchModalItemCatalogInPlace(
             Cairo.Context ctx,
-            double fitScale,
-            double modalX,
-            double modalY,
-            double modalWidth,
-            double modalHeight)
+            double unit,
+            double panelX,
+            double panelY,
+            double panelW,
+            double panelH)
         {
-            double pad = 16 * fitScale;
-            double panelH = System.Math.Min(
-                QuestbookGuiLayout.AddBranchModalPickerHeight * fitScale,
-                modalHeight - (pad * 2));
-            double panelW = modalWidth - (pad * 2);
-            double panelX = modalX + pad;
-            double panelY = modalY + modalHeight - pad - panelH;
             branchModalIconPickerPanelLocal = new LayoutRect(panelX, panelY, panelW, panelH);
 
-            // Dim modal body slightly under the catalog.
-            FillRoundedRectangle(
-                ctx, modalX + (8 * fitScale), modalY + (8 * fitScale),
-                modalWidth - (16 * fitScale), modalHeight - (16 * fitScale),
-                6 * fitScale, [0.05, 0.05, 0.06, 0.45]);
-
-            FillRoundedRectangle(ctx, panelX, panelY, panelW, panelH, 8 * fitScale,
+            double radius = QuestbookGuiLayout.QuestEditModalChipRadius * unit;
+            double borderW = System.Math.Max(1.0, unit);
+            FillRoundedRectangle(ctx, panelX, panelY, panelW, panelH, radius,
                 QuestbookGuiLayout.AdminTileBackgroundColor);
-            StrokeRoundedRectangle(ctx, panelX, panelY, panelW, panelH, 8 * fitScale, 1.6 * fitScale,
-                QuestbookGuiLayout.AdminSaveButtonColor);
+            StrokeRoundedRectangle(ctx, panelX, panelY, panelW, panelH, radius, borderW,
+                QuestbookGuiLayout.AdminTileBorderColor);
 
-            double innerPad = 12 * fitScale;
-            double titleY = panelY + innerPad;
-            CairoFont titleFont = CreateMontserratFont(13 * fitScale, QuestbookGuiLayout.TopMenuTitleColor);
-            DrawText(ctx, titleFont, QuestbookLang.GetLocal("admin.branch_icon.picker_title"),
-                panelX + innerPad, titleY + (4 * fitScale));
+            // Scale quest-picker design into this panel.
+            double designW = QuestbookGuiLayout.QuestEditModalContentWidth;
+            double designH = QuestbookGuiLayout.QuestEditModalPickerPanelHeight;
+            double u = System.Math.Min(panelW / designW, panelH / designH);
 
-            double cancelW = 88 * fitScale;
-            double cancelH = 26 * fitScale;
-            branchModalIconPickerCancelHitArea = new LayoutRect(
-                panelX + panelW - cancelW - innerPad,
-                titleY,
-                cancelW,
-                cancelH);
-            CairoFont cancelFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminPanelTextColor);
-            DrawCenteredText(
-                ctx,
-                cancelFont,
-                QuestbookLang.GetLocal("admin.branch_icon.picker_close"),
-                branchModalIconPickerCancelHitArea);
+            double searchH = QuestbookGuiLayout.QuestEditModalPickerSearchHeight * u;
+            double searchInsetX = QuestbookGuiLayout.QuestEditModalPickerSearchInsetX * u;
+            double searchInsetY = QuestbookGuiLayout.QuestEditModalPickerSearchInsetY * u;
+            // Fit search + cancel into panel width.
+            double cancelW = QuestbookGuiLayout.QuestEditModalPickerCancelWidth * u;
+            double gap = 8 * u;
+            double searchX = panelX + searchInsetX;
+            double searchY = panelY + searchInsetY;
+            double searchW = System.Math.Max(40 * u, panelW - searchInsetX * 2 - cancelW - gap);
+            double cancelX = searchX + searchW + gap;
 
-            double searchH = QuestbookGuiLayout.AddBranchModalSearchHeight * fitScale;
-            double searchY = titleY + cancelH + (8 * fitScale);
-            double searchX = panelX + innerPad;
-            double searchW = panelW - (innerPad * 2);
             branchModalIconSearchHitArea = new LayoutRect(searchX, searchY, searchW, searchH);
-            FillRoundedRectangle(ctx, searchX, searchY, searchW, searchH, 4 * fitScale, [0.10, 0.11, 0.13, 0.95]);
-            StrokeRoundedRectangle(
-                ctx, searchX, searchY, searchW, searchH, 4 * fitScale,
-                branchModalIconSearchFocused ? 1.6 * fitScale : 1.1 * fitScale,
-                branchModalIconSearchFocused
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminTileBorderColor);
+            branchModalIconPickerCancelHitArea = new LayoutRect(cancelX, searchY, cancelW, searchH);
 
-            bool searchEmpty = string.IsNullOrEmpty(branchModalIconSearchText);
-            CairoFont searchFont = CreateMontserratFont(
-                12 * fitScale,
-                searchEmpty && !branchModalIconSearchFocused
+            DrawQuestEditTextField(ctx, searchX, searchY, searchW, searchH, radius, borderW,
+                branchModalIconSearchFocused);
+
+            CairoFont searchFont = CreateMontserratFont(12 * u,
+                string.IsNullOrEmpty(branchModalIconSearchText) && !branchModalIconSearchFocused
                     ? QuestbookGuiLayout.AdminPanelPlaceholderColor
-                    : QuestbookGuiLayout.AdminPanelTextColor);
-            string searchDisplay = searchEmpty && !branchModalIconSearchFocused
+                    : QuestbookGuiLayout.AdminModalChipTextColor);
+            string searchDisplay = string.IsNullOrEmpty(branchModalIconSearchText) && !branchModalIconSearchFocused
                 ? QuestbookLang.GetLocal("admin.quest_edit.item_search_placeholder")
                 : branchModalIconSearchText;
-            double searchTextX = searchX + (8 * fitScale);
-            DrawText(ctx, searchFont, searchDisplay, searchTextX,
+            double textPad = 8 * u;
+            DrawText(ctx, searchFont, searchDisplay, searchX + textPad,
                 GetTextBaselineY(searchFont, searchY, searchH, searchH));
             if (branchModalIconSearchFocused)
             {
                 DrawTextCaret(ctx, searchFont, branchModalIconSearchText,
-                    searchTextX, searchY, searchH, QuestbookGuiLayout.AdminPanelTextColor);
+                    searchX + textPad, searchY, searchH, QuestbookGuiLayout.AdminModalChipTextColor);
             }
 
-            double slotSize = QuestbookGuiLayout.AddBranchModalItemSlotSize * fitScale;
-            double slotGap = QuestbookGuiLayout.AddBranchModalItemSlotGap * fitScale;
-            int columns = QuestbookGuiLayout.AddBranchModalItemColumns;
-            double gridY = searchY + searchH + (10 * fitScale);
-            double gridBottom = panelY + panelH - innerPad;
-            double gridHeight = System.Math.Max(slotSize, gridBottom - gridY);
-            double listWidth = searchW;
-            double listLeft = searchX;
-            branchModalIconViewportLocal = new LayoutRect(listLeft, gridY, listWidth, gridHeight);
+            FillRoundedRectangle(ctx, cancelX, searchY, cancelW, searchH, radius,
+                QuestbookGuiLayout.AdminTileBackgroundColor);
+            StrokeRoundedRectangle(ctx, cancelX, searchY, cancelW, searchH, radius, borderW,
+                QuestbookGuiLayout.AdminTileBorderColor);
+            CairoFont cancelFont = CreateMontserratFont(12 * u, [0xAE / 255.0, 0xAE / 255.0, 0xAE / 255.0, 1.0]);
+            DrawCenteredText(ctx, cancelFont, QuestbookLang.GetLocal("admin.quest_edit.picker_cancel"),
+                branchModalIconPickerCancelHitArea);
+
+            // Grid fills remaining height under search — fewer, larger slots than quest picker.
+            double tileGap = System.Math.Max(6 * u, QuestbookGuiLayout.QuestEditModalPickerSlotGap * u * 1.4);
+            double listTop = searchY + searchH + (10 * u);
+            double listLeft = panelX + searchInsetX;
+            double listRight = panelX + panelW - searchInsetX;
+            double listWidth = System.Math.Max(tileGap * 4, listRight - listLeft);
+            double listHeight = System.Math.Max(24 * u, panelY + panelH - listTop - 6 * u);
+
+            // Cap columns so icons stay chunky (~6× across, ~48–72px tiles).
+            const int maxColumns = 6;
+            double preferredTile = 56 * u;
+            int columns = System.Math.Max(3, (int)System.Math.Floor((listWidth + tileGap) / (preferredTile + tileGap)));
+            columns = System.Math.Min(columns, maxColumns);
+            double tileStep = listWidth / columns;
+            double tileSize = System.Math.Max(40 * u, tileStep - tileGap);
+            double tileR = System.Math.Min(radius, tileSize * 0.16);
+
+            branchModalIconViewportLocal = new LayoutRect(listLeft, listTop, listWidth, listHeight);
 
             IReadOnlyList<(string Code, string Label, DummySlot Slot)> catalog =
                 GetItemCatalogEntries(branchModalIconSearchText);
-            int rows = System.Math.Max(1, (int)System.Math.Ceiling(catalog.Count / (double)System.Math.Max(1, columns)));
-            double contentH = (rows * slotSize) + (System.Math.Max(0, rows - 1) * slotGap);
-            double maxScroll = System.Math.Max(0, contentH - gridHeight);
+            int rows = System.Math.Max(1, (int)System.Math.Ceiling(catalog.Count / (double)columns));
+            double contentH = rows * tileStep;
+            double maxScroll = System.Math.Max(0, contentH - listHeight);
             branchModalIconScrollOffset = System.Math.Clamp(branchModalIconScrollOffset, 0, maxScroll);
 
-            int firstVisibleRow = System.Math.Max(
-                0,
-                (int)System.Math.Floor(branchModalIconScrollOffset / (slotSize + slotGap)) - 1);
-            int visibleRowCount = (int)System.Math.Ceiling(gridHeight / (slotSize + slotGap)) + 2;
+            int firstVisibleRow = System.Math.Max(0, (int)System.Math.Floor(branchModalIconScrollOffset / tileStep) - 1);
+            int visibleRowCount = (int)System.Math.Ceiling(listHeight / tileStep) + 2;
             int firstIndex = firstVisibleRow * columns;
             int lastIndex = System.Math.Min(catalog.Count, (firstVisibleRow + visibleRowCount) * columns);
 
             ctx.Save();
-            ctx.Rectangle(listLeft, gridY, listWidth, gridHeight);
+            ctx.Rectangle(listLeft, listTop, listWidth, listHeight);
             ctx.Clip();
 
             var pickerSlots = new List<(ItemSlot Slot, LayoutRect HitArea, string CollectibleCode)>(
@@ -1057,49 +1093,54 @@ namespace SwixyQuestBook.Gui
             {
                 int col = i % columns;
                 int row = i / columns;
-                double slotX = listLeft + (col * (slotSize + slotGap));
-                double slotY = gridY + (row * (slotSize + slotGap)) - branchModalIconScrollOffset;
-                if (slotY + slotSize < gridY || slotY > gridY + gridHeight)
+                double cellX = listLeft + (col * tileStep);
+                double cellY = listTop + (row * tileStep) - branchModalIconScrollOffset;
+                if (cellY + tileSize < listTop || cellY > listTop + listHeight)
                     continue;
 
                 (string collectibleCode, string _, DummySlot slot) = catalog[i];
-                LayoutRect slotRect = new(slotX, slotY, slotSize, slotSize);
+                LayoutRect tileRect = new(cellX, cellY, tileSize, tileSize);
                 bool selected = string.Equals(
                     collectibleCode,
                     branchModalSelectedIconItemCode,
                     StringComparison.OrdinalIgnoreCase);
 
-                FillRoundedRectangle(ctx, slotX, slotY, slotSize, slotSize, 4 * fitScale,
-                    selected ? QuestbookGuiLayout.AdminTileActiveBackgroundColor : [0.14, 0.16, 0.18, 0.95]);
-                StrokeRoundedRectangle(
-                    ctx, slotX, slotY, slotSize, slotSize, 4 * fitScale,
-                    (selected ? 2.0 : 1.0) * fitScale,
-                    selected ? QuestbookGuiLayout.AdminSaveButtonColor : QuestbookGuiLayout.AdminTileBorderColor);
+                FillRoundedRectangle(ctx, tileRect.X, tileRect.Y, tileRect.Width, tileRect.Height, tileR,
+                    selected
+                        ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
+                        : QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, tileRect.X, tileRect.Y, tileRect.Width, tileRect.Height, tileR,
+                    selected ? borderW * 1.8 : borderW,
+                    selected
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
 
-                pickerSlots.Add((slot, slotRect, collectibleCode));
+                pickerSlots.Add((slot, tileRect, collectibleCode));
             }
 
             ctx.Restore();
 
             if (maxScroll > 0)
             {
-                double trackW = 6 * fitScale;
+                double trackW = System.Math.Max(3 * u, 4 * u);
                 double trackX = listLeft + listWidth - trackW;
-                double thumbH = System.Math.Max(16 * fitScale, gridHeight * (gridHeight / contentH));
-                double thumbY = gridY + ((branchModalIconScrollOffset / maxScroll) * (gridHeight - thumbH));
-                FillRoundedRectangle(ctx, trackX, gridY, trackW, gridHeight, 3 * fitScale, [0.22, 0.24, 0.27, 0.7]);
-                FillRoundedRectangle(ctx, trackX, thumbY, trackW, thumbH, 3 * fitScale,
+                double thumbH = System.Math.Max(16 * u, listHeight * (listHeight / contentH));
+                double thumbTravel = System.Math.Max(1, listHeight - thumbH);
+                double thumbY = listTop + ((branchModalIconScrollOffset / maxScroll) * thumbTravel);
+                FillRoundedRectangle(ctx, trackX, listTop, trackW, listHeight, trackW * 0.5,
                     QuestbookGuiLayout.AdminTileBorderColor);
+                FillRoundedRectangle(ctx, trackX, thumbY, trackW, thumbH, trackW * 0.5,
+                    [0x74 / 255.0, 0x74 / 255.0, 0x74 / 255.0, 1.0]);
             }
 
             if (catalog.Count == 0)
             {
-                CairoFont emptyFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
+                CairoFont emptyFont = CreateMontserratFont(12 * u, QuestbookGuiLayout.AdminPanelPlaceholderColor);
                 DrawCenteredText(
                     ctx,
                     emptyFont,
                     QuestbookLang.GetLocal("admin.quest_edit.item_search_empty"),
-                    new LayoutRect(listLeft, gridY, listWidth, gridHeight));
+                    new LayoutRect(listLeft, listTop, listWidth, listHeight));
             }
 
             branchModalItemPickerSlots = pickerSlots.ToArray();
@@ -1107,23 +1148,31 @@ namespace SwixyQuestBook.Gui
 
         private void DrawBranchModalButton(
             Cairo.Context ctx,
-            double fitScale,
-            ImageSurface? barSurface,
+            double unit,
+            ImageSurface? buttonSurface,
             LayoutRect area,
             string label,
             bool hovered,
             double[]? accent)
         {
-            if (barSurface != null)
-                DrawImageSurface(ctx, barSurface, area.X, area.Y, area.Width, area.Height);
+            // Group 714.png wood plaque (203×40 design).
+            if (buttonSurface != null)
+                DrawImageSurface(ctx, buttonSurface, area.X, area.Y, area.Width, area.Height);
+            else
+            {
+                FillRoundedRectangle(ctx, area.X, area.Y, area.Width, area.Height, 4 * unit,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, area.X, area.Y, area.Width, area.Height, 4 * unit,
+                    System.Math.Max(1.0, unit), QuestbookGuiLayout.AdminTileBorderColor);
+            }
 
             double[] color = hovered
-                ? accent ?? QuestbookGuiLayout.AdminSaveButtonColor
-                : QuestbookGuiLayout.AdminPanelTextColor;
-            CairoFont font = CreateMontserratFont(12 * fitScale, color);
+                ? accent ?? QuestbookGuiLayout.AdminTileActiveContentColor
+                : QuestbookGuiLayout.AdminModalChipTextColor;
+            CairoFont font = CreateMontserratFont(System.Math.Clamp(area.Height * 0.38, 11 * unit, 15 * unit), color);
             double textWidth = MeasureTextWidth(font, label);
             DrawText(ctx, font, label, area.X + ((area.Width - textWidth) / 2),
-                GetTextBaselineY(font, area.Y, area.Height, 18 * fitScale));
+                GetTextBaselineY(font, area.Y, area.Height, area.Height));
         }
 
         private void MarkBranchMetadataDirty()
@@ -1168,7 +1217,10 @@ namespace SwixyQuestBook.Gui
                 {
                     if (!adminData.IsAdminPanelOpen)
                         OpenAdminEditor();
-                    adminData.EditorSection = AdminEditorSection.Quests;
+                    // Prefer Branches when the admin panel is already on that section
+                    // (e.g. after creating a branch); only default to Quests for a fresh open.
+                    if (adminData.EditorSection != AdminEditorSection.Branches)
+                        adminData.EditorSection = AdminEditorSection.Quests;
                 }
 
                 ComposeDialog();
@@ -1179,12 +1231,13 @@ namespace SwixyQuestBook.Gui
             pendingOpenAdminEditor = openEditor;
         }
 
+        /// <summary>
+        /// Reserved space above the category list for admin chrome.
+        /// Edit entry is the bottom-right settings button (no left-sidebar offset).
+        /// </summary>
         private double GetSidebarAdminButtonsOffset(double fitScale)
         {
-            if (!IsPlayerAdmin() || adminData.IsAdminPanelOpen)
-                return 0;
-
-            return (QuestbookGuiLayout.SidebarEditButtonHeight + QuestbookGuiLayout.SidebarCardGap) * fitScale;
+            return 0;
         }
 
         private void OpenAdminEditor()
@@ -1317,37 +1370,50 @@ namespace SwixyQuestBook.Gui
             return false;
         }
 
-        private void DrawAdminSidebarEditButton(Cairo.Context ctx, double fitScale, double screenX, double screenY)
+        private void DrawAdminSettingsButton(Cairo.Context ctx, double fitScale, double screenX, double screenY)
         {
-            if (!IsPlayerAdmin()) return;
+            // Only for admins, and only outside edit mode — hides after opening the editor.
+            if (!IsPlayerAdmin() || adminData.IsAdminPanelOpen)
+            {
+                adminSettingsButtonHitArea = new LayoutRect(0, 0, 0, 0);
+                return;
+            }
 
-            double buttonX = QuestbookGuiLayout.SidebarCardOffsetX * fitScale;
-            double buttonWidth = QuestbookGuiLayout.SidebarCardWidth * fitScale;
-            double buttonHeight = QuestbookGuiLayout.SidebarEditButtonHeight * fitScale;
-            LayoutRect localButtonRect = new(
-                buttonX,
-                QuestbookGuiLayout.SidebarCardOffsetY * fitScale,
-                buttonWidth,
-                buttonHeight);
-            adminSidebarEditButtonHitArea = localButtonRect.Offset(screenX, screenY);
+            double buttonX = QuestbookGuiLayout.AdminSettingsButtonOffsetX * fitScale;
+            double buttonY = QuestbookGuiLayout.AdminSettingsButtonOffsetY * fitScale;
+            double buttonWidth = QuestbookGuiLayout.AdminSettingsButtonWidth * fitScale;
+            double buttonHeight = QuestbookGuiLayout.AdminSettingsButtonHeight * fitScale;
+            LayoutRect localButtonRect = new(buttonX, buttonY, buttonWidth, buttonHeight);
+            adminSettingsButtonHitArea = localButtonRect.Offset(screenX, screenY);
 
-            DrawAdminTileButton(
-                ctx,
-                fitScale,
-                localButtonRect,
-                AdminToolbarIcon.Editor,
-                adminData.IsAdminPanelOpen,
-                isAdminSidebarEditHovered,
-                null,
-                GetAdminToolbarLabel(AdminToolbarIcon.Editor),
-                labelOnRight: true);
+            string textureFileName = isAdminSettingsButtonHovered
+                ? QuestbookGuiLayout.AdminSettingsButtonHoverTexture
+                : QuestbookGuiLayout.AdminSettingsButtonTexture;
+
+            ImageSurface? buttonSurface = GetTextureSurface(textureFileName);
+            if (buttonSurface != null)
+            {
+                DrawImageSurface(ctx, buttonSurface, buttonX, buttonY, buttonWidth, buttonHeight);
+            }
+            else
+            {
+                // Fallback if textures fail to load — keep the hit target visible.
+                FillRectangle(
+                    ctx,
+                    buttonX,
+                    buttonY,
+                    buttonWidth,
+                    buttonHeight,
+                    isAdminSettingsButtonHovered
+                        ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
+                        : QuestbookGuiLayout.AdminTileBackgroundColor);
+            }
         }
 
         private void DrawAdminPanel(Cairo.Context ctx, double fitScale)
         {
             if (!adminData.IsAdminPanelOpen) return;
 
-            adminSidebarEditButtonHitArea = new LayoutRect(0, 0, 0, 0);
 
             double screenX = currentDialogX;
             double screenY = currentDialogY;
@@ -1372,12 +1438,8 @@ namespace SwixyQuestBook.Gui
             {
                 ClearBranchEditorHitAreas();
                 DrawAdminSidebarToolbar(ctx, fitScale, panelX, contentTop);
+                // Single gray status line under DELETE (left-aligned) — no second hint.
                 DrawAdminStatusText(ctx, fitScale, panelX, contentTop);
-
-                if (adminData.HasSelectedNode)
-                    DrawAdminSelectedNodeHint(ctx, fitScale, panelX, contentTop);
-                else
-                    DrawAdminEmptySelectionHint(ctx, fitScale, panelX, contentTop);
             }
 
             ctx.Restore();
@@ -1418,6 +1480,10 @@ namespace SwixyQuestBook.Gui
             adminToolCloseHitArea = new LayoutRect(0, 0, 0, 0);
             adminInputFieldHitAreas = [];
             adminTypeStartHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatOnceHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatCooldownHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatInstantHitArea = new LayoutRect(0, 0, 0, 0);
+            adminRepeatHoursHitArea = new LayoutRect(0, 0, 0, 0);
             adminTypeQuestHitArea = new LayoutRect(0, 0, 0, 0);
             adminTypeCheckpointHitArea = new LayoutRect(0, 0, 0, 0);
             adminTypeKillHitArea = new LayoutRect(0, 0, 0, 0);
@@ -1436,10 +1502,10 @@ namespace SwixyQuestBook.Gui
 
         private void DrawAdminModeSwitcher(Cairo.Context ctx, double fitScale, double panelX, double panelY)
         {
-            double panelWidth = QuestbookGuiLayout.SidebarAdminPanelWidth * fitScale;
+            // Group 671: BRANCHES | QUESTS — 139×69 tiles, gap 10 (panel 288).
             double buttonHeight = QuestbookGuiLayout.SidebarAdminModeBarHeight * fitScale;
-            double gap = QuestbookGuiLayout.SidebarAdminToolbarButtonGap * fitScale;
-            double buttonWidth = (panelWidth - gap) / 2;
+            double gap = QuestbookGuiLayout.SidebarAdminModeButtonGap * fitScale;
+            double buttonWidth = QuestbookGuiLayout.SidebarAdminModeTileWidth * fitScale;
 
             adminModeBranchesHitArea = new LayoutRect(panelX, panelY, buttonWidth, buttonHeight);
             adminModeQuestsHitArea = new LayoutRect(panelX + buttonWidth + gap, panelY, buttonWidth, buttonHeight);
@@ -1475,8 +1541,11 @@ namespace SwixyQuestBook.Gui
             double screenX,
             double screenY)
         {
-            double buttonHeight = QuestbookGuiLayout.SidebarAdminToolbarButtonHeight * fitScale;
-            double gap = QuestbookGuiLayout.SidebarAdminToolbarButtonGap * fitScale;
+            // Group 1142.svg full branch panel:
+            // CREATE / EDIT / DELETE BRANCH → gray header → cards 278×40 from y=286 → EXIT.
+            double buttonHeight = QuestbookGuiLayout.SidebarAdminBranchActionHeight * fitScale;
+            double gap = QuestbookGuiLayout.SidebarAdminBranchActionGap * fitScale;
+            double rowStep = buttonHeight + gap;
 
             adminBranchAddHitArea = new LayoutRect(panelX, contentTop, panelWidth, buttonHeight);
             DrawAdminTileButton(
@@ -1486,13 +1555,12 @@ namespace SwixyQuestBook.Gui
                 AdminToolbarIcon.Add,
                 false,
                 isAdminBranchAddHovered,
-                QuestbookGuiLayout.AdminSaveButtonColor,
-                GetAdminToolbarLabel(AdminToolbarIcon.Add));
+                null,
+                GetAdminToolbarLabel(AdminToolbarIcon.Add),
+                labelOnRight: true);
 
-            double row2Y = contentTop + buttonHeight + gap;
-            double halfWidth = (panelWidth - gap) / 2;
-            adminBranchRenameHitArea = new LayoutRect(panelX, row2Y, halfWidth, buttonHeight);
-            adminBranchDeleteHitArea = new LayoutRect(panelX + halfWidth + gap, row2Y, halfWidth, buttonHeight);
+            double row2Y = contentTop + rowStep;
+            adminBranchRenameHitArea = new LayoutRect(panelX, row2Y, panelWidth, buttonHeight);
             DrawAdminTileButton(
                 ctx,
                 fitScale,
@@ -1501,7 +1569,11 @@ namespace SwixyQuestBook.Gui
                 false,
                 isAdminBranchRenameHovered,
                 null,
-                GetAdminToolbarLabel(AdminToolbarIcon.Rename));
+                GetAdminToolbarLabel(AdminToolbarIcon.Rename),
+                labelOnRight: true);
+
+            double row3Y = contentTop + (rowStep * 2);
+            adminBranchDeleteHitArea = new LayoutRect(panelX, row3Y, panelWidth, buttonHeight);
             DrawAdminTileButton(
                 ctx,
                 fitScale,
@@ -1509,34 +1581,47 @@ namespace SwixyQuestBook.Gui
                 AdminToolbarIcon.Delete,
                 false,
                 isAdminBranchDeleteHovered,
-                QuestbookGuiLayout.AdminClearButtonColor,
-                GetAdminToolbarLabel(AdminToolbarIcon.Delete));
+                null,
+                QuestbookLang.GetLocal("admin.icon.delete_branch"),
+                labelOnRight: true);
 
-            double row3Y = row2Y + buttonHeight + gap;
-            double statusY = row3Y;
-            double statusHeight = QuestbookGuiLayout.SidebarAdminStatusHeight * fitScale;
-            CairoFont statusFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminTitleColor);
-            string statusText = categories.Length > 0
-                ? QuestbookLang.GetLocal("admin.branch.status", GetEditableCategoryTitle(GetSelectedCategory()))
-                : QuestbookLang.GetLocal("admin.branch.hint");
-            DrawText(ctx, statusFont, statusText, panelX + (4 * fitScale),
-                GetTextBaselineY(statusFont, statusY, statusHeight, 16 * fitScale));
+            // Section header above the list — Group 671 #555 ~y258, centered «Branch "Name"».
+            double headerY = panelY + (QuestbookGuiLayout.SidebarAdminBranchListHeaderOffsetY * fitScale);
+            double headerH = QuestbookGuiLayout.SidebarAdminBranchListHeaderHeight * fitScale;
+            CairoFont headerFont = CreateMontserratFont(
+                QuestbookGuiLayout.SidebarAdminBranchListHeaderFontSize * fitScale,
+                QuestbookGuiLayout.AdminBranchListHeaderColor);
+            string headerText = categories.Length > 0
+                ? QuestbookLang.GetLocal(
+                    "admin.branch.list_header_named",
+                    GetEditableCategoryTitle(GetSelectedCategory()))
+                : QuestbookLang.GetLocal("admin.branch.list_header");
+            double headerTextWidth = MeasureTextWidth(headerFont, headerText);
+            double headerTextX = panelX + ((panelWidth - headerTextWidth) / 2);
+            DrawText(
+                ctx,
+                headerFont,
+                headerText,
+                headerTextX,
+                GetTextBaselineY(headerFont, headerY, headerH, headerH));
 
+            // Cards y=286…551 (Group 671 scroll track), then ~64px gap, EXIT at y=615.5.
             double listTop = panelY + (QuestbookGuiLayout.SidebarAdminBranchListOffsetY * fitScale);
+            double listHeight = QuestbookGuiLayout.SidebarAdminBranchListHeight * fitScale;
             double closeHeight = buttonHeight;
-            double closeY = panelY + panelHeight - (QuestbookGuiLayout.SidebarAdminBranchCloseOffsetFromBottom * fitScale);
-            double listHeight = System.Math.Max(0, closeY - listTop - gap);
+            double closeY = panelY + (QuestbookGuiLayout.SidebarAdminQuestExitOffsetY * fitScale);
             adminBranchCloseHitArea = new LayoutRect(panelX, closeY, panelWidth, closeHeight);
-            DrawAdminTileButton(
+            DrawAdminCenteredTextButton(
                 ctx,
                 fitScale,
                 adminBranchCloseHitArea,
-                AdminToolbarIcon.Close,
-                false,
+                QuestbookLang.GetLocal("admin.icon.close"),
                 isAdminBranchCloseHovered,
-                null,
-                GetAdminToolbarLabel(AdminToolbarIcon.Close));
+                QuestbookGuiLayout.AdminExitButtonColor);
 
+            // Card column is 278 wide; scrollbar sits on the right edge (SVG x≈285, w=4).
+            double scrollbarWidth = QuestbookGuiLayout.SidebarScrollbarWidth * fitScale;
+            double cardWidth = System.Math.Min(panelWidth, QuestbookGuiLayout.SidebarCardWidth * fitScale);
             adminBranchListViewportHitArea = new LayoutRect(panelX, listTop, panelWidth, listHeight);
             adminBranchCardHitAreas = new LayoutRect[categories.Length];
             double cardHeight = QuestbookGuiLayout.SidebarCardHeight * fitScale;
@@ -1547,10 +1632,10 @@ namespace SwixyQuestBook.Gui
                 : 0;
             double maxScroll = System.Math.Max(0, contentHeight - listHeight);
             adminBranchListScrollOffset = System.Math.Clamp(adminBranchListScrollOffset, 0, maxScroll);
-            double scrollbarWidth = maxScroll > 0
-                ? QuestbookGuiLayout.QuestEditModalListScrollbarWidth * fitScale
-                : 0;
-            double listContentWidth = panelWidth - scrollbarWidth;
+            bool showScrollbar = maxScroll > 0;
+            double listContentWidth = showScrollbar
+                ? System.Math.Min(cardWidth, panelWidth - scrollbarWidth - (QuestbookGuiLayout.SidebarScrollbarGap * fitScale))
+                : cardWidth;
 
             ctx.Save();
             ctx.Rectangle(panelX, listTop, panelWidth, listHeight);
@@ -1573,16 +1658,20 @@ namespace SwixyQuestBook.Gui
                 DrawSidebarCard(ctx, entry, cardRect, fitScale, adminBranchListViewportHitArea);
             }
 
-            if (maxScroll > 0)
+            if (showScrollbar)
             {
+                // Group 1142: track #453324, thumb #997E68, 4px wide on the right.
                 double trackX = panelX + panelWidth - scrollbarWidth;
                 double thumbHeight = System.Math.Max(18 * fitScale, listHeight * (listHeight / contentHeight));
                 double thumbTravel = System.Math.Max(1, listHeight - thumbHeight);
                 double thumbY = listTop + ((adminBranchListScrollOffset / maxScroll) * thumbTravel);
-                FillRoundedRectangle(ctx, trackX, listTop, scrollbarWidth, listHeight, 3 * fitScale,
-                    [0.22, 0.24, 0.27, 0.7]);
-                FillRoundedRectangle(ctx, trackX, thumbY, scrollbarWidth, thumbHeight, 3 * fitScale,
-                    QuestbookGuiLayout.AdminTileBorderColor);
+                double radius = 2 * fitScale;
+                FillRoundedRectangle(
+                    ctx, trackX, listTop, scrollbarWidth, listHeight, radius,
+                    QuestbookGuiLayout.SidebarScrollbarTrackColor);
+                FillRoundedRectangle(
+                    ctx, trackX, thumbY, scrollbarWidth, thumbHeight, radius,
+                    QuestbookGuiLayout.SidebarScrollbarThumbColor);
             }
 
             ctx.Restore();
@@ -1621,167 +1710,94 @@ namespace SwixyQuestBook.Gui
 
         private void DrawAdminSidebarToolbar(Cairo.Context ctx, double fitScale, double panelX, double panelY)
         {
+            // Group 1143.svg: full-width 39px tool rows, then SAVE/EXIT at bottom of panel.
             double panelWidth = QuestbookGuiLayout.SidebarAdminPanelWidth * fitScale;
             double buttonHeight = QuestbookGuiLayout.SidebarAdminToolbarButtonHeight * fitScale;
             double gap = QuestbookGuiLayout.SidebarAdminToolbarButtonGap * fitScale;
-            int columns = QuestbookGuiLayout.SidebarAdminToolbarColumns;
-            double buttonWidth = (panelWidth - (gap * (columns - 1))) / columns;
-            double stepX = buttonWidth + gap;
             double stepY = buttonHeight + gap;
+            // panelY here is contentTop (below mode switcher) — matches SVG y=82.5.
+            double panelOriginY = panelY - (QuestbookGuiLayout.SidebarAdminQuestContentOffsetY * fitScale);
 
-            LayoutRect Cell(int index) => new(
-                panelX + ((index % columns) * stepX),
-                panelY + ((index / columns) * stepY),
-                buttonWidth,
+            LayoutRect Row(int index) => new(
+                panelX,
+                panelY + (index * stepY),
+                panelWidth,
                 buttonHeight);
 
-            adminToolSelectHitArea = Cell(0);
-            adminToolQuestHitArea = Cell(1);
-            adminToolLinkHitArea = Cell(2);
-            adminToolDeleteHitArea = Cell(3);
-            adminToolSaveHitArea = Cell(4);
-            adminToolClearHitArea = Cell(5);
-            adminToolGridHitArea = Cell(6);
-            adminToolCloseHitArea = Cell(7);
+            // SELECT, NEW QUEST, LINK, GRID, EDIT, DELETE
+            adminToolSelectHitArea = Row(0);
+            adminToolQuestHitArea = Row(1);
+            adminToolLinkHitArea = Row(2);
+            adminToolGridHitArea = Row(3);
+            adminToolClearHitArea = Row(4); // EDIT (pencil) — opens selected quest
+            adminToolDeleteHitArea = Row(5);
 
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolSelectHitArea,
-                AdminToolbarIcon.Select,
-                adminData.ToolMode == AdminToolMode.Select,
-                isAdminToolSelectHovered,
-                null);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolQuestHitArea,
-                AdminToolbarIcon.NewQuest,
-                adminData.ToolMode == AdminToolMode.NewQuest,
-                isAdminToolQuestHovered,
-                null);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolLinkHitArea,
-                AdminToolbarIcon.Link,
-                adminData.ToolMode == AdminToolMode.LinkQuests,
-                isAdminToolLinkHovered,
-                null);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolDeleteHitArea,
-                AdminToolbarIcon.Delete,
-                adminData.ToolMode == AdminToolMode.DeleteNode,
-                isAdminToolDeleteHovered,
-                QuestbookGuiLayout.AdminClearButtonColor);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolSaveHitArea,
-                AdminToolbarIcon.Save,
-                false,
+            DrawAdminTileButton(ctx, fitScale, adminToolSelectHitArea, AdminToolbarIcon.Select,
+                adminData.ToolMode == AdminToolMode.Select, isAdminToolSelectHovered, null,
+                GetAdminToolbarLabel(AdminToolbarIcon.Select), labelOnRight: true);
+            DrawAdminTileButton(ctx, fitScale, adminToolQuestHitArea, AdminToolbarIcon.NewQuest,
+                adminData.ToolMode == AdminToolMode.NewQuest, isAdminToolQuestHovered, null,
+                GetAdminToolbarLabel(AdminToolbarIcon.NewQuest), labelOnRight: true);
+            DrawAdminTileButton(ctx, fitScale, adminToolLinkHitArea, AdminToolbarIcon.Link,
+                adminData.ToolMode == AdminToolMode.LinkQuests, isAdminToolLinkHovered, null,
+                GetAdminToolbarLabel(AdminToolbarIcon.Link), labelOnRight: true);
+            DrawAdminTileButton(ctx, fitScale, adminToolGridHitArea, AdminToolbarIcon.Grid,
+                adminData.ShowGrid, isAdminToolGridHovered, null,
+                GetAdminToolbarLabel(AdminToolbarIcon.Grid), labelOnRight: true);
+            // EDIT — tool mode: click a node on the graph to open its editor (not drag).
+            DrawAdminTileButton(ctx, fitScale, adminToolClearHitArea, AdminToolbarIcon.EditBranch,
+                adminData.ToolMode == AdminToolMode.EditQuest, isAdminToolClearHovered, null,
+                QuestbookLang.GetLocal("admin.icon.edit_quest"), labelOnRight: true);
+            DrawAdminTileButton(ctx, fitScale, adminToolDeleteHitArea, AdminToolbarIcon.Delete,
+                adminData.ToolMode == AdminToolMode.DeleteNode, isAdminToolDeleteHovered, null,
+                GetAdminToolbarLabel(AdminToolbarIcon.Delete), labelOnRight: true);
+
+            // SAVE (green) + EXIT (red) — bottom of panel, centered labels, no icons.
+            double saveY = panelOriginY + (QuestbookGuiLayout.SidebarAdminQuestSaveOffsetY * fitScale);
+            double exitY = panelOriginY + (QuestbookGuiLayout.SidebarAdminQuestExitOffsetY * fitScale);
+            adminToolSaveHitArea = new LayoutRect(panelX, saveY, panelWidth, buttonHeight);
+            adminToolCloseHitArea = new LayoutRect(panelX, exitY, panelWidth, buttonHeight);
+
+            DrawAdminCenteredTextButton(
+                ctx, fitScale, adminToolSaveHitArea,
+                QuestbookLang.GetLocal("admin.icon.save"),
                 isAdminToolSaveHovered,
-                QuestbookGuiLayout.AdminSaveButtonColor);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolClearHitArea,
-                AdminToolbarIcon.Clear,
-                false,
-                isAdminToolClearHovered,
-                QuestbookGuiLayout.AdminClearButtonColor);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolGridHitArea,
-                AdminToolbarIcon.Grid,
-                adminData.ShowGrid,
-                isAdminToolGridHovered,
-                null);
-            DrawAdminWideToolbarButton(
-                ctx,
-                fitScale,
-                adminToolCloseHitArea,
-                AdminToolbarIcon.Close,
-                false,
+                QuestbookGuiLayout.AdminTileActiveContentColor);
+            DrawAdminCenteredTextButton(
+                ctx, fitScale, adminToolCloseHitArea,
+                QuestbookLang.GetLocal("admin.icon.close"),
                 isAdminToolCloseHovered,
-                null);
+                QuestbookGuiLayout.AdminExitButtonColor);
         }
 
-        /// <summary>
-        /// Full-width editor tool: icon + label side-by-side (one control ≈ old 4-tile row).
-        /// </summary>
-        private void DrawAdminWideToolbarButton(
-            Cairo.Context ctx,
-            double fitScale,
-            LayoutRect area,
-            AdminToolbarIcon icon,
-            bool active,
-            bool hovered,
-            double[]? accentColor)
+        private void DrawAdminStatusText(Cairo.Context ctx, double fitScale, double panelX, double toolbarTop)
         {
-            double radius = QuestbookGuiLayout.AdminTileCornerRadius * fitScale;
-            double borderWidth = (active ? 2.0 : 1.5) * fitScale;
-            double[] accent = accentColor ?? QuestbookGuiLayout.AdminSaveButtonColor;
+            // Group 1143.svg: single gray hint under DELETE, left-aligned (~y353, #555555).
+            double panelOriginY = toolbarTop - (QuestbookGuiLayout.SidebarAdminQuestContentOffsetY * fitScale);
+            double panelWidth = QuestbookGuiLayout.SidebarAdminPanelWidth * fitScale;
+            double statusY = panelOriginY + (QuestbookGuiLayout.SidebarAdminQuestStatusOffsetY * fitScale);
+            double statusHeight = QuestbookGuiLayout.SidebarAdminQuestStatusHeight * fitScale;
+            double padX = 4 * fitScale;
+            double maxTextWidth = panelWidth - (padX * 2);
+            double fontSize = QuestbookGuiLayout.SidebarAdminQuestStatusFontSize * fitScale;
+            string text = GetAdminStatusText();
 
-            double[] background = active
-                ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
-                : hovered
-                    ? QuestbookGuiLayout.AdminTileHoverBackgroundColor
-                    : QuestbookGuiLayout.AdminTileBackgroundColor;
-
-            double[] border = active || hovered
-                ? accent
-                : QuestbookGuiLayout.AdminTileBorderColor;
-
-            FillRoundedRectangle(ctx, area.X, area.Y, area.Width, area.Height, radius, background);
-            StrokeRoundedRectangle(ctx, area.X, area.Y, area.Width, area.Height, radius, borderWidth, border);
-
-            string label = GetAdminToolbarLabel(icon);
-            double[] iconColor = active || hovered
-                ? accent
-                : QuestbookGuiLayout.AdminPanelTextColor;
-
-            double pad = 10 * fitScale;
-            double iconSize = System.Math.Min(area.Height - (pad * 1.4), 40 * fitScale);
-            double iconX = area.X + pad;
-            double iconY = area.Y + ((area.Height - iconSize) / 2);
-            DrawAdminToolbarIcon(ctx, icon, iconX, iconY, iconSize, iconColor);
-
-            if (string.IsNullOrWhiteSpace(label))
-                return;
-
-            double fontSize = System.Math.Clamp(area.Height * 0.34, 13 * fitScale, 18 * fitScale);
-            CairoFont font = CreateMontserratFont(fontSize, iconColor);
-            string text = label.Trim();
-            double textX = iconX + iconSize + (10 * fitScale);
-            double textMaxW = area.X + area.Width - pad - textX;
-            if (textMaxW > 8 * fitScale)
+            CairoFont font = CreateMontserratFont(fontSize, QuestbookGuiLayout.AdminBranchListHeaderColor);
+            while (fontSize > 8 * fitScale && MeasureTextWidth(font, text) > maxTextWidth)
             {
-                while (text.Length > 1 && MeasureTextWidth(font, text) > textMaxW)
-                    text = text[..^1];
+                fontSize -= 0.5 * fitScale;
+                font = CreateMontserratFont(fontSize, QuestbookGuiLayout.AdminBranchListHeaderColor);
             }
+
+            while (text.Length > 3 && MeasureTextWidth(font, text) > maxTextWidth)
+                text = text[..^4] + "...";
 
             DrawText(
                 ctx,
                 font,
                 text,
-                textX,
-                GetTextBaselineY(font, area.Y, area.Height, area.Height * 0.7));
-        }
-
-        private void DrawAdminStatusText(Cairo.Context ctx, double fitScale, double panelX, double toolbarTop)
-        {
-            // Below the full-width tool stack (not overlaid on the last button).
-            double statusY = toolbarTop
-                + (QuestbookGuiLayout.SidebarAdminToolbarHeight * fitScale)
-                + (QuestbookGuiLayout.SidebarAdminToolbarButtonGap * fitScale);
-            double statusHeight = QuestbookGuiLayout.SidebarAdminStatusHeight * fitScale;
-            CairoFont font = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminTitleColor);
-            DrawText(ctx, font, GetAdminStatusText(), panelX + (4 * fitScale),
-                GetTextBaselineY(font, statusY, statusHeight, 16 * fitScale));
+                panelX + padX,
+                GetTextBaselineY(font, statusY, statusHeight, statusHeight));
         }
 
         private string GetAdminStatusText()
@@ -1789,9 +1805,11 @@ namespace SwixyQuestBook.Gui
             return adminData.ToolMode switch
             {
                 AdminToolMode.Select when adminData.HasSelectedNode =>
-                    QuestbookLang.GetLocal("admin.status.editing", adminData.SelectedNodeId),
+                    QuestbookLang.GetLocal("admin.status.selected", adminData.SelectedNodeId),
                 AdminToolMode.Select =>
                     QuestbookLang.GetLocal("admin.status.pick_select"),
+                AdminToolMode.EditQuest =>
+                    QuestbookLang.GetLocal("admin.status.pick_edit"),
                 AdminToolMode.NewQuest =>
                     QuestbookLang.GetLocal("admin.status.pick_new_position"),
                 AdminToolMode.LinkQuests when adminData.LinkSourceNodeId == null =>
@@ -1837,82 +1855,101 @@ namespace SwixyQuestBook.Gui
 
             questEditModalOverlayHitArea = GetQuestbookDialogContentRect();
 
-            // Wider + taller so goal rows, language tabs, info text and Save do not collide.
-            // Sit over the graph (right of the left admin sidebar), not dead-center of the book.
-            double modalWidth = QuestbookGuiLayout.QuestEditModalWidth * fitScale;
-            double bookW = QuestbookGuiLayout.BackgroundWidth * fitScale;
-            double bookTop = QuestbookGuiLayout.BackgroundOffsetY * fitScale;
-            double bookBottom = (QuestbookGuiLayout.BackgroundOffsetY + QuestbookGuiLayout.BackgroundHeight) * fitScale;
-            double bookH = bookBottom - bookTop;
-            double margin = 12 * fitScale;
-            double modalHeight = System.Math.Min(
-                System.Math.Max(QuestbookGuiLayout.QuestEditModalHeight * fitScale, 640 * fitScale),
-                bookH - (margin * 2));
-            double modalX = ((bookW - modalWidth) / 2) + (QuestbookGuiLayout.QuestEditModalOffsetX * fitScale);
-            modalX = System.Math.Clamp(modalX, margin, System.Math.Max(margin, bookW - modalWidth - margin));
-            double modalY = bookTop + System.Math.Max(margin, (bookH - modalHeight) / 2);
+            // Group 1169.svg layout (1080×608) + modal_questedit.png frame.
+            // Centered in the right-hand quest graph area (same as other floating modals).
+            double S(double v) => v * fitScale;
+            double designW = QuestbookGuiLayout.QuestEditModalWidth;
+            double designH = QuestbookGuiLayout.QuestEditModalHeight;
+            double modalWidth = S(designW);
+            double modalHeight = S(designH);
+
+            double rightX = QuestbookGuiLayout.GraphViewportX * fitScale;
+            double rightY = QuestbookGuiLayout.GraphViewportY * fitScale;
+            double rightW = QuestbookGuiLayout.GraphViewportWidth * fitScale;
+            double rightH = QuestbookGuiLayout.GraphViewportHeight * fitScale;
+
+            // If the modal is taller/wider than the graph pad, shrink uniformly to fit.
+            double scaleW = rightW / modalWidth;
+            double scaleH = rightH / modalHeight;
+            double fit = System.Math.Min(1.0, System.Math.Min(scaleW, scaleH));
+            if (fit < 0.999)
+            {
+                modalWidth *= fit;
+                modalHeight *= fit;
+            }
+
+            double unit = modalWidth / designW;
+            double D(double design) => design * unit;
+
+            double modalX = rightX + ((rightW - modalWidth) / 2);
+            double modalY = rightY + ((rightH - modalHeight) / 2);
             LayoutRect localPanelRect = new(modalX, modalY, modalWidth, modalHeight);
             questEditModalPanelHitArea = localPanelRect.Offset(screenX, screenY);
 
-            ImageSurface? modalSurface = GetTextureSurface("modal.png");
+            ImageSurface? modalSurface = GetTextureSurface(QuestbookGuiLayout.QuestEditModalTexture);
             if (modalSurface != null)
                 DrawImageSurface(ctx, modalSurface, modalX, modalY, modalWidth, modalHeight);
             else
                 FillRectangle(ctx, modalX, modalY, modalWidth, modalHeight, QuestbookGuiLayout.ModalBorderColor);
 
-            // Extra inset from the modal frame (texture border scales with the stretched modal.png).
-            double padX = QuestbookGuiLayout.QuestEditModalPadX * fitScale;
-            double padTop = QuestbookGuiLayout.QuestEditModalPadTop * fitScale;
-            double padBottom = QuestbookGuiLayout.QuestEditModalPadBottom * fitScale;
-            double contentX = modalX + padX;
-            double contentWidth = modalWidth - (padX * 2);
-            double currentY = modalY + padTop;
-            double sectionGap = QuestbookGuiLayout.QuestEditModalSectionGap * fitScale;
-
-            double closeHeight = QuestbookGuiLayout.QuestEditModalCloseButtonHeight * fitScale;
-            double closeY = modalY + modalHeight - padBottom - closeHeight;
-
-            CairoFont titleFont = CreateMontserratFont(18 * fitScale, QuestbookGuiLayout.TopMenuTitleColor);
-            DrawText(
-                ctx,
-                titleFont,
-                QuestbookLang.GetLocal("admin.quest_edit.title", adminData.SelectedNodeId),
-                contentX,
-                GetTextBaselineY(titleFont, currentY, 24 * fitScale, 24 * fitScale));
-            currentY += (32 * fitScale);
-
-            DrawQuestEditModalTypeSelector(ctx, fitScale, contentX, currentY, contentWidth);
-            currentY += (QuestbookGuiLayout.QuestEditModalTypeBarHeight * fitScale) + sectionGap;
+            // Content origin — Group 1169 design coords relative to modal (0,0).
+            double contentX = modalX + D(QuestbookGuiLayout.QuestEditModalPadX);
+            double contentWidth = D(QuestbookGuiLayout.QuestEditModalContentWidth);
 
             bool isQuestType = adminData.IsQuestTypeEdited;
+            bool isCheckpointLayout = adminData.EditedNodeType is QuestbookQuestNodeType.Checkpoint
+                or QuestbookQuestNodeType.Start;
+
+            // Header — Group 1214: left «Selecting A Quest» (white) + right «Quest #N» (#555).
+            string headerLeft = QuestbookLang.GetLocal("admin.quest_edit.header");
+            CairoFont headerLeftFont = CreateMontserratFont(
+                D(QuestbookGuiLayout.QuestEditModalHeaderTitleFontSize),
+                QuestbookGuiLayout.AdminModalTitleColor);
+            double headerLeftY = modalY + D(QuestbookGuiLayout.QuestEditModalHeaderTitleY);
+            double headerLeftH = D(QuestbookGuiLayout.QuestEditModalHeaderTitleHeight);
+            DrawText(
+                ctx,
+                headerLeftFont,
+                headerLeft,
+                modalX + D(QuestbookGuiLayout.QuestEditModalHeaderTitleX),
+                GetTextBaselineY(headerLeftFont, headerLeftY, headerLeftH, headerLeftH));
+
+            string headerId = QuestbookLang.GetLocal("admin.quest_edit.title", adminData.SelectedNodeId);
+            CairoFont headerIdFont = CreateMontserratFont(
+                D(QuestbookGuiLayout.QuestEditModalHeaderIdFontSize),
+                QuestbookGuiLayout.QuestEditModalHeaderIdColor);
+            double headerIdW = MeasureTextWidth(headerIdFont, headerId);
+            double headerIdY = modalY + D(QuestbookGuiLayout.QuestEditModalHeaderIdY);
+            double headerIdH = D(QuestbookGuiLayout.QuestEditModalHeaderIdHeight);
+            // Right-align inside content band (Group 1214 ~x863 in 950 content ≈ near content right).
+            double headerIdX = contentX + contentWidth - headerIdW;
+            DrawText(
+                ctx,
+                headerIdFont,
+                headerId,
+                headerIdX,
+                GetTextBaselineY(headerIdFont, headerIdY, headerIdH, headerIdH));
+
+            // Type bar START | QUEST | CHECKPOINT | KILL
+            double typeY = modalY + D(QuestbookGuiLayout.QuestEditModalTypeBarY);
+            DrawQuestEditModalTypeSelector(ctx, unit, contentX, typeY, contentWidth);
             List<LayoutRect> hitAreas = [];
             List<AdminFormFieldRef> fieldRefs = [];
-            double listsBottomY;
 
-            // Reserve bottom stack: language tabs + info box + gap + save button.
-            // listsMaxBottom is the lowest Y lists may use before that stack.
-            double langRowHeight = 32 * fitScale;
-            double langRowGap = 5 * fitScale;
-            double langBarHeight = (langRowHeight * 2) + langRowGap;
-            double langBarGap = 10 * fitScale;
-            double minInfoH = 72 * fitScale;
-            double maxInfoH = QuestbookGuiLayout.QuestEditModalInfoHeight * fitScale;
-            double infoGap = 12 * fitScale;
-            // Space from end of lists to top of save button.
-            double reservedAboveSave = langBarHeight + langBarGap + minInfoH + infoGap + sectionGap;
-            double listsMaxBottom = closeY - reservedAboveSave;
+            // Top legend only for Quest/Kill (flag chips apply to goal rows).
+            if (isQuestType)
+                DrawQuestEditTopLegend(ctx, unit, modalX, modalY);
 
             if (isQuestType)
             {
-                double columnGap = QuestbookGuiLayout.QuestEditModalListColumnGap * fitScale;
-                double columnWidth = (contentWidth - columnGap) / 2;
-                double headerH = 26 * fitScale;
-                double legendH = 20 * fitScale;
-                double headerY = currentY;
-                CairoFont sectionFont = CreateMontserratFont(14 * fitScale, QuestbookGuiLayout.AdminSaveButtonColor);
-                double addSize = QuestbookGuiLayout.QuestEditModalAddButtonSize * fitScale;
+                double columnWidth = D(QuestbookGuiLayout.QuestEditModalListColumnWidth);
+                double columnGap = D(QuestbookGuiLayout.QuestEditModalListColumnGap);
+                double headerY = modalY + D(QuestbookGuiLayout.QuestEditModalListHeaderY);
+                double headerH = D(QuestbookGuiLayout.QuestEditModalListHeaderHeight);
+                CairoFont sectionFont = CreateMontserratFont(D(14), QuestbookGuiLayout.AdminModalSectionColor);
+                double addSize = D(QuestbookGuiLayout.QuestEditModalAddButtonSize);
+                double addY = modalY + D(QuestbookGuiLayout.QuestEditModalAddButtonY);
 
-                // Goals header row
                 string goalsHeaderKey = adminData.EditedNodeType == QuestbookQuestNodeType.Kill
                     ? "admin.quest_edit.kill_section"
                     : "admin.quest_edit.goals_section";
@@ -1922,41 +1959,17 @@ namespace SwixyQuestBook.Gui
                     QuestbookLang.GetLocal(goalsHeaderKey),
                     contentX,
                     GetTextBaselineY(sectionFont, headerY, headerH, headerH));
+
+                // Goals + (cyan document-plus) — SVG absolute 482–498 × 165–181.
                 goalsAddButtonHitArea = new LayoutRect(
-                    contentX + columnWidth - addSize,
-                    headerY + ((headerH - addSize) / 2),
+                    modalX + D(QuestbookGuiLayout.QuestEditModalGoalsAddX),
+                    addY,
                     addSize,
                     addSize);
-                DrawAdminTileButton(ctx, fitScale, goalsAddButtonHitArea, AdminToolbarIcon.Add, false, isGoalsAddHovered,
-                    QuestbookGuiLayout.AdminSaveButtonColor);
+                DrawDocumentPlusGlyph(
+                    ctx, goalsAddButtonHitArea.X, goalsAddButtonHitArea.Y, addSize,
+                    QuestbookGuiLayout.AdminModalSectionColor);
 
-                // Legend by node type.
-                double legendY = headerY + headerH + (2 * fitScale);
-                double legendX = contentX;
-                bool killNode = adminData.EditedNodeType == QuestbookQuestNodeType.Kill;
-                if (!killNode)
-                {
-                    DrawAdminFlagLegendChip(
-                        ctx, fitScale, legendX, legendY, legendH,
-                        AdminFlagIcon.Take,
-                        QuestbookLang.GetLocal("admin.quest_edit.flag.take"),
-                        out double takeChipW);
-                    legendX += takeChipW + (8 * fitScale);
-                    DrawAdminFlagLegendChip(
-                        ctx, fitScale, legendX, legendY, legendH,
-                        AdminFlagIcon.Craft,
-                        QuestbookLang.GetLocal("admin.quest_edit.flag.craft"),
-                        out double craftChipW);
-                    legendX += craftChipW + (8 * fitScale);
-                }
-
-                DrawAdminFlagLegendChip(
-                    ctx, fitScale, legendX, legendY, legendH,
-                    AdminFlagIcon.AllVariants,
-                    QuestbookLang.GetLocal("admin.quest_edit.flag.variants"),
-                    out _);
-
-                // Awards header row
                 double awardsX = contentX + columnWidth + columnGap;
                 DrawText(
                     ctx,
@@ -1964,38 +1977,40 @@ namespace SwixyQuestBook.Gui
                     QuestbookLang.GetLocal("admin.quest_edit.awards_section"),
                     awardsX,
                     GetTextBaselineY(sectionFont, headerY, headerH, headerH));
+                // Awards + (orange document-plus) — SVG absolute 974–990 × 165–181.
                 awardsAddButtonHitArea = new LayoutRect(
-                    awardsX + columnWidth - addSize,
-                    headerY + ((headerH - addSize) / 2),
+                    modalX + D(QuestbookGuiLayout.QuestEditModalAwardsAddX),
+                    addY,
                     addSize,
                     addSize);
-                DrawAdminTileButton(ctx, fitScale, awardsAddButtonHitArea, AdminToolbarIcon.Add, false, isAwardsAddHovered,
-                    QuestbookGuiLayout.AdminSaveButtonColor);
+                DrawDocumentPlusGlyph(
+                    ctx, awardsAddButtonHitArea.X, awardsAddButtonHitArea.Y, addSize,
+                    [1.0, 170.0 / 255.0, 0.0, 1.0]); // #FFAA00
 
-                // Awards legend: all variants only.
-                DrawAdminFlagLegendChip(
-                    ctx, fitScale, awardsX, legendY, legendH,
-                    AdminFlagIcon.AllVariants,
-                    QuestbookLang.GetLocal("admin.quest_edit.flag.variants"),
-                    out _);
-
-                double listTop = legendY + legendH + (6 * fitScale);
-                double listHeight = System.Math.Clamp(
-                    listsMaxBottom - listTop,
-                    72 * fitScale,
-                    QuestbookGuiLayout.QuestEditModalListHeight * fitScale);
-
+                // List panels — y=191.5 h=111; scrollbar sits OUTSIDE right edge (+12.5).
+                double listTop = modalY + D(QuestbookGuiLayout.QuestEditModalListPanelY);
+                double listHeight = D(QuestbookGuiLayout.QuestEditModalListHeight);
                 goalsListViewportHitArea = new LayoutRect(contentX, listTop, columnWidth, listHeight);
                 awardsListViewportHitArea = new LayoutRect(awardsX, listTop, columnWidth, listHeight);
 
+                FillRoundedRectangle(ctx, contentX, listTop, columnWidth, listHeight, D(5.5),
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, contentX, listTop, columnWidth, listHeight, D(5.5), D(1),
+                    QuestbookGuiLayout.AdminTileBorderColor);
+                FillRoundedRectangle(ctx, awardsX, listTop, columnWidth, listHeight, D(5.5),
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, awardsX, listTop, columnWidth, listHeight, D(5.5), D(1),
+                    QuestbookGuiLayout.AdminTileBorderColor);
+
+                // Wavy divider between GOALS and AWARDS (Group 1169 path at x≈540).
+                DrawQuestEditWaveDivider(ctx, unit, modalX, listTop, listHeight);
+
                 DrawQuestEditScrollableItemList(
-                    ctx, fitScale, goalsListViewportHitArea, adminData.Goals, isGoals: true,
+                    ctx, unit, goalsListViewportHitArea, adminData.Goals, isGoals: true,
                     ref goalsListScrollOffset, ref goalsRemoveHitAreas, hitAreas, fieldRefs);
                 DrawQuestEditScrollableItemList(
-                    ctx, fitScale, awardsListViewportHitArea, adminData.Awards, isGoals: false,
+                    ctx, unit, awardsListViewportHitArea, adminData.Awards, isGoals: false,
                     ref awardsListScrollOffset, ref awardsRemoveHitAreas, hitAreas, fieldRefs);
-
-                listsBottomY = listTop + listHeight + sectionGap;
             }
             else
             {
@@ -2006,63 +2021,74 @@ namespace SwixyQuestBook.Gui
                 goalsRemoveHitAreas = [];
                 awardsRemoveHitAreas = [];
                 goalsTakeToggleHitAreas = [];
+                awardsTakeToggleHitAreas = [];
                 goalsCraftToggleHitAreas = [];
                 goalsKillToggleHitAreas = [];
-                listsBottomY = currentY;
+                goalsMatchToggleHitAreas = [];
+                awardsMatchToggleHitAreas = [];
             }
 
-            // Language tabs — always above the description box with a hard floor so Save never collides.
-            double langBarY = System.Math.Min(listsBottomY, closeY - infoGap - minInfoH - langBarGap - langBarHeight);
-            langBarY = System.Math.Max(listsBottomY > 0 ? System.Math.Min(listsBottomY, langBarY) : langBarY, modalY + padTop);
-            // Prefer placing lang bar right after lists when there is room.
-            if (listsBottomY + langBarHeight + langBarGap + minInfoH + infoGap <= closeY)
-                langBarY = listsBottomY;
+            // Language chips: under lists for Quest/Kill; under type bar for Checkpoint/Start (Group 1174).
+            double langY = modalY + D(isCheckpointLayout
+                ? QuestbookGuiLayout.QuestEditModalCheckpointLangY
+                : QuestbookGuiLayout.QuestEditModalLangY);
+            DrawQuestEditLanguageBar(
+                ctx,
+                unit,
+                contentX,
+                langY,
+                contentWidth,
+                D(QuestbookGuiLayout.QuestEditModalLangChipHeight),
+                D(QuestbookGuiLayout.QuestEditModalLangRowGap));
 
-            DrawQuestEditLanguageBar(ctx, fitScale, contentX, langBarY, contentWidth, langRowHeight, langRowGap);
-
-            double infoY = langBarY + langBarHeight + langBarGap;
-            double infoWidth = contentWidth;
-            double maxInfoByButton = closeY - infoGap - infoY;
-            double infoHeight = System.Math.Clamp(maxInfoH, minInfoH, System.Math.Max(minInfoH, maxInfoByButton));
-            // If still overlapping save, shrink info and push it up is not needed — clamp height only.
-
+            // Description between langs and SAVE. Repeat row sits under the text field (Quest/Kill).
             AdminFormFieldRef infoField = new(AdminFormFieldKind.Information);
-            hitAreas.Add(new LayoutRect(contentX, infoY, infoWidth, infoHeight));
-            fieldRefs.Add(infoField);
-            adminInputFieldHitAreas = hitAreas.ToArray();
-            adminInputFieldRefs = fieldRefs.ToArray();
+            double langBottom = langY
+                + D(QuestbookGuiLayout.QuestEditModalLangChipHeight * 2
+                    + QuestbookGuiLayout.QuestEditModalLangRowGap);
+            double saveTop = modalY + D(QuestbookGuiLayout.QuestEditModalSaveY);
+            double infoY = langBottom + D(isCheckpointLayout ? 12 : 8);
+            double repeatReserve = isQuestType
+                ? D(QuestbookGuiLayout.QuestEditModalRepeatRowHeight + QuestbookGuiLayout.QuestEditModalRepeatRowGap + 4)
+                : 0;
+            double infoH = System.Math.Max(D(36), saveTop - infoY - D(10) - repeatReserve);
+            if (infoY + infoH + repeatReserve > saveTop - D(6))
+                infoH = System.Math.Max(D(28), saveTop - D(6) - infoY - repeatReserve);
 
-            ImageSurface? infoBox = GetTextureSurface(QuestbookGuiLayout.AdminQvestBoxModalBoxTexture);
-            if (infoBox != null)
-                DrawImageSurface(ctx, infoBox, contentX, infoY, infoWidth, infoHeight);
-            else
-                FillRectangle(ctx, contentX, infoY, infoWidth, infoHeight, [0.12, 0.13, 0.15, 0.9]);
+            hitAreas.Add(new LayoutRect(contentX, infoY, contentWidth, infoH));
+            fieldRefs.Add(infoField);
 
             string infoPlaceholder = QuestbookLang.GetLocal("admin.information_text")
                 + $" [{adminData.EditorLanguage.ToUpperInvariant()}]";
             string infoValue = adminData.InformationText;
             bool infoFocused = adminData.FocusedField == infoField;
-            // Focused empty field: no placeholder under the caret.
+
+            // Description frame — pure Cairo rounded rect (no stretched texture).
+            DrawQuestEditTextField(
+                ctx, contentX, infoY, contentWidth, infoH, D(5.5), D(1), focused: infoFocused);
+
             string infoDisplay = string.IsNullOrWhiteSpace(infoValue) && !infoFocused
                 ? infoPlaceholder
                 : infoValue;
             double[] infoColor = infoFocused || !string.IsNullOrWhiteSpace(infoValue)
-                ? QuestbookGuiLayout.AdminPanelTextColor
+                ? QuestbookGuiLayout.AdminModalChipTextColor
                 : QuestbookGuiLayout.AdminPanelPlaceholderColor;
-            CairoFont infoFont = CreateMontserratFont(12 * fitScale, infoColor);
-            int infoMaxChars = isQuestType ? 220 : 624;
-            double textPadX = 8 * fitScale;
+            CairoFont infoFont = CreateMontserratFont(D(12), infoColor);
+            // Checkpoint/Start: long description; Quest/Kill: shorter under lists.
+            int infoMaxChars = isCheckpointLayout ? 900 : (isQuestType ? 220 : 624);
+            double textPadX = D(10);
+            double textPadY = D(isCheckpointLayout ? 10 : 6);
             List<string> infoLines = WrapText(
                 infoFont,
                 string.IsNullOrEmpty(infoDisplay) ? " " : infoDisplay,
-                infoWidth - (textPadX * 2),
+                contentWidth - (textPadX * 2),
                 infoMaxChars);
             if (string.IsNullOrEmpty(infoDisplay))
                 infoLines = [string.Empty];
 
-            double lineHeight = 18 * fitScale;
-            double contentTextY = infoY + (8 * fitScale);
-            int maxLines = System.Math.Max(1, (int)((infoHeight - (16 * fitScale)) / lineHeight));
+            double lineHeight = D(isCheckpointLayout ? 18 : 16);
+            double contentTextY = infoY + textPadY;
+            int maxLines = System.Math.Max(1, (int)((infoH - textPadY * 2) / lineHeight));
             if (infoLines.Count > maxLines)
             {
                 infoLines = infoLines.Take(maxLines).ToList();
@@ -2079,40 +2105,41 @@ namespace SwixyQuestBook.Gui
 
             if (infoFocused)
             {
-                StrokeRoundedRectangle(
-                    ctx,
-                    contentX,
-                    infoY,
-                    infoWidth,
-                    infoHeight,
-                    4 * fitScale,
-                    1.5 * fitScale,
-                    QuestbookGuiLayout.AdminSaveButtonColor);
-
-                // Caret at end of last visible line.
                 int last = System.Math.Max(0, infoLines.Count - 1);
                 string lastLine = infoLines.Count > 0 ? infoLines[last] : string.Empty;
-                double caretLineY = contentTextY + (last * lineHeight);
                 DrawTextCaret(
-                    ctx,
-                    infoFont,
-                    lastLine,
-                    contentX + textPadX,
-                    caretLineY,
-                    lineHeight,
-                    infoColor);
+                    ctx, infoFont, lastLine, contentX + textPadX,
+                    contentTextY + (last * lineHeight), lineHeight, infoColor);
             }
 
-            ImageSurface? barSurface = GetTextureSurface(QuestbookGuiLayout.AdminBarTexture);
-            questEditModalSaveButtonHitArea = new LayoutRect(contentX, closeY, contentWidth, closeHeight);
-            DrawBranchModalButton(
+            // Repeat row under description (Quest / Kill only).
+            if (isQuestType)
+            {
+                double repeatY = infoY + infoH + D(QuestbookGuiLayout.QuestEditModalRepeatRowGap);
+                DrawQuestEditRepeatRow(ctx, unit, contentX, repeatY, contentWidth, hitAreas, fieldRefs);
+            }
+            else
+            {
+                adminRepeatOnceHitArea = new LayoutRect(0, 0, 0, 0);
+                adminRepeatCooldownHitArea = new LayoutRect(0, 0, 0, 0);
+                adminRepeatInstantHitArea = new LayoutRect(0, 0, 0, 0);
+                adminRepeatHoursHitArea = new LayoutRect(0, 0, 0, 0);
+            }
+
+            adminInputFieldHitAreas = hitAreas.ToArray();
+            adminInputFieldRefs = fieldRefs.ToArray();
+
+            // SAVE — full-width green label, Group 1169 y=499.5
+            double saveY = modalY + D(QuestbookGuiLayout.QuestEditModalSaveY);
+            double saveH = D(QuestbookGuiLayout.QuestEditModalCloseButtonHeight);
+            questEditModalSaveButtonHitArea = new LayoutRect(contentX, saveY, contentWidth, saveH);
+            DrawAdminCenteredTextButton(
                 ctx,
                 fitScale,
-                barSurface,
                 questEditModalSaveButtonHitArea,
                 QuestbookLang.GetLocal("admin.quest_edit.save"),
                 isQuestEditModalSaveHovered,
-                QuestbookGuiLayout.AdminSaveButtonColor);
+                QuestbookGuiLayout.AdminTileActiveContentColor);
 
             if (adminItemPickerTarget != null)
                 DrawAdminItemPicker(ctx, fitScale, localPanelRect);
@@ -2150,7 +2177,7 @@ namespace SwixyQuestBook.Gui
 
         private void DrawQuestEditLanguageBar(
             Cairo.Context ctx,
-            double fitScale,
+            double unit,
             double x,
             double y,
             double width,
@@ -2172,52 +2199,52 @@ namespace SwixyQuestBook.Gui
             questEditLangCodes = langs;
             questEditLangButtonHitAreas = new LayoutRect[langs.Length];
 
-            // Two rows → fewer buttons per row → larger chips.
-            const int rowCount = 2;
-            int columns = System.Math.Max(1, (int)System.Math.Ceiling(langs.Length / (double)rowCount));
-            double gap = 8 * fitScale;
-            double buttonWidth = (width - (gap * System.Math.Max(0, columns - 1))) / columns;
+            // Group 1169: fixed 46×28 chips, step 49 (gap 3), left-to-right then next row.
+            double chipW = QuestbookGuiLayout.QuestEditModalLangChipWidth * unit;
+            double chipH = rowHeight > 0 ? rowHeight : QuestbookGuiLayout.QuestEditModalLangChipHeight * unit;
+            double step = QuestbookGuiLayout.QuestEditModalLangChipStep * unit;
+            int columns = System.Math.Max(1, (int)((width + (step - chipW)) / step));
 
             for (int i = 0; i < langs.Length; i++)
             {
                 string lang = langs[i];
                 int col = i % columns;
                 int row = i / columns;
-                double bx = x + (col * (buttonWidth + gap));
-                double by = y + (row * (rowHeight + rowGap));
-                LayoutRect rect = new(bx, by, buttonWidth, rowHeight);
+                double bx = x + (col * step);
+                double by = y + (row * (chipH + rowGap));
+                LayoutRect rect = new(bx, by, chipW, chipH);
                 questEditLangButtonHitAreas[i] = rect;
 
                 bool active = string.Equals(lang, adminData.EditorLanguage, StringComparison.OrdinalIgnoreCase);
                 bool hasText = adminData.InformationByLang.TryGetValue(lang, out string? text)
                     && !string.IsNullOrWhiteSpace(text);
 
-                double[] bg = active
-                    ? QuestbookGuiLayout.AdminTileActiveBackgroundColor
-                    : QuestbookGuiLayout.AdminTileBackgroundColor;
-                double[] border = active
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminTileBorderColor;
-
-                FillRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, 6 * fitScale, bg);
+                double radius = 5.5 * unit;
+                FillRoundedRectangle(ctx, rect.X, rect.Y, rect.Width, rect.Height, radius,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
                 StrokeRoundedRectangle(
                     ctx,
                     rect.X,
                     rect.Y,
                     rect.Width,
                     rect.Height,
-                    6 * fitScale,
-                    active ? 2.0 * fitScale : 1.3 * fitScale,
-                    border);
+                    radius,
+                    System.Math.Max(1.0, unit),
+                    active
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
 
                 string label = lang.ToUpperInvariant();
                 if (hasText && !active)
-                    label += " ·";
+                    label += "·";
 
                 double[] color = active
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminPanelTextColor;
-                CairoFont labelFont = CreateMontserratFont(14 * fitScale, color);
+                    ? QuestbookGuiLayout.AdminTileActiveContentColor
+                    : QuestbookGuiLayout.AdminTileIdleContentColor;
+                // Group 1169 chip labels #FAFFFD (idle) / green when active.
+                if (!active)
+                    color = QuestbookGuiLayout.AdminModalChipTextColor;
+                CairoFont labelFont = CreateMontserratFont(System.Math.Clamp(chipH * 0.42, 9 * unit, 12 * unit), color);
                 DrawCenteredText(ctx, labelFont, label, rect);
             }
         }
@@ -2228,6 +2255,10 @@ namespace SwixyQuestBook.Gui
             adminTypeQuestHitArea = adminTypeQuestHitArea.Offset(screenX, screenY);
             adminTypeCheckpointHitArea = adminTypeCheckpointHitArea.Offset(screenX, screenY);
             adminTypeKillHitArea = adminTypeKillHitArea.Offset(screenX, screenY);
+            adminRepeatOnceHitArea = adminRepeatOnceHitArea.Offset(screenX, screenY);
+            adminRepeatCooldownHitArea = adminRepeatCooldownHitArea.Offset(screenX, screenY);
+            adminRepeatInstantHitArea = adminRepeatInstantHitArea.Offset(screenX, screenY);
+            adminRepeatHoursHitArea = adminRepeatHoursHitArea.Offset(screenX, screenY);
             goalsAddButtonHitArea = goalsAddButtonHitArea.Offset(screenX, screenY);
             awardsAddButtonHitArea = awardsAddButtonHitArea.Offset(screenX, screenY);
             goalsListViewportHitArea = goalsListViewportHitArea.Offset(screenX, screenY);
@@ -2254,6 +2285,8 @@ namespace SwixyQuestBook.Gui
                 goalsKillToggleHitAreas[i] = goalsKillToggleHitAreas[i].Offset(screenX, screenY);
             for (int i = 0; i < goalsTakeToggleHitAreas.Length; i++)
                 goalsTakeToggleHitAreas[i] = goalsTakeToggleHitAreas[i].Offset(screenX, screenY);
+            for (int i = 0; i < awardsTakeToggleHitAreas.Length; i++)
+                awardsTakeToggleHitAreas[i] = awardsTakeToggleHitAreas[i].Offset(screenX, screenY);
 
             LayoutRect[] offsetInputHitAreas = new LayoutRect[adminInputFieldHitAreas.Length];
             for (int i = 0; i < adminInputFieldHitAreas.Length; i++)
@@ -2327,8 +2360,11 @@ namespace SwixyQuestBook.Gui
             QuestbookAdminItemEntry entry = list[target.ListIndex];
             entry.CollectibleCode = code;
 
-            if (QuestbookItemCodeHelper.SupportsVariantWildcard(entry.CollectibleCode))
+            // Goals: default to all variants when supported. Awards: always exact item.
+            if (target.IsGoals && QuestbookItemCodeHelper.SupportsVariantWildcard(entry.CollectibleCode))
                 entry.MatchAllVariants = true;
+            else if (!target.IsGoals)
+                entry.MatchAllVariants = false;
 
             if (entry.Count <= 0)
                 entry.Count = 1;
@@ -2373,85 +2409,35 @@ namespace SwixyQuestBook.Gui
                 return;
             }
 
-            // Full creative-style catalog (all items + blocks).
-            double padding = QuestbookGuiLayout.QuestEditModalPadX * fitScale;
-            double contentPadTop = 18 * fitScale;
-            double panelHeight = System.Math.Min(modalArea.Height * 0.62, 280 * fitScale);
-            double panelWidth = modalArea.Width - (padding * 2);
-            double panelX = modalArea.X + padding;
-            double panelY = modalArea.Y + modalArea.Height - panelHeight - (44 * fitScale);
-            adminItemPickerPanelHitArea = new LayoutRect(panelX, panelY, panelWidth, panelHeight);
+            // Group 1172.svg — bottom catalog panel over modal content.
+            double unit = modalArea.Width / QuestbookGuiLayout.QuestEditModalWidth;
+            LayoutRect panel = BeginQuestEditPickerChrome(
+                ctx,
+                unit,
+                modalArea,
+                QuestbookLang.GetLocal("admin.quest_edit.item_search_placeholder"));
 
-            FillRoundedRectangle(ctx, panelX, panelY, panelWidth, panelHeight, 8 * fitScale,
-                QuestbookGuiLayout.AdminTileBackgroundColor);
-            StrokeRoundedRectangle(ctx, panelX, panelY, panelWidth, panelHeight, 8 * fitScale, 1.5 * fitScale,
-                QuestbookGuiLayout.AdminSaveButtonColor);
+            double tileSize = QuestbookGuiLayout.QuestEditModalPickerSlotSize * unit;
+            double tileStep = QuestbookGuiLayout.QuestEditModalPickerSlotStep * unit;
+            double tileR = QuestbookGuiLayout.QuestEditModalChipRadius * unit;
+            double borderW = System.Math.Max(1.0, unit);
+            int columns = QuestbookGuiLayout.QuestEditModalPickerColumns;
 
-            CairoFont titleFont = CreateMontserratFont(13 * fitScale, QuestbookGuiLayout.TopMenuTitleColor);
-            DrawText(ctx, titleFont, QuestbookLang.GetLocal("admin.quest_edit.picker_title"),
-                panelX + (12 * fitScale), panelY + contentPadTop);
-
-            double cancelWidth = 88 * fitScale;
-            double cancelHeight = 28 * fitScale;
-            adminItemPickerCancelHitArea = new LayoutRect(
-                panelX + panelWidth - cancelWidth - (10 * fitScale),
-                panelY + contentPadTop - (4 * fitScale),
-                cancelWidth,
-                cancelHeight);
-            CairoFont cancelFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminPanelTextColor);
-            DrawCenteredText(ctx, cancelFont, QuestbookLang.GetLocal("admin.quest_edit.picker_cancel"),
-                adminItemPickerCancelHitArea);
-
-            // Search field under title (shared state with creature picker — only one open at a time).
-            double searchH = 28 * fitScale;
-            double searchY = panelY + contentPadTop + (26 * fitScale);
-            double searchX = panelX + (12 * fitScale);
-            double searchW = panelWidth - cancelWidth - (36 * fitScale);
-            adminEntityPickerSearchHitArea = new LayoutRect(searchX, searchY, searchW, searchH);
-            FillRoundedRectangle(ctx, searchX, searchY, searchW, searchH, 4 * fitScale,
-                [0.10, 0.11, 0.13, 0.95]);
-            StrokeRoundedRectangle(
-                ctx, searchX, searchY, searchW, searchH, 4 * fitScale,
-                adminEntityPickerSearchFocused ? 1.6 * fitScale : 1.1 * fitScale,
-                adminEntityPickerSearchFocused
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminTileBorderColor);
-
-            CairoFont searchFont = CreateMontserratFont(12 * fitScale,
-                string.IsNullOrEmpty(adminEntityPickerSearchText) && !adminEntityPickerSearchFocused
-                    ? QuestbookGuiLayout.AdminPanelPlaceholderColor
-                    : QuestbookGuiLayout.AdminPanelTextColor);
-            string searchDisplay = string.IsNullOrEmpty(adminEntityPickerSearchText) && !adminEntityPickerSearchFocused
-                ? QuestbookLang.GetLocal("admin.quest_edit.item_search_placeholder")
-                : adminEntityPickerSearchText;
-            DrawText(ctx, searchFont, searchDisplay, searchX + (8 * fitScale),
-                GetTextBaselineY(searchFont, searchY, searchH, searchH));
-            if (adminEntityPickerSearchFocused)
-            {
-                DrawTextCaret(ctx, searchFont, adminEntityPickerSearchText,
-                    searchX + (8 * fitScale), searchY, searchH, QuestbookGuiLayout.AdminPanelTextColor);
-            }
-
-            double tileSize = 48 * fitScale;
-            double tileGap = 6 * fitScale;
-            double listTop = searchY + searchH + (10 * fitScale);
-            double listBottom = panelY + panelHeight - (10 * fitScale);
-            double listHeight = System.Math.Max(tileSize, listBottom - listTop);
-            double listLeft = panelX + (12 * fitScale);
-            double listWidth = panelWidth - (28 * fitScale);
+            double listLeft = panel.X + QuestbookGuiLayout.QuestEditModalPickerSearchInsetX * unit;
+            double listTop = panel.Y + QuestbookGuiLayout.QuestEditModalPickerGridY * unit;
+            double listWidth = columns * tileStep - QuestbookGuiLayout.QuestEditModalPickerSlotGap * unit;
+            double listHeight = System.Math.Max(tileSize, panel.Y + panel.Height - listTop - 4 * unit);
             adminEntityPickerViewportLocal = new LayoutRect(listLeft, listTop, listWidth, listHeight);
 
-            int columns = System.Math.Max(1, (int)System.Math.Floor((listWidth + tileGap) / (tileSize + tileGap)));
             IReadOnlyList<(string Code, string Label, DummySlot Slot)> catalog =
                 GetItemCatalogEntries(adminEntityPickerSearchText);
-            int rows = System.Math.Max(1, (int)System.Math.Ceiling(catalog.Count / (double)System.Math.Max(1, columns)));
-            double contentH = (rows * tileSize) + (System.Math.Max(0, rows - 1) * tileGap);
+            int rows = System.Math.Max(1, (int)System.Math.Ceiling(catalog.Count / (double)columns));
+            double contentH = rows * tileStep;
             double maxScroll = System.Math.Max(0, contentH - listHeight);
             adminEntityPickerScrollOffset = System.Math.Clamp(adminEntityPickerScrollOffset, 0, maxScroll);
 
-            // Only lay out visible rows (creative menu does the same).
-            int firstVisibleRow = System.Math.Max(0, (int)System.Math.Floor(adminEntityPickerScrollOffset / (tileSize + tileGap)) - 1);
-            int visibleRowCount = (int)System.Math.Ceiling(listHeight / (tileSize + tileGap)) + 2;
+            int firstVisibleRow = System.Math.Max(0, (int)System.Math.Floor(adminEntityPickerScrollOffset / tileStep) - 1);
+            int visibleRowCount = (int)System.Math.Ceiling(listHeight / tileStep) + 2;
             int firstIndex = firstVisibleRow * columns;
             int lastIndex = System.Math.Min(catalog.Count, (firstVisibleRow + visibleRowCount) * columns);
 
@@ -2466,51 +2452,27 @@ namespace SwixyQuestBook.Gui
             {
                 int col = i % columns;
                 int row = i / columns;
-                double cellX = listLeft + (col * (tileSize + tileGap));
-                double cellY = listTop + (row * (tileSize + tileGap)) - adminEntityPickerScrollOffset;
+                double cellX = listLeft + (col * tileStep);
+                double cellY = listTop + (row * tileStep) - adminEntityPickerScrollOffset;
                 if (cellY + tileSize < listTop || cellY > listTop + listHeight)
                     continue;
 
                 LayoutRect tileRect = new(cellX, cellY, tileSize, tileSize);
-                // AssignCode = journal:piece for lore, or item code for normal catalog.
                 pickerSlots.Add((catalog[i].Slot, tileRect, catalog[i].Label, catalog[i].Code));
 
-                // Static cell chrome only — hover is drawn in GL each frame (no recompose).
-                FillRoundedRectangle(
-                    ctx,
-                    tileRect.X,
-                    tileRect.Y,
-                    tileRect.Width,
-                    tileRect.Height,
-                    4 * fitScale,
-                    [0.12, 0.14, 0.16, 0.96]);
-                StrokeRoundedRectangle(
-                    ctx,
-                    tileRect.X,
-                    tileRect.Y,
-                    tileRect.Width,
-                    tileRect.Height,
-                    4 * fitScale,
-                    1.0 * fitScale,
-                    QuestbookGuiLayout.AdminTileBorderColor);
+                FillRoundedRectangle(ctx, tileRect.X, tileRect.Y, tileRect.Width, tileRect.Height, tileR,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, tileRect.X, tileRect.Y, tileRect.Width, tileRect.Height, tileR,
+                    borderW, QuestbookGuiLayout.AdminTileBorderColor);
             }
 
             ctx.Restore();
-
-            if (maxScroll > 0)
-            {
-                double trackW = 6 * fitScale;
-                double trackX = listLeft + listWidth - trackW + (4 * fitScale);
-                double thumbH = System.Math.Max(16 * fitScale, listHeight * (listHeight / contentH));
-                double thumbY = listTop + ((adminEntityPickerScrollOffset / maxScroll) * (listHeight - thumbH));
-                FillRoundedRectangle(ctx, trackX, listTop, trackW, listHeight, 3 * fitScale, [0.22, 0.24, 0.27, 0.7]);
-                FillRoundedRectangle(ctx, trackX, thumbY, trackW, thumbH, 3 * fitScale,
-                    QuestbookGuiLayout.AdminTileBorderColor);
-            }
+            DrawQuestEditPickerScrollbar(
+                ctx, unit, panel, listTop, listHeight, contentH, maxScroll, adminEntityPickerScrollOffset);
 
             if (catalog.Count == 0)
             {
-                CairoFont emptyFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
+                CairoFont emptyFont = CreateMontserratFont(12 * unit, QuestbookGuiLayout.AdminPanelPlaceholderColor);
                 DrawCenteredText(
                     ctx,
                     emptyFont,
@@ -2520,7 +2482,104 @@ namespace SwixyQuestBook.Gui
 
             adminItemPickerSlots = pickerSlots.ToArray();
             adminEntityPickerSlots = [];
-            // Hover is tracked live in UpdateQuestEditModalHover / OnRenderGUI — don't stomp it here.
+        }
+
+        /// <summary>
+        /// Group 1172 chrome: 939×221 panel, search dual-bar + CANCEL, shared by item/entity pickers.
+        /// </summary>
+        private LayoutRect BeginQuestEditPickerChrome(
+            Cairo.Context ctx,
+            double unit,
+            LayoutRect modalArea,
+            string searchPlaceholder)
+        {
+            double padX = QuestbookGuiLayout.QuestEditModalPadX * unit;
+            double panelW = QuestbookGuiLayout.QuestEditModalContentWidth * unit;
+            double panelH = QuestbookGuiLayout.QuestEditModalPickerPanelHeight * unit;
+            double panelX = modalArea.X + padX;
+            // Pin to design Y when modal is full-size; clamp if modal is shorter.
+            double panelY = modalArea.Y + QuestbookGuiLayout.QuestEditModalPickerPanelY * unit;
+            if (panelY + panelH > modalArea.Y + modalArea.Height - 8 * unit)
+                panelY = modalArea.Y + modalArea.Height - panelH - 8 * unit;
+
+            adminItemPickerPanelHitArea = new LayoutRect(panelX, panelY, panelW, panelH);
+
+            double radius = QuestbookGuiLayout.QuestEditModalChipRadius * unit;
+            double borderW = System.Math.Max(1.0, unit);
+            FillRoundedRectangle(ctx, panelX, panelY, panelW, panelH, radius,
+                QuestbookGuiLayout.AdminTileBackgroundColor);
+            StrokeRoundedRectangle(ctx, panelX, panelY, panelW, panelH, radius, borderW,
+                QuestbookGuiLayout.AdminTileBorderColor);
+
+            // Search field (left dual-stadium style / Group 1156) + CANCEL chip on the right.
+            double searchX = panelX + QuestbookGuiLayout.QuestEditModalPickerSearchInsetX * unit;
+            double searchY = panelY + QuestbookGuiLayout.QuestEditModalPickerSearchInsetY * unit;
+            double searchW = QuestbookGuiLayout.QuestEditModalPickerSearchWidth * unit;
+            double searchH = QuestbookGuiLayout.QuestEditModalPickerSearchHeight * unit;
+            double cancelX = panelX + QuestbookGuiLayout.QuestEditModalPickerCancelX * unit;
+            double cancelW = QuestbookGuiLayout.QuestEditModalPickerCancelWidth * unit;
+
+            adminEntityPickerSearchHitArea = new LayoutRect(searchX, searchY, searchW, searchH);
+            adminItemPickerCancelHitArea = new LayoutRect(cancelX, searchY, cancelW, searchH);
+
+            // Search field — Cairo only (texture stretched and "swam" when scaled).
+            DrawQuestEditTextField(
+                ctx, searchX, searchY, searchW, searchH, radius, borderW,
+                adminEntityPickerSearchFocused);
+
+            CairoFont searchFont = CreateMontserratFont(12 * unit,
+                string.IsNullOrEmpty(adminEntityPickerSearchText) && !adminEntityPickerSearchFocused
+                    ? QuestbookGuiLayout.AdminPanelPlaceholderColor
+                    : QuestbookGuiLayout.AdminModalChipTextColor);
+            string searchDisplay = string.IsNullOrEmpty(adminEntityPickerSearchText) && !adminEntityPickerSearchFocused
+                ? searchPlaceholder
+                : adminEntityPickerSearchText;
+            double textPad = 8 * unit;
+            DrawText(ctx, searchFont, searchDisplay, searchX + textPad,
+                GetTextBaselineY(searchFont, searchY, searchH, searchH));
+            if (adminEntityPickerSearchFocused)
+            {
+                DrawTextCaret(ctx, searchFont, adminEntityPickerSearchText,
+                    searchX + textPad, searchY, searchH, QuestbookGuiLayout.AdminModalChipTextColor);
+            }
+
+            // CANCEL button — rounded chip, muted label (#AEAEAE in SVG).
+            FillRoundedRectangle(ctx, cancelX, searchY, cancelW, searchH, radius,
+                QuestbookGuiLayout.AdminTileBackgroundColor);
+            StrokeRoundedRectangle(ctx, cancelX, searchY, cancelW, searchH, radius, borderW,
+                QuestbookGuiLayout.AdminTileBorderColor);
+            CairoFont cancelFont = CreateMontserratFont(12 * unit, [0xAE / 255.0, 0xAE / 255.0, 0xAE / 255.0, 1.0]);
+            DrawCenteredText(ctx, cancelFont, QuestbookLang.GetLocal("admin.quest_edit.picker_cancel"),
+                adminItemPickerCancelHitArea);
+
+            return adminItemPickerPanelHitArea;
+        }
+
+        private void DrawQuestEditPickerScrollbar(
+            Cairo.Context ctx,
+            double unit,
+            LayoutRect panel,
+            double listTop,
+            double listHeight,
+            double contentH,
+            double maxScroll,
+            double scrollOffset)
+        {
+            if (maxScroll <= 0)
+                return;
+
+            double trackW = QuestbookGuiLayout.QuestEditModalPickerScrollbarWidth * unit;
+            // Scale scrollbar X with panel width (design: 929.5 on 939-wide panel).
+            double trackX = panel.X
+                + (QuestbookGuiLayout.QuestEditModalPickerScrollbarX
+                    / QuestbookGuiLayout.QuestEditModalContentWidth) * panel.Width;
+            double thumbH = System.Math.Max(18 * unit, listHeight * (listHeight / contentH));
+            double thumbTravel = System.Math.Max(1, listHeight - thumbH);
+            double thumbY = listTop + ((scrollOffset / maxScroll) * thumbTravel);
+            FillRoundedRectangle(ctx, trackX, listTop, trackW, listHeight, trackW * 0.5,
+                QuestbookGuiLayout.AdminTileBorderColor);
+            FillRoundedRectangle(ctx, trackX, thumbY, trackW, thumbH, trackW * 0.5,
+                [0x74 / 255.0, 0x74 / 255.0, 0x74 / 255.0, 1.0]);
         }
 
         /// <summary>
@@ -2687,99 +2746,54 @@ namespace SwixyQuestBook.Gui
         /// </summary>
         private void DrawAdminEntityPicker(Cairo.Context ctx, double fitScale, LayoutRect modalArea)
         {
-            double padding = QuestbookGuiLayout.QuestEditModalPadX * fitScale;
-            double contentPadTop = 18 * fitScale;
-            double panelHeight = System.Math.Min(
-                modalArea.Height * 0.62,
-                280 * fitScale);
-            double panelWidth = modalArea.Width - (padding * 2);
-            double panelX = modalArea.X + padding;
-            double panelY = modalArea.Y + modalArea.Height - panelHeight - (44 * fitScale);
-            adminItemPickerPanelHitArea = new LayoutRect(panelX, panelY, panelWidth, panelHeight);
+            // Same Group 1172 chrome as item picker; creature models in the grid.
+            double unit = modalArea.Width / QuestbookGuiLayout.QuestEditModalWidth;
+            LayoutRect panel = BeginQuestEditPickerChrome(
+                ctx,
+                unit,
+                modalArea,
+                QuestbookLang.GetLocal("admin.quest_edit.entity_search_placeholder"));
 
-            FillRoundedRectangle(ctx, panelX, panelY, panelWidth, panelHeight, 8 * fitScale,
-                QuestbookGuiLayout.AdminTileBackgroundColor);
-            StrokeRoundedRectangle(ctx, panelX, panelY, panelWidth, panelHeight, 8 * fitScale, 1.5 * fitScale,
-                QuestbookGuiLayout.AdminSaveButtonColor);
+            double tileSize = QuestbookGuiLayout.QuestEditModalPickerSlotSize * unit;
+            double tileStep = QuestbookGuiLayout.QuestEditModalPickerSlotStep * unit;
+            double tileR = QuestbookGuiLayout.QuestEditModalChipRadius * unit;
+            double borderW = System.Math.Max(1.0, unit);
+            int columns = QuestbookGuiLayout.QuestEditModalPickerColumns;
 
-            CairoFont titleFont = CreateMontserratFont(13 * fitScale, QuestbookGuiLayout.TopMenuTitleColor);
-            DrawText(ctx, titleFont, QuestbookLang.GetLocal("admin.quest_edit.entity_picker_title"),
-                panelX + (12 * fitScale), panelY + contentPadTop);
-
-            double cancelWidth = 88 * fitScale;
-            double cancelHeight = 28 * fitScale;
-            adminItemPickerCancelHitArea = new LayoutRect(
-                panelX + panelWidth - cancelWidth - (10 * fitScale),
-                panelY + contentPadTop - (4 * fitScale),
-                cancelWidth,
-                cancelHeight);
-            CairoFont cancelFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminPanelTextColor);
-            DrawCenteredText(ctx, cancelFont, QuestbookLang.GetLocal("admin.quest_edit.picker_cancel"),
-                adminItemPickerCancelHitArea);
-
-            // Search field under title.
-            double searchH = 28 * fitScale;
-            double searchY = panelY + contentPadTop + (26 * fitScale);
-            double searchX = panelX + (12 * fitScale);
-            double searchW = panelWidth - cancelWidth - (36 * fitScale);
-            adminEntityPickerSearchHitArea = new LayoutRect(searchX, searchY, searchW, searchH);
-            FillRoundedRectangle(ctx, searchX, searchY, searchW, searchH, 4 * fitScale,
-                [0.10, 0.11, 0.13, 0.95]);
-            StrokeRoundedRectangle(
-                ctx, searchX, searchY, searchW, searchH, 4 * fitScale,
-                adminEntityPickerSearchFocused ? 1.6 * fitScale : 1.1 * fitScale,
-                adminEntityPickerSearchFocused
-                    ? QuestbookGuiLayout.AdminSaveButtonColor
-                    : QuestbookGuiLayout.AdminTileBorderColor);
-
-            CairoFont searchFont = CreateMontserratFont(12 * fitScale,
-                string.IsNullOrEmpty(adminEntityPickerSearchText) && !adminEntityPickerSearchFocused
-                    ? QuestbookGuiLayout.AdminPanelPlaceholderColor
-                    : QuestbookGuiLayout.AdminPanelTextColor);
-            string searchDisplay = string.IsNullOrEmpty(adminEntityPickerSearchText) && !adminEntityPickerSearchFocused
-                ? QuestbookLang.GetLocal("admin.quest_edit.entity_search_placeholder")
-                : adminEntityPickerSearchText;
-            DrawText(ctx, searchFont, searchDisplay, searchX + (8 * fitScale),
-                GetTextBaselineY(searchFont, searchY, searchH, searchH));
-            if (adminEntityPickerSearchFocused)
-            {
-                DrawTextCaret(ctx, searchFont, adminEntityPickerSearchText,
-                    searchX + (8 * fitScale), searchY, searchH, QuestbookGuiLayout.AdminPanelTextColor);
-            }
-
-            // Square tiles — name only as hover tooltip (drawn after 3D models).
-            double tileSize = 48 * fitScale;
-            double tileGap = 6 * fitScale;
-            double listTop = searchY + searchH + (10 * fitScale);
-            double listBottom = panelY + panelHeight - (10 * fitScale);
-            double listHeight = System.Math.Max(tileSize, listBottom - listTop);
-            double listLeft = panelX + (12 * fitScale);
-            double listWidth = panelWidth - (28 * fitScale);
+            double listLeft = panel.X + QuestbookGuiLayout.QuestEditModalPickerSearchInsetX * unit;
+            double listTop = panel.Y + QuestbookGuiLayout.QuestEditModalPickerGridY * unit;
+            double listWidth = columns * tileStep - QuestbookGuiLayout.QuestEditModalPickerSlotGap * unit;
+            double listHeight = System.Math.Max(tileSize, panel.Y + panel.Height - listTop - 4 * unit);
             adminEntityPickerViewportLocal = new LayoutRect(listLeft, listTop, listWidth, listHeight);
 
-            int columns = System.Math.Max(1, (int)System.Math.Floor((listWidth + tileGap) / (tileSize + tileGap)));
             var creatures = GetKillPickerCreatureEntries(adminEntityPickerSearchText);
-            int rows = System.Math.Max(1, (int)System.Math.Ceiling(creatures.Count / (double)System.Math.Max(1, columns)));
-            double contentH = (rows * tileSize) + (System.Math.Max(0, rows - 1) * tileGap);
+            int rows = System.Math.Max(1, (int)System.Math.Ceiling(creatures.Count / (double)columns));
+            double contentH = rows * tileStep;
             double maxScroll = System.Math.Max(0, contentH - listHeight);
             adminEntityPickerScrollOffset = System.Math.Clamp(adminEntityPickerScrollOffset, 0, maxScroll);
+
+            int firstVisibleRow = System.Math.Max(0, (int)System.Math.Floor(adminEntityPickerScrollOffset / tileStep) - 1);
+            int visibleRowCount = (int)System.Math.Ceiling(listHeight / tileStep) + 2;
+            int firstIndex = firstVisibleRow * columns;
+            int lastIndex = System.Math.Min(creatures.Count, (firstVisibleRow + visibleRowCount) * columns);
 
             ctx.Save();
             ctx.Rectangle(listLeft, listTop, listWidth, listHeight);
             ctx.Clip();
 
-            var slots = new List<(string EntityCode, string Label, DummySlot Slot, LayoutRect HitArea)>(creatures.Count);
+            var slots = new List<(string EntityCode, string Label, DummySlot Slot, LayoutRect HitArea)>(
+                System.Math.Max(16, lastIndex - firstIndex));
             string? hoverLabel = null;
             LayoutRect hoverRect = new(0, 0, 0, 0);
             int mouseX = capi.Input.MouseX;
             int mouseY = capi.Input.MouseY;
 
-            for (int i = 0; i < creatures.Count; i++)
+            for (int i = firstIndex; i < lastIndex; i++)
             {
                 int col = i % columns;
                 int row = i / columns;
-                double cellX = listLeft + (col * (tileSize + tileGap));
-                double cellY = listTop + (row * (tileSize + tileGap)) - adminEntityPickerScrollOffset;
+                double cellX = listLeft + (col * tileStep);
+                double cellY = listTop + (row * tileStep) - adminEntityPickerScrollOffset;
                 if (cellY + tileSize < listTop || cellY > listTop + listHeight)
                     continue;
 
@@ -2794,60 +2808,24 @@ namespace SwixyQuestBook.Gui
                     hoverRect = tileRect;
                 }
 
-                // Hover highlight — brighter fill + green glow stroke.
-                FillRoundedRectangle(
-                    ctx,
-                    tileRect.X,
-                    tileRect.Y,
-                    tileRect.Width,
-                    tileRect.Height,
-                    4 * fitScale,
+                FillRoundedRectangle(ctx, tileRect.X, tileRect.Y, tileRect.Width, tileRect.Height, tileR,
                     hovered
                         ? [0.18, 0.36, 0.20, 0.98]
-                        : [0.12, 0.14, 0.16, 0.96]);
-                StrokeRoundedRectangle(
-                    ctx,
-                    tileRect.X,
-                    tileRect.Y,
-                    tileRect.Width,
-                    tileRect.Height,
-                    4 * fitScale,
-                    hovered ? 2.4 * fitScale : 1.0 * fitScale,
+                        : QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, tileRect.X, tileRect.Y, tileRect.Width, tileRect.Height, tileR,
+                    hovered ? borderW * 1.8 : borderW,
                     hovered
-                        ? QuestbookGuiLayout.AdminSaveButtonColor
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
                         : QuestbookGuiLayout.AdminTileBorderColor);
-
-                // Extra outer glow ring on hover so the cell is obvious under the 3D model.
-                if (hovered)
-                {
-                    StrokeRoundedRectangle(
-                        ctx,
-                        tileRect.X - (1.5 * fitScale),
-                        tileRect.Y - (1.5 * fitScale),
-                        tileRect.Width + (3 * fitScale),
-                        tileRect.Height + (3 * fitScale),
-                        5 * fitScale,
-                        1.2 * fitScale,
-                        [0.35, 0.95, 0.40, 0.55]);
-                }
             }
 
             ctx.Restore();
-
-            if (maxScroll > 0)
-            {
-                double trackW = 6 * fitScale;
-                double trackX = listLeft + listWidth - trackW + (4 * fitScale);
-                double thumbH = System.Math.Max(16 * fitScale, listHeight * (listHeight / contentH));
-                double thumbY = listTop + ((adminEntityPickerScrollOffset / maxScroll) * (listHeight - thumbH));
-                FillRoundedRectangle(ctx, trackX, listTop, trackW, listHeight, 3 * fitScale, [0.22, 0.24, 0.27, 0.7]);
-                FillRoundedRectangle(ctx, trackX, thumbY, trackW, thumbH, 3 * fitScale,
-                    QuestbookGuiLayout.AdminTileBorderColor);
-            }
+            DrawQuestEditPickerScrollbar(
+                ctx, unit, panel, listTop, listHeight, contentH, maxScroll, adminEntityPickerScrollOffset);
 
             if (creatures.Count == 0)
             {
-                CairoFont emptyFont = CreateMontserratFont(12 * fitScale, QuestbookGuiLayout.AdminPanelPlaceholderColor);
+                CairoFont emptyFont = CreateMontserratFont(12 * unit, QuestbookGuiLayout.AdminPanelPlaceholderColor);
                 DrawCenteredText(
                     ctx,
                     emptyFont,
@@ -2950,59 +2928,548 @@ namespace SwixyQuestBook.Gui
             return string.IsNullOrEmpty(loc.Domain) ? path : $"{loc.Domain}:{path}";
         }
 
-        private void DrawQuestEditModalTypeSelector(Cairo.Context ctx, double fitScale, double panelX, double panelY, double panelWidth)
+        /// <summary>
+        /// Top-of-modal flag legend from Group 1169 (y=70, 18×18 chips at 409 / 500 / 581).
+        /// Soft translucent chips + caption — not the solid row toggles.
+        /// </summary>
+        private void DrawQuestEditTopLegend(Cairo.Context ctx, double unit, double modalX, double modalY)
         {
-            double typeHeight = QuestbookGuiLayout.QuestEditModalTypeBarHeight * fitScale;
-            double gap = QuestbookGuiLayout.SidebarAdminToolbarButtonGap * fitScale;
-            // Four types: Start | Quest | Checkpoint | Kill
-            double typeButtonWidth = (panelWidth - (gap * 3)) / 4;
+            double y = modalY + QuestbookGuiLayout.QuestEditModalLegendY * unit;
+            double icon = QuestbookGuiLayout.QuestEditModalLegendIconSize * unit;
+            double labelGap = QuestbookGuiLayout.QuestEditModalLegendLabelGap * unit;
+            double radius = 4 * unit;
+            // Compact captions so they never collide with the next chip.
+            CairoFont font = CreateMontserratFont(11 * unit, QuestbookGuiLayout.AdminTileIdleContentColor);
+
+            // Fixed slots with max text width = gap to next chip (no overlap).
+            void Chip(double designX, double nextDesignX, AdminFlagIcon flag, string caption)
+            {
+                double x = modalX + designX * unit;
+                double[] accent = GetAdminFlagAccent(flag);
+                FillRoundedRectangle(ctx, x, y, icon, icon, radius,
+                    [accent[0], accent[1], accent[2], 0.16]);
+                StrokeRoundedRectangle(ctx, x, y, icon, icon, radius,
+                    System.Math.Max(1.0, unit),
+                    [accent[0], accent[1], accent[2], 0.32]);
+                double pad = icon * 0.14;
+                DrawAdminFlagGlyph(ctx, x + pad, y + pad, icon - (pad * 2), flag,
+                    [accent[0], accent[1], accent[2], 0.7]);
+
+                double textX = x + icon + labelGap;
+                double maxTextW = System.Math.Max(8 * unit, (nextDesignX - designX) * unit - icon - labelGap - 4 * unit);
+                string draw = caption;
+                while (draw.Length > 1 && MeasureTextWidth(font, draw) > maxTextW)
+                    draw = draw[..^1];
+                if (draw.Length < caption.Length && draw.Length > 1)
+                    draw = draw[..^1] + "…";
+                DrawText(ctx, font, draw, textX, GetTextBaselineY(font, y, icon, icon));
+            }
+
+            // Group 896 legend (left→right): Create · Craft · All Types
+            //   purple layers → take · cyan paperclip → craft · yellow tile → all variants
+            Chip(QuestbookGuiLayout.QuestEditModalLegendTakeX,
+                QuestbookGuiLayout.QuestEditModalLegendCraftX,
+                AdminFlagIcon.Take,
+                QuestbookLang.GetLocal("admin.quest_edit.flag.take"));
+            Chip(QuestbookGuiLayout.QuestEditModalLegendCraftX,
+                QuestbookGuiLayout.QuestEditModalLegendVariantsX,
+                AdminFlagIcon.Craft,
+                QuestbookLang.GetLocal("admin.quest_edit.flag.craft"));
+            Chip(QuestbookGuiLayout.QuestEditModalLegendVariantsX,
+                QuestbookGuiLayout.QuestEditModalLegendVariantsX + 120,
+                AdminFlagIcon.AllVariants,
+                QuestbookLang.GetLocal("admin.quest_edit.flag.variants"));
+        }
+
+        /// <summary>
+        /// Vertical divider strip between GOALS and AWARDS — Line 31.png (7×143).
+        /// Placed in the gap between the two list panels.
+        /// </summary>
+        private void DrawQuestEditWaveDivider(Cairo.Context ctx, double unit, double modalX, double listTop, double listHeight)
+        {
+            double designX = QuestbookGuiLayout.QuestEditModalWaveDividerX;
+            double texW = QuestbookGuiLayout.QuestEditModalWaveDividerWidth * unit;
+            // Texture is 143px tall; list is 111 — stretch to list height (or slightly beyond like SVG).
+            double texH = listHeight;
+            double x = modalX + designX * unit - texW / 2;
+            double y = listTop;
+
+            ImageSurface? strip = GetTextureSurface(QuestbookGuiLayout.QuestEditWaveDividerTexture);
+            if (strip != null)
+            {
+                DrawImageSurface(ctx, strip, x, y, texW, texH);
+                return;
+            }
+
+            // Fallback if texture missing.
+            FillRoundedRectangle(
+                ctx, x, y, texW, texH, texW * 0.5,
+                QuestbookGuiLayout.AdminTileBorderColor);
+        }
+
+        /// <summary>
+        /// Text field: dark fill + exact Group 767.svg border paths drawn in Cairo.
+        /// </summary>
+        private void DrawQuestEditTextField(
+            Cairo.Context ctx,
+            double x,
+            double y,
+            double width,
+            double height,
+            double radius,
+            double borderWidth,
+            bool focused)
+        {
+            if (width <= 0 || height <= 0)
+                return;
+
+            double r = System.Math.Min(radius, System.Math.Min(width, height) / 2);
+            FillRoundedRectangle(ctx, x, y, width, height, r, QuestbookGuiLayout.AdminTileBackgroundColor);
+            DrawGroup767BorderCairo(ctx, x, y, width, height);
+
+            if (focused)
+            {
+                StrokeRoundedRectangle(ctx, x, y, width, height, r, System.Math.Max(1.5, borderWidth * 1.5),
+                    QuestbookGuiLayout.AdminTileActiveContentColor);
+            }
+        }
+
+        /// <summary>
+        /// Dual name+qty: solid halves + Group 767 outer rim + straight join.
+        /// </summary>
+        private void DrawQuestEditNameQtyFrame(
+            Cairo.Context ctx,
+            double nameOuterX,
+            double joinX,
+            double qtyRight,
+            double y,
+            double height,
+            double radius,
+            double[] fill,
+            double[] border,
+            double borderWidth,
+            bool nameFocused,
+            bool qtyFocused)
+        {
+            if (qtyRight <= nameOuterX || height <= 0)
+                return;
+
+            double r = System.Math.Min(radius, height / 2);
+            double width = qtyRight - nameOuterX;
+
+            ctx.NewPath();
+            ctx.MoveTo(joinX, y);
+            ctx.LineTo(nameOuterX + r, y);
+            ctx.ArcNegative(nameOuterX + r, y + r, r, -System.Math.PI / 2, System.Math.PI);
+            ctx.LineTo(nameOuterX, y + height - r);
+            ctx.ArcNegative(nameOuterX + r, y + height - r, r, System.Math.PI, System.Math.PI / 2);
+            ctx.LineTo(joinX, y + height);
+            ctx.ClosePath();
+            ctx.SetSourceRGBA(fill[0], fill[1], fill[2], fill[3]);
+            ctx.Fill();
+
+            ctx.NewPath();
+            ctx.MoveTo(joinX, y);
+            ctx.LineTo(qtyRight - r, y);
+            ctx.Arc(qtyRight - r, y + r, r, -System.Math.PI / 2, 0);
+            ctx.LineTo(qtyRight, y + height - r);
+            ctx.Arc(qtyRight - r, y + height - r, r, 0, System.Math.PI / 2);
+            ctx.LineTo(joinX, y + height);
+            ctx.ClosePath();
+            ctx.SetSourceRGBA(fill[0], fill[1], fill[2], fill[3]);
+            ctx.Fill();
+
+            DrawGroup767BorderCairo(ctx, nameOuterX, y, width, height);
+
+            ctx.SetSourceRGBA(border[0], border[1], border[2], border[3]);
+            ctx.LineWidth = System.Math.Max(1.0, borderWidth);
+            ctx.NewPath();
+            ctx.MoveTo(joinX, y + 1);
+            ctx.LineTo(joinX, y + height - 1);
+            ctx.Stroke();
+
+            if (nameFocused || qtyFocused)
+            {
+                double fx = nameFocused ? nameOuterX : joinX;
+                double fw = nameFocused ? (joinX - nameOuterX) : (qtyRight - joinX);
+                StrokeRoundedRectangle(ctx, fx, y, fw, height, r, System.Math.Max(1.5, borderWidth * 1.5),
+                    QuestbookGuiLayout.AdminTileActiveContentColor);
+            }
+        }
+
+        /// <summary>
+        /// Draw exact Group 767.svg border polygons (#2D2D2D).
+        /// Top/bottom: 9-slice stretch (length only) so thickness stays correct.
+        /// Left/right: tile the side wave instead of stretching — tall Start fields keep waviness.
+        /// <paramref name="thicknessMul"/> &gt; 1 makes the rim bolder (branch lang frame, etc.).
+        /// </summary>
+        private void DrawGroup767BorderCairo(
+            Cairo.Context ctx,
+            double x,
+            double y,
+            double width,
+            double height,
+            double thicknessMul = 1.0)
+        {
+            EnsureGroup767BorderPolys();
+            if (group767BorderPolys == null || group767BorderPolys.Length == 0)
+            {
+                StrokeRoundedRectangle(ctx, x, y, width, height,
+                    QuestbookGuiLayout.QuestEditModalChipRadius,
+                    System.Math.Max(1.5, width * 0.004) * System.Math.Max(1.0, thicknessMul),
+                    QuestbookGuiLayout.AdminTileBorderColor);
+                return;
+            }
+
+            double srcW = group767BorderSrcW;
+            double srcH = group767BorderSrcH;
+            // Corner pocket in design space (rounded ends of the stadium).
+            double cornerSrc = System.Math.Min(28.0, System.Math.Min(srcW, srcH) * 0.35);
+            // Thickness scale never uses the long axis alone (avoids fat top/bottom on tall fields).
+            double thickScale = System.Math.Min(width / srcW, height / srcH) * System.Math.Max(0.5, thicknessMul);
+            // Keep corners from eating the whole frame.
+            double maxThick = System.Math.Min(width, height) / (2.0 * cornerSrc + 4.0);
+            thickScale = System.Math.Min(thickScale, maxThick);
+            if (thickScale <= 1e-6)
+                return;
+
+            double cDx = System.Math.Min(cornerSrc * thickScale, width * 0.45);
+            double cDy = System.Math.Min(cornerSrc * thickScale, height * 0.45);
+            double midSrcW = System.Math.Max(1.0, srcW - (cornerSrc * 2));
+            double midSrcH = System.Math.Max(1.0, srcH - (cornerSrc * 2));
+            double midDstW = System.Math.Max(0.5, width - (cDx * 2));
+            double midDstH = System.Math.Max(0.5, height - (cDy * 2));
+
+            // One natural-height copy of the side wave (preserves frequency).
+            double sideTileH = midSrcH * thickScale;
+            int sideTiles = System.Math.Max(1, (int)System.Math.Ceiling(midDstH / sideTileH));
+            // Slight overlap so seams between tiles don't gap.
+            double sideTileStep = midDstH / sideTiles;
+
+            // Horizontal: stretch middle, keep corner thickness.
+            double MapX(double px)
+            {
+                if (px <= cornerSrc)
+                    return (px / cornerSrc) * cDx;
+                if (px >= srcW - cornerSrc)
+                    return width - cDx + ((px - (srcW - cornerSrc)) / cornerSrc) * cDx;
+                return cDx + ((px - cornerSrc) / midSrcW) * midDstW;
+            }
+
+            // Vertical for top/bottom bands only (no tall-field stretch of sides).
+            double MapYCap(double py)
+            {
+                if (py <= cornerSrc)
+                    return (py / cornerSrc) * cDy;
+                if (py >= srcH - cornerSrc)
+                    return height - cDy + ((py - (srcH - cornerSrc)) / cornerSrc) * cDy;
+                // Mid of top/bottom paths rarely appears; keep in upper band.
+                return cDy + ((py - cornerSrc) / midSrcH) * System.Math.Min(midDstH, sideTileH);
+            }
+
+            // Vertical for one side-tile copy (tile index 0..sideTiles-1).
+            double MapYSide(double py, int tile)
+            {
+                if (py <= cornerSrc)
+                    return (py / cornerSrc) * cDy; // only meaningful on first tile
+                if (py >= srcH - cornerSrc)
+                    return height - cDy + ((py - (srcH - cornerSrc)) / cornerSrc) * cDy;
+                double local = (py - cornerSrc) / midSrcH; // 0..1 within source mid
+                return cDy + (tile * sideTileStep) + (local * sideTileStep);
+            }
+
+            // Classify poly by centroid: top / bottom / left / right.
+            static int Classify(float[] poly, double sw, double sh, double corner)
+            {
+                double sx = 0, sy = 0;
+                int n = poly.Length / 2;
+                for (int i = 0; i < poly.Length; i += 2)
+                {
+                    sx += poly[i];
+                    sy += poly[i + 1];
+                }
+
+                sx /= n;
+                sy /= n;
+                if (sy < corner)
+                    return 0; // top
+                if (sy > sh - corner)
+                    return 1; // bottom
+                if (sx < corner)
+                    return 2; // left
+                if (sx > sw - corner)
+                    return 3; // right
+                // Fallback by nearer edge.
+                double dt = sy, db = sh - sy, dl = sx, dr = sw - sx;
+                double m = System.Math.Min(System.Math.Min(dt, db), System.Math.Min(dl, dr));
+                if (m == dt) return 0;
+                if (m == db) return 1;
+                if (m == dl) return 2;
+                return 3;
+            }
+
+            ctx.SetSourceRGBA(0x2D / 255.0, 0x2D / 255.0, 0x2D / 255.0, 1.0);
+
+            void FillPolyTopBottom(float[] poly)
+            {
+                ctx.NewPath();
+                ctx.MoveTo(x + MapX(poly[0]), y + MapYCap(poly[1]));
+                for (int i = 2; i < poly.Length; i += 2)
+                    ctx.LineTo(x + MapX(poly[i]), y + MapYCap(poly[i + 1]));
+                ctx.ClosePath();
+                ctx.Fill();
+            }
+
+            void FillPolySide(float[] poly, int tile)
+            {
+                ctx.NewPath();
+                ctx.MoveTo(x + MapX(poly[0]), y + MapYSide(poly[1], tile));
+                for (int i = 2; i < poly.Length; i += 2)
+                    ctx.LineTo(x + MapX(poly[i]), y + MapYSide(poly[i + 1], tile));
+                ctx.ClosePath();
+                ctx.Fill();
+            }
+
+            // Clip side tiles to the vertical mid band so tiles don't spill over corners.
+            for (int p = 0; p < group767BorderPolys.Length; p++)
+            {
+                float[] poly = group767BorderPolys[p];
+                if (poly.Length < 6)
+                    continue;
+
+                int part = Classify(poly, srcW, srcH, cornerSrc);
+                if (part is 0 or 1)
+                {
+                    FillPolyTopBottom(poly);
+                    continue;
+                }
+
+                // Left / right: tile wave along height.
+                ctx.Save();
+                ctx.Rectangle(x, y + cDy, width, midDstH);
+                ctx.Clip();
+                for (int tile = 0; tile < sideTiles; tile++)
+                    FillPolySide(poly, tile);
+                ctx.Restore();
+            }
+        }
+
+        private void EnsureGroup767BorderPolys()
+        {
+            if (group767BorderLoadAttempted)
+                return;
+            group767BorderLoadAttempted = true;
+
+            try
+            {
+                IAsset? asset = capi.Assets.TryGet(
+                    new AssetLocation("swixyquestbook", "textures/" + QuestbookGuiLayout.QuestEditTextFieldBorderPaths));
+                if (asset?.Data == null || asset.Data.Length < 16)
+                    return;
+
+                using MemoryStream ms = new(asset.Data);
+                using BinaryReader br = new(ms);
+                group767BorderSrcW = br.ReadSingle();
+                group767BorderSrcH = br.ReadSingle();
+                int count = br.ReadInt32();
+                if (count <= 0 || count > 20000)
+                    return;
+
+                float[][] polys = new float[count][];
+                for (int i = 0; i < count; i++)
+                {
+                    int n = br.ReadInt32();
+                    if (n < 3 || n > 64)
+                    {
+                        // Skip malformed entry: try to stay aligned if possible.
+                        if (n > 0 && n <= 64)
+                        {
+                            for (int k = 0; k < n * 2; k++)
+                                br.ReadSingle();
+                        }
+
+                        polys[i] = [];
+                        continue;
+                    }
+
+                    float[] pts = new float[n * 2];
+                    for (int k = 0; k < pts.Length; k++)
+                        pts[k] = br.ReadSingle();
+                    polys[i] = pts;
+                }
+
+                group767BorderPolys = polys;
+            }
+            catch
+            {
+                group767BorderPolys = null;
+            }
+        }
+
+
+        private void DrawQuestEditModalTypeSelector(Cairo.Context ctx, double unit, double panelX, double panelY, double panelWidth)
+        {
+            // Group 1169: 4× (231×39) chips, gap 5, text-only labels.
+            double typeHeight = QuestbookGuiLayout.QuestEditModalTypeBarHeight * unit;
+            double gap = QuestbookGuiLayout.QuestEditModalTypeButtonGap * unit;
+            double typeButtonWidth = QuestbookGuiLayout.QuestEditModalTypeButtonWidth * unit;
+            // Fall back to equal split if content width differs after scale clamp.
+            if (System.Math.Abs((typeButtonWidth * 4) + (gap * 3) - panelWidth) > 2 * unit)
+                typeButtonWidth = (panelWidth - (gap * 3)) / 4;
 
             adminTypeStartHitArea = new LayoutRect(panelX, panelY, typeButtonWidth, typeHeight);
             adminTypeQuestHitArea = new LayoutRect(panelX + typeButtonWidth + gap, panelY, typeButtonWidth, typeHeight);
             adminTypeCheckpointHitArea = new LayoutRect(panelX + (typeButtonWidth + gap) * 2, panelY, typeButtonWidth, typeHeight);
             adminTypeKillHitArea = new LayoutRect(panelX + (typeButtonWidth + gap) * 3, panelY, typeButtonWidth, typeHeight);
 
-            DrawAdminTileButton(
-                ctx,
-                fitScale,
-                adminTypeStartHitArea,
-                AdminToolbarIcon.Start,
-                adminData.EditedNodeType == QuestbookQuestNodeType.Start,
-                isAdminTypeStartHovered,
-                null,
+            void DrawType(LayoutRect area, QuestbookQuestNodeType type, bool hovered, string label)
+            {
+                bool active = adminData.EditedNodeType == type;
+                double radius = QuestbookGuiLayout.AdminTileCornerRadius * unit;
+                FillRoundedRectangle(ctx, area.X, area.Y, area.Width, area.Height, radius,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, area.X, area.Y, area.Width, area.Height, radius,
+                    System.Math.Max(1.0, unit),
+                    active || hovered
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
+                double[] color = active || hovered
+                    ? QuestbookGuiLayout.AdminTileActiveContentColor
+                    : QuestbookGuiLayout.AdminTileIdleContentColor;
+                CairoFont font = CreateMontserratFont(System.Math.Clamp(typeHeight * 0.38, 11 * unit, 15 * unit), color);
+                DrawCenteredText(ctx, font, label, area);
+            }
+
+            DrawType(adminTypeStartHitArea, QuestbookQuestNodeType.Start, isAdminTypeStartHovered,
                 GetAdminToolbarLabel(AdminToolbarIcon.Start));
-            DrawAdminTileButton(
-                ctx,
-                fitScale,
-                adminTypeQuestHitArea,
-                AdminToolbarIcon.Quest,
-                adminData.EditedNodeType == QuestbookQuestNodeType.Quest,
-                isAdminTypeQuestHovered,
-                null,
+            DrawType(adminTypeQuestHitArea, QuestbookQuestNodeType.Quest, isAdminTypeQuestHovered,
                 GetAdminToolbarLabel(AdminToolbarIcon.Quest));
-            DrawAdminTileButton(
-                ctx,
-                fitScale,
-                adminTypeCheckpointHitArea,
-                AdminToolbarIcon.Checkpoint,
-                adminData.EditedNodeType == QuestbookQuestNodeType.Checkpoint,
-                isAdminTypeCheckpointHovered,
-                null,
+            DrawType(adminTypeCheckpointHitArea, QuestbookQuestNodeType.Checkpoint, isAdminTypeCheckpointHovered,
                 GetAdminToolbarLabel(AdminToolbarIcon.Checkpoint));
-            DrawAdminTileButton(
-                ctx,
-                fitScale,
-                adminTypeKillHitArea,
-                AdminToolbarIcon.Kill,
-                adminData.EditedNodeType == QuestbookQuestNodeType.Kill,
-                isAdminTypeKillHovered,
-                null,
+            DrawType(adminTypeKillHitArea, QuestbookQuestNodeType.Kill, isAdminTypeKillHovered,
                 GetAdminToolbarLabel(AdminToolbarIcon.Kill));
+        }
+
+        /// <summary>
+        /// Under description: full-width equal chips Once | Cooldown | Instant
+        /// (+ minutes box flush-right when cooldown).
+        /// </summary>
+        private void DrawQuestEditRepeatRow(
+            Cairo.Context ctx,
+            double unit,
+            double panelX,
+            double rowY,
+            double panelWidth,
+            List<LayoutRect> hitAreas,
+            List<AdminFormFieldRef> fieldRefs)
+        {
+            double u = unit;
+            double rowH = QuestbookGuiLayout.QuestEditModalRepeatRowHeight * u;
+            double gap = 5 * u;
+            double borderW = System.Math.Max(1.0, u);
+            double radius = 5 * u;
+
+            CairoFont labelFont = CreateMontserratFont(11 * u, QuestbookGuiLayout.AdminTileIdleContentColor);
+            string label = QuestbookLang.GetLocal("admin.quest_edit.repeat");
+            double labelW = System.Math.Max(MeasureTextWidth(labelFont, label) + 6 * u, 56 * u);
+            DrawText(ctx, labelFont, label, panelX, GetTextBaselineY(labelFont, rowY, rowH, rowH));
+
+            string mode = QuestbookRepeatMode.Normalize(adminData.EditedRepeatMode);
+            bool isCooldown = string.Equals(mode, QuestbookRepeatMode.Cooldown, StringComparison.OrdinalIgnoreCase);
+
+            // Right cluster: [minutes box] + "min" label — only in cooldown mode.
+            string minLabelText = QuestbookLang.GetLocal("admin.quest_edit.repeat_minutes");
+            CairoFont minLabelFont = CreateMontserratFont(11 * u, QuestbookGuiLayout.AdminTileIdleContentColor);
+            double minsBoxW = 52 * u;
+            double minLabelW = isCooldown ? MeasureTextWidth(minLabelFont, minLabelText) : 0;
+            double rightClusterW = isCooldown ? minsBoxW + 4 * u + minLabelW : 0;
+
+            // Three equal chips fill everything between label and right cluster.
+            const int chipCount = 3;
+            double chipsLeft = panelX + labelW + gap;
+            double chipsRight = panelX + panelWidth - rightClusterW;
+            if (isCooldown)
+                chipsRight -= gap; // breathing room before minutes box
+
+            double chipAreaW = System.Math.Max(0, chipsRight - chipsLeft);
+            double chipW = (chipAreaW - gap * (chipCount - 1)) / chipCount;
+            chipW = System.Math.Max(chipW, 48 * u);
+
+            double x = chipsLeft;
+
+            void Chip(ref LayoutRect hit, string modeKey, string textKey)
+            {
+                hit = new LayoutRect(x, rowY, chipW, rowH);
+                bool active = string.Equals(mode, modeKey, StringComparison.OrdinalIgnoreCase);
+                FillRoundedRectangle(ctx, hit.X, hit.Y, hit.Width, hit.Height, radius,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, hit.X, hit.Y, hit.Width, hit.Height, radius,
+                    borderW,
+                    active
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
+                CairoFont font = CreateMontserratFont(
+                    System.Math.Clamp(rowH * 0.38, 10 * u, 13 * u),
+                    active
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileIdleContentColor);
+                DrawCenteredText(ctx, font, QuestbookLang.GetLocal(textKey), hit);
+                x += chipW + gap;
+            }
+
+            Chip(ref adminRepeatOnceHitArea, QuestbookRepeatMode.Once, "admin.quest_edit.repeat_once");
+            Chip(ref adminRepeatCooldownHitArea, QuestbookRepeatMode.Cooldown, "admin.quest_edit.repeat_cooldown");
+            Chip(ref adminRepeatInstantHitArea, QuestbookRepeatMode.Instant, "admin.quest_edit.repeat_instant");
+
+            if (isCooldown)
+            {
+                // Flush-right minutes input + unit label.
+                double minsX = panelX + panelWidth - rightClusterW;
+                adminRepeatHoursHitArea = new LayoutRect(minsX, rowY, minsBoxW, rowH);
+                bool focused = adminData.FocusedField.Kind == AdminFormFieldKind.CooldownMinutes;
+                FillRoundedRectangle(ctx, adminRepeatHoursHitArea.X, adminRepeatHoursHitArea.Y,
+                    adminRepeatHoursHitArea.Width, adminRepeatHoursHitArea.Height, radius,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, adminRepeatHoursHitArea.X, adminRepeatHoursHitArea.Y,
+                    adminRepeatHoursHitArea.Width, adminRepeatHoursHitArea.Height, radius,
+                    borderW,
+                    focused
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
+
+                AdminFormFieldRef minsField = new(AdminFormFieldKind.CooldownMinutes);
+                string minsText = adminData.GetFieldValue(minsField);
+                CairoFont minsFont = CreateMontserratFont(12 * u, QuestbookGuiLayout.AdminTileActiveContentColor);
+                double minsTextW = MeasureTextWidth(minsFont, minsText);
+                double minsTextX = adminRepeatHoursHitArea.X
+                    + ((adminRepeatHoursHitArea.Width - minsTextW) * 0.5);
+                DrawText(ctx, minsFont, minsText, minsTextX,
+                    GetTextBaselineY(minsFont, adminRepeatHoursHitArea.Y, adminRepeatHoursHitArea.Height, adminRepeatHoursHitArea.Height));
+                if (focused)
+                {
+                    DrawTextCaret(
+                        ctx, minsFont, minsText,
+                        minsTextX,
+                        adminRepeatHoursHitArea.Y, adminRepeatHoursHitArea.Height,
+                        QuestbookGuiLayout.AdminTileActiveContentColor);
+                }
+
+                hitAreas.Add(adminRepeatHoursHitArea);
+                fieldRefs.Add(minsField);
+
+                DrawText(ctx, minLabelFont, minLabelText,
+                    minsX + minsBoxW + 4 * u,
+                    GetTextBaselineY(minLabelFont, rowY, rowH, rowH));
+            }
+            else
+            {
+                adminRepeatHoursHitArea = new LayoutRect(0, 0, 0, 0);
+            }
         }
 
         private void DrawQuestEditScrollableItemList(
             Cairo.Context ctx,
-            double fitScale,
+            double unit,
             LayoutRect viewport,
             List<QuestbookAdminItemEntry> items,
             bool isGoals,
@@ -3011,36 +3478,66 @@ namespace SwixyQuestBook.Gui
             List<LayoutRect> hitAreas,
             List<AdminFormFieldRef> fieldRefs)
         {
-            double rowHeight = QuestbookGuiLayout.QuestEditModalRowHeight * fitScale;
-            double rowGap = QuestbookGuiLayout.QuestEditModalRowGap * fitScale;
-            double rowStep = rowHeight + rowGap;
-            double pickSize = QuestbookGuiLayout.QuestEditModalPickSlotSize * fitScale;
-            double flagSize = QuestbookGuiLayout.QuestEditModalMatchToggleSize * fitScale;
-            double numWidth = QuestbookGuiLayout.QuestEditModalNumInputWidth * fitScale;
-            double removeWidth = QuestbookGuiLayout.QuestEditModalRemoveButtonWidth * fitScale;
-            // Kill: no take/craft. Quest: take + craft.
+            // Design-unit → screen scale for this modal instance.
+            double u = unit;
+            double chip = QuestbookGuiLayout.QuestEditModalChipSize * u;
+            double chipR = QuestbookGuiLayout.QuestEditModalChipRadius * u;
+            double rowStep = (QuestbookGuiLayout.QuestEditModalRowHeight + QuestbookGuiLayout.QuestEditModalRowGap) * u;
+            double rowHeight = QuestbookGuiLayout.QuestEditModalRowHeight * u;
+            // First row inset inside panel (197.5 − 191.5 = 6).
+            double rowPadY = 6 * u;
+            double borderW = System.Math.Max(1.0, u);
+
+            // Group 1171 goals · 1171(1) awards · 1171(2) kill — different name width & chips.
             bool killGoalRows = isGoals && adminData.EditedNodeType == QuestbookQuestNodeType.Kill;
-            double takeSize = isGoals && !killGoalRows ? flagSize : 0;
-            double craftSize = isGoals && !killGoalRows ? flagSize : 0;
-            double innerGap = 3 * fitScale;
-            int gapCount = isGoals
-                ? (killGoalRows ? 4 : 6)
-                : 4;
-            // Leave a little horizontal pad so the last control does not sit on the edge.
-            double hPad = 4 * fitScale;
-            double nameWidth = System.Math.Max(
-                36 * fitScale,
-                viewport.Width - hPad - pickSize - takeSize - craftSize - flagSize - numWidth - removeWidth - (innerGap * gapCount));
+            bool showCraft = isGoals && !killGoalRows;
+            // Kill: paperclip (all types) + delete only. Awards: name/qty/delete only.
+            bool showVariants = isGoals;
+            // Take/consume only on quest goals (not kill, not awards).
+            bool showTake = isGoals && !killGoalRows;
+
+            double pickX = viewport.X + QuestbookGuiLayout.QuestEditModalChipPadX * u;
+            double nameOuterX = viewport.X + QuestbookGuiLayout.QuestEditModalNameFrameX * u;
+
+            double joinDesign;
+            double qtyRightDesign;
+            if (killGoalRows)
+            {
+                joinDesign = QuestbookGuiLayout.QuestEditModalKillNameJoinX;
+                qtyRightDesign = QuestbookGuiLayout.QuestEditModalKillQtyRightX;
+            }
+            else if (isGoals)
+            {
+                joinDesign = QuestbookGuiLayout.QuestEditModalNameJoinX;
+                qtyRightDesign = QuestbookGuiLayout.QuestEditModalQtyRightX;
+            }
+            else
+            {
+                joinDesign = QuestbookGuiLayout.QuestEditModalAwardsNameJoinX;
+                qtyRightDesign = QuestbookGuiLayout.QuestEditModalAwardsQtyRightX;
+            }
+
+            double joinX = viewport.X + joinDesign * u;
+            double qtyRight = viewport.X + qtyRightDesign * u;
+            // Group 896 goals: Create/take@288 · Craft@322 · All Types@356 · delete@390.
+            // Kill: All Types@356 + delete. Awards: name/qty stretched, delete only.
+            double takeX = viewport.X + QuestbookGuiLayout.QuestEditModalTakeX * u;
+            double craftX = viewport.X + QuestbookGuiLayout.QuestEditModalCraftX * u;
+            double variantsX = viewport.X + QuestbookGuiLayout.QuestEditModalVariantsX * u;
+            double deleteX = viewport.X + QuestbookGuiLayout.QuestEditModalDeleteX * u;
+            double nameTextX = nameOuterX + 6 * u;
+            double nameTextW = System.Math.Max(12 * u, joinX - nameTextX - 4 * u);
+
             double contentHeight = items.Count * rowStep;
             double maxScroll = System.Math.Max(0, contentHeight - viewport.Height);
             scrollOffset = System.Math.Clamp(scrollOffset, 0, maxScroll);
 
             removeHitAreas = new LayoutRect[items.Count];
             LayoutRect[] pickHitAreas = new LayoutRect[items.Count];
-            LayoutRect[] matchHitAreas = new LayoutRect[items.Count];
-            LayoutRect[] craftHitAreas = isGoals && craftSize > 0 ? new LayoutRect[items.Count] : [];
+            LayoutRect[] matchHitAreas = showVariants ? new LayoutRect[items.Count] : [];
+            LayoutRect[] craftHitAreas = showCraft ? new LayoutRect[items.Count] : [];
             LayoutRect[] killHitAreas = [];
-            LayoutRect[] takeHitAreas = isGoals && takeSize > 0 ? new LayoutRect[items.Count] : [];
+            LayoutRect[] takeHitAreas = showTake ? new LayoutRect[items.Count] : [];
             if (isGoals)
             {
                 goalsItemPickHitAreas = pickHitAreas;
@@ -3052,19 +3549,9 @@ namespace SwixyQuestBook.Gui
             else
             {
                 awardsItemPickHitAreas = pickHitAreas;
-                awardsMatchToggleHitAreas = matchHitAreas;
+                awardsMatchToggleHitAreas = [];
+                awardsTakeToggleHitAreas = []; // awards: no take chip — name/qty fill the row
             }
-
-            ImageSurface? box = GetTextureSurface(QuestbookGuiLayout.AdminQvestBoxModalBoxTexture);
-
-            FillRoundedRectangle(
-                ctx,
-                viewport.X,
-                viewport.Y,
-                viewport.Width,
-                viewport.Height,
-                4 * fitScale,
-                [0.10, 0.11, 0.13, 0.55]);
 
             ctx.Save();
             ctx.Rectangle(viewport.X, viewport.Y, viewport.Width, viewport.Height);
@@ -3072,31 +3559,20 @@ namespace SwixyQuestBook.Gui
 
             if (items.Count == 0)
             {
-                CairoFont emptyFont = CreateMontserratFont(11 * fitScale, QuestbookGuiLayout.AdminTitleColor);
+                CairoFont emptyFont = CreateMontserratFont(11 * u, QuestbookGuiLayout.AdminTitleColor);
                 DrawText(ctx, emptyFont, QuestbookLang.GetLocal("admin.quest_edit.empty_list"),
-                    viewport.X + (8 * fitScale), viewport.Y + (12 * fitScale));
+                    viewport.X + (8 * u), viewport.Y + (12 * u));
             }
 
             for (int index = 0; index < items.Count; index++)
             {
-                double rowY = viewport.Y + (index * rowStep) - scrollOffset;
+                double rowY = viewport.Y + rowPadY + (index * rowStep) - scrollOffset;
                 if (rowY + rowHeight < viewport.Y || rowY > viewport.Y + viewport.Height)
                     continue;
 
                 QuestbookAdminItemEntry entry = items[index];
                 bool isKillRow = isGoals
                     && (entry.IsKillObjective || adminData.EditedNodeType == QuestbookQuestNodeType.Kill);
-                double pickX = viewport.X + hPad;
-                double nameX = pickX + pickSize + innerGap;
-                double takeX = nameX + nameWidth + innerGap;
-                double craftX = takeSize > 0 ? takeX + takeSize + innerGap : takeX;
-                double matchX = craftSize > 0
-                    ? craftX + craftSize + innerGap
-                    : takeSize > 0
-                        ? takeX + takeSize + innerGap
-                        : takeX;
-                double numX = matchX + flagSize + innerGap;
-                double removeX = numX + numWidth + innerGap;
 
                 AdminFormFieldRef countField = new(
                     isGoals ? AdminFormFieldKind.GoalCount : AdminFormFieldKind.AwardCount,
@@ -3105,24 +3581,28 @@ namespace SwixyQuestBook.Gui
                     isGoals ? AdminFormFieldKind.GoalId : AdminFormFieldKind.AwardId,
                     index);
 
-                LayoutRect pickRect = new(pickX, rowY, pickSize, rowHeight);
-                LayoutRect nameRect = new(nameX, rowY, nameWidth, rowHeight);
-                LayoutRect takeRect = takeSize > 0
-                    ? new LayoutRect(takeX, rowY + ((rowHeight - takeSize) / 2), takeSize, takeSize)
+                LayoutRect pickRect = new(pickX, rowY, chip, chip);
+                LayoutRect nameRect = new(nameOuterX, rowY, joinX - nameOuterX, rowHeight);
+                LayoutRect countRect = new(joinX, rowY, qtyRight - joinX, rowHeight);
+                LayoutRect craftRect = showCraft
+                    ? new LayoutRect(craftX, rowY, chip, chip)
                     : new LayoutRect(0, 0, 0, 0);
-                LayoutRect craftRect = craftSize > 0
-                    ? new LayoutRect(craftX, rowY + ((rowHeight - craftSize) / 2), craftSize, craftSize)
+                LayoutRect matchRect = showVariants
+                    ? new LayoutRect(variantsX, rowY, chip, chip)
                     : new LayoutRect(0, 0, 0, 0);
-                LayoutRect matchRect = new(matchX, rowY + ((rowHeight - flagSize) / 2), flagSize, flagSize);
-                LayoutRect countRect = new(numX, rowY, numWidth, rowHeight);
-                LayoutRect removeRect = new(removeX, rowY, removeWidth, rowHeight);
+                LayoutRect takeRect = showTake
+                    ? new LayoutRect(takeX, rowY, chip, chip)
+                    : new LayoutRect(0, 0, 0, 0);
+                LayoutRect removeRect = new(deleteX, rowY, chip, chip);
+
                 pickHitAreas[index] = pickRect;
-                matchHitAreas[index] = matchRect;
-                if (takeSize > 0)
+                if (showVariants)
+                    matchHitAreas[index] = matchRect;
+                if (showTake)
                     takeHitAreas[index] = takeRect;
-                if (craftSize > 0)
+                if (showCraft)
                     craftHitAreas[index] = craftRect;
-                // Name / entity-code field is editable (needed for kill entity codes).
+
                 hitAreas.Add(nameRect);
                 fieldRefs.Add(codeField);
                 hitAreas.Add(countRect);
@@ -3132,39 +3612,28 @@ namespace SwixyQuestBook.Gui
                 bool pickerActive = adminItemPickerTarget is { } pickerTarget
                     && pickerTarget.IsGoals == isGoals
                     && pickerTarget.ListIndex == index;
-                // Kill goals store entity codes — resolve to ItemCreature for the slot icon.
                 string savedCode = entry.GetSavedCollectibleCode();
                 string iconCode = QuestbookItemDisplayHelper.ResolveDisplayIconCode(capi, savedCode, isKillRow);
                 bool hasCode = !string.IsNullOrWhiteSpace(savedCode);
+                bool hasItem = !string.IsNullOrWhiteSpace(entry.CollectibleCode);
+                bool codeFocused = adminData.FocusedField == codeField;
+                bool countFocused = adminData.FocusedField == countField;
+
+                // Pick chip 31×31.
+                FillRoundedRectangle(ctx, pickRect.X, pickRect.Y, pickRect.Width, pickRect.Height, chipR,
+                    QuestbookGuiLayout.AdminTileBackgroundColor);
+                StrokeRoundedRectangle(ctx, pickRect.X, pickRect.Y, pickRect.Width, pickRect.Height, chipR,
+                    borderW,
+                    pickerActive
+                        ? QuestbookGuiLayout.AdminTileActiveContentColor
+                        : QuestbookGuiLayout.AdminTileBorderColor);
 
                 if (hasCode)
                 {
-                    // Selected item: plain slot background only — no Select glyph under the item mesh.
-                    FillRoundedRectangle(
-                        ctx,
-                        pickRect.X,
-                        pickRect.Y,
-                        pickRect.Width,
-                        pickRect.Height,
-                        4 * fitScale,
-                        QuestbookGuiLayout.AdminTileBackgroundColor);
-                    if (pickerActive)
-                    {
-                        StrokeRoundedRectangle(
-                            ctx,
-                            pickRect.X,
-                            pickRect.Y,
-                            pickRect.Width,
-                            pickRect.Height,
-                            4 * fitScale,
-                            1.5 * fitScale,
-                            QuestbookGuiLayout.AdminSaveButtonColor);
-                    }
-
-                    double iconSide = System.Math.Min(pickSize, rowHeight) * 0.86;
+                    double iconSide = chip * 0.86;
                     LayoutRect iconRect = new(
-                        pickX + ((pickSize - iconSide) / 2),
-                        rowY + ((rowHeight - iconSide) / 2),
+                        pickRect.X + ((chip - iconSide) / 2),
+                        pickRect.Y + ((chip - iconSide) / 2),
                         iconSide,
                         iconSide);
                     adminEditorIconRenderRequests.Add(new QuestItemIconRenderRequest(
@@ -3177,26 +3646,31 @@ namespace SwixyQuestBook.Gui
                 }
                 else
                 {
-                    // Empty slot: show the pick/select affordance.
-                    DrawAdminTileButton(
+                    // Empty pick: crosshair glyph (#3C3C3C) like Group 1169.
+                    DrawAdminToolbarIcon(
                         ctx,
-                        fitScale,
-                        pickRect,
                         AdminToolbarIcon.Select,
-                        pickerActive,
-                        pickerActive,
-                        QuestbookGuiLayout.AdminSaveButtonColor);
+                        pickRect.X + chip * 0.12,
+                        pickRect.Y + chip * 0.12,
+                        chip * 0.76,
+                        QuestbookGuiLayout.AdminModalMutedIconColor);
                 }
 
-                if (box != null)
-                {
-                    DrawImageSurface(ctx, box, nameX, rowY, nameWidth, rowHeight);
-                    DrawImageSurface(ctx, box, numX, rowY, numWidth, rowHeight);
-                }
+                // Dual name+qty frame (not two separate full-rounded rects).
+                DrawQuestEditNameQtyFrame(
+                    ctx,
+                    nameOuterX,
+                    joinX,
+                    qtyRight,
+                    rowY,
+                    rowHeight,
+                    chipR,
+                    QuestbookGuiLayout.AdminTileBackgroundColor,
+                    QuestbookGuiLayout.AdminTileBorderColor,
+                    borderW,
+                    codeFocused,
+                    countFocused);
 
-                bool hasItem = !string.IsNullOrWhiteSpace(entry.CollectibleCode);
-                bool codeFocused = adminData.FocusedField == codeField;
-                // Prefer creature/item display name; fall back to stripped code.
                 string itemLabel;
                 if (codeFocused)
                 {
@@ -3210,124 +3684,89 @@ namespace SwixyQuestBook.Gui
                 }
                 else
                 {
-                    // ResolveDisplayIconCode + CreateDisplayStack map kill entity codes to ItemCreature names.
                     itemLabel = GetQuestItemSlot(iconCode)?.Itemstack?.GetName()
                         ?? GetQuestItemSlot(entry.CollectibleCode)?.Itemstack?.GetName()
                         ?? StripItemCodeForDisplay(entry.CollectibleCode);
                 }
 
-                CairoFont nameFont = CreateMontserratFont(12 * fitScale,
+                CairoFont nameFont = CreateMontserratFont(11 * u,
                     !hasItem && !codeFocused
                         ? QuestbookGuiLayout.AdminPanelPlaceholderColor
-                        : QuestbookGuiLayout.AdminPanelTextColor);
-                if (codeFocused)
-                {
-                    StrokeRoundedRectangle(
-                        ctx, nameRect.X, nameRect.Y, nameRect.Width, nameRect.Height,
-                        4 * fitScale, 1.5 * fitScale, QuestbookGuiLayout.AdminSaveButtonColor);
-                }
+                        : QuestbookGuiLayout.AdminModalChipTextColor);
 
                 ctx.Save();
-                ctx.Rectangle(nameX + (4 * fitScale), rowY, nameWidth - (8 * fitScale), rowHeight);
+                ctx.Rectangle(nameTextX, rowY, nameTextW, rowHeight);
                 ctx.Clip();
-                DrawText(ctx, nameFont, itemLabel, nameX + (6 * fitScale),
-                    GetTextBaselineY(nameFont, rowY, rowHeight, 16 * fitScale));
+                DrawText(ctx, nameFont, itemLabel, nameTextX,
+                    GetTextBaselineY(nameFont, rowY, rowHeight, 16 * u));
                 if (codeFocused)
                 {
-                    DrawTextCaret(ctx, nameFont, itemLabel, nameX + (6 * fitScale), rowY, rowHeight,
-                        QuestbookGuiLayout.AdminPanelTextColor);
+                    DrawTextCaret(ctx, nameFont, itemLabel, nameTextX, rowY, rowHeight,
+                        QuestbookGuiLayout.AdminModalChipTextColor);
                 }
                 ctx.Restore();
 
-                if (takeSize > 0)
-                {
-                    DrawAdminFlagToggle(
-                        ctx,
-                        fitScale,
-                        takeRect,
-                        AdminFlagIcon.Take,
-                        entry.ConsumeOnComplete,
-                        enabled: true,
-                        hovered: false);
-                }
-
-                if (craftSize > 0)
-                {
-                    DrawAdminFlagToggle(
-                        ctx,
-                        fitScale,
-                        craftRect,
-                        AdminFlagIcon.Craft,
-                        entry.IsCraftObjective,
-                        enabled: true,
-                        hovered: false);
-                }
-
-                // All variants — wildcard types for this item code.
-                DrawAdminFlagToggle(
-                    ctx,
-                    fitScale,
-                    matchRect,
-                    AdminFlagIcon.AllVariants,
-                    entry.MatchAllVariants,
-                    enabled: true,
-                    hovered: false);
-
                 string countPlaceholder = QuestbookLang.GetLocal("admin.num");
-                bool countFocused = adminData.FocusedField == countField;
                 string countDisplay = countFocused
                     ? (entry.Count > 0 ? entry.Count.ToString() : string.Empty)
                     : (entry.Count > 0 ? entry.Count.ToString() : countPlaceholder);
                 double[] countColor = countFocused || entry.Count > 0
-                    ? QuestbookGuiLayout.AdminPanelTextColor
+                    ? QuestbookGuiLayout.AdminModalChipTextColor
                     : QuestbookGuiLayout.AdminPanelPlaceholderColor;
-                CairoFont countFont = CreateMontserratFont(12 * fitScale, countColor);
-                if (countFocused)
-                {
-                    StrokeRoundedRectangle(
-                        ctx,
-                        countRect.X,
-                        countRect.Y,
-                        countRect.Width,
-                        countRect.Height,
-                        4 * fitScale,
-                        1.5 * fitScale,
-                        QuestbookGuiLayout.AdminSaveButtonColor);
-                }
-
+                CairoFont countFont = CreateMontserratFont(12 * u, countColor);
                 double countTextWidth = MeasureTextWidth(countFont, countDisplay);
-                double countTextX = numX + ((numWidth - countTextWidth) / 2);
+                double countTextX = countRect.X + ((countRect.Width - countTextWidth) / 2);
                 DrawText(ctx, countFont, countDisplay, countTextX,
-                    GetTextBaselineY(countFont, rowY, rowHeight, 16 * fitScale));
-
+                    GetTextBaselineY(countFont, countRect.Y, countRect.Height, countRect.Height));
                 if (countFocused)
                 {
-                    DrawTextCaret(ctx, countFont, countDisplay, countTextX, rowY, rowHeight, countColor);
+                    DrawTextCaret(ctx, countFont, countDisplay, countTextX, countRect.Y, countRect.Height, countColor);
                 }
 
-                DrawAdminTileButton(
-                    ctx,
-                    fitScale,
-                    removeRect,
-                    AdminToolbarIcon.Delete,
-                    false,
-                    false,
-                    QuestbookGuiLayout.AdminClearButtonColor);
+                // Goals: take · craft · variants · delete. Awards: delete only (row stretched).
+                if (showTake)
+                {
+                    DrawAdminFlagToggle(
+                        ctx, u, takeRect, AdminFlagIcon.Take,
+                        entry.ConsumeOnComplete, enabled: true, hovered: false);
+                }
+
+                if (showCraft)
+                {
+                    DrawAdminFlagToggle(
+                        ctx, u, craftRect, AdminFlagIcon.Craft,
+                        entry.IsCraftObjective, enabled: true, hovered: false);
+                }
+
+                if (showVariants)
+                {
+                    DrawAdminFlagToggle(
+                        ctx, u, matchRect, AdminFlagIcon.AllVariants,
+                        entry.MatchAllVariants, enabled: true, hovered: false);
+                }
+
+                // Delete chip — red trash (#FD5A53).
+                DrawAdminFlagToggle(
+                    ctx, u, removeRect, AdminFlagIcon.Delete,
+                    isActive: true, enabled: true, hovered: false);
             }
 
             ctx.Restore();
 
+            // Scrollbar OUTSIDE panel right edge (goals: panel right + 12.5 → track).
             if (maxScroll > 0)
             {
-                double trackX = viewport.X + viewport.Width - (QuestbookGuiLayout.QuestEditModalListScrollbarWidth * fitScale);
-                double trackWidth = QuestbookGuiLayout.QuestEditModalListScrollbarWidth * fitScale;
-                double thumbHeight = System.Math.Max(18 * fitScale, viewport.Height * (viewport.Height / contentHeight));
+                double trackWidth = QuestbookGuiLayout.QuestEditModalListScrollbarWidth * u;
+                double trackX = viewport.X + viewport.Width
+                    + (QuestbookGuiLayout.QuestEditModalListScrollbarOutside * u);
+                double thumbHeight = System.Math.Max(18 * u, viewport.Height * (viewport.Height / contentHeight));
                 double thumbTravel = System.Math.Max(1, viewport.Height - thumbHeight);
                 double thumbY = viewport.Y + ((scrollOffset / maxScroll) * thumbTravel);
-                FillRoundedRectangle(ctx, trackX, viewport.Y, trackWidth, viewport.Height, 3 * fitScale,
-                    [0.22, 0.24, 0.27, 0.7]);
-                FillRoundedRectangle(ctx, trackX, thumbY, trackWidth, thumbHeight, 3 * fitScale,
-                    QuestbookGuiLayout.AdminTileBorderColor);
+
+                FillRoundedRectangle(ctx, trackX, viewport.Y, trackWidth, viewport.Height, trackWidth * 0.5,
+                    QuestbookGuiLayout.AdminTileBorderColor); // #353432 track
+                FillRoundedRectangle(ctx, trackX, thumbY, trackWidth, thumbHeight, trackWidth * 0.5,
+                    [0x74 / 255.0, 0x74 / 255.0, 0x74 / 255.0, 1.0]); // #747474 thumb
             }
         }
 
@@ -3519,6 +3958,47 @@ namespace SwixyQuestBook.Gui
                 return true;
             }
 
+            if (adminRepeatOnceHitArea.Contains(mouseX, mouseY))
+            {
+                adminData.CommitCooldownMinutesDraft();
+                adminData.EditedRepeatMode = QuestbookRepeatMode.Once;
+                ApplyFormToSelectedNode();
+                RequestContentRefresh();
+                return true;
+            }
+
+            if (adminRepeatCooldownHitArea.Contains(mouseX, mouseY))
+            {
+                adminData.CommitCooldownMinutesDraft();
+                adminData.EditedRepeatMode = QuestbookRepeatMode.Cooldown;
+                if (adminData.EditedCooldownSeconds < 60)
+                    adminData.EditedCooldownSeconds = 60; // default 1 minute
+                ApplyFormToSelectedNode();
+                RequestContentRefresh();
+                return true;
+            }
+
+            // Explicit focus for minutes box (also in adminInputFieldHitAreas).
+            if (adminRepeatHoursHitArea.Width > 0 && adminRepeatHoursHitArea.Contains(mouseX, mouseY))
+            {
+                // Start draft from current value so first backspace can clear it.
+                if (adminData.CooldownMinutesDraft == null)
+                    adminData.CooldownMinutesDraft = adminData.GetFieldValue(new AdminFormFieldRef(AdminFormFieldKind.CooldownMinutes));
+                adminData.FocusedField = new AdminFormFieldRef(AdminFormFieldKind.CooldownMinutes);
+                ResetTextCaretBlink();
+                RequestContentRefresh();
+                return true;
+            }
+
+            if (adminRepeatInstantHitArea.Contains(mouseX, mouseY))
+            {
+                adminData.CommitCooldownMinutesDraft();
+                adminData.EditedRepeatMode = QuestbookRepeatMode.Instant;
+                ApplyFormToSelectedNode();
+                RequestContentRefresh();
+                return true;
+            }
+
             if (goalsAddButtonHitArea.Contains(mouseX, mouseY))
             {
                 adminData.AddGoal();
@@ -3543,7 +4023,16 @@ namespace SwixyQuestBook.Gui
                     continue;
 
                 AdminFormFieldRef field = adminInputFieldRefs[i];
-                if (field.IsCount && adminData.GetFieldValue(field) == "0")
+                if (adminData.FocusedField.Kind == AdminFormFieldKind.CooldownMinutes
+                    && field.Kind != AdminFormFieldKind.CooldownMinutes)
+                    adminData.CommitCooldownMinutesDraft();
+
+                if (field.Kind == AdminFormFieldKind.CooldownMinutes
+                    && adminData.CooldownMinutesDraft == null)
+                    adminData.CooldownMinutesDraft = adminData.GetFieldValue(field);
+
+                if (field.IsCount && field.Kind != AdminFormFieldKind.CooldownMinutes
+                    && adminData.GetFieldValue(field) == "0")
                     adminData.SetFieldValue(field, "0");
 
                 CloseAdminItemPicker();
@@ -3625,18 +4114,27 @@ namespace SwixyQuestBook.Gui
 
         private bool TryToggleQuestEditTakeOnComplete(double mouseX, double mouseY)
         {
-            for (int index = 0; index < goalsTakeToggleHitAreas.Length; index++)
+            // Awards no longer have a take chip — only quest goals.
+            return TryToggleTakeOnList(goalsTakeToggleHitAreas, adminData.Goals, mouseX, mouseY);
+        }
+
+        private bool TryToggleTakeOnList(
+            LayoutRect[] hitAreas,
+            List<QuestbookAdminItemEntry> items,
+            double mouseX,
+            double mouseY)
+        {
+            for (int index = 0; index < hitAreas.Length; index++)
             {
-                if (!goalsTakeToggleHitAreas[index].Contains(mouseX, mouseY))
+                if (!hitAreas[index].Contains(mouseX, mouseY))
                     continue;
 
-                if (index < 0 || index >= adminData.Goals.Count)
+                if (index < 0 || index >= items.Count)
                     return true;
 
-                QuestbookAdminItemEntry entry = adminData.Goals[index];
+                QuestbookAdminItemEntry entry = items[index];
                 if (entry.IsKillObjective)
                     return true;
-                // Independent of craft: can craft-only, craft+turn-in, have, or detect.
                 entry.ConsumeOnComplete = !entry.ConsumeOnComplete;
                 ApplyFormToSelectedNode();
                 RequestContentRefresh();
@@ -3871,7 +4369,9 @@ namespace SwixyQuestBook.Gui
             }
             if (adminToolClearHitArea.Contains(mouseX, mouseY))
             {
-                HandleAdminClear();
+                // EDIT — click quests on the graph to open the editor.
+                adminData.ToggleToolMode(AdminToolMode.EditQuest);
+                ComposeDialog();
                 return true;
             }
             if (adminToolCloseHitArea.Contains(mouseX, mouseY))
@@ -3946,9 +4446,12 @@ namespace SwixyQuestBook.Gui
         {
             if (!adminData.IsAdminPanelOpen)
             {
-                UpdateHover(ref isAdminSidebarEditHovered, adminSidebarEditButtonHitArea.Contains(mouseX, mouseY));
+                UpdateHover(ref isAdminSettingsButtonHovered, adminSettingsButtonHitArea.Contains(mouseX, mouseY));
                 return;
             }
+
+            if (isAdminSettingsButtonHovered)
+                UpdateHover(ref isAdminSettingsButtonHovered, false);
 
             UpdateHover(ref isAdminModeBranchesHovered, adminModeBranchesHitArea.Contains(mouseX, mouseY));
             UpdateHover(ref isAdminModeQuestsHovered, adminModeQuestsHitArea.Contains(mouseX, mouseY));
@@ -3994,7 +4497,11 @@ namespace SwixyQuestBook.Gui
             switch (adminData.ToolMode)
             {
                 case AdminToolMode.Select:
+                    // Select only — drag is handled on mouse-down; click selects without opening editor.
                     HandleSelectToolClick(nodeId);
+                    return true;
+                case AdminToolMode.EditQuest:
+                    HandleEditToolClick(nodeId);
                     return true;
                 case AdminToolMode.NewQuest:
                     HandleNewQuestToolClick(mouseX, mouseY, nodeId);
@@ -4043,10 +4550,25 @@ namespace SwixyQuestBook.Gui
 
         private void HandleSelectToolClick(int? nodeId)
         {
+            // SELECT tool: pick / deselect only. Drag moves the node; never opens the editor.
             if (nodeId == null)
             {
                 CloseQuestEditModal();
                 adminData.ClearSelection();
+                ComposeDialog();
+                return;
+            }
+
+            SelectNode(nodeId.Value);
+            ComposeDialog();
+        }
+
+        private void HandleEditToolClick(int? nodeId)
+        {
+            // EDIT tool: click a quest on the graph to open its property editor.
+            if (nodeId == null)
+            {
+                CloseQuestEditModal();
                 ComposeDialog();
                 return;
             }
@@ -4100,8 +4622,19 @@ namespace SwixyQuestBook.Gui
             ComposeDialog();
         }
 
+        /// <summary>Cancel in-progress link rubber-band (first node already chosen).</summary>
+        private void CancelLinkToolPending()
+        {
+            if (adminData.LinkSourceNodeId == null)
+                return;
+
+            adminData.LinkSourceNodeId = null;
+            ComposeDialog();
+        }
+
         private void HandleLinkToolRightClick(int nodeId)
         {
+            // Only removes an existing connection when no pending link is active.
             var category = GetSelectedCategory();
             if (category == null)
                 return;
@@ -4112,17 +4645,8 @@ namespace SwixyQuestBook.Gui
             if (removeIndex < 0)
                 return;
 
-            QuestbookQuestConnectionDefinition removed = connections[removeIndex];
             connections.RemoveAt(removeIndex);
             ApplyCategoryUpdate(category, category.Nodes.ToList(), connections);
-
-            if (adminData.LinkSourceNodeId == nodeId
-                || adminData.LinkSourceNodeId == removed.StartNodeId
-                || adminData.LinkSourceNodeId == removed.EndNodeId)
-            {
-                adminData.LinkSourceNodeId = null;
-            }
-
             ComposeDialog();
         }
 
@@ -4171,6 +4695,9 @@ namespace SwixyQuestBook.Gui
 
         private void ApplyFormToSelectedNode()
         {
+            // Do NOT commit CooldownMinutesDraft here: SyncAdminFieldEdit calls this on every
+            // keystroke. Committing would clear the draft and snap the minutes box back to "1".
+            // Draft is finalized on save/close or when leaving the field.
             if (!adminData.HasSelectedNode)
                 return;
 
@@ -4201,7 +4728,9 @@ namespace SwixyQuestBook.Gui
                 existing.Id, existing.X, existing.Y, existing.State,
                 adminData.GetInformationTextForSave(),
                 adminData.EditedNodeType,
-                descriptionByLang: new Dictionary<string, string>(adminData.InformationByLang, StringComparer.OrdinalIgnoreCase));
+                descriptionByLang: new Dictionary<string, string>(adminData.InformationByLang, StringComparer.OrdinalIgnoreCase),
+                repeatMode: QuestbookRepeatMode.Once,
+                cooldownSeconds: 0);
         }
 
         private QuestbookQuestNodeDefinition CreateQuestNodeFromForm(int id, double x, double y, QuestbookQuestNodeState state)
@@ -4228,7 +4757,8 @@ namespace SwixyQuestBook.Gui
             var rewardItems = new List<QuestbookQuestItemRequirement>();
             foreach (QuestbookAdminItemEntry award in adminData.Awards)
             {
-                string code = award.GetSavedCollectibleCode();
+                // Exact collectible only — never expand awards to game:item-* wildcards.
+                string code = (award.CollectibleCode ?? string.Empty).Trim();
                 if (!string.IsNullOrWhiteSpace(code) && award.Count > 0)
                     rewardItems.Add(new QuestbookQuestItemRequirement(code, award.Count));
             }
@@ -4242,7 +4772,9 @@ namespace SwixyQuestBook.Gui
                 nodeType,
                 requiredItems.ToArray(), rewardItems.ToArray(),
                 descriptionByLang: new Dictionary<string, string>(adminData.InformationByLang, StringComparer.OrdinalIgnoreCase),
-                consumeRequiredItems: requiredItems.Any(static i => i.Consume));
+                consumeRequiredItems: requiredItems.Any(static i => i.Consume),
+                repeatMode: adminData.EditedRepeatMode,
+                cooldownSeconds: adminData.EditedCooldownSeconds);
         }
 
         private void HandleAddConnection(int startNodeId, int endNodeId)
@@ -4504,7 +5036,9 @@ namespace SwixyQuestBook.Gui
                         Count = i.Count,
                         Objective = "have"
                     }).ToArray(),
-                    ConsumeRequiredItems = n.ConsumeRequiredItems
+                    ConsumeRequiredItems = n.ConsumeRequiredItems,
+                    RepeatMode = n.RepeatMode,
+                    CooldownSeconds = n.CooldownSeconds
                 }).ToArray(),
                 Connections = category.Connections.Select(c => new QuestbookSyncConnectionPacket
                 {

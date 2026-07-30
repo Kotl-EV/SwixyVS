@@ -65,5 +65,7 @@
     <Compile Remove="Domain\Compatibility\**" />
     <Compile Remove="Server\ServerGlobalUsings.cs" />
     <Compile Remove="Client\ClientGlobalUsings.cs" />
+    <Compile Remove="tools\**" />
+    <None Include="tools\**" />
   </ItemGroup>
 </Project>

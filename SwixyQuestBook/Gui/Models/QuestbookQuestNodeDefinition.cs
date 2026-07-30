@@ -2,6 +2,7 @@ using SwixyQuestBook.Domain.Models;
 
 namespace SwixyQuestBook.Gui
 {
+    // QuestbookRepeatMode is in Domain.Models
     public sealed class QuestbookQuestNodeDefinition
     {
         public int Id { get; }
@@ -14,6 +15,9 @@ namespace SwixyQuestBook.Gui
         public QuestbookQuestItemRequirement[] RequiredItems { get; }
         public QuestbookQuestItemRequirement[] RewardItems { get; }
         public bool ConsumeRequiredItems { get; }
+        /// <summary><see cref="QuestbookRepeatMode"/> value.</summary>
+        public string RepeatMode { get; }
+        public int CooldownSeconds { get; }
 
         public bool IsStartNode => NodeType == QuestbookQuestNodeType.Start;
 
@@ -36,7 +40,9 @@ namespace SwixyQuestBook.Gui
             QuestbookQuestItemRequirement[]? requiredItems = null,
             QuestbookQuestItemRequirement[]? rewardItems = null,
             IReadOnlyDictionary<string, string>? descriptionByLang = null,
-            bool consumeRequiredItems = true)
+            bool consumeRequiredItems = true,
+            string? repeatMode = null,
+            int cooldownSeconds = 0)
         {
             Id = id;
             X = x;
@@ -50,6 +56,24 @@ namespace SwixyQuestBook.Gui
             bool anyItemConsume = RequiredItems.Any(static i => i.Consume);
             bool anyGoal = RequiredItems.Length > 0;
             ConsumeRequiredItems = anyGoal ? anyItemConsume : consumeRequiredItems;
+            // Start / Checkpoint are always one-shot.
+            if (nodeType is QuestbookQuestNodeType.Start or QuestbookQuestNodeType.Checkpoint)
+            {
+                RepeatMode = QuestbookRepeatMode.Once;
+                CooldownSeconds = 0;
+            }
+            else
+            {
+                RepeatMode = QuestbookRepeatMode.Normalize(repeatMode);
+                CooldownSeconds = RepeatMode == QuestbookRepeatMode.Cooldown
+                    ? QuestbookRepeatMode.ClampCooldownSeconds(cooldownSeconds > 0 ? cooldownSeconds : 60)
+                    : 0;
+            }
+        }
+
+        public void MarkAvailable()
+        {
+            State = QuestbookQuestNodeState.Available;
         }
 
         private static IReadOnlyDictionary<string, string> CloneLangMap(

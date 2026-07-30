@@ -141,8 +141,16 @@ namespace SwixyQuestBook.Gui
                         continue;
                     }
 
-                    if (!graphNodeById.TryGetValue(connection.StartNodeId, out QuestbookQuestNodeDefinition? parent)
-                        || parent.State != QuestbookQuestNodeState.Completed)
+                    if (!graphNodeById.TryGetValue(connection.StartNodeId, out QuestbookQuestNodeDefinition? parent))
+                    {
+                        unlocked = false;
+                        break;
+                    }
+
+                    // Parent done once is enough (repeatable parents stay unlocked after cooldown).
+                    bool parentDone = parent.State == QuestbookQuestNodeState.Completed
+                        || dataManager.HasEverCompleted(category.HeaderTitle, parent.Id);
+                    if (!parentDone)
                     {
                         unlocked = false;
                         break;
@@ -239,9 +247,9 @@ namespace SwixyQuestBook.Gui
                 return font;
             }
 
-            // Family is "Montserrat" (file Montserrat-Bold.ttf). Never use the PostScript name
-            // "Montserrat-Bold" — Cairo SelectFontFace will miss it and fall back to sans-serif.
-            font = QuestbookFontHelper.Create(renderSize, color, bold: true);
+            // Body family is "Minecraft Rus" (minecraft.ttf). Use the OpenType family name,
+            // not the file name — Cairo SelectFontFace will miss file names and fall back.
+            font = QuestbookFontHelper.Create(renderSize, color, bold: false);
             montserratFontCache[key] = font;
             return font;
         }

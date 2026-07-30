@@ -176,8 +176,8 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         deleteHighlightTexture = new LoadedTexture(capi);
 
         // Group 471 member names: fill #9F795B (same as settings button labels).
-        cell.TitleFont ??= ClaimFontHelper.Create(16, [0x9F / 255.0, 0x79 / 255.0, 0x5B / 255.0, 1.0], bold: true);
-        cell.DetailTextFont ??= ClaimFontHelper.Create(12, ClaimFontHelper.ColorAccent, bold: true);
+        cell.TitleFont ??= ClaimFontHelper.Create(16, [0x9F / 255.0, 0x79 / 255.0, 0x5B / 255.0, 1.0]);
+        cell.DetailTextFont ??= ClaimFontHelper.Create(12, ClaimFontHelper.ColorAccent);
     }
 
     /// <summary>
@@ -231,30 +231,25 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         Delete
     }
 
-    /// <summary>Возвращает масштабированный размер одной квадратной колонки справа.</summary>
-    private double GetSquareSize() => scaled(UnscaledMinSquareSize);
+    /// <summary>
+    /// All right-column metrics scale with cell width so icons stay on texture wells
+    /// when the row is stretched (MembersW ≠ 435).
+    /// Group 470: btn 46, gap 9, step 55, first btn x=218 of 435.
+    /// </summary>
+    private double TexScaleX() => Bounds.OuterWidth / RowTexW;
 
-    private double GetBtnGap() => scaled(UnscaledBtnGap);
+    private double GetSquareSize() => UnscaledMinSquareSize * TexScaleX();
+
+    private double GetBtnGap() => UnscaledBtnGap * TexScaleX();
 
     /// <summary>Ширина правого блока: 4 кнопки + 3 промежутка (SVG step 55).</summary>
     private double GetRightBoxWidth() => GetSquareSize() * ColumnCount + GetBtnGap() * (ColumnCount - 1);
 
-    /// <summary>
-    /// X начала правых кнопок. Group 470: first btn @ x=218 of 435 → scale to cell width.
-    /// </summary>
-    private double GetDividerX(double rightBoxWidth)
-    {
-        // Prefer texture ratio so hit zones match chrome (218/435).
-        var fromTex = Bounds.OuterWidth * (218.0 / RowTexW);
-        var fromRight = Bounds.OuterWidth - rightBoxWidth - scaled(6); // right chrome ~6
-        // Prefer the texture anchor when cell is ~full row width.
-        return System.Math.Abs(Bounds.OuterWidth - scaled(RowTexW)) < scaled(8)
-            ? fromTex
-            : fromRight;
-    }
+    /// <summary>X начала правых кнопок (texture x=218 scaled to cell width).</summary>
+    private double GetDividerX(double rightBoxWidth) => 218.0 * TexScaleX();
 
-    /// <summary>Шаг колонки = кнопка + gap (последняя без trailing gap).</summary>
-    private double GetColumnStep() => GetSquareSize() + GetBtnGap();
+    /// <summary>Шаг колонки = кнопка + gap.</summary>
+    private double GetColumnStep() => 55.0 * TexScaleX();
 
     /// <summary>Доступная ширина name plate слева.</summary>
     private double GetTextAreaWidth(double rightBoxWidth) =>
@@ -278,6 +273,7 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         {
             if (rowTexture != null)
             {
+                // Full Group 470 texture (435×58) — do not crop left chrome.
                 ctx.Save();
                 ctx.Scale(drawW / rowTexture.Width, drawH / rowTexture.Height);
                 ctx.SetSourceSurface(rowTexture, 0, 0);
@@ -291,7 +287,7 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
             }
             else
             {
-                // Fallback: name plate + 4 faces (old SVG geometry).
+                // Fallback: name plate + 4 faces (texture chrome ~6px).
                 var nameW = GetDividerX(rightBoxWidth) - GetBtnGap();
                 DrawSvgFace(ctx, scaled(6), faceTop, nameW, faceH, pressed);
                 var sq = GetSquareSize();
@@ -310,7 +306,7 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
         }
 
         Font = cellEntry.TitleFont;
-        // Name plate content starts ~x=6+pad inside texture.
+        // Name plate content starts inside face (~x=6+pad of 435 texture).
         var textLeft = Bounds.absPaddingX + scaled(16);
         var textWidth = GetTextAreaWidth(rightBoxWidth);
         titleTextHeight = textUtil.GetMultilineTextHeight(Font, cellEntry.Title, textWidth);

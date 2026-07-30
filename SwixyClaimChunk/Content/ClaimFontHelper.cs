@@ -1,10 +1,14 @@
 // =============================================================================
-// ClaimFontHelper.cs — Montserrat for ClaimChunk UI (same approach as Questbook).
+// ClaimFontHelper.cs — Minecraft fonts for ClaimChunk UI.
+// Body: minecraft.ttf → family "SwixyClaimBody" (patched capital Й).
+// Titles/tabs: MinecraftTitle.ttf → family "SwixyClaimTitle".
+// Unique family names avoid Windows/Cairo picking a stale "Minecraft Rus" face.
 // =============================================================================
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Cairo;
 using Vintagestory.API.Client;
@@ -16,17 +20,28 @@ using IOPath = System.IO.Path;
 namespace SwixyClaimChunk.Content;
 
 /// <summary>
-/// Registers Montserrat from assets so Cairo can resolve the family for claim GUI text.
+/// Registers shipped Minecraft TTFs so Cairo can resolve claim GUI text.
+/// Family names must match the OpenType name table in the shipped TTFs.
 /// </summary>
 public static class ClaimFontHelper
 {
-    public const string FamilyName = "Montserrat";
+    /// <summary>Body family from minecraft.ttf (OpenType name, not file name).</summary>
+    public const string BodyFamilyName = "SwixyClaimBody";
+
+    /// <summary>Title / tab family from MinecraftTitle.ttf.</summary>
+    public const string TitleFamilyName = "SwixyClaimTitle";
+
+    /// <summary>Legacy alias — body family.</summary>
+    public const string FamilyName = BodyFamilyName;
 
     /// <summary>Design accent text #FEE4CF.</summary>
     public static readonly double[] ColorCream = [0.996, 0.894, 0.812, 1.0];
 
     /// <summary>Secondary accent #D29F78.</summary>
     public static readonly double[] ColorAccent = [0.824, 0.624, 0.471, 1.0];
+
+    private static readonly string[] BodyFontFileNames = ["minecraft.ttf", "Minecraft.ttf"];
+    private static readonly string[] TitleFontFileNames = ["MinecraftTitle.ttf", "minecrafttitle.ttf"];
 
     private const uint FrPrivate = 0x10;
     private static bool registered;
@@ -57,15 +72,17 @@ public static class ClaimFontHelper
             if (registeredFiles.Count > 0)
             {
                 api.Logger.Notification(
-                    "[SwixyClaimChunk] Registered {0} Montserrat font file(s) (e.g. {1})",
+                    "[SwixyClaimChunk] Registered {0} font file(s) (body '{1}', title '{2}'; e.g. {3})",
                     registeredFiles.Count,
+                    BodyFamilyName,
+                    TitleFamilyName,
                     registeredFiles[0]);
             }
             else
             {
                 api.Logger.Warning(
-                    "[SwixyClaimChunk] Montserrat .ttf not found — UI falls back to system fonts. " +
-                    "Expected assets/swixyclaimchunk/fonts/Montserrat-*.ttf");
+                    "[SwixyClaimChunk] Minecraft .ttf not found — UI falls back to system fonts. " +
+                    "Expected assets/swixyclaimchunk/fonts/minecraft.ttf and MinecraftTitle.ttf");
             }
         }
         catch (Exception ex)
@@ -75,37 +92,33 @@ public static class ClaimFontHelper
     }
 
     /// <summary>
-    /// Montserrat at SVG design size (px at GUIScale=1).
-    /// <see cref="CairoFont.SetupContext"/> multiplies UnscaledFontsize by GUIScale —
-    /// same as ElementBounds.Fixed — so text and layout stay proportional.
+    /// Body font at SVG design size (px at GUIScale=1).
+    /// <see cref="CairoFont.SetupContext"/> multiplies UnscaledFontsize by GUIScale.
+    /// Minecraft faces are single-weight — never request Bold (Cairo misses the face).
     /// </summary>
-    public static CairoFont Create(double designSize, double[]? color = null, bool bold = true)
+    public static CairoFont Create(double designSize, double[]? color = null, bool bold = false)
     {
-        return new CairoFont
-        {
-            Fontname = FamilyName,
-            UnscaledFontsize = (float)designSize,
-            FontWeight = bold ? FontWeight.Bold : FontWeight.Normal,
-            Color = color ?? ColorCream
-        };
+        return CreateWithFamily(BodyFamilyName, designSize, color, bold: false);
+    }
+
+    /// <summary>Title / tab font (Minecraft Five), optionally double-stroked like quest top menu.</summary>
+    public static CairoFont CreateTitle(double designSize, double[]? color = null, bool renderTwice = true)
+    {
+        var font = CreateWithFamily(TitleFamilyName, designSize, color, bold: false);
+        return renderTwice ? font.WithRenderTwice() : font;
     }
 
     /// <summary>
-    /// Font for DynamicCustomDraw when positions are already multiplied by GUIScale
-    /// (e.g. <c>x * s</c> with <c>s = RuntimeEnv.GUIScale</c>).
-    /// <see cref="CairoFont.SetupContext"/> multiplies <see cref="CairoFont.UnscaledFontsize"/> by GUIScale,
-    /// so we pass design size as UnscaledFontsize — result is designSize×GUIScale screen pixels,
-    /// matching scaled layout coordinates.
+    /// Font for DynamicCustomDraw when positions are already multiplied by GUIScale.
+    /// Same as <see cref="Create"/> — UnscaledFontsize is design size.
     /// </summary>
-    public static CairoFont CreateForSurface(double designSize, double[]? color = null, bool bold = true)
+    public static CairoFont CreateForSurface(double designSize, double[]? color = null, bool bold = false)
     {
-        // Same as Create: do NOT divide by GUIScale (that was undersizing chrome text).
-        return Create(designSize, color, bold);
+        return Create(designSize, color, bold: false);
     }
 
     /// <summary>
-    /// Apply Montserrat (Bold) to a Cairo context for chrome drawing.
-    /// Always forces family name — never "Montserrat-Bold" (Cairo misses PostScript name).
+    /// Apply body font (SwixyClaimBody) to a Cairo context for chrome drawing.
     /// </summary>
     public static void SetupMontserrat(
         Context ctx,
@@ -113,9 +126,24 @@ public static class ClaimFontHelper
         double[]? color = null,
         bool bold = true)
     {
-        var font = Create(designSize, color, bold);
-        font.Fontname = FamilyName;
-        font.FontWeight = bold ? FontWeight.Bold : FontWeight.Normal;
+        SetupBody(ctx, designSize, color);
+    }
+
+    /// <summary>Body face on a surface context.</summary>
+    public static void SetupBody(Context ctx, double designSize, double[]? color = null)
+    {
+        ApplyFont(ctx, BodyFamilyName, designSize, color);
+    }
+
+    /// <summary>Title face on a surface context (tabs / section headers).</summary>
+    public static void SetupTitle(Context ctx, double designSize, double[]? color = null)
+    {
+        ApplyFont(ctx, TitleFamilyName, designSize, color);
+    }
+
+    private static void ApplyFont(Context ctx, string family, double designSize, double[]? color)
+    {
+        var font = CreateWithFamily(family, designSize, color, bold: false);
         font.SetupContext(ctx);
         ctx.Operator = Operator.Over;
         if (color != null && color.Length >= 3)
@@ -125,28 +153,38 @@ public static class ClaimFontHelper
         }
     }
 
-    // SVG outlined-text height ~22px on tabs → design size 18–20.
-    public static CairoFont Tab() => Create(20, ColorCream, bold: true);
+    private static CairoFont CreateWithFamily(string family, double designSize, double[]? color, bool bold)
+    {
+        return new CairoFont
+        {
+            Fontname = family,
+            UnscaledFontsize = (float)designSize,
+            FontWeight = bold ? FontWeight.Bold : FontWeight.Normal,
+            Color = color ?? ColorCream
+        };
+    }
 
-    public static CairoFont Title() => Create(16, ColorCream, bold: true);
+    public static CairoFont Tab() => CreateTitle(20, ColorCream);
 
-    public static CairoFont Body() => Create(14, ColorAccent, bold: true);
+    public static CairoFont Title() => CreateTitle(16, ColorCream, renderTwice: false);
 
-    public static CairoFont Hint() => Create(12, ColorAccent, bold: true);
+    public static CairoFont Body() => Create(14, ColorAccent);
 
-    public static CairoFont Center() => Create(16, ColorCream, bold: true);
+    public static CairoFont Hint() => Create(12, ColorAccent);
 
-    public static CairoFont TabSurface() => CreateForSurface(20, ColorCream, bold: true);
+    public static CairoFont Center() => Create(16, ColorCream);
 
-    public static CairoFont TitleSurface() => CreateForSurface(16, ColorCream, bold: true);
+    public static CairoFont TabSurface() => CreateTitle(20, ColorCream);
 
-    public static CairoFont BodySurface() => CreateForSurface(14, ColorAccent, bold: true);
+    public static CairoFont TitleSurface() => CreateTitle(16, ColorCream, renderTwice: false);
 
-    public static CairoFont HintSurface() => CreateForSurface(12, ColorAccent, bold: true);
+    public static CairoFont BodySurface() => CreateForSurface(14, ColorAccent);
 
-    public static CairoFont CenterSurface() => CreateForSurface(16, ColorCream, bold: true);
+    public static CairoFont HintSurface() => CreateForSurface(12, ColorAccent);
 
-    public static CairoFont LegendSurface() => CreateForSurface(14, ColorAccent, bold: true);
+    public static CairoFont CenterSurface() => CreateForSurface(16, ColorCream);
+
+    public static CairoFont LegendSurface() => CreateForSurface(14, ColorAccent);
 
     private static IEnumerable<string> EnumerateCandidateFontFiles(ICoreClientAPI api, Mod? mod)
     {
@@ -172,46 +210,47 @@ public static class ClaimFontHelper
             ?? api.ModLoader.GetMod("swixyclaimchunk")?.SourcePath;
         if (!string.IsNullOrWhiteSpace(source) && Directory.Exists(source))
         {
-            foreach (var file in Directory.EnumerateFiles(
-                         IOPath.Combine(source, "assets"),
-                         "Montserrat*.ttf",
-                         SearchOption.AllDirectories))
+            var assetsRoot = IOPath.Combine(source, "assets");
+            if (Directory.Exists(assetsRoot))
             {
-                foreach (var p in YieldIfExists(file))
+                foreach (var pattern in new[] { "minecraft.ttf", "MinecraftTitle.ttf", "Minecraft*.ttf" })
                 {
-                    yield return p;
+                    foreach (var file in Directory.EnumerateFiles(
+                                 assetsRoot,
+                                 pattern,
+                                 SearchOption.AllDirectories))
+                    {
+                        foreach (var p in YieldIfExists(file))
+                        {
+                            yield return p;
+                        }
+                    }
                 }
             }
         }
 
-        foreach (var fileName in new[] { "Montserrat-Bold.ttf", "Montserrat-Regular.ttf" })
+        foreach (var fileName in BodyFontFileNames)
         {
-            var extracted = TryExtractAssetFont(api, $"fonts/{fileName}");
-            foreach (var p in YieldIfExists(extracted))
+            foreach (var p in YieldIfExists(TryExtractDomainFont(api, "swixyclaimchunk", $"fonts/{fileName}")))
             {
                 yield return p;
             }
         }
 
-        // Reuse Questbook / game fonts if already present.
-        foreach (var domain in new[] { "swixyquestbook", "game" })
+        foreach (var fileName in TitleFontFileNames)
         {
-            var shared = TryExtractDomainFont(api, domain, "fonts/Montserrat-Bold.ttf");
-            foreach (var p in YieldIfExists(shared))
+            foreach (var p in YieldIfExists(TryExtractDomainFont(api, "swixyclaimchunk", $"fonts/{fileName}")))
             {
                 yield return p;
             }
         }
 
-        var gameFonts = IOPath.Combine(GamePaths.AssetsPath, "game", "fonts");
-        if (Directory.Exists(gameFonts))
+        // Reuse Questbook pack if present (same typefaces).
+        foreach (var fileName in BodyFontFileNames.Concat(TitleFontFileNames))
         {
-            foreach (var file in Directory.EnumerateFiles(gameFonts, "Montserrat*.ttf"))
+            foreach (var p in YieldIfExists(TryExtractDomainFont(api, "swixyquestbook", $"fonts/{fileName}")))
             {
-                foreach (var p in YieldIfExists(file))
-                {
-                    yield return p;
-                }
+                yield return p;
             }
         }
 
@@ -220,19 +259,14 @@ public static class ClaimFontHelper
             "Microsoft", "Windows", "Fonts");
         if (Directory.Exists(userFonts))
         {
-            foreach (var file in Directory.EnumerateFiles(userFonts, "Montserrat*.ttf"))
+            foreach (var fileName in BodyFontFileNames.Concat(TitleFontFileNames))
             {
-                foreach (var p in YieldIfExists(file))
+                foreach (var p in YieldIfExists(IOPath.Combine(userFonts, fileName)))
                 {
                     yield return p;
                 }
             }
         }
-    }
-
-    private static string? TryExtractAssetFont(ICoreClientAPI api, string relativePath)
-    {
-        return TryExtractDomainFont(api, "swixyclaimchunk", relativePath);
     }
 
     private static string? TryExtractDomainFont(ICoreClientAPI api, string domain, string relativePath)
@@ -249,7 +283,15 @@ public static class ClaimFontHelper
             Directory.CreateDirectory(cacheDir);
             var fileName = IOPath.GetFileName(relativePath);
             var outPath = IOPath.Combine(cacheDir, fileName);
-            if (!File.Exists(outPath) || new FileInfo(outPath).Length != asset.Data.Length)
+            var needsWrite = !File.Exists(outPath);
+            if (!needsWrite)
+            {
+                var existing = File.ReadAllBytes(outPath);
+                needsWrite = existing.Length != asset.Data.Length
+                    || !existing.AsSpan().SequenceEqual(asset.Data);
+            }
+
+            if (needsWrite)
             {
                 File.WriteAllBytes(outPath, asset.Data);
             }
@@ -301,8 +343,14 @@ public static class ClaimFontHelper
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Microsoft", "Windows", "Fonts");
             Directory.CreateDirectory(userFonts);
-            var dest = IOPath.Combine(userFonts, IOPath.GetFileName(sourcePath));
-            if (!File.Exists(dest) || new FileInfo(dest).Length != new FileInfo(sourcePath).Length)
+            // Versioned unique file name so we always reinstall the patched glyph file
+            // even when an older minecraft.ttf is locked by Windows.
+            var dest = IOPath.Combine(userFonts, "swixyclaimchunk-v9-" + IOPath.GetFileName(sourcePath));
+            var srcInfo = new FileInfo(sourcePath);
+            var needsCopy = !File.Exists(dest)
+                || new FileInfo(dest).Length != srcInfo.Length
+                || !FilesEqual(sourcePath, dest);
+            if (needsCopy)
             {
                 File.Copy(sourcePath, dest, overwrite: true);
             }
@@ -312,6 +360,33 @@ public static class ClaimFontHelper
         catch
         {
             return null;
+        }
+    }
+
+    private static bool FilesEqual(string a, string b)
+    {
+        try
+        {
+            var ba = File.ReadAllBytes(a);
+            var bb = File.ReadAllBytes(b);
+            if (ba.Length != bb.Length)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < ba.Length; i++)
+            {
+                if (ba[i] != bb[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 }

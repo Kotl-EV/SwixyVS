@@ -21,8 +21,8 @@ namespace SwixyClaimChunk.Content;
 /// </summary>
 public sealed class ClaimUseFilterTileGridElement : GuiElement
 {
-    public const double UnscaledTile = 48; // same as GuiElementPassiveItemSlot.unscaledSlotSize
-    public const double UnscaledGap = 4;
+    public const double UnscaledTile = 48; // Group 1349.svg face 48×48
+    public const double UnscaledGap = 10; // step 58 (48+10) as in Group 1349
 
     private static readonly double UnscaledSlotSize = GuiElementPassiveItemSlot.unscaledSlotSize;
     private static readonly double UnscaledItemSize = GuiElementPassiveItemSlot.unscaledItemSize;
@@ -133,27 +133,41 @@ public sealed class ClaimUseFilterTileGridElement : GuiElement
     {
         using var surface = new ImageSurface(Format.Argb32, size, size);
         using var ctx = genContext(surface);
-        RoundRectangle(ctx, 0, 0, size, size, 3);
+        // Group 1349: face #412D1D, selected fill #5AFB57 @ 0.36 + green bevels.
+        ctx.SetSourceRGB(0x41 / 255.0, 0x2D / 255.0, 0x1D / 255.0);
+        ctx.Rectangle(0, 0, size, size);
+        ctx.Fill();
+
         if (selected)
         {
-            ctx.SetSourceRGBA(0.22, 0.48, 0.26, 0.98);
+            ctx.SetSourceRGBA(0x5A / 255.0, 0xFB / 255.0, 0x57 / 255.0, 0.36);
+            ctx.Rectangle(0, 0, size, size);
+            ctx.Fill();
+            // Green edge highlights from SVG.
+            ctx.SetSourceRGB(0x5A / 255.0, 0xFB / 255.0, 0x57 / 255.0);
+            ctx.Rectangle(0, 0, size, 2);
+            ctx.Fill();
+            ctx.Rectangle(0, 0, 2, size);
+            ctx.Fill();
+            ctx.Rectangle(0, size - 2, size, 2);
+            ctx.Fill();
+            ctx.Rectangle(size - 2, 0, 2, size);
+            ctx.Fill();
         }
         else
         {
-            ctx.SetSourceRGBA(0.20, 0.15, 0.11, 0.96);
+            // Wood bevels #563E2B / #2A1E14
+            ctx.SetSourceRGB(0x56 / 255.0, 0x3E / 255.0, 0x2B / 255.0);
+            ctx.Rectangle(0, 0, size, 2);
+            ctx.Fill();
+            ctx.Rectangle(0, 0, 2, size);
+            ctx.Fill();
+            ctx.SetSourceRGB(0x2A / 255.0, 0x1E / 255.0, 0x14 / 255.0);
+            ctx.Rectangle(0, size - 2, size, 2);
+            ctx.Fill();
+            ctx.Rectangle(size - 2, 0, 2, size);
+            ctx.Fill();
         }
-
-        ctx.Fill();
-        EmbossRoundRectangleElement(ctx, 0, 0, size, size, inverse: selected, depth: 2);
-
-        ctx.SetSourceRGBA(
-            selected ? 0.45 : 0x83 / 255.0,
-            selected ? 0.85 : 0x66 / 255.0,
-            selected ? 0.50 : 0x50 / 255.0,
-            selected ? 0.9 : 0.55);
-        RoundRectangle(ctx, 0.5, 0.5, size - 1, size - 1, 3);
-        ctx.LineWidth = 1.25;
-        ctx.Stroke();
 
         generateTexture(surface, ref texture);
     }

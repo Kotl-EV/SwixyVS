@@ -11,12 +11,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Cairo;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 
 using SwixyClaimChunk.Core;
 // ClaimFlagBits lives in root SwixyClaimChunk (Types.cs).
@@ -40,200 +42,288 @@ public sealed class ClaimMapDialog : GuiDialog
     private const int PageClaims = 1;
 
     // =============================================================================
-    // Layout from "Claim Chunk _ Map (3).svg" viewBox 1920×1080 + Group 462 frame.
-    // Frame origin (475, 189), dialog 973×706. Local = SVG − origin.
+    // Frame: Group 1012 dialog_frame.png 1012×760.
+    // Map tab: Group 1350.svg. Claims tab: Group 1349.svg.
     //
-    // Tabs:    Map(70,0,302×74) Claims(464,0,302×74) Actions(822,0,115×74) = pin + close
-    // Panel:   (42,118) 885×542 #513A28
-    // Faces (inner #412D1D / #4D3624) vs full PNG textures (outer chrome = face − 6):
-    //   Limits face (68,196) 306×100 → tex (62,190) 318×112  Group 466
-    //   Legend title (68,316) 306×32 + body (68,357) 267×108 + swatches @x=344
-    //     → tex (62,310) 318×161  Group 387
-    //   Center face (68,604) 306×30 → tex (62,598) 318×42  Group 464
-    // Map:     (458,192) 447×446 + 2px #121212
+    // Tabs: Map(72,0,304×74) Claims(468,0,304×74) Close(858,0,85×74)
+    // Map well: (467,215) 475×474 + 2px #121212 (outer 465,213)
+    // Limits face (73,217) 304×84 | Legend title (73,321) 304×30 + rows 268×30
+    // Center face (73,655) 304×32 | Dashes y=187 left 69→379 / right 465→943
     // =============================================================================
-    private const int UiW = 973;
-    private const int UiH = 706;
+    private const int UiW = 1012;
+    private const int UiH = 760;
 
     private const int TabY = 0;
     private const int TabH = 74;
-    private const int TabMapX = 70;
-    private const int TabMapW = 302;
-    private const int TabClaimsX = 464;
-    private const int TabClaimsW = 302;
-    // Right action plate from SVG (2): 1297.5,189 w=115 → REL 822,115 — pin (☰) + close (✕)
-    private const int TabActionsX = 822;
-    private const int TabActionsW = 115;
-    private const int PinBtnX = 828;
-    private const int PinBtnW = 48;
-    private const int CloseBtnX = 882;
-    private const int CloseBtnW = 48;
+    private const int TabMapX = 72;
+    private const int TabMapW = 304;
+    private const int TabClaimsX = 468;
+    private const int TabClaimsW = 304;
+    // Right plate Group 1344 / 1012: x=858 w=85 (to 943) — close.
+    // Close glyph is pixel-art at (884,30)–(916,62), fill #836045 (see CloseIconRects).
+    // Pin/detach: vanilla Fixed/Movable list menu on RMB over the top chrome (TabY…PanelY).
+    private const int CloseBtnX = 858;
+    private const int CloseBtnW = 85;
+    private const string DialogComposerName = "epclaimmap";
+    /// <summary>Header band used for RMB pin menu + drag when Movable (above content panel).</summary>
+    private const int DetachChromeH = PanelY;
+    private static readonly double[] ColCloseIcon = [0x83 / 255.0, 0x60 / 255.0, 0x45 / 255.0, 1.0]; // #836045
 
     private const int PanelX = 42;
     private const int PanelY = 118;
-    private const int PanelW = 885;
-    private const int PanelH = 542;
+    private const int PanelW = 920;
+    private const int PanelH = 590;
 
-    /// <summary>Inner face X of left-column cards (face = texture + 6).</summary>
-    private const int CardX = 68;
-    private const int CardW = 306;
+    /// <summary>Left-column face X/W from Group 1350 (limits/legend/center).</summary>
+    private const int CardX = 73;
+    private const int CardW = 304;
     private const int CardPadX = 12;
     private const int CardPadY = 10;
 
-    // --- Section headers Group 471.svg ---
-    // Titles: CLAIMS M176.821,165.288 / SETTINGS M621.817,165.288 fill #836750
-    // Cap height of outlined glyphs ≈ 17–18 → Montserrat Bold ~22 design-px.
-    // Dashes: y=174, left 64→382, right 458→909, stroke #836650 @0.16 width 4 dash 8 8.
+    // --- Section headers Group 1350/1349: dashes y=187, titles ~165–172 ---
     private const double SectionTitleBaselineY = 165.288;
     private const double FontSection = 22;
-    private const double SectionDashY = 174;
-    private const double SectionDashLeftX1 = 64;
-    private const double SectionDashLeftX2 = 382;
-    private const double SectionDashRightX1 = 458;
-    private const double SectionDashRightX2 = 909;
-    /// <summary>Left edge of CLAIMS title path (Group 471).</summary>
+    private const double SectionDashY = 187;
+    private const double SectionDashLeftX1 = 69;
+    private const double SectionDashLeftX2 = 379;
+    private const double SectionDashRightX1 = 465;
+    private const double SectionDashRightX2 = 943;
     private const double SectionClaimsTextX = 176.821;
-    /// <summary>Left edge of SETTINGS title path (Group 471).</summary>
     private const double SectionSettingsTextX = 621.817;
     private const double SectionDashWidth = 4;
     private const double SectionDashOn = 8;
     private const double SectionDashOff = 8;
     private static readonly double[] ColSection = [0x83 / 255.0, 0x67 / 255.0, 0x50 / 255.0, 1.0]; // #836750
     /// <summary>
-    /// SVG: stroke #836650 @ opacity 0.16 over panel #513A28.
-    /// Baked opaque so VS layer compositing matches the SVG blend.
+    /// SVG: stroke #836650 @ opacity 0.32 over Group 1012 face (dashed section rules).
     /// </summary>
     private static readonly double[] ColSectionDash =
     [
-        (0x83 * 0.16 + 0x51 * 0.84) / 255.0,
-        (0x66 * 0.16 + 0x3A * 0.84) / 255.0,
-        (0x50 * 0.16 + 0x28 * 0.84) / 255.0,
+        (0x83 * 0.32 + 0x2F * 0.68) / 255.0,
+        (0x66 * 0.32 + 0x1D * 0.68) / 255.0,
+        (0x50 * 0.32 + 0x11 * 0.68) / 255.0,
         1.0
     ];
 
-    // --- Limits: Group 466.svg/png 318×112 @ REL(62,190) ---
-    // Single left margin for all labels (SVG path X varies by glyph; UI must left-align).
-    // Face starts at tex x=6; content pad ≈12 → left ink edge at 18.
-    private const int LimitsX = 62;
-    private const int LimitsY = 190;
-    private const int LimitsTexW = 318;
-    private const int LimitsTexH = 112;
-    private const double LimitsTextLeftX = 18;
-    private const double LimitsTitleBaselineY = 28;
-    private const double LimitsValueRightX = 299.555;
-    private const double LimitsLine1BaselineY = 66.192;
-    private const double LimitsLine2BaselineY = 90.192;
-    private const double FontLimitsTitle = 20;
-    private const double FontLimitsBody = 17;
+    // --- Left column faces (Group 1350 absolute) = Group 1355 faces at local (4,4)/(4,108) ---
+    private const int LimitsX = 73;
+    private const int LimitsY = 217;
+    private const int LimitsFaceW = 304;
+    private const int LimitsFaceH = 84;
+    private const int LimitsTexW = LimitsFaceW;
+    private const int LimitsTexH = LimitsFaceH;
 
-    // --- Legend: Group 387.svg/png 318×161 @ REL(62,310) ---
-    // Same left margin as Limits so both plates share one column edge.
-    private const int LegendX = 62;
-    private const int LegendY = 310;
-    private const int LegendTexW = 318;
-    private const int LegendTexH = 161;
-    private const double LegendTextLeftX = 18;
-    private const double LegendTitleBaselineY = 28;
-    private const double LegendLine1BaselineY = 68;
-    private const double LegendLine2BaselineY = 107;
-    private const double LegendLine3BaselineY = 146.192;
-    private const double LegendTextMaxRightX = 300;
-    private const double FontLegendTitle = 20;
-    private const double FontLegendBody = 17;
+    // Group 1355 text relative to brown face origin (face at local 4,4):
+    // left x=16 → +12; values end x≈294 → right edge +290; baselines y=27/58/78 → +23/54/74.
+    private const double LimitsTextLeftX = 12;
+    private const double LimitsValueRightX = 290;
+    private const double LimitsTitleBaselineY = 23;
+    private const double LimitsLine1BaselineY = 54;
+    private const double LimitsLine2BaselineY = 74;
+    private const double FontLimitsTitle = 13;
+    private const double FontLimitsBody = 12;
 
-    // Status between legend bottom (471) and center top (598).
-    private const int MessageY = 490;
+    // Legend title face absolute y=321 (= Group 1355 local y=108). Design stack H=138.
+    private const int LegendX = LimitsX;
+    private const int LegendY = 321;
+    private const int LegendTitleW = LimitsFaceW;
+    private const int LegendTitleH = 30;
+    private const int LegendRowX = LimitsX;
+    private const int LegendRowW = 268;
+    private const int LegendRowH = 30;
+    private const int LegendRow1Y = 357;
+    private const int LegendRow2Y = 393;
+    private const int LegendRow3Y = 429;
+    private const int LegendSwatchX = LegendX + LimitsFaceW - LegendRowH;
+    private const int LegendSwatchSize = 30;
+    private const int LegendTexW = LimitsFaceW;
+    private const int LegendDesignH = LegendRow3Y + LegendRowH - LegendY; // 138
+    private const int LegendTexH = LegendDesignH;
+    // Group 1355 text relative to legend title face (local 4,108): left +12; baselines +20/+56/+92/+128.
+    private const double LegendTextLeftX = 12;
+    private const double LegendTitleBaselineY = 20;
+    private const double LegendRow1BaselineY = 56;
+    private const double LegendRow2BaselineY = 92;
+    private const double LegendRow3BaselineY = 128;
+    private const double FontLegendTitle = 13;
+    private const double FontLegendBody = 12;
 
-    // --- Center: Group 464.png 318×42 @ REL(62,598); face (68,604) 306×30 ---
-    private const int CenterX = 62;
-    private const int CenterY = 598;
-    private const int CenterTexW = 318;
-    private const int CenterTexH = 42;
+    // Measured #412D1D face bbox inside PNGs (panel_* 318×N). Used to map tex → design face 1:1.
+    private const int LimitsPngFaceX = 6;
+    private const int LimitsPngFaceY = 6;
+    private const int LimitsPngFaceW = 306;
+    private const int LimitsPngFaceH = 100;
+    private const int LegendPngFaceX = 6;
+    private const int LegendPngFaceY = 6;
+    private const int LegendPngFaceW = 306;
+    private const int LegendPngFaceH = 149;
+    private const int CenterPngFaceX = 6;
+    private const int CenterPngFaceY = 6;
+    private const int CenterPngFaceW = 306;
+    private const int CenterPngFaceH = 30;
 
-    private const int MapX = 458;
-    private const int MapY = 192;
-    private const int MapW = 447;
-    private const int MapH = 446;
+    // Status between legend bottom (459) and center top (655).
+    private const int MessageY = 480;
+
+    // --- Center Group 1350: face (73,655) 304×32 #4D3624 ---
+    private const int CenterX = 73;
+    private const int CenterY = 655;
+    private const int CenterTexW = 304;
+    private const int CenterTexH = 32;
+
+    // --- Interactive map Group 1350: (467,215) 475×474 + 2px #121212 ---
+    private const int MapX = 467;
+    private const int MapY = 215;
+    private const int MapW = 475;
+    private const int MapH = 474;
     private const int MapBorder = 2;
 
-    // --- Claims tab layout from Group 471.svg (dialog = viewBox 973×706, origin 0,0) ---
-    // Claim rows Group 378: face name (70,198) 251×69 → full tex 302×81 @ (64,192). Step 89 (81+8).
-    private const int ClaimsListX = 64;
-    private const int ClaimsListY = 192;
+    // Lift content toward dashed section rule (SectionDashY=174): SVG Y − 10.
+    private const int ContentYNudge = 10;
+
+    // --- Claims list Group 1349.svg: outer 302×76 @ (69,215), step 82 (gap 6) ---
+    // Name face 256×70 @ (73,217); icon wells 32×32 @ (335,217) & (335,255).
+    private const int ClaimsListX = 69;
+    private const int ClaimsListY = 215 - ContentYNudge;
     private const int ClaimsListW = 302;
-    private const int ClaimsListH = 445;
-    private const int ClaimsCardH = 81;
-    /// <summary>Gap between claim panels AND gap from panel right edge to scrollbar.</summary>
-    private const int ClaimsCardGap = 8;
-    private const int ClaimsIconColW = 42;
-    // Scroll 8px right of list: 64+302+8 = 374.
-    private const int ClaimsScrollX = ClaimsListX + ClaimsListW + ClaimsCardGap;
+    private const int ClaimsListH = 486; // 6 rows × 82 − last gap
+    private const int ClaimsCardH = 76;
+    /// <summary>Gap between claim rows (SVG step 82 − row 76).</summary>
+    private const int ClaimsCardGap = 6;
+    private const int ClaimsIconColW = 32;
+    // Scroll just right of list outer edge 371.
+    private const int ClaimsScrollX = ClaimsListX + ClaimsListW + 8;
     private const int ClaimsScrollY = ClaimsListY;
     private const int ClaimsScrollW = 6;
-    private const int ClaimsScrollH = 450;
+    private const int ClaimsScrollH = ClaimsListH;
     private const double ClaimsScrollThumbMinH = 36;
     private static readonly double[] ColScrollTrack = [69 / 255.0, 50 / 255.0, 36 / 255.0];
     private static readonly double[] ColScrollThumb = [0x7E / 255.0, 0x5D / 255.0, 0x43 / 255.0];
 
-    // --- Settings plate Group 468: face (464,198) 439×164, full tex 451×176 @ (458,192) ---
-    private const int SettingsX = 464;
-    private const int SettingsY = 198;
-    private const int SettingsW = 439;
-    private const int SettingsH = 164;
-    private const int SettingsTexX = 458;
-    private const int SettingsTexY = 192;
-    private const int SettingsTexW = 451;
-    private const int SettingsTexH = 176;
-    // Fields absolute in Group 471: inputs (476,266) & (691,266) 200×30; btns (476,311) & (691,311) 200×42.
-    private const int SettingsFieldW = 200;
-    private const int SettingsInputH = 30;
-    private const int SettingsBtnH = 42; // Group 469.png
-    private const int SettingsLeftFieldX = 476;
-    private const int SettingsRightFieldX = 691;
-    private const int SettingsInputY = 266;
-    private const int SettingsBtnY = 311;
-    // Text baselines absolute Group 471 → relative to tex (458,192):
-    // stats (475.856,220) → (17.856,28); labels y=258 → 66; btn text y=335 → 143.
-    private const double SettingsStatsBaselineY = 28;
-    private const double SettingsLabelBaselineY = 66;
-    private const double SettingsBtnTextBaselineY = 143;
-    private const double SettingsStatsTextX = 17.856;
-    private const double SettingsLabelLeftX = 19.328;   // 477.328 − 458
-    private const double SettingsLabelRightX = 234.328; // 692.328 − 458
-    private const double SettingsBtnLeftCenterX = 118;  // mid 476..676 − 458
-    private const double SettingsBtnRightCenterX = 333; // mid 691..891 − 458
-    private const double FontSettingsStats = 16;
-    private const double FontSettingsLabel = 16;
-    private const double FontSettingsBtn = 16;
-    /// <summary>SVG stats fill #836650 @ 0.64.</summary>
-    private static readonly double[] ColSettingsStats = [0x83 / 255.0, 0x66 / 255.0, 0x50 / 255.0, 0.64];
-    /// <summary>SVG button + member name labels #9F795B.</summary>
-    private static readonly double[] ColSettingsBtn = [0x9F / 255.0, 0x79 / 255.0, 0x5B / 255.0, 1.0];
+    // --- Settings block Group 1347.svg → panel_settings.png 478×174 @ dialog (465,215) ---
+    // Local SVG coords + origin = absolute. Rows local y=4 / 56 / 100 / 138, face H=32.
+    private const int SettingsTexX = 465;
+    private const int SettingsTexY = 215 - ContentYNudge;
+    private const int SettingsTexW = 478;
+    private const int SettingsTexH = 174;
+    private const int SettingsX = SettingsTexX;
+    private const int SettingsY = SettingsTexY;
+    private const int SettingsW = SettingsTexW;
+    private const int SettingsH = SettingsTexH;
 
-    // Members list Group 470 / 469(1): full row 435×58 @ (458,380); face name (464,386) 203×46.
-    // Row faces y=386,450,514,578 → step 64 → gap 6 between 58px rows.
-    private const int MembersX = 458;
-    private const int MembersY = 380;
-    private const int MembersW = 435;
-    private const int MembersH = 258; // fits ~4 rows (58+6)*3+58
+    private const int PlateH = 32;
+
+    // Row 1 local: AREAS(4,4,213) CHUNKS(223,4,213) GEAR(442,4,32)
+    private const int StatAreasX = SettingsTexX + 4;
+    private const int StatAreasY = SettingsTexY + 4;
+    private const int StatAreasW = 213;
+    private const int StatChunksX = SettingsTexX + 223;
+    private const int StatChunksW = 213;
+    private const int StatGearX = SettingsTexX + 442;
+    private const int StatGearW = 32;
+    // Gear hub @ local (458,20), 24px well → draw origin local (446,8)
+    private const double StatGearIconLocalX = 446;
+    private const double StatGearIconLocalY = 8;
+    private const double StatGearIconSize = 24;
+
+    // Row 2 local: flags (4,56) & (242,56) w=232; checkbox (15,63)/(253,63) 18×18; labels (44,77)/(289,68.25)
+    private const int FlagPvpX = SettingsTexX + 4;
+    private const int FlagPvpY = SettingsTexY + 56;
+    private const int FlagPlateW = 232;
+    private const int FlagAnimalsX = SettingsTexX + 242;
+    private const int FlagCheckLocalX = 11; // 15−4 / 253−242
+    private const int FlagCheckLocalY = 7;  // 63−56
+    private const int FlagCheckSize = 18;
+
+    // Row 3–4 local: input(4,100/138,314) + btn(324,100/138,150)
+    private const int RenameInputX = SettingsTexX + 4;
+    private const int RenameInputY = SettingsTexY + 100;
+    private const int RenameInputW = 314;
+    private const int RenameBtnX = SettingsTexX + 324;
+    private const int RenameBtnW = 150;
+    private const int AddInputX = SettingsTexX + 4;
+    private const int AddInputY = SettingsTexY + 138;
+    private const int AddInputW = 314;
+    private const int AddBtnX = SettingsTexX + 324;
+    private const int AddBtnW = 150;
+
+    // Text layout: consistent pad/baseline inside 32px faces (SVG paths were English pixel-font anchors).
+    private const int FacePadX = 12;
+    /// <summary>Baseline from face top for ~14px Montserrat in 32px face (optical center).</summary>
+    private const int FaceTextBaseline = 21;
+    private const double StatAreasTextX = StatAreasX + FacePadX;
+    private const double StatChunksTextX = StatChunksX + FacePadX;
+    private const double StatTextBaselineY = StatAreasY + FaceTextBaseline;
+    // After checkbox (11+18) + gap 8 → text starts ~37 from face left.
+    private const double FlagLabelLocalX = FlagCheckLocalX + FlagCheckSize + 8;
+    private const double FlagPvpTextX = FlagPvpX + FlagLabelLocalX;
+    private const double FlagAnimalsTextX = FlagAnimalsX + FlagLabelLocalX;
+    private const double FlagPvpTextBaselineY = FlagPvpY + FaceTextBaseline;
+    private const double FlagAnimalsTextBaselineY = FlagPvpY + FaceTextBaseline;
+    private const double RenamePlaceholderX = RenameInputX + FacePadX;
+    private const double RenamePlaceholderBaselineY = RenameInputY + FaceTextBaseline;
+    private const double AddPlaceholderX = AddInputX + FacePadX;
+    private const double AddPlaceholderBaselineY = AddInputY + FaceTextBaseline;
+    // Button labels centered in plates.
+    private const double RenameBtnCenterX = RenameBtnX + RenameBtnW * 0.5;
+    private const double AddBtnCenterX = AddBtnX + AddBtnW * 0.5;
+    private const double RenameBtnBaselineY = RenameInputY + FaceTextBaseline;
+    private const double AddBtnBaselineY = AddInputY + FaceTextBaseline;
+    private const double FontSettingsStats = 14;
+    private const double FontSettingsLabel = 14;
+    private const double FontSettingsBtn = 14;
+    /// <summary>AREAS #6B513D.</summary>
+    private static readonly double[] ColStatAreas = [0x6B / 255.0, 0x51 / 255.0, 0x3D / 255.0, 1.0];
+    /// <summary>CHUNKS #836650 @ 0.64.</summary>
+    private static readonly double[] ColStatChunks = [0x83 / 255.0, 0x66 / 255.0, 0x50 / 255.0, 0.64];
+    /// <summary>Flags / buttons #9F795B.</summary>
+    private static readonly double[] ColSettingsBtn = [0x9F / 255.0, 0x79 / 255.0, 0x5B / 255.0, 1.0];
+    /// <summary>RENAME/ADD #9F795B @ 0.64.</summary>
+    private static readonly double[] ColSettingsBtnMuted = [0x9F / 255.0, 0x79 / 255.0, 0x5B / 255.0, 0.64];
+    /// <summary>Placeholders RegionName… / PlayerName… #836650 @ 0.32.</summary>
+    private static readonly double[] ColSettingsPlaceholder = [0x83 / 255.0, 0x66 / 255.0, 0x50 / 255.0, 0.32];
+    /// <summary>Gear stroke #FEE4CF (Group 1347).</summary>
+    private static readonly double[] ColSettingsGear = [0xFE / 255.0, 0xE4 / 255.0, 0xCF / 255.0, 1.0];
+
+    // --- Below settings: members list OR use-filter — same band (465…943) ---
+    // Shared so gear swap does not shift left claims list or settings plates.
+    private const int MembersX = SettingsTexX; // 465
+    private const int MembersY = 417 - ContentYNudge;
+    private const int MembersRight = SettingsTexX + SettingsTexW; // 943
+    private const int MembersScrollW = ClaimsScrollW;
+    private const int MembersScrollX = MembersRight - MembersScrollW; // 937
+    private const int MembersW = MembersScrollX - ClaimsCardGap - MembersX; // 466
     private const int MembersRowH = 58;
     private const int MembersRowGap = 6;
     private const int MembersNameW = 203;
     private const int MembersBtnSize = 46;
     private const int MembersBtnGap = 9;
-    private const int MembersScrollX = 901; // Group 471 vertical track ~902
     private const int MembersScrollY = MembersY;
-    private const int MembersScrollW = ClaimsScrollW;
-    private const int MembersScrollH = MembersH;
+    private const int MembersScrollH = 274; // fills band under settings to ~bottom
+    private const int MembersH = MembersScrollH;
+
+    // Use-filter (Group 1349): Search + PublicUse on first row, then 48×48 grid step 58.
+    // X positions relative to MembersX so left edge matches members list.
+    private const int UseSearchH = 32;
+    private const int UseSearchW = 262;
+    private const int UseStatusW = 202;
+    private const int UseStatusGap = 6;
+    private const int UseSearchX = MembersX + 4; // face inset like settings plates
+    private const int UseSearchY = MembersY;
+    private const int UseStatusX = UseSearchX + UseSearchW + UseStatusGap;
+    private const int UseStatusY = UseSearchY;
+    private const int UseStatusH = UseSearchH;
+    private const int UseGridX = MembersX + 4;
+    private const int UseGridY = MembersY + UseSearchH + 20; // 469−417 = 52 in SVG
+    private const int UseTile = 48;
+    private const int UseTileGap = 10;
+    private const int UseGridCols = 8;
+    private const int UseGridW = MembersW - 8; // same content width as members face band
+    private const int UseGridH = MembersY + MembersH - UseGridY;
 
     // Right panel modes: settings/members vs use-filter catalog (in-panel, not modal).
     private const int ClaimsRightSettings = 0;
     private const int ClaimsRightUseFilter = 1;
-
-    // Gear next to SETTINGS title (Group 471 section band).
-    private const int SettingsGearSize = 26;
-    private const int SettingsGearX = (int)SectionDashRightX2 - SettingsGearSize;
-    private const int SettingsGearY = 140;
 
     /// <summary>Tab plate labels (Group 471 tab faces). Outlined SVG ~22px → design ~28–30 fills well.</summary>
     private const double FontTab = 28;
@@ -246,11 +336,9 @@ public sealed class ClaimMapDialog : GuiDialog
     private static readonly double[] ColLo = [0.165, 0.118, 0.078];      // #2A1E14
     private static readonly double[] ColCenter = [0.302, 0.212, 0.141];  // #4D3624
     private static readonly double[] ColEdge = [0.071, 0.071, 0.071];    // #121212
-    private static readonly double[] ColPanel = [0.318, 0.227, 0.157];   // #513A28
+    private static readonly double[] ColPanel = [0.184, 0.114, 0.067];   // #2F1D11 Group 1012 face
     private static readonly double[] ColTabActive = [1.0, 1.0, 1.0, 1.0];
     private static readonly double[] ColTabInactive = [0.624, 0.475, 0.357, 1.0]; // #9F795B from SVG
-    private static readonly double[] ColIcon = [0.624, 0.475, 0.357, 1.0];      // #9F795B icons
-    private static readonly double[] ColIconPinned = [1.0, 1.0, 1.0, 1.0];     // white when pinned
     private static readonly double[] ColLimitsTitle = [0.514, 0.400, 0.314, 1.0]; // #836650 title in Group 466
 
     /// <summary>Клиентский API Vintage Story.</summary>
@@ -259,7 +347,7 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Сетевой канал SwixyClaimChunk для пакетов карты и приватов.</summary>
     private readonly IClientNetworkChannel channel;
 
-    /// <summary>Фон-фрейм Group 462 (textures/gui/dialog_frame.png).</summary>
+    /// <summary>Фон-фрейм Group 1012 (textures/gui/dialog_frame.png).</summary>
     private ImageSurface? frameSurface;
 
     /// <summary>Кнопка «К игроку» — Group 464.png (textures/gui/button_center.png).</summary>
@@ -271,10 +359,10 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Плашка лимитов — Group 466.png (textures/gui/panel_limits.png).</summary>
     private ImageSurface? limitsPanelSurface;
 
-    /// <summary>Плашка настроек — Group 468.png (textures/gui/panel_settings.png).</summary>
+    /// <summary>Блок настроек — Group 1347.svg plates (textures/gui/panel_settings.png, 478×174).</summary>
     private ImageSurface? settingsPanelSurface;
 
-    /// <summary>Кнопки rename/add — Group 469.png (textures/gui/btn_settings.png).</summary>
+    /// <summary>Legacy Group 469 buttons (optional; labels now drawn over Group 1346).</summary>
     private ImageSurface? settingsButtonSurface;
 
     /// <summary>Трек скролла списка приватов — Rectangle 758.png (scrollbar_track.png).</summary>
@@ -288,23 +376,6 @@ public sealed class ClaimMapDialog : GuiDialog
 
     /// <summary>Локальный статус (Working… / send error); null — брать mapState.Message.</summary>
     private string? mapStatusOverride;
-
-    /// <summary>
-    /// Как в ванильном title bar: Fixed (закреплено) / Movable (откреплено, можно таскать за верх).
-    /// </summary>
-    private bool isMovable;
-
-    /// <summary>Смещение от центра экрана (ElementBounds.fixedOffset*), в design px.</summary>
-    private double dialogOffsetX;
-    private double dialogOffsetY;
-
-    private bool dragArmed;
-    private bool isDragging;
-    private double dragStartMouseX;
-    private double dragStartMouseY;
-    private double dragStartOffsetX;
-    private double dragStartOffsetY;
-    private const double DragThresholdPx = 5;
 
     /// <summary>Кэш списка приватов игрока и сообщений UI.</summary>
     private ClaimListStatePacket? claimListState;
@@ -379,6 +450,21 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Границы клип-области списка участников.</summary>
     private ElementBounds? memberListClipBounds;
 
+    /// <summary>Внешняя область списка участников (паркуется при открытой шестерёнке).</summary>
+    private ElementBounds? memberListAreaBounds;
+
+    /// <summary>Hit-зона скролла участников.</summary>
+    private ElementBounds? memberScrollAreaBounds;
+
+    /// <summary>Сообщение под списком участников.</summary>
+    private ElementBounds? claimsMessageAreaBounds;
+
+    /// <summary>Поле поиска use-filter (паркуется, когда шестерёнка выкл.).</summary>
+    private ElementBounds? useFilterSearchAreaBounds;
+
+    /// <summary>Hit-зона скролла use-filter.</summary>
+    private ElementBounds? useFilterScrollAreaBounds;
+
     /// <summary>Флаг: отложенное обновление UI уже запланировано на следующий тик.</summary>
     private bool claimsUiDeferScheduled;
 
@@ -406,6 +492,20 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Клиентский скан привата (без сервера) — только для UI выбора блоков.</summary>
     private ClaimUseFilterClientScanner? useFilterClientScanner;
 
+    /// <summary>Vanilla Fixed/Movable dropdown (same as GuiElementDialogTitleBar).</summary>
+    private GuiElementListMenu? detachListMenu;
+
+    /// <summary>True after user picks Movable (or restored from saved dialog position).</summary>
+    private bool dialogMovable;
+
+    /// <summary>LMB drag of the whole window while Movable.</summary>
+    private bool dialogDragging;
+
+    private readonly Vec2i dialogDragStart = new();
+
+    /// <summary>Snapshot of centered bounds before first detach (restore on Fixed).</summary>
+    private ElementBounds? dialogAnchoredBoundsBefore;
+
     #endregion
 
     /// <summary>Код горячей клавиши P для открытия карты приватов.</summary>
@@ -413,6 +513,15 @@ public sealed class ClaimMapDialog : GuiDialog
 
     /// <summary>Не захватывать мышь глобально — удобнее кликать по карте.</summary>
     public override bool PrefersUngrabbedMouse => true;
+
+    /// <summary>VS clickable pointer (same as Questbook — assets/game/textures/gui/cursors/linkselect.png).</summary>
+    private const string ClickableCursor = "linkselect";
+
+    /// <summary>Text-field cursor over rename / add / use-filter search.</summary>
+    private const string TextCursor = "textselect";
+
+    /// <summary>Move cursor when dragging a Movable dialog by the header chrome.</summary>
+    private const string MoveCursor = "move";
 
     #region Конструктор и жизненный цикл
 
@@ -481,6 +590,8 @@ public sealed class ClaimMapDialog : GuiDialog
 
         if (packet.Claims.Count == 0)
         {
+            // No claims left — discard use-filter draft so it cannot save onto a later selection.
+            DiscardUseFilterDraftIfOpen(applyUi: false);
             selectedClaimId = 0;
             selectedClaimName = "";
             selectedMemberUid = "";
@@ -563,9 +674,147 @@ public sealed class ClaimMapDialog : GuiDialog
 
     public override void OnGuiClosed()
     {
+        // Stop background near-scan so it cannot touch UI after close.
+        useFilterClientScanner?.Cancel();
+        useFilterScanning = false;
         claimsRightMode = ClaimsRightSettings;
+        dialogDragging = false;
+        MouseOverCursor = null;
+        CloseDetachListMenu();
         DisposeFrameSurface();
         base.OnGuiClosed();
+    }
+
+    /// <summary>
+    /// Base copies composer → MouseOverCursor; we override like Questbook so invisible
+    /// hit buttons (tabs/flags/gear) still show the linkselect pointer.
+    /// </summary>
+    public override void OnRenderGUI(float deltaTime)
+    {
+        base.OnRenderGUI(deltaTime);
+        UpdateHoverCursor(clientApi.Input.MouseX, clientApi.Input.MouseY);
+    }
+
+    /// <summary>
+    /// Set <see cref="GuiDialog.MouseOverCursor"/> for clickable hit areas.
+    /// Must run at the end of <see cref="OnRenderGUI"/> — that is when GuiManager samples it.
+    /// </summary>
+    private void UpdateHoverCursor(int mouseX, int mouseY)
+    {
+        if (dialogDragging)
+        {
+            MouseOverCursor = MoveCursor;
+            return;
+        }
+
+        if (IsOverTextInput(mouseX, mouseY))
+        {
+            MouseOverCursor = TextCursor;
+            return;
+        }
+
+        if (dialogMovable
+            && IsDetachChromeHit(mouseX, mouseY)
+            && !IsHeaderControlHit(mouseX, mouseY)
+            && detachListMenu is not { IsOpened: true })
+        {
+            MouseOverCursor = MoveCursor;
+            return;
+        }
+
+        MouseOverCursor = IsOverClickableControl(mouseX, mouseY) ? ClickableCursor : null;
+    }
+
+    private bool IsOverTextInput(int mouseX, int mouseY)
+    {
+        if (activePage != PageClaims || GetSelectedClaim() == null)
+        {
+            return false;
+        }
+
+        // Rename / add player fields (settings plates).
+        if (IsMouseOverRect(mouseX, mouseY, RenameInputX, RenameInputY, RenameInputW, PlateH)
+            || IsMouseOverRect(mouseX, mouseY, AddInputX, AddInputY, AddInputW, PlateH))
+        {
+            return true;
+        }
+
+        // Use-filter search when gear panel is open.
+        return claimsRightMode == ClaimsRightUseFilter
+            && useFilterSearchAreaBounds != null
+            && IsMouseOverElementBounds(mouseX, mouseY, useFilterSearchAreaBounds);
+    }
+
+    private bool IsOverClickableControl(int mouseX, int mouseY)
+    {
+        // Top tabs + close
+        if (IsHeaderControlHit(mouseX, mouseY))
+        {
+            return true;
+        }
+
+        // Detach menu open / header RMB affordance
+        if (detachListMenu is { IsOpened: true } && detachListMenu.IsPositionInside(mouseX, mouseY))
+        {
+            return true;
+        }
+
+        if (IsDetachChromeHit(mouseX, mouseY))
+        {
+            return true;
+        }
+
+        if (activePage == PageMap)
+        {
+            if (IsMouseOverRect(mouseX, mouseY, MapX, MapY, MapW, MapH)
+                || IsMouseOverRect(mouseX, mouseY, CenterX, CenterY, CenterTexW, CenterTexH))
+            {
+                return true;
+            }
+        }
+        else if (activePage == PageClaims && GetSelectedClaim() != null)
+        {
+            // Left claims list + thin scroll track
+            if (IsMouseOverRect(mouseX, mouseY, ClaimsListX, ClaimsListY, ClaimsListW, ClaimsListH)
+                || IsMouseOverRect(mouseX, mouseY, ClaimsScrollX, ClaimsScrollY, ClaimsScrollW, ClaimsScrollH))
+            {
+                return true;
+            }
+
+            // Settings hit plates: flags, gear, rename/add buttons
+            if (IsMouseOverRect(mouseX, mouseY, FlagPvpX, FlagPvpY, FlagPlateW, PlateH)
+                || IsMouseOverRect(mouseX, mouseY, FlagAnimalsX, FlagPvpY, FlagPlateW, PlateH)
+                || IsMouseOverRect(mouseX, mouseY, StatGearX, StatAreasY, StatGearW, PlateH)
+                || IsMouseOverRect(mouseX, mouseY, RenameBtnX, RenameInputY, RenameBtnW, PlateH)
+                || IsMouseOverRect(mouseX, mouseY, AddBtnX, AddInputY, AddBtnW, PlateH))
+            {
+                return true;
+            }
+
+            if (claimsRightMode == ClaimsRightUseFilter)
+            {
+                if (useFilterViewportBounds != null
+                    && IsMouseOverElementBounds(mouseX, mouseY, useFilterViewportBounds))
+                {
+                    return true;
+                }
+
+                if (IsMouseOverUseFilterScrollTrack(mouseX, mouseY))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (IsMouseOverRect(mouseX, mouseY, MembersX, MembersY, MembersW, MembersH)
+                    || IsMouseOverRect(mouseX, mouseY, MembersScrollX, MembersScrollY, MembersScrollW, MembersScrollH))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     #endregion
@@ -578,14 +827,13 @@ public sealed class ClaimMapDialog : GuiDialog
         ClaimFontHelper.EnsureRegistered(clientApi);
         EnsureFrameSurface();
 
-        // Centered frame + optional drag offset (vanilla Movable uses offset from center).
-        var dialogBounds = ElementBounds.Fixed(0, 0, UiW, UiH)
-            .WithAlignment(EnumDialogArea.CenterMiddle)
-            .WithFixedAlignmentOffset(dialogOffsetX, dialogOffsetY);
+        // Fixed = centered; Movable = free position from client settings (vanilla dialog pin).
+        var dialogBounds = BuildDialogBounds();
         var bgBounds = ElementBounds.Fill;
 
         gridElement?.Dispose();
         gridElement = null;
+        detachListMenu = null;
         if (activePage == PageMap)
         {
             gridElement = new ClaimMapGridElement(
@@ -596,10 +844,10 @@ public sealed class ClaimMapDialog : GuiDialog
         }
 
         ClearComposers();
-        // Invisible hit targets — labels drawn in DrawDialogChrome with Montserrat.
+        // Invisible hit targets — labels drawn in DrawDialogChrome (Minecraft faces).
         var hitFont = ClaimFontHelper.Create(1, [0, 0, 0, 0], bold: true);
         var composer = clientApi.Gui
-            .CreateCompo("epclaimmap", dialogBounds)
+            .CreateCompo(DialogComposerName, dialogBounds)
             .AddDynamicCustomDraw(bgBounds.FlatCopy().WithFixedPadding(0), DrawDialogChrome, "dialogChrome")
             .BeginChildElements(bgBounds)
             .AddButton(
@@ -618,18 +866,27 @@ public sealed class ClaimMapDialog : GuiDialog
                 "claimsTab")
             .AddButton(
                 " ",
-                TogglePinButton,
-                ElementBounds.Fixed(PinBtnX, TabY, PinBtnW, TabH),
-                hitFont,
-                EnumButtonStyle.None,
-                "pinBtn")
-            .AddButton(
-                " ",
                 CloseButton,
                 ElementBounds.Fixed(CloseBtnX, TabY, CloseBtnW, TabH),
                 hitFont,
                 EnumButtonStyle.None,
                 "closeBtn");
+
+        // Vanilla Fixed/Movable list (GuiElementDialogTitleBar menu) — opened via RMB on header.
+        var detachMenuBounds = ElementBounds.Fixed(UiW - 160, 8, 140, 22);
+        detachListMenu = new GuiElementListMenu(
+            clientApi,
+            ["auto", "manual"],
+            [Lang.Get("Fixed"), Lang.Get("Movable")],
+            dialogMovable ? 1 : 0,
+            OnDetachMenuSelection,
+            detachMenuBounds,
+            CairoFont.WhiteSmallText(),
+            multiSelect: false)
+        {
+            HoveredIndex = dialogMovable ? 1 : 0
+        };
+        composer.AddInteractiveElement(detachListMenu, "detachListMenu");
 
         if (activePage == PageMap)
         {
@@ -645,11 +902,155 @@ public sealed class ClaimMapDialog : GuiDialog
         {
             ConfigureClaimListSpacing();
             ConfigureMemberListSpacing();
+            // Sync Enabled for parked band after full compose (bounds already parked in compose).
+            SyncGearModeElementEnabled();
         }
 
         ApplyClaimsPageScrollState();
         ApplyClaimsPageInputState();
         UpdateText(null);
+    }
+
+    /// <summary>
+    /// Dialog root bounds: CenterMiddle when Fixed, saved free position when Movable
+    /// (same keys as vanilla title-bar pin via <see cref="IGuiAPI.GetDialogPosition"/>).
+    /// </summary>
+    private ElementBounds BuildDialogBounds()
+    {
+        var dialogBounds = ElementBounds.Fixed(0, 0, UiW, UiH);
+        var savedPos = clientApi.Gui.GetDialogPosition(DialogComposerName);
+        if (savedPos != null)
+        {
+            dialogMovable = true;
+            dialogBounds.Alignment = EnumDialogArea.None;
+            dialogBounds.fixedX = savedPos.X;
+            dialogBounds.fixedY = Math.Max(0, savedPos.Y);
+            dialogBounds.absMarginX = 0;
+            dialogBounds.absMarginY = 0;
+            return dialogBounds;
+        }
+
+        dialogMovable = false;
+        return dialogBounds.WithAlignment(EnumDialogArea.CenterMiddle);
+    }
+
+    /// <summary>Vanilla list values: "auto" = Fixed, "manual" = Movable.</summary>
+    private void OnDetachMenuSelection(string val, bool on)
+    {
+        var parent = SingleComposer?.Bounds;
+        if (parent == null)
+        {
+            return;
+        }
+
+        if (val == "auto")
+        {
+            // Fixed — re-center (restore snapshot if we still have one from this session).
+            if (dialogAnchoredBoundsBefore != null)
+            {
+                parent.fixedX = dialogAnchoredBoundsBefore.fixedX;
+                parent.fixedY = dialogAnchoredBoundsBefore.fixedY;
+                parent.fixedOffsetX = dialogAnchoredBoundsBefore.fixedOffsetX;
+                parent.fixedOffsetY = dialogAnchoredBoundsBefore.fixedOffsetY;
+                parent.Alignment = dialogAnchoredBoundsBefore.Alignment;
+                parent.absMarginX = dialogAnchoredBoundsBefore.absMarginX;
+                parent.absMarginY = dialogAnchoredBoundsBefore.absMarginY;
+            }
+            else
+            {
+                parent.Alignment = EnumDialogArea.CenterMiddle;
+                parent.fixedX = 0;
+                parent.fixedY = 0;
+                parent.fixedOffsetX = 0;
+                parent.fixedOffsetY = 0;
+                parent.absMarginX = 0;
+                parent.absMarginY = 0;
+            }
+
+            dialogMovable = false;
+            dialogDragging = false;
+            clientApi.Gui.SetDialogPosition(DialogComposerName, null);
+            parent.MarkDirtyRecursive();
+            parent.CalcWorldBounds();
+            return;
+        }
+
+        // Movable — free drag; remember position in client settings.
+        if (!dialogMovable)
+        {
+            dialogAnchoredBoundsBefore = parent.FlatCopy();
+        }
+
+        dialogMovable = true;
+        parent.Alignment = EnumDialogArea.None;
+        parent.fixedOffsetX = 0;
+        parent.fixedOffsetY = 0;
+        parent.fixedX = parent.absX / RuntimeEnv.GUIScale;
+        parent.fixedY = parent.absY / RuntimeEnv.GUIScale;
+        parent.absMarginX = 0;
+        parent.absMarginY = 0;
+        parent.MarkDirtyRecursive();
+        parent.CalcWorldBounds();
+        clientApi.Gui.SetDialogPosition(
+            DialogComposerName,
+            new Vec2i((int)parent.fixedX, (int)parent.fixedY));
+    }
+
+    private void OpenDetachListMenu(int mouseX, int mouseY)
+    {
+        if (detachListMenu == null || SingleComposer?.Bounds == null)
+        {
+            return;
+        }
+
+        var s = Math.Max(0.01, RuntimeEnv.GUIScale);
+        var parent = SingleComposer.Bounds;
+        // Anchor dropdown near cursor inside the dialog (same list as vanilla title-bar menu).
+        detachListMenu.Bounds.fixedX = Math.Clamp((mouseX - parent.absX) / s, 8, UiW - 150);
+        detachListMenu.Bounds.fixedY = Math.Clamp((mouseY - parent.absY) / s, 4, DetachChromeH);
+        detachListMenu.Bounds.CalcWorldBounds();
+        detachListMenu.SetSelectedIndex(dialogMovable ? 1 : 0);
+        detachListMenu.HoveredIndex = dialogMovable ? 1 : 0;
+        detachListMenu.Open();
+        clientApi.Gui.PlaySound("menubutton");
+    }
+
+    /// <summary>
+    /// <see cref="GuiElementListMenu.Close"/> is internal — invoke via reflection (same as title bar).
+    /// </summary>
+    private void CloseDetachListMenu()
+    {
+        if (detachListMenu == null || !detachListMenu.IsOpened)
+        {
+            return;
+        }
+
+        typeof(GuiElementListMenu)
+            .GetMethod("Close", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            ?.Invoke(detachListMenu, null);
+    }
+
+    private bool IsDetachChromeHit(int mouseX, int mouseY)
+    {
+        return IsMouseOverRect(mouseX, mouseY, 0, 0, UiW, DetachChromeH);
+    }
+
+    private bool IsHeaderControlHit(int mouseX, int mouseY)
+    {
+        return IsMouseOverRect(mouseX, mouseY, TabMapX, TabY, TabMapW, TabH)
+            || IsMouseOverRect(mouseX, mouseY, TabClaimsX, TabY, TabClaimsW, TabH)
+            || IsMouseOverRect(mouseX, mouseY, CloseBtnX, TabY, CloseBtnW, TabH);
+    }
+
+    private void PersistDialogPositionIfMovable()
+    {
+        if (!dialogMovable || SingleComposer?.Bounds == null)
+        {
+            return;
+        }
+
+        var b = SingleComposer.Bounds;
+        clientApi.Gui.SetDialogPosition(DialogComposerName, new Vec2i((int)b.fixedX, (int)b.fixedY));
     }
 
     /// <summary>
@@ -698,7 +1099,7 @@ public sealed class ClaimMapDialog : GuiDialog
 
         // ----- Left: claim list + custom thin scroll (Rectangle 758, no VS chrome) -----
         // Parent bounds MUST be in the composer tree before BeginClip (else renderX NRE).
-        // Spacing: FixedHeight=81 panel + CellList.unscaledCellSpacing=8 (see ConfigureClaimListSpacing).
+        // Group 1349: FixedHeight=76 + CellList spacing=6 (step 82).
         var claimListBounds = ElementBounds.Fixed(ClaimsListX, ClaimsListY, ClaimsListW, ClaimsListH);
         claimListClipBounds = claimListBounds.ForkContainingChild(0, 0, 0, 0);
         claimListTableBounds = claimListClipBounds.ForkContainingChild(0, 0, 0, 0);
@@ -722,16 +1123,6 @@ public sealed class ClaimMapDialog : GuiDialog
                 "claimsEmpty");
         }
 
-        // Gear next to SETTINGS title — opens use-filter in the right panel.
-        var hitFont = ClaimFontHelper.Create(1, [0, 0, 0, 0], bold: true);
-        composer.AddButton(
-            " ",
-            ToggleUseFilterPanel,
-            ElementBounds.Fixed(SettingsGearX, SettingsGearY, SettingsGearSize, SettingsGearSize),
-            hitFont,
-            EnumButtonStyle.None,
-            "settingsGearBtn");
-
         var selectedClaim = GetSelectedClaim();
         if (selectedClaim == null)
         {
@@ -744,16 +1135,13 @@ public sealed class ClaimMapDialog : GuiDialog
             return;
         }
 
-        if (claimsRightMode == ClaimsRightUseFilter)
-        {
-            ComposeUseFilterPanel(composer, selectedClaim, labelFont, bodyFont, actionButtonFont, inputFont);
-            return;
-        }
-
+        // Always the same element tree (settings + members + use-filter).
+        // Use-filter is parked off-screen when inactive so gear toggle does not change left claims list structure.
         ComposeSettingsAndMembersPanel(composer, selectedClaim, labelFont, bodyFont, actionButtonFont, inputFont);
+        ComposeUseFilterPanel(composer, selectedClaim, labelFont, bodyFont, actionButtonFont, inputFont);
     }
 
-    /// <summary>Правая колонка: rename / add member / members list.</summary>
+    /// <summary>Правая колонка: settings plates + members list (always; gear overlays use-filter on top).</summary>
     private void ComposeSettingsAndMembersPanel(
         GuiComposer composer,
         ClaimInfoPacket selectedClaim,
@@ -762,77 +1150,112 @@ public sealed class ClaimMapDialog : GuiDialog
         CairoFont actionButtonFont,
         CairoFont inputFont)
     {
-        // Layout from Group 468.svg: two 200px columns, input @y+68, button @y+113 (Group 469).
-        // Labels/stats/button text are drawn in DrawClaimsPageChrome (SVG baselines + colors).
-        var leftColX = SettingsLeftFieldX;
-        var rightColX = SettingsRightFieldX;
-        const int fieldW = SettingsFieldW;
-        const int inputH = SettingsInputH;
-        const int btnH = SettingsBtnH;
-        const int fieldInputY = SettingsInputY;
-        const int fieldBtnY = SettingsBtnY;
-
-        // Input text: cream (SVG placeholder is #D29F78@0.16; typed text must stay readable).
-        var settingsInputFont = ClaimFontHelper.Create(15, ClaimFontHelper.ColorCream, bold: true);
+        // Input text cream; plates drawn in DrawClaimsPageChrome (Group 1346 faces).
+        var settingsInputFont = ClaimFontHelper.Create(14, ClaimFontHelper.ColorCream, bold: true);
         var hitFont = ClaimFontHelper.Create(1, [0, 0, 0, 0], bold: true);
 
+        // Text field inset — same pad as plate labels / placeholders.
+        const int inputPadX = FacePadX;
+        const int inputPadY = 6;
+
         composer
+            // Flag plates (hit = full face).
             .AddDynamicCustomDraw(
-                ElementBounds.Fixed(leftColX, fieldInputY, fieldW, inputH),
-                DrawTextInputBackground,
-                "claimNameInputBg")
+                ElementBounds.Fixed(FlagPvpX, FlagPvpY, FlagPlateW, PlateH),
+                DrawClaimFlagPvpPlate,
+                "claimFlagPvpBg")
+            .AddDynamicCustomDraw(
+                ElementBounds.Fixed(FlagAnimalsX, FlagPvpY, FlagPlateW, PlateH),
+                DrawClaimFlagAnimalsPlate,
+                "claimFlagAnimalsBg")
+            .AddButton(
+                " ",
+                ToggleClaimFlagPvpButton,
+                ElementBounds.Fixed(FlagPvpX, FlagPvpY, FlagPlateW, PlateH),
+                hitFont,
+                EnumButtonStyle.None,
+                "claimFlagPvpHit")
+            .AddButton(
+                " ",
+                ToggleClaimFlagAnimalsButton,
+                ElementBounds.Fixed(FlagAnimalsX, FlagPvpY, FlagPlateW, PlateH),
+                hitFont,
+                EnumButtonStyle.None,
+                "claimFlagAnimalsHit")
+            // Gear plate next to stats — open use-filter overlay.
+            .AddButton(
+                " ",
+                ToggleUseFilterPanel,
+                ElementBounds.Fixed(StatGearX, StatAreasY, StatGearW, PlateH),
+                hitFont,
+                EnumButtonStyle.None,
+                "settingsPlateGearBtn")
+            // Rename row: wide input + short button.
             .AddTextInput(
-                ElementBounds.Fixed(leftColX + 8, fieldInputY + 5, fieldW - 16, inputH - 10),
+                ElementBounds.Fixed(
+                    RenameInputX + inputPadX,
+                    RenameInputY + inputPadY,
+                    RenameInputW - inputPadX * 2,
+                    PlateH - inputPadY * 2),
                 text => claimNameInput = text,
                 settingsInputFont,
                 "claimNameInput")
-            .AddDynamicCustomDraw(
-                ElementBounds.Fixed(rightColX, fieldInputY, fieldW, inputH),
-                DrawTextInputBackground,
-                "memberNameInputBg")
-            .AddTextInput(
-                ElementBounds.Fixed(rightColX + 8, fieldInputY + 5, fieldW - 16, inputH - 10),
-                text => memberNameInput = text,
-                settingsInputFont,
-                "memberNameInput")
-            // Textured Group 469 hit targets — labels drawn centered in chrome.
             .AddButton(
                 " ",
                 RenameClaimButton,
-                ElementBounds.Fixed(leftColX, fieldBtnY, fieldW, btnH),
+                ElementBounds.Fixed(RenameBtnX, RenameInputY, RenameBtnW, PlateH),
                 hitFont,
                 EnumButtonStyle.None,
                 "renameClaim")
+            // Add player row.
+            .AddTextInput(
+                ElementBounds.Fixed(
+                    AddInputX + inputPadX,
+                    AddInputY + inputPadY,
+                    AddInputW - inputPadX * 2,
+                    PlateH - inputPadY * 2),
+                text => memberNameInput = text,
+                settingsInputFont,
+                "memberNameInput")
             .AddButton(
                 " ",
                 AddMemberButton,
-                ElementBounds.Fixed(rightColX, fieldBtnY, fieldW, btnH),
+                ElementBounds.Fixed(AddBtnX, AddInputY, AddBtnW, PlateH),
                 hitFont,
                 EnumButtonStyle.None,
                 "addMember");
 
-        var memberListBounds = ElementBounds.Fixed(MembersX, MembersY, MembersW, MembersH);
-        memberListClipBounds = memberListBounds.ForkContainingChild(0, 0, 0, 0);
+        // Members list — parked off-screen while use-filter (gear) is open.
+        var memPark = claimsRightMode == ClaimsRightUseFilter ? UiParkY : 0;
+        memberListAreaBounds = ElementBounds.Fixed(MembersX, MembersY + memPark, MembersW, MembersH);
+        memberListClipBounds = memberListAreaBounds.ForkContainingChild(0, 0, 0, 0);
         memberListTableBounds = memberListClipBounds.ForkContainingChild(0, 0, 0, 0);
-        var memberScrollBounds = ElementBounds.Fixed(MembersScrollX, MembersScrollY, MembersScrollW, MembersScrollH);
+        memberScrollAreaBounds = ElementBounds.Fixed(
+            MembersScrollX,
+            MembersScrollY + memPark,
+            MembersScrollW,
+            MembersScrollH);
+        claimsMessageAreaBounds = ElementBounds.Fixed(
+            MembersX + 30,
+            MembersY + MembersH + 4 + memPark,
+            MembersW + ClaimsCardGap + MembersScrollW - 30,
+            24);
 
         composer
-            .AddDynamicCustomDraw(memberListBounds, DrawTransparentBounds, "memberListArea")
-            .AddDynamicCustomDraw(memberScrollBounds, DrawTransparentBounds, "memberScrollHit")
+            .AddDynamicCustomDraw(memberListAreaBounds, DrawTransparentBounds, "memberListArea")
+            .AddDynamicCustomDraw(memberScrollAreaBounds, DrawTransparentBounds, "memberScrollHit")
             .BeginClip(memberListClipBounds)
             .AddCellList(memberListTableBounds, CreateMemberCell, BuildMemberCells(selectedClaim), "memberList")
             .EndClip()
             .AddDynamicText(
                 claimListState?.Message ?? "",
                 bodyFont,
-                // +30px right so "Use restriction saved" / status sits clearer under the members panel.
-                ElementBounds.Fixed(MembersX + 30, MembersY + MembersH + 4, MembersW + ClaimsCardGap + MembersScrollW - 30, 24),
+                claimsMessageAreaBounds,
                 "claimsMessage");
     }
 
     /// <summary>
-    /// Правая колонка: одно окно-плитка (креатив). Выбранные плитки сверху списка.
-    /// Поиск + прокрутка; укладывается в SettingsY → MembersY+MembersH.
+    /// Group 1349: Search + PublicUse + grid. Always in tree; parked off-screen when gear is off.
     /// </summary>
     private void ComposeUseFilterPanel(
         GuiComposer composer,
@@ -842,42 +1265,28 @@ public sealed class ClaimMapDialog : GuiDialog
         CairoFont actionButtonFont,
         CairoFont inputFont)
     {
-        const int pad = 8;
-        // Full right-column band up to the thin scroll strip.
-        var x = SettingsX + pad;
-        var contentW = MembersScrollX - x - ClaimsCardGap; // room for scrollbar
-        if (contentW < 280)
-        {
-            contentW = MembersW - pad;
-        }
-
-        var scrollX = MembersScrollX;
-        var y0 = SettingsY;
-        // Footer sits slightly below the members band so status + buttons are lower.
-        const int footerDrop = 14;
-        var bottom = MembersY + MembersH + footerDrop;
-        const int btnH = 30;
-        const int footerH = btnH + 4;
-        // Claim flags (one row with plates) + search + hint.
-        const int flagsRowH = 34;
-        const int flagsGap = 8;
-        const int searchFieldH = 28;
-        const int chromeH = 4 + flagsRowH + 6 + searchFieldH + 6 + 18;
-        var gridY = y0 + chromeH;
-        // Grid ends above footer with a small gap.
-        var gridH = Math.Max(120, bottom - footerH - 8 - gridY);
-
-        var cream = ClaimFontHelper.Create(13, ClaimFontHelper.ColorCream, bold: true);
-        var creamSm = ClaimFontHelper.Create(12, ClaimFontHelper.ColorCream, bold: true);
-
         RefreshUseFilterEntryLists();
 
-        useFilterViewportBounds = ElementBounds.Fixed(x, gridY, contentW, gridH);
-        var scrollBounds = ElementBounds.Fixed(scrollX, gridY, MembersScrollW, gridH);
+        var ufPark = claimsRightMode == ClaimsRightUseFilter ? 0 : UiParkY;
+
+        useFilterViewportBounds = ElementBounds.Fixed(UseGridX, UseGridY + ufPark, UseGridW, UseGridH);
+        useFilterScrollAreaBounds = ElementBounds.Fixed(
+            MembersScrollX,
+            UseGridY + ufPark,
+            MembersScrollW,
+            UseGridH);
 
         useFilterGrid = new ClaimUseFilterTileGridElement(clientApi, useFilterViewportBounds)
         {
-            OnTileClick = ToggleUseFilterCode,
+            OnTileClick = code =>
+            {
+                if (claimsRightMode != ClaimsRightUseFilter)
+                {
+                    return;
+                }
+
+                ToggleUseFilterCode(code);
+            },
             IsSelected = code =>
             {
                 var n = NormalizeUseFilterCode(code);
@@ -886,6 +1295,11 @@ public sealed class ClaimMapDialog : GuiDialog
             EmptyHint = GetUseFilterEmptyHint(),
             OnScrollChanged = () =>
             {
+                if (claimsRightMode != ClaimsRightUseFilter)
+                {
+                    return;
+                }
+
                 useFilterScroll = useFilterGrid?.ScrollOffset ?? 0f;
                 SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
             }
@@ -893,76 +1307,156 @@ public sealed class ClaimMapDialog : GuiDialog
         useFilterGrid.SetEntries(useFilterEntries);
         useFilterGrid.ScrollOffset = useFilterScroll;
 
-        var flagsY = y0 + 2;
-        var searchY = flagsY + flagsRowH + 6;
-        var hintY = searchY + searchFieldH + 6;
-
-        const int checkSize = 22;
-        const int flagPad = 8;
-        var halfW = (contentW - flagsGap) / 2;
-        var pvpPlate = ElementBounds.Fixed(x, flagsY, halfW, flagsRowH);
-        var animalsPlate = ElementBounds.Fixed(x + halfW + flagsGap, flagsY, halfW, flagsRowH);
-        var searchBgBounds = ElementBounds.Fixed(x, searchY, contentW, searchFieldH);
-        var searchInputBounds = ElementBounds.Fixed(x + 6, searchY + 3, contentW - 12, searchFieldH - 6);
-
-        // Full-plate hit targets; checkbox is drawn on the chip (dark square when off).
-        var hitFont = ClaimFontHelper.Create(1, [0, 0, 0, 0], bold: true);
+        useFilterSearchAreaBounds = ElementBounds.Fixed(
+            UseSearchX + FacePadX,
+            UseSearchY + 6 + ufPark,
+            UseSearchW - FacePadX * 2,
+            UseSearchH - 12);
 
         composer
-            .AddDynamicCustomDraw(pvpPlate, DrawClaimFlagPvpChip, "claimFlagPvpBg")
-            .AddDynamicCustomDraw(animalsPlate, DrawClaimFlagAnimalsChip, "claimFlagAnimalsBg")
-            .AddButton(" ", ToggleClaimFlagPvpButton, pvpPlate.FlatCopy(), hitFont, EnumButtonStyle.None, "claimFlagPvpHit")
-            .AddButton(" ", ToggleClaimFlagAnimalsButton, animalsPlate.FlatCopy(), hitFont, EnumButtonStyle.None, "claimFlagAnimalsHit")
-            .AddDynamicText(
-                Lang.Get("swixyclaimchunk:claim-flag-pvp"),
-                cream,
-                ElementBounds.Fixed(x + flagPad + checkSize + 8, flagsY + 7, halfW - flagPad * 2 - checkSize - 10, 22),
-                "claimFlagPvpText")
-            .AddDynamicText(
-                Lang.Get("swixyclaimchunk:claim-flag-animals"),
-                cream,
-                ElementBounds.Fixed(
-                    x + halfW + flagsGap + flagPad + checkSize + 8,
-                    flagsY + 7,
-                    halfW - flagPad * 2 - checkSize - 10,
-                    22),
-                "claimFlagAnimalsText")
-            .AddDynamicCustomDraw(searchBgBounds, DrawTextInputBackground, "useFilterSearchBg")
             .AddTextInput(
-                searchInputBounds,
-                OnUseFilterSearchChanged,
-                inputFont,
-                "useFilterSearch")
-            .AddDynamicText(
-                Lang.Get("swixyclaimchunk:use-filter-list-hint"),
-                creamSm,
-                ElementBounds.Fixed(x, hintY, contentW, 18),
-                "useFilterHint")
-            .AddDynamicCustomDraw(scrollBounds, DrawTransparentBounds, "useFilterScrollHit")
-            .AddInteractiveElement(useFilterGrid, "useFilterGrid")
-            .AddDynamicText(
-                BuildUseFilterSelectedText(),
-                creamSm,
-                ElementBounds.Fixed(x, bottom - footerH + 2, Math.Max(80, contentW - 220), 22),
-                "useFilterSelectedText")
-            .AddButton(
-                Lang.Get("swixyclaimchunk:use-filter-cancel").ToUpperInvariant(),
-                CloseUseFilterPanel,
-                ElementBounds.Fixed(x + contentW - 210, bottom - footerH, 100, btnH),
-                actionButtonFont,
-                EnumButtonStyle.Small,
-                "useFilterBack")
-            .AddButton(
-                Lang.Get("swixyclaimchunk:use-filter-save").ToUpperInvariant(),
-                SaveUseFilterPanel,
-                ElementBounds.Fixed(x + contentW - 100, bottom - footerH, 100, btnH),
-                actionButtonFont,
-                EnumButtonStyle.Small,
-                "useFilterSave");
+                useFilterSearchAreaBounds,
+                text =>
+                {
+                    if (claimsRightMode != ClaimsRightUseFilter)
+                    {
+                        return;
+                    }
 
-        // Montserrat + Small style often left-biases shorter labels ("ОТМЕНА") — force center.
-        composer.GetButton("useFilterBack")?.SetOrientation(EnumTextOrientation.Center);
-        composer.GetButton("useFilterSave")?.SetOrientation(EnumTextOrientation.Center);
+                    OnUseFilterSearchChanged(text);
+                },
+                ClaimFontHelper.Create(14, ClaimFontHelper.ColorCream, bold: true),
+                "useFilterSearch")
+            .AddDynamicCustomDraw(useFilterScrollAreaBounds, DrawTransparentBounds, "useFilterScrollHit")
+            .AddInteractiveElement(useFilterGrid, "useFilterGrid");
+    }
+
+    private const int UiParkY = -20000;
+
+    /// <summary>
+    /// Gear open/close without ComposeDialog: park members / unpark use-filter (or reverse).
+    /// Left claims list is never touched.
+    /// </summary>
+    private void ApplyGearModeUi()
+    {
+        // Tree must already contain both bands (compose always builds both).
+        if (SingleComposer == null
+            || memberListAreaBounds == null
+            || memberListClipBounds == null
+            || useFilterViewportBounds == null
+            || useFilterGrid == null)
+        {
+            RecomposeClaimsUiPreservingClaimList();
+            return;
+        }
+
+        ApplyGearModeBounds();
+        SyncGearModeElementEnabled();
+
+        if (claimsRightMode == ClaimsRightUseFilter && useFilterGrid != null)
+        {
+            useFilterGrid.EmptyHint = GetUseFilterEmptyHint();
+            useFilterGrid.SetEntries(useFilterEntries);
+            useFilterGrid.ScrollOffset = useFilterScroll;
+        }
+
+        try
+        {
+            SingleComposer.GetCustomDraw("claimsPageChrome")?.Redraw();
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    /// <summary>
+    /// TextInput has Enabled (GuiElementControl). Grid/cell-list rely on parking bounds.
+    /// </summary>
+    private void SyncGearModeElementEnabled()
+    {
+        if (SingleComposer == null)
+        {
+            return;
+        }
+
+        var useOn = claimsRightMode == ClaimsRightUseFilter;
+        var search = SingleComposer.GetTextInput("useFilterSearch");
+        if (search != null)
+        {
+            search.Enabled = useOn;
+            if (useOn)
+            {
+                search.SetValue(useFilterSearch ?? "", true);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Park/unpark right-band bounds only. Clip/table stay relative to memberListAreaBounds
+    /// (do not assign absolute MembersY to forked children — scroll uses table.fixedY).
+    /// </summary>
+    private void ApplyGearModeBounds()
+    {
+        var useOn = claimsRightMode == ClaimsRightUseFilter;
+        var memY = useOn ? MembersY + UiParkY : MembersY;
+        var ufYGrid = useOn ? UseGridY : UseGridY + UiParkY;
+        var ufYSearch = useOn ? UseSearchY + 6 : UseSearchY + 6 + UiParkY;
+
+        // Members: move outer area; clip/table recalculate as children (keep scroll fixedY).
+        SetBoundsY(memberListAreaBounds, memY);
+        if (memberListAreaBounds != null)
+        {
+            RecalcBoundsTree(memberListAreaBounds);
+        }
+
+        SetBoundsY(memberScrollAreaBounds, useOn ? MembersScrollY + UiParkY : MembersScrollY);
+        SetBoundsY(claimsMessageAreaBounds, MembersY + MembersH + 4 + (useOn ? UiParkY : 0));
+
+        // Use-filter: absolute Fixed bounds (+ grid element).
+        SetBoundsY(useFilterViewportBounds, ufYGrid);
+        SetBoundsY(useFilterScrollAreaBounds, ufYGrid);
+        SetBoundsY(useFilterSearchAreaBounds, ufYSearch);
+        if (useFilterGrid != null)
+        {
+            SetBoundsY(useFilterGrid.Bounds, ufYGrid);
+            RecalcBoundsTree(useFilterGrid.Bounds);
+        }
+        else if (useFilterViewportBounds != null)
+        {
+            RecalcBoundsTree(useFilterViewportBounds);
+        }
+
+        // Re-apply member scroll offset after world-bounds recalc.
+        if (!useOn)
+        {
+            RestoreMemberListScroll(memberListScrollValue);
+        }
+    }
+
+    private static void SetBoundsY(ElementBounds? bounds, double fixedY)
+    {
+        if (bounds == null)
+        {
+            return;
+        }
+
+        bounds.fixedY = fixedY;
+        bounds.CalcWorldBounds();
+    }
+
+    private static void RecalcBoundsTree(ElementBounds bounds)
+    {
+        bounds.CalcWorldBounds();
+        if (bounds.ChildBounds == null)
+        {
+            return;
+        }
+
+        foreach (var child in bounds.ChildBounds)
+        {
+            RecalcBoundsTree(child);
+        }
     }
 
     /// <summary>Регистрирует ElementBounds в дереве GUI без отрисовки (для clip/scrollbar parents).</summary>
@@ -1076,11 +1570,56 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Устанавливает выбранный приват и сбрасывает выбор участника.</summary>
     private void SelectClaim(ClaimInfoPacket claim)
     {
+        if (selectedClaimId != claim.ClaimId)
+        {
+            // Same name + gear open ≈ ClaimId remapped after TouchClaim — keep draft, rebind scan id.
+            // Different claim while gear open: discard draft so Save cannot hit the wrong claim.
+            var sameLogicalClaim = selectedClaimId != 0
+                && !string.IsNullOrWhiteSpace(selectedClaimName)
+                && string.Equals(selectedClaimName, claim.Name ?? "", StringComparison.OrdinalIgnoreCase);
+
+            if (sameLogicalClaim && claimsRightMode == ClaimsRightUseFilter)
+            {
+                useFilterScanClaimId = claim.ClaimId;
+            }
+            else
+            {
+                DiscardUseFilterDraftIfOpen(applyUi: true);
+            }
+        }
+
         selectedClaimId = claim.ClaimId;
         selectedClaimName = claim.Name ?? "";
         selectedMemberUid = "";
         selectedMemberName = "";
         claimNameInput = claim.Name ?? "";
+    }
+
+    /// <summary>
+    /// Cancels near-scan and exits use-filter mode without saving.
+    /// <paramref name="applyUi"/> parks members/use-filter when the claims page is live.
+    /// </summary>
+    private void DiscardUseFilterDraftIfOpen(bool applyUi)
+    {
+        if (claimsRightMode != ClaimsRightUseFilter)
+        {
+            return;
+        }
+
+        useFilterClientScanner?.Cancel();
+        useFilterScanning = false;
+        useFilterDraftCodes.Clear();
+        useFilterSearch = "";
+        useFilterEntriesFilterKey = "\0";
+        useFilterScroll = 0;
+        useFilterCatalog = [];
+        useFilterEntries = [];
+        claimsRightMode = ClaimsRightSettings;
+
+        if (applyUi && IsOpened() && activePage == PageClaims && SingleComposer != null)
+        {
+            ApplyGearModeUi();
+        }
     }
 
     /// <summary>Выбирает участника; обновляет правую панель без полной пересборки.</summary>
@@ -1173,10 +1712,56 @@ public sealed class ClaimMapDialog : GuiDialog
 
         if (claimsRightMode == ClaimsRightUseFilter)
         {
-            return CloseUseFilterPanel();
+            // Gear again = apply whitelist and return to members list (no Save/Cancel buttons in SVG).
+            return SaveUseFilterPanel();
         }
 
         return OpenUseFilterPanel();
+    }
+
+    /// <summary>
+    /// Gear toggle recompose: identical element tree every time + hard restore of left claims scroll.
+    /// </summary>
+    private void RecomposeClaimsUiPreservingClaimList()
+    {
+        claimListScrollValue = GetClaimListScrollOffset();
+        var savedClaimScroll = claimListScrollValue;
+        var savedMemberScroll = GetMemberListScrollOffset();
+        ComposeDialog();
+        // Spacing can reset cell fixedY — re-apply after both configures.
+        ConfigureClaimListSpacing();
+        ConfigureMemberListSpacing();
+        RestoreClaimListScroll(savedClaimScroll);
+        RestoreMemberListScroll(savedMemberScroll);
+        // Next frame: VS may recalc cell heights after first layout pass.
+        clientApi.Event.RegisterCallback(
+            _ =>
+            {
+                if (!IsOpened() || activePage != PageClaims)
+                {
+                    return;
+                }
+
+                ConfigureClaimListSpacing();
+                RestoreClaimListScroll(savedClaimScroll);
+                try
+                {
+                    SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
+                }
+                catch
+                {
+                    // ignore
+                }
+            },
+            1);
+        try
+        {
+            SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
+        }
+        catch
+        {
+            // ignore
+        }
     }
 
     private bool OpenUseFilterPanel()
@@ -1236,10 +1821,9 @@ public sealed class ClaimMapDialog : GuiDialog
 
         RefreshUseFilterEntryLists();
         claimsRightMode = ClaimsRightUseFilter;
-        ComposeDialog();
+        // No ComposeDialog — left claims list must stay pixel-identical.
+        ApplyGearModeUi();
         SyncClaimFlagSwitches(claim);
-        SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
-        SingleComposer?.GetTextInput("useFilterSearch")?.SetValue(useFilterSearch, true);
 
         useFilterClientScanner ??= new ClaimUseFilterClientScanner(clientApi);
         useFilterClientScanner.Start(
@@ -1251,10 +1835,8 @@ public sealed class ClaimMapDialog : GuiDialog
 
     private bool CloseUseFilterPanel()
     {
-        useFilterClientScanner?.Cancel();
-        useFilterScanning = false;
-        claimsRightMode = ClaimsRightSettings;
-        ComposeDialog();
+        // Escape / leave gear without saving — same discard path as claim switch.
+        DiscardUseFilterDraftIfOpen(applyUi: true);
         return true;
     }
 
@@ -1290,7 +1872,6 @@ public sealed class ClaimMapDialog : GuiDialog
             useFilterGrid.ScrollOffset = 0;
         }
 
-        SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
         SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
 
         clientApi.Logger.Notification(
@@ -1369,7 +1950,9 @@ public sealed class ClaimMapDialog : GuiDialog
         });
 
         claimsRightMode = ClaimsRightSettings;
-        ComposeDialog();
+        useFilterScanning = false;
+        useFilterClientScanner?.Cancel();
+        ApplyGearModeUi();
         return true;
     }
 
@@ -1407,7 +1990,6 @@ public sealed class ClaimMapDialog : GuiDialog
             useFilterGrid.ScrollOffset = 0;
         }
 
-        SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
         SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
 
         clientApi.Logger.Notification(
@@ -1482,8 +2064,6 @@ public sealed class ClaimMapDialog : GuiDialog
         useFilterDraftMode = useFilterDraftCodes.Count > 0
             ? ClaimUseFilterMode.Whitelist
             : ClaimUseFilterMode.AllowAll;
-
-        SingleComposer?.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
 
         // Reorder list: selected tiles bubble to the top; keep scroll near top of selection.
         useFilterEntriesFilterKey = "\0";
@@ -2185,7 +2765,7 @@ public sealed class ClaimMapDialog : GuiDialog
             return;
         }
 
-        cellList.unscaledCellSpacing = ClaimsCardGap; // 8
+        cellList.unscaledCellSpacing = ClaimsCardGap; // 6 (SVG step 82)
         cellList.UnscaledCellVerPadding = 0;
         cellList.UnscaledCellHorPadding = 0;
 
@@ -2262,15 +2842,15 @@ public sealed class ClaimMapDialog : GuiDialog
         cellList.CalcTotalHeight();
     }
 
-    /// <summary>Подпись строки привата в левом списке (SVG: CHUNKS: n).</summary>
+    /// <summary>Подпись строки привата (Group 1351: sentence case, not ALL CAPS).</summary>
     private string BuildClaimListDetailText(ClaimInfoPacket claim)
     {
         return claim.ViewerIsCoOwner
-            ? Lang.Get("swixyclaimchunk:claims-list-coowner-stats", claim.OwnerName, claim.ChunkCount).ToUpperInvariant()
-            : Lang.Get("swixyclaimchunk:claims-list-stats", claim.ChunkCount).ToUpperInvariant();
+            ? Lang.Get("swixyclaimchunk:claims-list-coowner-stats", claim.OwnerName, claim.ChunkCount)
+            : Lang.Get("swixyclaimchunk:claims-list-stats", claim.ChunkCount);
     }
 
-    /// <summary>Строит данные строк списка приватов из claimListState.</summary>
+    /// <summary>Строка списка приватов: имя как введено, статистика как в lang (Group 1351).</summary>
     private IEnumerable<SavegameCellEntry> BuildClaimCells()
     {
         var titleFont = ClaimFontHelper.Create(15, ClaimFontHelper.ColorCream, bold: true);
@@ -2279,7 +2859,8 @@ public sealed class ClaimMapDialog : GuiDialog
         {
             yield return new SavegameCellEntry
             {
-                Title = Lang.Get("swixyclaimchunk:claims-list-name", claim.Name).ToUpperInvariant(),
+                // Do not force UPPERCASE — Group 1351 uses normal casing for name + "Chunks: n".
+                Title = Lang.Get("swixyclaimchunk:claims-list-name", claim.Name),
                 DetailText = BuildClaimListDetailText(claim),
                 TitleFont = titleFont,
                 DetailTextFont = detailFont,
@@ -2448,7 +3029,7 @@ public sealed class ClaimMapDialog : GuiDialog
     {
         foreach (var claim in claimListState?.Claims ?? [])
         {
-            var title = Lang.Get("swixyclaimchunk:claims-list-name", claim.Name).ToUpperInvariant();
+            var title = Lang.Get("swixyclaimchunk:claims-list-name", claim.Name);
             if (title == cell.Title && BuildClaimListDetailText(claim) == cell.DetailText)
             {
                 return claim;
@@ -3041,19 +3622,16 @@ public sealed class ClaimMapDialog : GuiDialog
         if (claimsRightMode == ClaimsRightUseFilter)
         {
             SyncClaimFlagSwitches(selected);
-            SingleComposer.GetDynamicText("useFilterSelectedText")?.SetNewText(BuildUseFilterSelectedText());
             SingleComposer.GetTextInput("useFilterSearch")?.SetValue(useFilterSearch, true);
-            // Re-apply after full compose so button textures use centered Montserrat labels.
-            SingleComposer.GetButton("useFilterBack")?.SetOrientation(EnumTextOrientation.Center);
-            SingleComposer.GetButton("useFilterSave")?.SetOrientation(EnumTextOrientation.Center);
         }
     }
 
     private void SyncClaimFlagSwitches(ClaimInfoPacket claim)
     {
-        // Custom checkboxes are drawn on DynamicCustomDraw chips — just refresh textures.
+        // Flag labels live on Group 1346 chrome + optional transparent overlays.
         SingleComposer?.GetCustomDraw("claimFlagPvpBg")?.Redraw();
         SingleComposer?.GetCustomDraw("claimFlagAnimalsBg")?.Redraw();
+        SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
     }
 
     private bool ToggleClaimFlagPvpButton()
@@ -3124,6 +3702,90 @@ public sealed class ClaimMapDialog : GuiDialog
         // Галочка = животные защищены (default ON when flags == 0).
         var on = ClaimFlagBits.AreAnimalsProtected(GetSelectedClaim()?.ClaimFlags ?? 0);
         DrawFlagChipWithCheckbox(ctx, bounds, on);
+    }
+
+    /// <summary>Group 1347 flag plate overlay: checkbox + label (face from panel_settings texture).</summary>
+    private void DrawClaimFlagPvpPlate(Context ctx, ImageSurface surface, ElementBounds bounds)
+    {
+        var on = (GetSelectedClaim()?.ClaimFlags & ClaimFlagBits.AllowPvp) != 0;
+        DrawSettingsFlagOverlay(
+            ctx,
+            bounds,
+            Lang.Get("swixyclaimchunk:claim-flag-pvp"),
+            on,
+            textX: FlagLabelLocalX,
+            textBaselineY: FaceTextBaseline);
+    }
+
+    private void DrawClaimFlagAnimalsPlate(Context ctx, ImageSurface surface, ElementBounds bounds)
+    {
+        var on = ClaimFlagBits.AreAnimalsProtected(GetSelectedClaim()?.ClaimFlags ?? 0);
+        DrawSettingsFlagOverlay(
+            ctx,
+            bounds,
+            Lang.Get("swixyclaimchunk:claim-flag-animals"),
+            on,
+            textX: FlagLabelLocalX,
+            textBaselineY: FaceTextBaseline);
+    }
+
+    private static void DrawSettingsFlagOverlay(
+        Context ctx,
+        ElementBounds bounds,
+        string label,
+        bool on,
+        double textX,
+        double textBaselineY)
+    {
+        var w = bounds.OuterWidth;
+        var h = bounds.OuterHeight;
+        ctx.Operator = Operator.Source;
+        ctx.SetSourceRGBA(0, 0, 0, 0);
+        ctx.Rectangle(0, 0, w, h);
+        ctx.Fill();
+        ctx.Operator = Operator.Over;
+
+        var s = Math.Max(0.01, RuntimeEnv.GUIScale);
+        // Checkbox Group 1347: 18×18 @ (11,7) inside face, stroke #9F795B w=2.
+        DrawGroup1347Checkbox(ctx, FlagCheckLocalX * s, FlagCheckLocalY * s, FlagCheckSize * s, on);
+        DrawTextAtBaseline(
+            ctx,
+            label.ToUpperInvariant(),
+            textX * s,
+            textBaselineY * s,
+            FontSettingsLabel,
+            ColSettingsBtn);
+    }
+
+    /// <summary>Rounded checkbox from Group 1347 paths (empty stroke / checked with tick).</summary>
+    private static void DrawGroup1347Checkbox(Context ctx, double x, double y, double size, bool isOn)
+    {
+        var r = size * (3.0 / 18.0); // SVG corner radius ~3 on 18px well
+        var stroke = Math.Max(1.25, size * (2.0 / 18.0));
+        ctx.Save();
+        ctx.SetSourceRGBA(ColSettingsBtn[0], ColSettingsBtn[1], ColSettingsBtn[2], 1.0);
+        ctx.LineWidth = stroke;
+        ctx.LineCap = LineCap.Round;
+        ctx.LineJoin = LineJoin.Round;
+        RoundRectangle(ctx, x + stroke * 0.5, y + stroke * 0.5, size - stroke, size - stroke, r);
+        ctx.Stroke();
+
+        if (isOn)
+        {
+            // Tick relative to 18px box: (5,9) → (7.67,12) → (13,6)
+            var x0 = x + size * (5.0 / 18.0);
+            var y0 = y + size * (9.0 / 18.0);
+            var x1 = x + size * (7.667 / 18.0);
+            var y1 = y + size * (12.0 / 18.0);
+            var x2 = x + size * (13.0 / 18.0);
+            var y2 = y + size * (6.0 / 18.0);
+            ctx.MoveTo(x0, y0);
+            ctx.LineTo(x1, y1);
+            ctx.LineTo(x2, y2);
+            ctx.Stroke();
+        }
+
+        ctx.Restore();
     }
 
     #endregion
@@ -3271,7 +3933,7 @@ public sealed class ClaimMapDialog : GuiDialog
     }
 
     /// <summary>
-    /// Group 462 frame + tab labels / pin / close icons.
+    /// Group 1012 frame + tab labels / close icon.
     /// </summary>
     private void DrawDialogChrome(Context ctx, ImageSurface surface, ElementBounds bounds)
     {
@@ -3289,12 +3951,11 @@ public sealed class ClaimMapDialog : GuiDialog
         if (frameSurface != null && frameSurface.Width > 0 && frameSurface.Height > 0)
         {
             ctx.Save();
-            // Integer-friendly scale: avoid subpixel blur that shreds pixel UI art.
+            // 1:1 when UiW/UiH match PNG; nearest keeps metal corners / wood crisp.
             var sx = w / frameSurface.Width;
             var sy = h / frameSurface.Height;
             ctx.Scale(sx, sy);
             ctx.SetSourceSurface(frameSurface, 0, 0);
-            // Nearest-neighbour: keep metal corners / wood crisp.
             ((SurfacePattern)ctx.GetSource()).Filter = Filter.Nearest;
             ctx.Paint();
             ctx.Restore();
@@ -3306,7 +3967,7 @@ public sealed class ClaimMapDialog : GuiDialog
             ctx.Fill();
         }
 
-        // Tab labels: UPPERCASE Montserrat, centered in plate, nudged slightly down.
+        // Tab labels: UPPERCASE Minecraft Five (quest title face), centered in plate.
         // «ПРИВАТЫ» is wider than «КАРТА» — slight +X so ink sits in the visual center of the plate.
         var mapActive = activePage == PageMap;
         DrawTabLabel(
@@ -3325,62 +3986,42 @@ public sealed class ClaimMapDialog : GuiDialog
             mapActive ? ColTabInactive : ColTabActive,
             s,
             nudgeXDesign: 6);
-        // ☰ Fixed/Movable (vanilla title-bar menu) + ✕ close — Cairo on right plate.
-        // White when Movable (откреплено / можно таскать), #9F795B when Fixed (закреплено).
-        DrawMenuIcon(ctx, PinBtnX * s, TabY * s, PinBtnW * s, TabH * s, isMovable ? ColIconPinned : ColIcon);
-        DrawCloseIcon(ctx, CloseBtnX * s, TabY * s, CloseBtnW * s, TabH * s, ColIcon);
-    }
-
-    /// <summary>
-    /// ☰ Fixed ↔ Movable (как list menu ванильного title bar).
-    /// Movable = можно таскать; Fixed = нельзя и сброс позиции в центр экрана.
-    /// </summary>
-    private bool TogglePinButton()
-    {
-        isMovable = !isMovable;
-        isDragging = false;
-        dragArmed = false;
-
-        // Закрепить → вернуть окно в центр.
-        if (!isMovable)
-        {
-            dialogOffsetX = 0;
-            dialogOffsetY = 0;
-            ApplyDialogOffset();
-        }
-
-        try
-        {
-            SingleComposer?.GetCustomDraw("dialogChrome")?.Redraw();
-        }
-        catch
-        {
-            // ignore
-        }
-
-        return true;
+        // ✕ close — pixel-art from Group 1344.svg (not a fat stroke X).
+        DrawCloseIcon(ctx, s);
     }
 
     public override void OnMouseDown(MouseEvent args)
     {
-        // Arm drag BEFORE base so Map/Claims buttons covering the tab strip don't block it.
-        // Actual drag starts after a small movement threshold so tab clicks still work.
-        dragArmed = false;
-        isDragging = false;
         claimScrollDragging = false;
         memberScrollDragging = false;
         useFilterScrollDragging = false;
 
-        if (isMovable
-            && args.Button == EnumMouseButton.Left
-            && SingleComposer?.Bounds != null
-            && IsInTitleBarDragZone(args.X, args.Y))
+        // Close vanilla pin menu when clicking outside it (Close is internal on the list).
+        if (detachListMenu is { IsOpened: true }
+            && !detachListMenu.IsPositionInside(args.X, args.Y))
         {
-            dragArmed = true;
-            dragStartMouseX = args.X;
-            dragStartMouseY = args.Y;
-            dragStartOffsetX = dialogOffsetX;
-            dragStartOffsetY = dialogOffsetY;
+            CloseDetachListMenu();
+        }
+
+        // RMB on top chrome → vanilla Fixed / Movable menu (pin / detach).
+        if (args.Button == EnumMouseButton.Right && IsDetachChromeHit(args.X, args.Y))
+        {
+            OpenDetachListMenu(args.X, args.Y);
+            args.Handled = true;
+            return;
+        }
+
+        // LMB drag window when Movable (skip tabs / close so they still work).
+        if (dialogMovable
+            && args.Button == EnumMouseButton.Left
+            && IsDetachChromeHit(args.X, args.Y)
+            && !IsHeaderControlHit(args.X, args.Y)
+            && detachListMenu is not { IsOpened: true })
+        {
+            dialogDragging = true;
+            dialogDragStart.Set(args.X, args.Y);
+            args.Handled = true;
+            return;
         }
 
         if (activePage == PageClaims && args.Button == EnumMouseButton.Left)
@@ -3409,6 +4050,18 @@ public sealed class ClaimMapDialog : GuiDialog
 
     public override void OnMouseMove(MouseEvent args)
     {
+        if (dialogDragging && SingleComposer?.Bounds != null)
+        {
+            var scale = Math.Max(0.01f, RuntimeEnv.GUIScale);
+            var parent = SingleComposer.Bounds;
+            parent.fixedX += (args.X - dialogDragStart.X) / scale;
+            parent.fixedY += (args.Y - dialogDragStart.Y) / scale;
+            dialogDragStart.Set(args.X, args.Y);
+            parent.CalcWorldBounds();
+            args.Handled = true;
+            return;
+        }
+
         if (claimScrollDragging)
         {
             UpdateClaimScrollDrag(args.Y);
@@ -3430,33 +4083,17 @@ public sealed class ClaimMapDialog : GuiDialog
             return;
         }
 
-        if (dragArmed && isMovable && SingleComposer?.Bounds != null)
-        {
-            var dx = args.X - dragStartMouseX;
-            var dy = args.Y - dragStartMouseY;
-
-            if (!isDragging && (dx * dx + dy * dy) >= DragThresholdPx * DragThresholdPx)
-            {
-                isDragging = true;
-            }
-
-            if (isDragging)
-            {
-                var s = Math.Max(0.01, RuntimeEnv.GUIScale);
-                dialogOffsetX = dragStartOffsetX + dx / s;
-                dialogOffsetY = dragStartOffsetY + dy / s;
-                ApplyDialogOffset();
-                args.Handled = true;
-            }
-        }
-
         base.OnMouseMove(args);
     }
 
     public override void OnMouseUp(MouseEvent args)
     {
-        dragArmed = false;
-        isDragging = false;
+        if (dialogDragging)
+        {
+            dialogDragging = false;
+            PersistDialogPositionIfMovable();
+        }
+
         claimScrollDragging = false;
         memberScrollDragging = false;
         useFilterScrollDragging = false;
@@ -3734,114 +4371,34 @@ public sealed class ClaimMapDialog : GuiDialog
         OnMemberListScrollCustom((float)(t * maxScroll));
     }
 
-    /// <summary>Верхняя полоса окна (табы), кроме кнопок ☰ и ✕.</summary>
-    private bool IsInTitleBarDragZone(int mouseX, int mouseY)
-    {
-        var b = SingleComposer?.Bounds;
-        if (b == null)
-        {
-            return false;
-        }
-
-        var s = Math.Max(0.01, RuntimeEnv.GUIScale);
-        if (mouseX < b.absX || mouseX >= b.absX + b.OuterWidth
-            || mouseY < b.absY || mouseY >= b.absY + TabH * s)
-        {
-            return false;
-        }
-
-        // ☰ / ✕ — свои кнопки, не зона drag.
-        var pinLeft = b.absX + PinBtnX * s;
-        var closeRight = b.absX + (CloseBtnX + CloseBtnW) * s;
-        if (mouseX >= pinLeft && mouseX < closeRight)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     /// <summary>
-    /// Moves the dialog without re-rasterizing Cairo textures (MarkDirtyRecursive was
-    /// shredding the frame PNG every mouse-move while dragging).
+    /// Close ✕ from Group 1344.svg — small pixel rects (#836045), outer box ~32×32 @ (884,30).
     /// </summary>
-    private void ApplyDialogOffset()
+    private static readonly (int X, int Y, int W, int H)[] CloseIconRects =
+    [
+        // Outer corners
+        (884, 30, 5, 5), (911, 30, 5, 5), (884, 57, 5, 5), (911, 57, 5, 5),
+        // Main diagonals (5×5 steps)
+        (886, 32, 5, 5), (909, 32, 5, 5), (907, 34, 5, 5), (888, 34, 5, 5),
+        (890, 36, 5, 5), (905, 36, 5, 5), (892, 38, 5, 5), (903, 38, 5, 5),
+        (894, 40, 5, 5), (901, 40, 5, 5), (894, 47, 5, 5), (901, 47, 5, 5),
+        (892, 49, 5, 5), (903, 49, 5, 5), (890, 51, 5, 5), (905, 51, 5, 5),
+        (888, 53, 5, 5), (907, 53, 5, 5), (886, 55, 5, 5), (909, 55, 5, 5),
+        // Center cluster (2×2)
+        (899, 45, 2, 2), (898, 46, 2, 2), (898, 44, 2, 2), (900, 44, 2, 2),
+        (900, 46, 2, 2), (899, 48, 2, 2), (896, 45, 2, 2), (899, 42, 2, 2),
+        (902, 45, 2, 2),
+    ];
+
+    /// <summary>Крестик закрытия — pixel-art Group 1344.svg, fill #836045.</summary>
+    private static void DrawCloseIcon(Context ctx, double s)
     {
-        if (SingleComposer?.Bounds == null)
-        {
-            return;
-        }
-
-        var b = SingleComposer.Bounds;
-        b.fixedOffsetX = dialogOffsetX;
-        b.fixedOffsetY = dialogOffsetY;
-        RecalcBoundsTree(b);
-    }
-
-    private static void RecalcBoundsTree(ElementBounds bounds)
-    {
-        bounds.CalcWorldBounds();
-        if (bounds.ChildBounds == null)
-        {
-            return;
-        }
-
-        foreach (var child in bounds.ChildBounds)
-        {
-            RecalcBoundsTree(child);
-        }
-    }
-
-    /// <summary>Общий размер иконки вкладки (☰ / ✕) — один квадрат в hit-area.</summary>
-    private static double GetTabActionIconSize(double w, double h) => Math.Min(w, h) * 0.38;
-
-    /// <summary>Крестик закрытия — Cairo, цвет #9F795B как на SVG.</summary>
-    private static void DrawCloseIcon(Context ctx, double x, double y, double w, double h, double[] color)
-    {
-        var size = GetTabActionIconSize(w, h);
-        var cx = x + w * 0.5;
-        var cy = y + h * 0.5;
-        var half = size * 0.5;
-        var thickness = Math.Max(2.5, size * 0.18);
-
         ctx.Save();
-        ctx.SetSourceRGBA(color[0], color[1], color[2], color.Length > 3 ? color[3] : 1.0);
-        ctx.LineWidth = thickness;
-        ctx.LineCap = LineCap.Square;
-        ctx.MoveTo(cx - half, cy - half);
-        ctx.LineTo(cx + half, cy + half);
-        ctx.Stroke();
-        ctx.MoveTo(cx + half, cy - half);
-        ctx.LineTo(cx - half, cy + half);
-        ctx.Stroke();
-        ctx.Restore();
-    }
-
-    /// <summary>
-    /// ☰ pin/detach: 3 bars in the same square as the close ✕ (equal size, even spacing).
-    /// </summary>
-    private static void DrawMenuIcon(Context ctx, double x, double y, double w, double h, double[] color)
-    {
-        // Match close icon bounding square so both glyphs align on the action plate.
-        var size = GetTabActionIconSize(w, h);
-        var thickness = Math.Max(2.5, size * 0.18);
-        var cx = x + w * 0.5;
-        var cy = y + h * 0.5;
-        var left = cx - size * 0.5;
-        // Centers of top/mid/bottom bars evenly fill the square (outer edges = size).
-        var span = size - thickness; // first center → last center
-        var gap = span * 0.5;        // three lines: -gap, 0, +gap
-
-        ctx.Save();
-        ctx.SetSourceRGBA(color[0], color[1], color[2], color.Length > 3 ? color[3] : 1.0);
-        ctx.LineWidth = thickness;
-        ctx.LineCap = LineCap.Square;
-        for (var i = -1; i <= 1; i++)
+        ctx.SetSourceRGBA(ColCloseIcon[0], ColCloseIcon[1], ColCloseIcon[2], ColCloseIcon[3]);
+        foreach (var r in CloseIconRects)
         {
-            var ly = cy + i * gap;
-            ctx.MoveTo(left, ly);
-            ctx.LineTo(left + size, ly);
-            ctx.Stroke();
+            ctx.Rectangle(r.X * s, r.Y * s, r.W * s, r.H * s);
+            ctx.Fill();
         }
 
         ctx.Restore();
@@ -3857,7 +4414,7 @@ public sealed class ClaimMapDialog : GuiDialog
         double Xd(double abs) => (abs - PanelX) * s;
         double Yd(double abs) => (abs - PanelY) * s;
 
-        // Section headers: centered under each dashed band (ПРИВАТЫ left, НАСТРОЙКИ right).
+        // Section titles + dashed underlines (keep dashes; solid line below was the problem).
         DrawSectionHeader(
             ctx,
             Lang.Get("swixyclaimchunk:claim-map-section-claims").ToUpperInvariant(),
@@ -3875,29 +4432,19 @@ public sealed class ClaimMapDialog : GuiDialog
             Yd(SectionDashY),
             s);
 
-        // SETTINGS plate (Group 468) + rename/add buttons (Group 469) — not in use-filter view.
-        if (claimsRightMode != ClaimsRightUseFilter)
+        // Group 1347 settings plates always when a claim is selected (gear stays visible).
+        if (GetSelectedClaim() != null)
         {
-            var settingsTexX = Xd(SettingsTexX);
-            var settingsTexY = Yd(SettingsTexY);
-            var settingsTexW = SettingsTexW * s;
-            var settingsTexH = SettingsTexH * s;
-            DrawSettingsPanelTexture(ctx, settingsTexX, settingsTexY, settingsTexW, settingsTexH);
-            DrawSettingsButtonTexture(ctx, Xd(SettingsLeftFieldX), Yd(SettingsBtnY), SettingsFieldW * s, SettingsBtnH * s);
-            DrawSettingsButtonTexture(ctx, Xd(SettingsRightFieldX), Yd(SettingsBtnY), SettingsFieldW * s, SettingsBtnH * s);
-            DrawSettingsPlateTexts(ctx, settingsTexX, settingsTexY, settingsTexW, settingsTexH);
+            DrawSettingsPlates(ctx, s);
         }
 
-        // Gear next to SETTINGS title (right side of section header band).
-        ClaimCairoIcons.DrawGear(
-            ctx,
-            Xd(SettingsGearX),
-            Yd(SettingsGearY),
-            SettingsGearSize * s,
-            active: claimsRightMode == ClaimsRightUseFilter,
-            locked: false);
+        // Group 1349: Search + PublicUse plates when picking public-use blocks.
+        if (claimsRightMode == ClaimsRightUseFilter && GetSelectedClaim() != null)
+        {
+            DrawUseFilterChrome(ctx, s);
+        }
 
-        // Thin scrolls: claims list (left) + members list (settings) or use-filter grid.
+        // Left claims scrollbar — always the same (independent of gear mode).
         DrawThinScrollBar(
             ctx,
             Xd(ClaimsScrollX),
@@ -3907,23 +4454,21 @@ public sealed class ClaimMapDialog : GuiDialog
             s,
             ClaimsScrollY,
             GetClaimScrollThumbDesign);
-        if (claimsRightMode == ClaimsRightUseFilter
-            && useFilterViewportBounds != null
-            && useFilterGrid != null)
+
+        // Right band scrollbar: members or use-filter grid (same track X).
+        if (claimsRightMode == ClaimsRightUseFilter && useFilterGrid != null)
         {
-            var fy = (int)Math.Round(useFilterViewportBounds.fixedY);
-            var fh = (int)Math.Round(useFilterViewportBounds.fixedHeight);
             DrawThinScrollBar(
                 ctx,
                 Xd(MembersScrollX),
-                Yd(fy),
+                Yd(UseGridY),
                 MembersScrollW * s,
-                fh * s,
+                UseGridH * s,
                 s,
-                fy,
+                UseGridY,
                 GetUseFilterScrollThumbDesign);
         }
-        else if (claimsRightMode != ClaimsRightUseFilter)
+        else
         {
             DrawThinScrollBar(
                 ctx,
@@ -3934,20 +4479,6 @@ public sealed class ClaimMapDialog : GuiDialog
                 s,
                 MembersScrollY,
                 GetMemberScrollThumbDesign);
-        }
-
-        // Separator under stats (SVG line y=227.5) — only in settings view.
-        if (claimsRightMode != ClaimsRightUseFilter)
-        {
-            var lineY = Yd(227.5);
-            ctx.Save();
-            ctx.SetSourceRGBA(0x83 / 255.0, 0x66 / 255.0, 0x50 / 255.0, 0.64);
-            ctx.LineWidth = Math.Max(1.0, 2 * s);
-            ctx.LineCap = LineCap.Round;
-            ctx.MoveTo(Xd(474.5), lineY);
-            ctx.LineTo(Xd(888.5), lineY);
-            ctx.Stroke();
-            ctx.Restore();
         }
     }
 
@@ -3989,16 +4520,17 @@ public sealed class ClaimMapDialog : GuiDialog
     }
 
     /// <summary>
-    /// Весь контент вкладки Map внутри panel (42,118 885×542).
-    /// Surface origin = PanelX/PanelY. Координаты = SVG local − panel.
+    /// Map tab content — Group 1350.svg. Surface origin = PanelX/PanelY.
     /// </summary>
     private void DrawMapPageContent(Context ctx, ImageSurface surface, ElementBounds bounds)
     {
         var s = Math.Max(0.01, RuntimeEnv.GUIScale);
         double X(int abs) => (abs - PanelX) * s;
         double Y(int abs) => (abs - PanelY) * s;
+        double Xd(double abs) => (abs - PanelX) * s;
+        double Yd(double abs) => (abs - PanelY) * s;
 
-        // ----- Interactive map well: SVG map (458,192) 447×446 + 2px #121212 -----
+        // ----- Interactive map well: (467,215) 475×474 + 2px #121212 -----
         var mx = X(MapX);
         var my = Y(MapY);
         var mw = MapW * s;
@@ -4007,17 +4539,11 @@ public sealed class ClaimMapDialog : GuiDialog
         SetRgb(ctx, ColEdge);
         ctx.Rectangle(mx - b, my - b, mw + 2 * b, mh + 2 * b);
         ctx.Fill();
-        // dark fill under grid (shows until tiles load)
         ctx.SetSourceRGB(0.05, 0.05, 0.055);
         ctx.Rectangle(mx, my, mw, mh);
         ctx.Fill();
 
-        // ----- Section headers: exact Map (3).svg positions -----
-        // X/Y helpers take dialog-local design coords (SVG − frame origin).
-        double Xd(double abs) => (abs - PanelX) * s;
-        double Yd(double abs) => (abs - PanelY) * s;
-
-        // Map tab sections — same size/color as claims; center under dashes (map SVG).
+        // Section headers MAP / INTERACTIVE MAP + dashed rules y=187.
         DrawSectionHeader(
             ctx,
             Lang.Get("swixyclaimchunk:claim-map-tab-map").ToUpperInvariant(),
@@ -4035,40 +4561,149 @@ public sealed class ClaimMapDialog : GuiDialog
             Yd(SectionDashY),
             s);
 
-        // ----- Left column: Limits + Legend + Center (origins from Map (3).svg) -----
-        // Full PNGs include 6px outer chrome; place at texture origin, not face.
-        var limitsW = LimitsTexW * s;
-        var limitsH = LimitsTexH * s;
-        var legendW = LegendTexW * s;
-        var legendH = LegendTexH * s;
-        var centerW = CenterTexW * s;
-        var centerH = CenterTexH * s;
+        // Left column: map each PNG so its measured face rect lands on the design face.
+        // Text uses Group 1355 offsets from that face (not from the outer texture box).
+        DrawMappedPanelTexture(
+            ctx,
+            limitsPanelSurface,
+            LimitsX,
+            LimitsY,
+            LimitsFaceW,
+            LimitsFaceH,
+            LimitsPngFaceX,
+            LimitsPngFaceY,
+            LimitsPngFaceW,
+            LimitsPngFaceH,
+            s,
+            out var limFaceX,
+            out var limFaceY,
+            out var limFaceW,
+            out var limFaceH);
+        DrawMappedPanelTexture(
+            ctx,
+            legendPanelSurface,
+            LegendX,
+            LegendY,
+            LimitsFaceW,
+            LegendDesignH,
+            LegendPngFaceX,
+            LegendPngFaceY,
+            LegendPngFaceW,
+            LegendPngFaceH,
+            s,
+            out var legFaceX,
+            out var legFaceY,
+            out var legFaceW,
+            out var legFaceH);
+        DrawMappedPanelTexture(
+            ctx,
+            centerButtonSurface,
+            CenterX,
+            CenterY,
+            CenterTexW,
+            CenterTexH,
+            CenterPngFaceX,
+            CenterPngFaceY,
+            CenterPngFaceW,
+            CenterPngFaceH,
+            s,
+            out var cenFaceX,
+            out var cenFaceY,
+            out var cenFaceW,
+            out var cenFaceH);
 
-        DrawLimitsPanelTexture(ctx, X(LimitsX), Y(LimitsY), limitsW, limitsH);
-        DrawLegendPanelTexture(ctx, X(LegendX), Y(LegendY), legendW, legendH);
-        DrawCenterButtonTexture(ctx, X(CenterX), Y(CenterY), centerW, centerH);
+        DrawLimitsTextsOnFace(ctx, limFaceX, limFaceY, limFaceW, limFaceH);
+        DrawLegendTextsOnFace(ctx, legFaceX, legFaceY, legFaceW, legFaceH);
 
         var textX = X(CardX) + CardPadX * s;
         var textW = (CardW - CardPadX * 2) * s;
-
-        // Limits / legend text — design coords relative to texture origin
-        DrawLimitsTexts(ctx, X(LimitsX), Y(LimitsY), limitsW, limitsH);
-        DrawLegendTexts(ctx, X(LegendX), Y(LegendY), legendW, legendH);
-
-        // Claim result / working message on wood between legend and center.
         var msg = mapStatusOverride ?? mapState?.Message ?? "";
         if (!string.IsNullOrWhiteSpace(msg))
         {
             DrawMultilineSurface(ctx, msg, textX, Y(MessageY), textW, FontBody, ClaimFontHelper.ColorAccent, 18 * s);
         }
 
-        // Center label (over Group 464) — «ЦЕНТР» UPPERCASE Montserrat Bold.
         DrawCenteredLabelSurface(
             ctx,
-            Lang.Get("swixyclaimchunk:claim-map-center").ToUpperInvariant(),
-            X(CenterX), Y(CenterY), centerW, centerH,
+            Lang.Get("swixyclaimchunk:claim-map-center"),
+            cenFaceX,
+            cenFaceY,
+            cenFaceW,
+            cenFaceH,
             FontCenter,
-            ClaimFontHelper.ColorCream);
+            ColSettingsBtn);
+    }
+
+    /// <summary>
+    /// Draw a panel PNG so the brown face region in the texture lands exactly on the
+    /// design face (faceDesignX/Y/W/H). Outer chrome extends outside that face.
+    /// </summary>
+    private void DrawMappedPanelTexture(
+        Context ctx,
+        ImageSurface? tex,
+        int faceDesignX,
+        int faceDesignY,
+        int faceDesignW,
+        int faceDesignH,
+        int texFaceX,
+        int texFaceY,
+        int texFaceW,
+        int texFaceH,
+        double s,
+        out double faceDrawX,
+        out double faceDrawY,
+        out double faceDrawW,
+        out double faceDrawH)
+    {
+        faceDrawX = (faceDesignX - PanelX) * s;
+        faceDrawY = (faceDesignY - PanelY) * s;
+        faceDrawW = faceDesignW * s;
+        faceDrawH = faceDesignH * s;
+
+        if (tex == null || tex.Width <= 0 || tex.Height <= 0 || texFaceW <= 0 || texFaceH <= 0)
+        {
+            DrawFacePlateChrome(ctx, faceDrawX, faceDrawY, faceDrawW, faceDrawH);
+            return;
+        }
+
+        var scaleX = faceDrawW / texFaceW;
+        var scaleY = faceDrawH / texFaceH;
+        var drawW = tex.Width * scaleX;
+        var drawH = tex.Height * scaleY;
+        var drawX = faceDrawX - texFaceX * scaleX;
+        var drawY = faceDrawY - texFaceY * scaleY;
+        DrawGuiTexture(ctx, tex, drawX, drawY, drawW, drawH, fallback: ColInset);
+    }
+
+    /// <summary>
+    /// Fallback swatch when panel_legend.png is missing.
+    /// Full face bevel: edge #121212, hi #563E2B, lo #2A1E14 (same as DrawFacePlateChrome).
+    /// </summary>
+    private static void DrawMapLegendSwatch(Context ctx, double x, double y, double size, double r, double g, double b)
+    {
+        var s = Math.Max(0.01, RuntimeEnv.GUIScale);
+        var edge = 2 * s;
+        var bevel = Math.Max(1.0, 2 * s);
+
+        SetRgb(ctx, ColEdge);
+        ctx.Rectangle(x - edge, y - edge, size + edge * 2, size + edge * 2);
+        ctx.Fill();
+
+        ctx.SetSourceRGB(r, g, b);
+        ctx.Rectangle(x, y, size, size);
+        ctx.Fill();
+
+        SetRgb(ctx, ColHi);
+        ctx.Rectangle(x, y, size, bevel);
+        ctx.Fill();
+        ctx.Rectangle(x, y, bevel, size);
+        ctx.Fill();
+
+        SetRgb(ctx, ColLo);
+        ctx.Rectangle(x, y + size - bevel, size, bevel);
+        ctx.Fill();
+        ctx.Rectangle(x + size - bevel, y, bevel, size);
+        ctx.Fill();
     }
 
     /// <summary>SVG inset card: face #412D1D, top/left #563E2B 3px, bottom/right #2A1E14 3px.</summary>
@@ -4091,99 +4726,222 @@ public sealed class ClaimMapDialog : GuiDialog
         ctx.Fill();
     }
 
-    /// <summary>Плашка лимитов Group 466.png.</summary>
+    /// <summary>Плашка лимитов — panel_limits.png (bevels included). Fallback: face chrome.</summary>
     private void DrawLimitsPanelTexture(Context ctx, double x, double y, double w, double h)
     {
-        DrawGuiTexture(ctx, limitsPanelSurface, x, y, w, h, fallback: ColInset);
-    }
+        if (limitsPanelSurface != null && limitsPanelSurface.Width > 0 && limitsPanelSurface.Height > 0)
+        {
+            DrawGuiTexture(ctx, limitsPanelSurface, x, y, w, h, fallback: ColInset);
+            return;
+        }
 
-    /// <summary>Плашка легенды Group 387.svg / Group 387 (1).png.</summary>
-    private void DrawLegendPanelTexture(Context ctx, double x, double y, double w, double h)
-    {
-        DrawGuiTexture(ctx, legendPanelSurface, x, y, w, h, fallback: ColInset);
-    }
-
-    /// <summary>Плашка настроек Group 468.png (rename / add player).</summary>
-    private void DrawSettingsPanelTexture(Context ctx, double x, double y, double w, double h)
-    {
-        DrawGuiTexture(ctx, settingsPanelSurface, x, y, w, h, fallback: ColInset);
-    }
-
-    /// <summary>Кнопки rename/add Group 469.png.</summary>
-    private void DrawSettingsButtonTexture(Context ctx, double x, double y, double w, double h)
-    {
-        DrawGuiTexture(ctx, settingsButtonSurface, x, y, w, h, fallback: ColCenter);
+        DrawFacePlateChrome(ctx, x, y, w, h);
     }
 
     /// <summary>
-    /// Group 468.svg text: stats #836650@0.64 baseline 28; labels #D29F78 baseline 66;
-    /// buttons #9F795B baseline 143 centered on each Group 469 plate.
+    /// Full legend chrome: panel_legend.png (title + rows + swatches with bevels).
+    /// Falls back to programmatic plates + swatches if the PNG failed to load.
     /// </summary>
-    private void DrawSettingsPlateTexts(Context ctx, double texX, double texY, double texW, double texH)
+    private void DrawLegendPanelTexture(Context ctx, double x, double y, double w, double h)
     {
-        var sx = texW / SettingsTexW;
-        var sy = texH / SettingsTexH;
-
-        var claim = GetSelectedClaim();
-        var stats = "";
-        if (claim != null)
+        if (legendPanelSurface != null && legendPanelSurface.Width > 0 && legendPanelSurface.Height > 0)
         {
-            stats = (claim.ViewerIsCoOwner
-                    ? Lang.Get(
-                        "swixyclaimchunk:claims-stats-coowner",
-                        claim.OwnerName,
-                        claim.AreaCount,
-                        claim.ChunkCount)
-                    : Lang.Get(
-                        "swixyclaimchunk:claims-stats",
-                        claim.AreaCount,
-                        claim.ChunkCount))
-                .ToUpperInvariant();
+            DrawGuiTexture(ctx, legendPanelSurface, x, y, w, h, fallback: ColInset);
+            return;
         }
 
-        if (!string.IsNullOrEmpty(stats))
+        // Fallback without PNG — full width of limits, swatches on the right edge.
+        var s = Math.Max(0.01, RuntimeEnv.GUIScale);
+        DrawFacePlateChrome(ctx, x, y, w, LegendTitleH * s);
+        var row1y = y + (LegendRow1Y - LegendY) * s;
+        var row2y = y + (LegendRow2Y - LegendY) * s;
+        var row3y = y + (LegendRow3Y - LegendY) * s;
+        var rowH = LegendRowH * s;
+        var sw = LegendSwatchSize * s;
+        var gap = 6 * s;
+        var rowW = w - sw - gap;
+        DrawFacePlateChrome(ctx, x, row1y, rowW, rowH);
+        DrawFacePlateChrome(ctx, x, row2y, rowW, rowH);
+        DrawFacePlateChrome(ctx, x, row3y, rowW, rowH);
+        var swX = x + w - sw;
+        DrawMapLegendSwatch(ctx, swX, row1y, sw, 0x4F / 255.0, 0x59 / 255.0, 0x52 / 255.0);
+        DrawMapLegendSwatch(ctx, swX, row2y, sw, 0x03 / 255.0, 0xE9 / 255.0, 0xFD / 255.0);
+        DrawMapLegendSwatch(ctx, swX, row3y, sw, 0xFC / 255.0, 0x4B / 255.0, 0x3C / 255.0);
+    }
+
+    /// <summary>
+    /// Group 1349.svg use-filter chrome under settings: Search plate + PublicUse:N plate.
+    /// </summary>
+    private void DrawUseFilterChrome(Context ctx, double s)
+    {
+        double X(double abs) => (abs - PanelX) * s;
+        double Y(double abs) => (abs - PanelY) * s;
+
+        DrawFacePlateChrome(ctx, X(UseSearchX), Y(UseSearchY), UseSearchW * s, UseSearchH * s);
+        DrawFacePlateChrome(ctx, X(UseStatusX), Y(UseStatusY), UseStatusW * s, UseStatusH * s);
+
+        if (string.IsNullOrWhiteSpace(useFilterSearch))
         {
             DrawTextAtBaseline(
                 ctx,
-                stats,
-                texX + SettingsStatsTextX * sx,
-                texY + SettingsStatsBaselineY * sy,
-                FontSettingsStats,
-                ColSettingsStats);
+                Lang.Get("swixyclaimchunk:use-filter-search-placeholder").ToUpperInvariant(),
+                X(UseSearchX + FacePadX),
+                Y(UseSearchY + FaceTextBaseline),
+                FontSettingsLabel,
+                ColSettingsPlaceholder);
         }
 
         DrawTextAtBaseline(
             ctx,
-            Lang.Get("swixyclaimchunk:claims-rename").ToUpperInvariant(),
-            texX + SettingsLabelLeftX * sx,
-            texY + SettingsLabelBaselineY * sy,
+            Lang.Get("swixyclaimchunk:use-filter-public-count", useFilterDraftCodes.Count).ToUpperInvariant(),
+            X(UseStatusX + FacePadX),
+            Y(UseStatusY + FaceTextBaseline),
             FontSettingsLabel,
-            ClaimFontHelper.ColorAccent);
+            ColStatChunks);
+    }
 
+    /// <summary>Inset face plate (same bevel language as Group 1347 faces).</summary>
+    private static void DrawFacePlateChrome(Context ctx, double x, double y, double w, double h)
+    {
+        var s = Math.Max(0.01, RuntimeEnv.GUIScale);
+        var edge = 4 * s;
+        var bevel = 2 * s;
+        SetRgb(ctx, ColEdge);
+        ctx.Rectangle(x - edge, y - edge, w + edge * 2, h + edge * 2);
+        ctx.Fill();
+        SetRgb(ctx, ColInset);
+        ctx.Rectangle(x, y, w, h);
+        ctx.Fill();
+        SetRgb(ctx, ColHi);
+        ctx.Rectangle(x, y, w, bevel);
+        ctx.Fill();
+        ctx.Rectangle(x, y, bevel, h);
+        ctx.Fill();
+        SetRgb(ctx, ColLo);
+        ctx.Rectangle(x, y + h - bevel, w, bevel);
+        ctx.Fill();
+        ctx.Rectangle(x + w - bevel, y, bevel, h);
+        ctx.Fill();
+    }
+
+    /// <summary>
+    /// Group 1347.svg settings block (478×174 @ 465,215) + dynamic text/icons on top.
+    /// Surface origin = PanelX/PanelY.
+    /// </summary>
+    private void DrawSettingsPlates(Context ctx, double s)
+    {
+        double X(double abs) => (abs - PanelX) * s;
+        double Y(double abs) => (abs - PanelY) * s;
+        var claim = GetSelectedClaim();
+
+        DrawGuiTexture(
+            ctx,
+            settingsPanelSurface,
+            X(SettingsTexX),
+            Y(SettingsTexY),
+            SettingsTexW * s,
+            SettingsTexH * s,
+            fallback: ColInset);
+
+        if (claim != null)
+        {
+            DrawTextAtBaseline(
+                ctx,
+                Lang.Get("swixyclaimchunk:claims-stats-areas", claim.AreaCount).ToUpperInvariant(),
+                X(StatAreasTextX),
+                Y(StatTextBaselineY),
+                FontSettingsStats,
+                ColStatAreas);
+            DrawTextAtBaseline(
+                ctx,
+                Lang.Get("swixyclaimchunk:claims-stats-chunks", claim.ChunkCount).ToUpperInvariant(),
+                X(StatChunksTextX),
+                Y(StatTextBaselineY),
+                FontSettingsStats,
+                ColStatChunks);
+        }
+
+        // Gear #FEE4CF, stroke-opacity 0.32 idle / 1.0 when use-filter open (Group 1347).
+        ClaimCairoIcons.DrawGear(
+            ctx,
+            X(SettingsTexX + StatGearIconLocalX),
+            Y(SettingsTexY + StatGearIconLocalY),
+            StatGearIconSize * s,
+            active: claimsRightMode == ClaimsRightUseFilter,
+            locked: false,
+            r: ColSettingsGear[0],
+            g: ColSettingsGear[1],
+            b: ColSettingsGear[2],
+            inactiveAlpha: 0.32);
+
+        // Flags: also on claimFlag*Bg for live toggle; draw here so first paint is correct.
+        var pvpOn = claim != null && (claim.ClaimFlags & ClaimFlagBits.AllowPvp) != 0;
+        var animalsOn = claim != null && ClaimFlagBits.AreAnimalsProtected(claim.ClaimFlags);
+        DrawGroup1347Checkbox(
+            ctx,
+            X(FlagPvpX + FlagCheckLocalX),
+            Y(FlagPvpY + FlagCheckLocalY),
+            FlagCheckSize * s,
+            pvpOn);
+        DrawGroup1347Checkbox(
+            ctx,
+            X(FlagAnimalsX + FlagCheckLocalX),
+            Y(FlagPvpY + FlagCheckLocalY),
+            FlagCheckSize * s,
+            animalsOn);
         DrawTextAtBaseline(
             ctx,
-            Lang.Get("swixyclaimchunk:claims-player-name").ToUpperInvariant(),
-            texX + SettingsLabelRightX * sx,
-            texY + SettingsLabelBaselineY * sy,
+            Lang.Get("swixyclaimchunk:claim-flag-pvp").ToUpperInvariant(),
+            X(FlagPvpTextX),
+            Y(FlagPvpTextBaselineY),
             FontSettingsLabel,
-            ClaimFontHelper.ColorAccent);
+            ColSettingsBtn);
+        DrawTextAtBaseline(
+            ctx,
+            Lang.Get("swixyclaimchunk:claim-flag-animals").ToUpperInvariant(),
+            X(FlagAnimalsTextX),
+            Y(FlagAnimalsTextBaselineY),
+            FontSettingsLabel,
+            ColSettingsBtn);
 
-        // Button captions — horizontal center at SVG midpoints, baseline 143.
+        // Placeholders when inputs empty (SVG RegionName… / PlayerName… @ 0.32).
+        if (string.IsNullOrWhiteSpace(claimNameInput))
+        {
+            DrawTextAtBaseline(
+                ctx,
+                Lang.Get("swixyclaimchunk:claims-rename-placeholder").ToUpperInvariant(),
+                X(RenamePlaceholderX),
+                Y(RenamePlaceholderBaselineY),
+                FontSettingsLabel,
+                ColSettingsPlaceholder);
+        }
+
+        if (string.IsNullOrWhiteSpace(memberNameInput))
+        {
+            DrawTextAtBaseline(
+                ctx,
+                Lang.Get("swixyclaimchunk:claims-player-placeholder").ToUpperInvariant(),
+                X(AddPlaceholderX),
+                Y(AddPlaceholderBaselineY),
+                FontSettingsLabel,
+                ColSettingsPlaceholder);
+        }
+
+        // Button labels centered in RENAME / ADD plates.
         DrawTextCenteredAtBaseline(
             ctx,
             Lang.Get("swixyclaimchunk:claims-rename-button").ToUpperInvariant(),
-            texX + SettingsBtnLeftCenterX * sx,
-            texY + SettingsBtnTextBaselineY * sy,
+            X(RenameBtnCenterX),
+            Y(RenameBtnBaselineY),
             FontSettingsBtn,
-            ColSettingsBtn);
-
+            ColSettingsBtnMuted);
         DrawTextCenteredAtBaseline(
             ctx,
             Lang.Get("swixyclaimchunk:claims-add-player").ToUpperInvariant(),
-            texX + SettingsBtnRightCenterX * sx,
-            texY + SettingsBtnTextBaselineY * sy,
+            X(AddBtnCenterX),
+            Y(AddBtnBaselineY),
             FontSettingsBtn,
-            ColSettingsBtn);
+            ColSettingsBtnMuted);
     }
 
     private static void DrawTextCenteredAtBaseline(
@@ -4205,10 +4963,16 @@ public sealed class ClaimMapDialog : GuiDialog
         ctx.ShowText(text);
     }
 
-    /// <summary>Кнопка «К игроку» из Group 464.png (button_center.png).</summary>
+    /// <summary>Кнопка «Центр» — button_center.png. Fallback: face chrome.</summary>
     private void DrawCenterButtonTexture(Context ctx, double x, double y, double w, double h)
     {
-        DrawGuiTexture(ctx, centerButtonSurface, x, y, w, h, fallback: ColCenter);
+        if (centerButtonSurface != null && centerButtonSurface.Width > 0 && centerButtonSurface.Height > 0)
+        {
+            DrawGuiTexture(ctx, centerButtonSurface, x, y, w, h, fallback: ColCenter);
+            return;
+        }
+
+        DrawFacePlateChrome(ctx, x, y, w, h);
     }
 
     private static void DrawGuiTexture(
@@ -4242,84 +5006,101 @@ public sealed class ClaimMapDialog : GuiDialog
     }
 
     /// <summary>
-    /// Limits text (UPPERCASE, Montserrat Bold): one left column + right-aligned values.
+    /// Limits text on the mapped face — Group 1355 offsets from face origin (local 4,4).
     /// </summary>
-    private void DrawLimitsTexts(Context ctx, double panelX, double panelY, double panelW, double panelH)
+    private void DrawLimitsTextsOnFace(Context ctx, double faceX, double faceY, double faceW, double faceH)
     {
-        var sx = panelW / LimitsTexW;
-        var sy = panelH / LimitsTexH;
-        var leftX = panelX + LimitsTextLeftX * sx;
+        var ux = faceW / LimitsFaceW;
+        var uy = faceH / LimitsFaceH;
+        var leftX = faceX + LimitsTextLeftX * ux;
+        var valueRight = faceX + LimitsValueRightX * ux;
 
         DrawTextAtBaseline(
             ctx,
             Lang.Get("swixyclaimchunk:claim-map-used").ToUpperInvariant(),
             leftX,
-            panelY + LimitsTitleBaselineY * sy,
+            faceY + LimitsTitleBaselineY * uy,
             FontLimitsTitle,
             ColLimitsTitle);
 
         GetLimitsValues(mapState, out var chunksUsed, out var chunksMax, out var areasUsed, out var areasMax);
-
-        var chunksLabel = Lang.Get("swixyclaimchunk:claim-map-chunks-label").ToUpperInvariant();
-        var areasLabel = Lang.Get("swixyclaimchunk:claim-map-areas-label").ToUpperInvariant();
-        var chunksVal = Lang.Get("swixyclaimchunk:claim-map-value-ratio", chunksUsed, chunksMax).ToUpperInvariant();
-        var areasVal = Lang.Get("swixyclaimchunk:claim-map-value-ratio", areasUsed, areasMax).ToUpperInvariant();
-
-        var valueRight = panelX + LimitsValueRightX * sx;
-        var y1 = panelY + LimitsLine1BaselineY * sy;
-        var y2 = panelY + LimitsLine2BaselineY * sy;
-
-        DrawTextAtBaseline(ctx, chunksLabel, leftX, y1, FontLimitsBody, ClaimFontHelper.ColorAccent);
-        DrawTextRightAtBaseline(ctx, chunksVal, valueRight, y1, FontLimitsBody, ClaimFontHelper.ColorAccent);
-        DrawTextAtBaseline(ctx, areasLabel, leftX, y2, FontLimitsBody, ClaimFontHelper.ColorAccent);
-        DrawTextRightAtBaseline(ctx, areasVal, valueRight, y2, FontLimitsBody, ClaimFontHelper.ColorAccent);
+        var y1 = faceY + LimitsLine1BaselineY * uy;
+        var y2 = faceY + LimitsLine2BaselineY * uy;
+        DrawTextAtBaseline(
+            ctx,
+            Lang.Get("swixyclaimchunk:claim-map-chunks-label"),
+            leftX,
+            y1,
+            FontLimitsBody,
+            ClaimFontHelper.ColorAccent);
+        DrawTextRightAtBaseline(
+            ctx,
+            Lang.Get("swixyclaimchunk:claim-map-value-ratio", chunksUsed, chunksMax),
+            valueRight,
+            y1,
+            FontLimitsBody,
+            ClaimFontHelper.ColorAccent);
+        DrawTextAtBaseline(
+            ctx,
+            Lang.Get("swixyclaimchunk:claim-map-areas-label"),
+            leftX,
+            y2,
+            FontLimitsBody,
+            ClaimFontHelper.ColorAccent);
+        DrawTextRightAtBaseline(
+            ctx,
+            Lang.Get("swixyclaimchunk:claim-map-value-ratio", areasUsed, areasMax),
+            valueRight,
+            y2,
+            FontLimitsBody,
+            ClaimFontHelper.ColorAccent);
     }
 
     /// <summary>
-    /// Legend text (UPPERCASE): title + Free / Yours / Other, shared left margin.
+    /// Legend text on the mapped face — Group 1355 offsets from title face (local 4,108).
     /// </summary>
-    private void DrawLegendTexts(Context ctx, double panelX, double panelY, double panelW, double panelH)
+    private void DrawLegendTextsOnFace(Context ctx, double faceX, double faceY, double faceW, double faceH)
     {
-        var sx = panelW / LegendTexW;
-        var sy = panelH / LegendTexH;
-        var leftX = panelX + LegendTextLeftX * sx;
-        var maxW = (LegendTextMaxRightX - LegendTextLeftX) * sx;
+        var ux = faceW / LimitsFaceW;
+        var uy = faceH / LegendDesignH;
+        var leftX = faceX + LegendTextLeftX * ux;
+        var maxW = faceW - (LegendSwatchSize + 6 + LegendTextLeftX) * ux;
 
         DrawTextAtBaseline(
             ctx,
             Lang.Get("swixyclaimchunk:claim-map-legend-title").ToUpperInvariant(),
             leftX,
-            panelY + LegendTitleBaselineY * sy,
+            faceY + LegendTitleBaselineY * uy,
             FontLegendTitle,
             ColLimitsTitle);
 
         DrawTextAtBaselineClamped(
             ctx,
-            Lang.Get("swixyclaimchunk:claim-map-legend-free").ToUpperInvariant(),
+            Lang.Get("swixyclaimchunk:claim-map-legend-free"),
             leftX,
-            panelY + LegendLine1BaselineY * sy,
+            faceY + LegendRow1BaselineY * uy,
             maxW,
             FontLegendBody,
             ClaimFontHelper.ColorAccent);
         DrawTextAtBaselineClamped(
             ctx,
-            Lang.Get("swixyclaimchunk:claim-map-legend-own").ToUpperInvariant(),
+            Lang.Get("swixyclaimchunk:claim-map-legend-own"),
             leftX,
-            panelY + LegendLine2BaselineY * sy,
+            faceY + LegendRow2BaselineY * uy,
             maxW,
             FontLegendBody,
             ClaimFontHelper.ColorAccent);
         DrawTextAtBaselineClamped(
             ctx,
-            Lang.Get("swixyclaimchunk:claim-map-legend-other").ToUpperInvariant(),
+            Lang.Get("swixyclaimchunk:claim-map-legend-other"),
             leftX,
-            panelY + LegendLine3BaselineY * sy,
+            faceY + LegendRow3BaselineY * uy,
             maxW,
             FontLegendBody,
             ClaimFontHelper.ColorAccent);
     }
 
-    /// <summary>Baseline text; truncates with … if wider than maxWidth. Montserrat Bold.</summary>
+    /// <summary>Baseline text; truncates with … if wider than maxWidth.</summary>
     private static void DrawTextAtBaselineClamped(
         Context ctx,
         string text,
@@ -4380,7 +5161,7 @@ public sealed class ClaimMapDialog : GuiDialog
         areasMax = packet.MaxAreas > 0 ? packet.MaxAreas.ToString() : Lang.Get("swixyclaimchunk:claim-map-unlimited");
     }
 
-    /// <summary>Текст с привязкой к baseline Y (как path M в SVG) — Montserrat Bold.</summary>
+    /// <summary>Текст с привязкой к baseline Y (как path M в SVG).</summary>
     private static void DrawTextAtBaseline(
         Context ctx,
         string text,
@@ -4412,15 +5193,7 @@ public sealed class ClaimMapDialog : GuiDialog
         double dashY,
         double s)
     {
-        if (!string.IsNullOrEmpty(text))
-        {
-            ClaimFontHelper.SetupMontserrat(ctx, FontSection, ColSection, bold: true);
-            var extents = ctx.TextExtents(text);
-            var x = leftX + (rightX - leftX - extents.Width) * 0.5 - extents.XBearing;
-            ctx.MoveTo(x, baselineY);
-            ctx.ShowText(text);
-        }
-
+        DrawSectionTitleOnly(ctx, text, leftX, rightX, baselineY);
         DrawDashedLine(
             ctx,
             leftX,
@@ -4431,6 +5204,26 @@ public sealed class ClaimMapDialog : GuiDialog
             SectionDashOn * s,
             SectionDashOff * s,
             ColSectionDash);
+    }
+
+    /// <summary>Section title without dashed underline (claims page).</summary>
+    private static void DrawSectionTitleOnly(
+        Context ctx,
+        string text,
+        double leftX,
+        double rightX,
+        double baselineY)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        ClaimFontHelper.SetupMontserrat(ctx, FontSection, ColSection, bold: true);
+        var extents = ctx.TextExtents(text);
+        var x = leftX + (rightX - leftX - extents.Width) * 0.5 - extents.XBearing;
+        ctx.MoveTo(x, baselineY);
+        ctx.ShowText(text);
     }
 
     /// <summary>
@@ -4603,7 +5396,7 @@ public sealed class ClaimMapDialog : GuiDialog
     }
 
     /// <summary>
-    /// Tab plate label: Montserrat Bold, truly centered, slight downward nudge (wood plate optics).
+    /// Tab plate label: Minecraft Five (quest title face), centered, slight downward nudge.
     /// </summary>
     private static void DrawTabLabel(
         Context ctx,
@@ -4622,7 +5415,7 @@ public sealed class ClaimMapDialog : GuiDialog
             return;
         }
 
-        ClaimFontHelper.SetupMontserrat(ctx, designFontSize, color, bold: true);
+        ClaimFontHelper.SetupTitle(ctx, designFontSize, color);
         var extents = ctx.TextExtents(text);
         var fe = ctx.FontExtents;
         // Optical center: baseline mid of ascent/descent box, then nudge down on wood plate.

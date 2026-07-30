@@ -214,15 +214,28 @@ internal static class ClaimCairoIcons
 
     /// <summary>Group 470 gear — stroke #50B5E1 + hub circle, width 2.</summary>
     public static void DrawGear(Context ctx, double x, double y, double size, bool active, bool locked)
+        => DrawGear(ctx, x, y, size, active, locked, r: 0x50 / 255.0, g: 0xB5 / 255.0, b: 0xE1 / 255.0);
+
+    /// <summary>Same gear geometry with custom stroke color (e.g. Group 1347 #FEE4CF @ 0.32).</summary>
+    public static void DrawGear(
+        Context ctx,
+        double x,
+        double y,
+        double size,
+        bool active,
+        bool locked,
+        double r,
+        double g,
+        double b,
+        double inactiveAlpha = 0.42)
     {
         double X(double v) => x + Map(v, size);
         double Y(double v) => y + Map(v, size);
         var on = active || locked;
-        var alpha = on ? 1.0 : 0.42;
+        var alpha = on ? 1.0 : inactiveAlpha;
 
         ctx.Save();
-        // #50B5E1
-        ctx.SetSourceRGBA(0x50 / 255.0, 0xB5 / 255.0, 0xE1 / 255.0, alpha);
+        ctx.SetSourceRGBA(r, g, b, alpha);
         ctx.LineWidth = Math.Max(1.25, Map(2, size));
         ctx.LineCap = LineCap.Round;
         ctx.LineJoin = LineJoin.Round;

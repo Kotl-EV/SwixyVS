@@ -247,7 +247,7 @@ namespace SwixyQuestBook.Gui
                 return font;
             }
 
-            // Body family is "Minecraft Rus" (minecraft.ttf). Use the OpenType family name,
+            // Body family is "SwixyQuestBody" (minecraft.ttf). Use the OpenType family name,
             // not the file name — Cairo SelectFontFace will miss file names and fall back.
             font = QuestbookFontHelper.Create(renderSize, color, bold: false);
             montserratFontCache[key] = font;

@@ -15,11 +15,11 @@ namespace SwixyQuestBook.Util.Fonts
     /// </summary>
     public static class QuestbookFontHelper
     {
-        /// <summary>Body / general UI family from minecraft.ttf.</summary>
-        public const string BodyFamilyName = "Minecraft Rus";
+        /// <summary>Body / general UI family from minecraft.ttf (unique name; patched capital Й).</summary>
+        public const string BodyFamilyName = "SwixyQuestBody";
 
         /// <summary>Title / top-menu family from MinecraftTitle.ttf.</summary>
-        public const string TitleFamilyName = "Minecraft Five";
+        public const string TitleFamilyName = "SwixyQuestTitle";
 
         /// <summary>Legacy alias — body family.</summary>
         public const string FamilyName = BodyFamilyName;
@@ -90,13 +90,13 @@ namespace SwixyQuestBook.Util.Fonts
             }
         }
 
-        /// <summary>Body UI font (minecraft.ttf / Minecraft Rus).</summary>
+        /// <summary>Body UI font (minecraft.ttf / SwixyQuestBody).</summary>
         public static CairoFont Create(double renderSize, double[] color, bool bold = false)
         {
             return CreateWithFamily(BodyFamilyName, renderSize, color, bold);
         }
 
-        /// <summary>Title font (MinecraftTitle.ttf / Minecraft Five) for the top menu bar.</summary>
+        /// <summary>Title font (MinecraftTitle.ttf / SwixyQuestTitle) for the top menu bar.</summary>
         public static CairoFont CreateTopMenu(double fitScale, double[] color)
         {
             double renderSize = QuestbookGuiLayout.TopMenuFontSize * fitScale;
@@ -195,8 +195,16 @@ namespace SwixyQuestBook.Util.Fonts
                 Directory.CreateDirectory(cacheDir);
                 string fileName = IOPath.GetFileName(relativePath);
                 string outPath = IOPath.Combine(cacheDir, fileName);
-                // Refresh when the packed asset is newer / different size.
-                if (!File.Exists(outPath) || new FileInfo(outPath).Length != asset.Data.Length)
+                // Refresh when asset bytes change (e.g. capital Й glyph patch).
+                bool needsWrite = !File.Exists(outPath);
+                if (!needsWrite)
+                {
+                    byte[] existing = File.ReadAllBytes(outPath);
+                    needsWrite = existing.Length != asset.Data.Length
+                        || !existing.AsSpan().SequenceEqual(asset.Data);
+                }
+
+                if (needsWrite)
                     File.WriteAllBytes(outPath, asset.Data);
                 return outPath;
             }
@@ -250,12 +258,24 @@ namespace SwixyQuestBook.Util.Fonts
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "Microsoft", "Windows", "Fonts");
                 Directory.CreateDirectory(userFonts);
-                string dest = IOPath.Combine(userFonts, IOPath.GetFileName(sourcePath));
-                if (!File.Exists(dest)
-                    || new FileInfo(dest).Length != new FileInfo(sourcePath).Length)
+                // Versioned name: pick up patched capital Й even when legacy minecraft.ttf is locked.
+                string dest = IOPath.Combine(userFonts, "swixyquestbook-v9-" + IOPath.GetFileName(sourcePath));
+                var srcInfo = new FileInfo(sourcePath);
+                bool needsCopy = !File.Exists(dest) || new FileInfo(dest).Length != srcInfo.Length;
+                if (!needsCopy)
                 {
-                    File.Copy(sourcePath, dest, overwrite: true);
+                    try
+                    {
+                        needsCopy = !File.ReadAllBytes(dest).AsSpan().SequenceEqual(File.ReadAllBytes(sourcePath));
+                    }
+                    catch
+                    {
+                        needsCopy = true;
+                    }
                 }
+
+                if (needsCopy)
+                    File.Copy(sourcePath, dest, overwrite: true);
 
                 return dest;
             }

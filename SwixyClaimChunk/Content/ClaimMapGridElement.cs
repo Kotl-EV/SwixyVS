@@ -1332,7 +1332,8 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="height">Высота области.</param>
     private static void DrawClaimNameLabel(Context ctx, string claimName, double x, double y, double width, double height)
     {
-        ctx.SelectFontFace("sans-serif", FontSlant.Normal, FontWeight.Bold);
+        // Same body face as the rest of claim UI (SwixyClaimBody). Never Bold — single-weight Minecraft face.
+        ctx.SelectFontFace(ClaimFontHelper.BodyFamilyName, FontSlant.Normal, FontWeight.Normal);
 
         var maxWidth = Math.Max(8, width - 6);
         var maxHeight = Math.Max(8, height - 4);

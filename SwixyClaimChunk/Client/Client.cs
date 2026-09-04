@@ -66,6 +66,15 @@ public sealed partial class SwixyClaimChunkClientMod
         OpenDialog();
     }
 
+    /// <summary>
+    /// Soft-called from another pack's ESC menu (no compile reference).
+    /// Opens only — does not toggle closed. Same shape as OneBlock QuestbookClientSystem.OpenFromMenu().
+    /// </summary>
+    public bool OpenFromMenu()
+    {
+        return OpenDialog();
+    }
+
     /// <summary>Создаёт или открывает ClaimMapDialog; при повторном вызове — RequestRefresh.</summary>
     private bool OpenDialog()
     {

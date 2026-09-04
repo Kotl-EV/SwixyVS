@@ -10,6 +10,8 @@ namespace SwixyQuestBook.Client
     {
         public const string ToggleHotkeyCode = "swixyquestbook-toggle";
 
+        private static QuestbookClientSystem? instance;
+
         private ICoreClientAPI? capi;
         private QuestbookDialog? dialog;
         private QuestbookClientDataManager? dataManager;
@@ -19,6 +21,7 @@ namespace SwixyQuestBook.Client
         public override void StartClientSide(ICoreClientAPI api)
         {
             base.StartClientSide(api);
+            instance = this;
             capi = api;
 
             // Make assets/…/fonts/minecraft.ttf + MinecraftTitle.ttf visible to Cairo before any dialog draws.
@@ -68,6 +71,9 @@ namespace SwixyQuestBook.Client
 
         public override void Dispose()
         {
+            if (ReferenceEquals(instance, this))
+                instance = null;
+
             if (dataManager != null)
             {
                 dataManager.QuestDataUpdated -= OnQuestDataUpdated;
@@ -80,6 +86,31 @@ namespace SwixyQuestBook.Client
             dialog = null;
             capi = null;
             base.Dispose();
+        }
+
+        /// <summary>
+        /// Open the questbook GUI from another pack's ESC menu. Opens only — does not toggle closed.
+        /// </summary>
+        public static bool OpenFromMenu()
+        {
+            var sys = instance;
+            if (sys?.dialog == null) return false;
+            return sys.OpenDialog();
+        }
+
+        private bool OpenDialog()
+        {
+            if (dialog == null) return false;
+
+            if (!dialog.IsOpened())
+            {
+                dialog.TryOpen();
+                if (capi != null)
+                    QuestbookSoundHelper.PlayBookOpening(capi);
+                dialog.EnsureSelectedCategoryContentLoaded();
+            }
+
+            return dialog.IsOpened();
         }
 
         private bool OnToggleQuestbook(KeyCombination keyCombination)

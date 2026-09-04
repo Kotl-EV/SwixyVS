@@ -232,7 +232,9 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
         // Claim/Sky lang still helps server log messages:
         CopyLangAssets(projectRoot, serverDir, context);
 
-        WriteSideModInfo(serverModInfoSrc, Path.Combine(serverDir, "modinfo.json"), "Server", " [SERVER]");
+        // Universal + required both sides: VS shows the "both sides" badge.
+        // Code still lives in the matching zip (server vs client); do not mix zips.
+        WriteSideModInfo(serverModInfoSrc, Path.Combine(serverDir, "modinfo.json"), "Universal", " [SERVER]");
         CopyFileIfExists(Path.Combine(projectRoot, "modicon.png"), Path.Combine(serverDir, "modicon.png"));
 
         var serverZip = $"../Releases/{modInfo.ModID}_server_{modInfo.Version}.zip";
@@ -252,7 +254,7 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
         }
 
         CopyIfExists(Path.Combine(projectRoot, "assets"), Path.Combine(clientDir, "assets"), context);
-        WriteSideModInfo(clientModInfoSrc, Path.Combine(clientDir, "modinfo.json"), "Client", " [CLIENT]");
+        WriteSideModInfo(clientModInfoSrc, Path.Combine(clientDir, "modinfo.json"), "Universal", " [CLIENT]");
         CopyFileIfExists(Path.Combine(projectRoot, "modicon.png"), Path.Combine(clientDir, "modicon.png"));
 
         var clientZip = $"../Releases/{modInfo.ModID}_client_{modInfo.Version}.zip";
@@ -519,7 +521,7 @@ public sealed class PerProjectTask : FrostingTask<BuildContext>
             json["version"] = ver;
             json.Remove("Version");
         }
-        json["side"] = side;
+        json["side"] = side; // Universal: VS "both sides" badge; zip still server- or client-only code
         json["requiredOnClient"] = true;
         json["requiredOnServer"] = true;
         var desc = json["description"]?.ToString() ?? "";
@@ -790,6 +792,13 @@ public static class SourceSideAnalyzer
         if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
         {
             var head = ReadFileHead(fullPath, 8000);
+            // VS allows only ONE dll per zip with [ModInfo] or ModSystem.
+            // Shared.dll must not carry ModInfo — only Server.dll / Client.dll.
+            if (head.Contains("[assembly: ModInfo", StringComparison.Ordinal)
+                || head.Contains("[assembly: ModInfoAttribute", StringComparison.Ordinal))
+            {
+                return SourceSide.Both;
+            }
             if (Regex.IsMatch(head, @"\bpartial\s+class\s+\w*Mod\b"))
             {
                 if (n.StartsWith("Server/", StringComparison.OrdinalIgnoreCase))

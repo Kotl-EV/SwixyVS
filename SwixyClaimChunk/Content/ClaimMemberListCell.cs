@@ -187,6 +187,10 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     public void Compose()
     {
         Bounds.CalcWorldBounds();
+        if (Bounds.OuterWidthInt <= 0 || Bounds.OuterHeightInt <= 0)
+        {
+            return;
+        }
 
         // Одна поверхность Cairo: сначала released, затем pressed (с очисткой между проходами)
         using (var surface = new ImageSurface(Format.Argb32, Bounds.OuterWidthInt, Bounds.OuterHeightInt))
@@ -552,7 +556,13 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     /// <param name="deltaTime">Дельта времени кадра (не используется).</param>
     public void OnRenderInteractiveElements(ICoreClientAPI capi, float deltaTime)
     {
-        if (pressedButtonTexture.TextureId == 0)
+        Bounds.CalcWorldBounds();
+        if (Bounds.OuterWidthInt <= 0 || Bounds.OuterHeightInt <= 0)
+        {
+            return;
+        }
+
+        if (CellTextureStale(releasedButtonTexture) || CellTextureStale(pressedButtonTexture))
         {
             Compose();
         }
@@ -700,6 +710,13 @@ public sealed class ClaimMemberListCell : GuiElementTextBase, IGuiElementCell
     /// <param name="elementIndex">Индекс элемента в списке.</param>
     public void OnMouseMoveOnElement(MouseEvent args, int elementIndex)
     {
+    }
+
+    private bool CellTextureStale(LoadedTexture texture)
+    {
+        return texture.TextureId == 0
+            || texture.Width != Bounds.OuterWidthInt
+            || texture.Height != Bounds.OuterHeightInt;
     }
 
     /// <summary>

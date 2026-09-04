@@ -8,6 +8,9 @@
   ],
   "description": "Permission groups and rights manager for Swixy mods.",
   "version": "1.0.0",
+  "side": "Universal",
+  "requiredOnClient": true,
+  "requiredOnServer": true,
   "dependencies": {
     "game": "1.22.0"
   }

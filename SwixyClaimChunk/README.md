@@ -59,5 +59,5 @@ The build script publishes release zips into the `Releases` directory.
 
 - Mod ID: `swixyclaimchunk`
 - Type: code mod
-- Current version: `1.0.1`
+- Current version: `1.0.6`
 - Authors: `Tehtelev`, `Kotl`

@@ -6,7 +6,7 @@
   "description": "[SwixyQuestBook] CLIENT package — players / public (hotkey K)",
   "version": "1.0.0",
   "gameversions": [ "1.22.3" ],
-  "side": "Client",
+  "side": "Universal",
   "requiredOnClient": true,
   "requiredOnServer": true,
   "dependencies": {

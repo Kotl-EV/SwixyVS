@@ -6,7 +6,7 @@
   "description": "[SwixyQuestBook] SERVER package — put on dedicated server only",
   "version": "1.0.0",
   "gameversions": [ "1.22.3" ],
-  "side": "Server",
+  "side": "Universal",
   "requiredOnClient": true,
   "requiredOnServer": true,
   "dependencies": {

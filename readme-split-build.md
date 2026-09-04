@@ -12,8 +12,8 @@ Each mod stays **one** `.csproj` for IDE/Debug.
 | Package | Zip | Contents | Use |
 |---------|-----|----------|-----|
 | **Full** (universal) | `{modid}_{version}.zip` | One DLL with client+server code + assets | Singleplayer / one Mods folder |
-| **Server** | `{modid}_server_{version}.zip` | Server.dll + Shared.dll (+ lang) | Dedicated server only |
-| **Client** | `{modid}_client_{version}.zip` | Client.dll + Shared.dll + assets | Player clients |
+| **Server** | `{modid}_server_{version}.zip` | Server.dll + Shared.dll (+ lang) | Dedicated server (`side: Universal`, required both sides) |
+| **Client** | `{modid}_client_{version}.zip` | Client.dll + Shared.dll + assets | Player clients (`side: Universal`, required both sides) |
 
 Install **only one** package type per Mods folder.  
 Do **not** mix FULL + server/client, or server + client together (same modid).

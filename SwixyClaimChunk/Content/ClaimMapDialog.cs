@@ -28,7 +28,7 @@ namespace SwixyClaimChunk.Content;
 /// <summary>
 /// Диалог карты приватов и редактора списка приватов/участников.
 /// </summary>
-public sealed class ClaimMapDialog : GuiDialog
+public sealed partial class ClaimMapDialog : GuiDialog
 {
     #region Константы и поля состояния
 
@@ -648,10 +648,27 @@ public sealed class ClaimMapDialog : GuiDialog
     public override void OnGuiOpened()
     {
         base.OnGuiOpened();
+        EnsureFrameSurface();
+        // Constructor ComposeDialog runs before TryOpen: CustomDraw GPU textures can be
+        // empty until a tab switch rebuilds the composer. Recompose now that we are registered.
+        ComposeDialog();
         CenterOnPlayer();
         gridElement?.CenterMapOnPlayer();
         RequestRefresh();
         RequestClaimList();
+        RefreshOpenGuiTextures();
+        // One more redraw next frame — Fill/clip bounds settle after the first GUI render.
+        clientApi.Event.RegisterCallback(_ =>
+        {
+            if (!IsOpened())
+            {
+                return;
+            }
+
+            EnsureFrameSurface();
+            RefreshOpenGuiTextures();
+            gridElement?.CenterMapOnPlayer();
+        }, 0);
 
         if (highlightedClaimId > 0 && activePage == PageClaims)
         {
@@ -662,6 +679,12 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Escape: из use-filter → настройки; иначе закрыть окно.</summary>
     public override bool OnEscapePressed()
     {
+        if (deleteConfirmOpen)
+        {
+            CloseDeleteConfirm();
+            return true;
+        }
+
         if (activePage == PageClaims && claimsRightMode == ClaimsRightUseFilter)
         {
             CloseUseFilterPanel();
@@ -681,8 +704,16 @@ public sealed class ClaimMapDialog : GuiDialog
         dialogDragging = false;
         MouseOverCursor = null;
         CloseDetachListMenu();
-        DisposeFrameSurface();
+        CloseDeleteConfirm();
+        // Keep PNG Cairo surfaces: closing used to Dispose them, then ApplyState/Redraw
+        // painted fallback plates until a tab switch called ComposeDialog again.
         base.OnGuiClosed();
+    }
+
+    public override void Dispose()
+    {
+        DisposeFrameSurface();
+        base.Dispose();
     }
 
     /// <summary>
@@ -691,6 +722,11 @@ public sealed class ClaimMapDialog : GuiDialog
     /// </summary>
     public override void OnRenderGUI(float deltaTime)
     {
+        if (deleteConfirmOpen)
+        {
+            SyncDeleteConfirmBounds();
+        }
+
         base.OnRenderGUI(deltaTime);
         UpdateHoverCursor(clientApi.Input.MouseX, clientApi.Input.MouseY);
     }
@@ -704,6 +740,12 @@ public sealed class ClaimMapDialog : GuiDialog
         if (dialogDragging)
         {
             MouseOverCursor = MoveCursor;
+            return;
+        }
+
+        if (deleteConfirmOpen)
+        {
+            MouseOverCursor = IsOverDeleteConfirmButton(mouseX, mouseY) ? ClickableCursor : null;
             return;
         }
 
@@ -909,6 +951,47 @@ public sealed class ClaimMapDialog : GuiDialog
         ApplyClaimsPageScrollState();
         ApplyClaimsPageInputState();
         UpdateText(null);
+        RefreshOpenGuiTextures();
+        if (deleteConfirmOpen)
+        {
+            ComposeDeleteConfirmOverlay();
+        }
+    }
+
+    /// <summary>
+    /// Regenerates CustomDraw GPU textures (frame, map cards, claims chrome) after bounds exist.
+    /// </summary>
+    private void RefreshOpenGuiTextures()
+    {
+        EnsureFrameSurface();
+        try
+        {
+            SingleComposer?.GetCustomDraw("dialogChrome")?.Redraw();
+        }
+        catch
+        {
+            // Composer not ready.
+        }
+
+        try
+        {
+            SingleComposer?.GetCustomDraw("mapPageContent")?.Redraw();
+        }
+        catch
+        {
+            // Map tab not built.
+        }
+
+        try
+        {
+            SingleComposer?.GetCustomDraw("claimsPageChrome")?.Redraw();
+            SingleComposer?.GetCustomDraw("claimFlagPvpBg")?.Redraw();
+            SingleComposer?.GetCustomDraw("claimFlagAnimalsBg")?.Redraw();
+        }
+        catch
+        {
+            // Claims tab not built.
+        }
     }
 
     /// <summary>
@@ -937,6 +1020,13 @@ public sealed class ClaimMapDialog : GuiDialog
     /// <summary>Vanilla list values: "auto" = Fixed, "manual" = Movable.</summary>
     private void OnDetachMenuSelection(string val, bool on)
     {
+        // Single-select also fires on=false for the previous row. That callback
+        // must be ignored — otherwise picking Movable is immediately undone by auto/false.
+        if (!on)
+        {
+            return;
+        }
+
         var parent = SingleComposer?.Bounds;
         if (parent == null)
         {
@@ -1005,9 +1095,16 @@ public sealed class ClaimMapDialog : GuiDialog
 
         var s = Math.Max(0.01, RuntimeEnv.GUIScale);
         var parent = SingleComposer.Bounds;
-        // Anchor dropdown near cursor inside the dialog (same list as vanilla title-bar menu).
-        detachListMenu.Bounds.fixedX = Math.Clamp((mouseX - parent.absX) / s, 8, UiW - 150);
-        detachListMenu.Bounds.fixedY = Math.Clamp((mouseY - parent.absY) / s, 4, DetachChromeH);
+        // Anchor dropdown near cursor. Leave room below for both Fixed/Movable rows
+        // (clamping into DetachChromeH put the 2nd row outside the list hit box).
+        const int menuW = 150;
+        const int menuTriggerH = 22;
+        const int dropRowsH = 52;
+        detachListMenu.Bounds.fixedX = Math.Clamp((mouseX - parent.absX) / s, 8, UiW - menuW);
+        detachListMenu.Bounds.fixedY = Math.Clamp(
+            (mouseY - parent.absY) / s,
+            4,
+            Math.Max(4, UiH - menuTriggerH - dropRowsH));
         detachListMenu.Bounds.CalcWorldBounds();
         detachListMenu.SetSelectedIndex(dialogMovable ? 1 : 0);
         detachListMenu.HoveredIndex = dialogMovable ? 1 : 0;
@@ -1665,7 +1762,7 @@ public sealed class ClaimMapDialog : GuiDialog
         return true;
     }
 
-    /// <summary>Удаляет участника по UID; владельца удалить нельзя.</summary>
+    /// <summary>Удаляет участника по UID; владельца удалить нельзя — сначала модалка.</summary>
     private void RemoveMemberByUid(string memberUid)
     {
         var member = FindMemberByUid(memberUid);
@@ -1674,7 +1771,7 @@ public sealed class ClaimMapDialog : GuiDialog
             return;
         }
 
-        SendClaimAction(ClaimAccessActionType.RemovePlayer, member.PlayerName, 0, "", member.PlayerUid);
+        OpenDeleteMemberConfirm(member);
     }
 
     /// <summary>Переключает статус со-владельца участника (корона).</summary>
@@ -2929,7 +3026,7 @@ public sealed class ClaimMapDialog : GuiDialog
         SelectClaimButton(claim);
     }
 
-    /// <summary>Удаление привата; при активной подсветке сначала снимает её на сервере.</summary>
+    /// <summary>Удаление привата — сначала модалка подтверждения (Group modal.svg).</summary>
     private void DeleteClaimCell(int index)
     {
         var claim = GetClaimAt(index);
@@ -2938,20 +3035,7 @@ public sealed class ClaimMapDialog : GuiDialog
             return;
         }
 
-        SelectClaim(claim);
-
-        if (highlightedClaimId == claim.ClaimId)
-        {
-            channel.SendPacket(new ClaimShowRequestPacket
-            {
-                ClaimId = claim.ClaimId,
-                Clear = true
-            });
-            highlightedClaimId = 0;
-            pendingHighlightClaimId = -1;
-        }
-
-        SendClaimAction(ClaimAccessActionType.DeleteClaim, "", 0, "");
+        OpenDeleteConfirm(claim);
     }
 
     /// <summary>Переключает право Use у участника (оптимистичное обновление UI).</summary>
@@ -3856,6 +3940,9 @@ public sealed class ClaimMapDialog : GuiDialog
         settingsPanelSurface ??= LoadGuiPng("textures/gui/panel_settings.png", "panel_settings.png");
         settingsButtonSurface ??= LoadGuiPng("textures/gui/btn_settings.png", "btn_settings.png");
         scrollTrackSurface ??= LoadGuiPng("textures/gui/scrollbar_track.png", "scrollbar_track.png");
+        deleteModalSurface ??= LoadGuiPng("textures/gui/modal_delete.png", "modal_delete.png");
+        deleteCancelBtnSurface ??= LoadGuiPng("textures/gui/btn_modal_cancel.png", "btn_modal_cancel.png");
+        deleteConfirmBtnSurface ??= LoadGuiPng("textures/gui/btn_modal_delete.png", "btn_modal_delete.png");
     }
 
     private ImageSurface? LoadGuiPng(string assetPath, string logName)
@@ -3896,6 +3983,12 @@ public sealed class ClaimMapDialog : GuiDialog
         settingsButtonSurface = null;
         scrollTrackSurface?.Dispose();
         scrollTrackSurface = null;
+        deleteModalSurface?.Dispose();
+        deleteModalSurface = null;
+        deleteCancelBtnSurface?.Dispose();
+        deleteCancelBtnSurface = null;
+        deleteConfirmBtnSurface?.Dispose();
+        deleteConfirmBtnSurface = null;
     }
 
     /// <summary>
@@ -3992,15 +4085,27 @@ public sealed class ClaimMapDialog : GuiDialog
 
     public override void OnMouseDown(MouseEvent args)
     {
+        if (TryHandleDeleteConfirmMouseDown(args))
+        {
+            return;
+        }
+
         claimScrollDragging = false;
         memberScrollDragging = false;
         useFilterScrollDragging = false;
 
-        // Close vanilla pin menu when clicking outside it (Close is internal on the list).
-        if (detachListMenu is { IsOpened: true }
-            && !detachListMenu.IsPositionInside(args.X, args.Y))
+        // Pin menu is open: give it the click first (dropdown sits over tabs/chrome).
+        // Closing before OnMouseDown made "Movable" (second row) miss the hit test.
+        if (detachListMenu is { IsOpened: true })
         {
-            CloseDetachListMenu();
+            detachListMenu.OnMouseDown(clientApi, args);
+            if (!args.Handled && !detachListMenu.IsPositionInside(args.X, args.Y))
+            {
+                CloseDetachListMenu();
+            }
+
+            args.Handled = true;
+            return;
         }
 
         // RMB on top chrome → vanilla Fixed / Movable menu (pin / detach).
@@ -4097,11 +4202,24 @@ public sealed class ClaimMapDialog : GuiDialog
         claimScrollDragging = false;
         memberScrollDragging = false;
         useFilterScrollDragging = false;
+
+        if (deleteConfirmOpen)
+        {
+            args.Handled = true;
+            return;
+        }
+
         base.OnMouseUp(args);
     }
 
     public override void OnMouseWheel(MouseWheelEventArgs args)
     {
+        if (deleteConfirmOpen)
+        {
+            args.SetHandled(true);
+            return;
+        }
+
         if (activePage != PageClaims)
         {
             base.OnMouseWheel(args);

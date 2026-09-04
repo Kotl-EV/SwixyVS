@@ -8,6 +8,9 @@
   ],
   "description": "SkyBlock gameplay for Vintage Story.",
   "version": "1.0.0",
+  "side": "Universal",
+  "requiredOnClient": true,
+  "requiredOnServer": true,
   "dependencies": {
     "game": "1.22.0",
     "survival": "1.22.0"

@@ -67,6 +67,10 @@ public sealed class ClaimUseFilterListCell : GuiElementTextBase, IGuiElementCell
     public void Compose()
     {
         Bounds.CalcWorldBounds();
+        if (Bounds.OuterWidthInt <= 0 || Bounds.OuterHeightInt <= 0)
+        {
+            return;
+        }
 
         using (var surface = new ImageSurface(Format.Argb32, Bounds.OuterWidthInt, Bounds.OuterHeightInt))
         using (var ctx = genContext(surface))
@@ -152,7 +156,13 @@ public sealed class ClaimUseFilterListCell : GuiElementTextBase, IGuiElementCell
 
     public void OnRenderInteractiveElements(ICoreClientAPI capi, float deltaTime)
     {
-        if (releasedTexture.TextureId == 0)
+        Bounds.CalcWorldBounds();
+        if (Bounds.OuterWidthInt <= 0 || Bounds.OuterHeightInt <= 0)
+        {
+            return;
+        }
+
+        if (CellTextureStale(releasedTexture) || CellTextureStale(selectedTexture))
         {
             Compose();
         }
@@ -264,6 +274,13 @@ public sealed class ClaimUseFilterListCell : GuiElementTextBase, IGuiElementCell
 
         IsWhitelisted = value;
         cellEntry.Selected = value;
+    }
+
+    private bool CellTextureStale(LoadedTexture texture)
+    {
+        return texture.TextureId == 0
+            || texture.Width != Bounds.OuterWidthInt
+            || texture.Height != Bounds.OuterHeightInt;
     }
 
     public override void Dispose()

@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // ClaimMemberListCell.cs
 // =============================================================================
 // Ячейка списка участников привата (claim) в GUI Vintage Story.
@@ -12,7 +12,6 @@ using Cairo;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
-using Vintagestory.API.MathTools;
 
 namespace SwixyClaimChunk.Content;
 

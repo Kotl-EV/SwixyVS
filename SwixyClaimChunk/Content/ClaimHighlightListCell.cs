@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // ClaimHighlightListCell.cs
 // -----------------------------------------------------------------------------
 // Ячейка списка приватов — layout Group 1349.svg:
@@ -8,9 +8,6 @@
 using System;
 using Cairo;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
-using Vintagestory.API.Config;
-using Vintagestory.API.MathTools;
 
 namespace SwixyClaimChunk.Content;
 

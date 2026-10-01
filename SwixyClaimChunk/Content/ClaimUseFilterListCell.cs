@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // ClaimUseFilterListCell.cs
 // -----------------------------------------------------------------------------
 // Строка whitelist Use: иконка предмета слева, название справа.
@@ -9,7 +9,6 @@ using System;
 using Cairo;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
 namespace SwixyClaimChunk.Content;

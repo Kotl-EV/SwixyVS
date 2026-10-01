@@ -1,14 +1,15 @@
-// =============================================================================
+﻿// =============================================================================
 // Клиентский ModSystem. Partial-файлы: Client/*
 // =============================================================================
 
 using System;
 using System.Collections.Generic;
 using SwixyClaimChunk.Content;
+using SwixyClaimChunk.Core;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Client;
 
 /// <summary>Клиентский диалог карты приватов и prediction use-filter.</summary>
 public sealed partial class SwixyClaimChunkClientMod : ModSystem

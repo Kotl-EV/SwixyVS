@@ -1,4 +1,4 @@
-{
+﻿{
   "type": "code",
   "modid": "swixyclaimchunk",
   "name": "SwixyClaimChunk",
@@ -7,7 +7,7 @@
     "Kotl"
   ],
   "description": "Chunk claim map interface.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "side": "Universal",
   "requiredOnClient": true,
   "requiredOnServer": true,

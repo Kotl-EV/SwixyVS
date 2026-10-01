@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // LandClaimAllowance / ExtraLandClaimAllowance в serverconfig = ЧАНКИ.
 // При старте: reflection по Roles и player data — миграция старых значений (блоки → чанки)
 // и запись обратно в конфиг.
@@ -9,9 +9,8 @@ using System.Collections;
 using System.Reflection;
 using SwixyClaimChunk.Core;
 using Vintagestory.API.Common;
-using Vintagestory.API.Server;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Server;
 
 public sealed partial class SwixyClaimChunkServerMod
 {

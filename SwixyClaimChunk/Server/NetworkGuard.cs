@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // Network hardening: rate limits, field sanitization, packet size caps.
 // =============================================================================
 
@@ -10,7 +10,7 @@ using SwixyClaimChunk.Net;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Server;
 
 /// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — защита и нормализация сетевых пакетов.</summary>
 public sealed partial class SwixyClaimChunkServerMod

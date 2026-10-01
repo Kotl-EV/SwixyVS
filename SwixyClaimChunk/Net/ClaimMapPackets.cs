@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // ClaimMapPackets.cs
 // -----------------------------------------------------------------------------
 // Контракты сетевых пакетов (ProtoBuf) для мода SwixyClaimChunk.
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ProtoBuf;
+using SwixyClaimChunk.Core;
 
 namespace SwixyClaimChunk.Net;
 

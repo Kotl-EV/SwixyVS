@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // Claim flags: PvP allow + animal protection — SaveGame + damage checks.
 // =============================================================================
 
@@ -10,11 +10,10 @@ using SwixyClaimChunk.Net;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
-using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Server;
 
 /// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — флаги привата (PvP, животные).</summary>
 public sealed partial class SwixyClaimChunkServerMod

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using SwixyClaimChunk.Core;
@@ -9,7 +9,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Server;
 
 /// <summary>����� <see cref="SwixyClaimChunkServerMod"/> � ������: ������ ������ ��� Use.</summary>
 public sealed partial class SwixyClaimChunkServerMod

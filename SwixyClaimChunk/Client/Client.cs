@@ -1,12 +1,11 @@
-using System;
+﻿using System;
 using SwixyClaimChunk.Content;
 using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
-using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Client;
 
 /// <summary>Часть <see cref="SwixyClaimChunkClientMod"/> — клиент: GUI и входящие пакеты.</summary>
 public sealed partial class SwixyClaimChunkClientMod

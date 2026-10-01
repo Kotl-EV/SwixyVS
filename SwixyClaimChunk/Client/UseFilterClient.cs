@@ -1,9 +1,8 @@
-using System;
-using SwixyClaimChunk.Core;
+﻿using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Common;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Client;
 
 /// <summary>Часть <see cref="SwixyClaimChunkClientMod"/> — client prediction whitelist Use.</summary>
 public sealed partial class SwixyClaimChunkClientMod

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ProtoBuf;
 using Vintagestory.API.Common;
@@ -6,7 +6,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Core;
 
 /// <summary>Результат серверной операции: ключ локализации и тип (0 — успех, 1 — ошибка) для UI.</summary>
 public readonly struct ClaimActionResult

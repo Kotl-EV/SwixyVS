@@ -1,18 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
-using ProtoBuf;
-using static SwixyClaimChunk.Core.ClaimVolumeUtil;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
-using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
-using Vintagestory.API.Util;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Server;
 
 /// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: пакетный клейм.</summary>
 public sealed partial class SwixyClaimChunkServerMod

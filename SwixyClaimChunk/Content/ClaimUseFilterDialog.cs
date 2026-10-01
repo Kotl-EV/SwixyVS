@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // ClaimUseFilterDialog.cs
 // -----------------------------------------------------------------------------
 // Whitelist Use: creative-style catalog (items + blocks like creative menu).
@@ -9,7 +9,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SwixyClaimChunk.Core;
 using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;

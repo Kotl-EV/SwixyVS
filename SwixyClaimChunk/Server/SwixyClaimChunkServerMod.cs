@@ -1,13 +1,14 @@
-// =============================================================================
+﻿// =============================================================================
 // Серверный ModSystem. Partial-файлы: Server/*
 // =============================================================================
 
 using System;
 using System.Collections.Generic;
+using SwixyClaimChunk.Core;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
-namespace SwixyClaimChunk;
+namespace SwixyClaimChunk.Server;
 
 /// <summary>Серверная логика LandClaim / use-filter / сетевые обработчики.</summary>
 public sealed partial class SwixyClaimChunkServerMod : ModSystem

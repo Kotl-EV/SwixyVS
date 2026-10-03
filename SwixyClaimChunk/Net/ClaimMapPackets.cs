@@ -137,7 +137,7 @@ public class ClaimMapStatePacket
     [ProtoMember(3)]
     public int PlayerChunkX { get; set; }
 
-    /// <summary>Координата Z чанка, в котором находится игрок.</summary>
+    /// <summary>Координата Z чанка, в которой находится игрок.</summary>
     [ProtoMember(4)]
     public int PlayerChunkZ { get; set; }
 
@@ -155,11 +155,11 @@ public class ClaimMapStatePacket
     [ProtoMember(7)]
     public int MapSizeX { get; set; }
 
-    /// <summary>Глубина мира в блоках по оси Z (для границ карты).</summary>
+    /// <summary>Глубина мира в блоках по оси Z ( для границы карты).</summary>
     [ProtoMember(8)]
     public int MapSizeZ { get; set; }
 
-    /// <summary>Высота мира в блоках по оси Y (для расчёта объёма чанка).</summary>
+    /// <summary>Высота мира в блоках по оси Y (для расчёта обёма чанка).</summary>
     [ProtoMember(16)]
     public int MapSizeY { get; set; }
 
@@ -169,11 +169,11 @@ public class ClaimMapStatePacket
 
     // --- Группа: квоты и использование привата игрока ---
 
-    /// <summary>Текущий занятый объём привата (в блоках или согласованных единицах сервера).</summary>
+    /// <summary>Текущий занятый обём привата (в блоках или согласованных единицах сервера).</summary>
     [ProtoMember(9)]
     public long UsedVolume { get; set; }
 
-    /// <summary>Максимально допустимый объём привата для игрока.</summary>
+    /// <summary>Максимально допустимый обём привата для игрока.</summary>
     [ProtoMember(10)]
     public long MaxVolume { get; set; }
 
@@ -197,7 +197,7 @@ public class ClaimMapStatePacket
 
     // --- Группа: данные ячеек карты ---
 
-    /// <summary>Список ячеек чанков в окне карты с состоянием и метаданными владельца.</summary>
+    /// <summary>Списокячеек чанков в окне карты с состоянием и метаданными владельца.</summary>
     [ProtoMember(15)]
     public List<ClaimChunkCellPacket> Chunks { get; set; } = [];
 }
@@ -228,10 +228,10 @@ public static class ClaimAccessActionType
     /// <summary>Выдать участнику полные права со-владельца, не снимая текущего владельца.</summary>
     public const int GrantCoOwnership = 6;
 
-    /// <summary>Установить фильтр блоков для права Use.</summary>
+    /// <summary>Уставить фильтр блоков для права Use.</summary>
     public const int SetUseFilter = 7;
 
-    /// <summary>Установить флаги привата (PvP, защита животных…).</summary>
+    /// <summary>Уставить флаги привата (PvP, защита животных…).</summary>
     public const int SetClaimFlags = 8;
 }
 
@@ -419,7 +419,7 @@ public class ClaimInfoPacket
     [ProtoMember(3)]
     public int AreaCount { get; set; }
 
-    /// <summary>Суммарный объём привата в блоках (или единицах сервера).</summary>
+    /// <summary>Суммарный обём привата в блоках (или единицах сервера).</summary>
     [ProtoMember(4)]
     public long Volume { get; set; }
 
@@ -431,7 +431,7 @@ public class ClaimInfoPacket
     [ProtoMember(6)]
     public string OwnerName { get; set; } = "";
 
-    /// <summary>Количество занятых чанков (агрегат для отображения в списке).</summary>
+    /// <summary>Число занятых чанков (агрегат для отображения в списке).</summary>
     [ProtoMember(7)]
     public long ChunkCount { get; set; }
 
@@ -458,14 +458,16 @@ public class ClaimInfoPacket
 [ProtoContract]
 public class ClaimUseFiltersRequestPacket
 {
+    /// <summary>Зарезервированное поле, пока не используется (для расширения протокола).</summary>
     [ProtoMember(1)]
     public int Unused { get; set; }
 }
 
-/// <summary>Клиент: «какие usable-блоки стоят в этом привате?» (для UI галочек).</summary>
+/// <summary>Клиент: «каие usable-блоки стоят в этом привате?» (для UI галочек).</summary>
 [ProtoContract]
 public class ClaimUseFilterScanRequestPacket
 {
+    /// <summary>Идентификатор привата, в котором нужно найти usable-блоки.</summary>
     [ProtoMember(1)]
     public int ClaimId { get; set; }
 }
@@ -474,6 +476,7 @@ public class ClaimUseFilterScanRequestPacket
 [ProtoContract]
 public class ClaimUseFilterScanResultPacket
 {
+    /// <summary>Идентификатор привата, для которого выполнен поиск usable-блоков.</summary>
     [ProtoMember(1)]
     public int ClaimId { get; set; }
 
@@ -489,16 +492,18 @@ public class ClaimUseFilterScanResultPacket
     [ProtoMember(4)]
     public int ScannedBlocks { get; set; }
 
+    /// <summary>Текст сообщения для UI (например, «usable-блоки не найдены»).</summary>
     [ProtoMember(5)]
     public string Message { get; set; } = "";
 }
 
 /// <summary>
-/// Полный снимок фильтров Use для клиентов (чтобы client-side prediction не открывала GUI / не двигала предметы).
+/// Полный снимок фильтров Use для клиентов (чтобы client-side prediction не открывала GUI / не двигали предметы).
 /// </summary>
 [ProtoContract]
 public class ClaimUseFiltersSyncPacket
 {
+    /// <summary>Список записей фильтров Use для синхронизации на клиенте.</summary>
     [ProtoMember(1)]
     public List<ClaimUseFilterSyncEntry> Entries { get; set; } = [];
 }
@@ -520,11 +525,13 @@ public class ClaimUseFilterSyncEntry
     public string CodesRaw { get; set; } = "";
 }
 
-/// <summary>Хелперы сериализации списка кодов блоков в строку пакета.</summary>
+/// <summary>Хелперы сериализации и десериализации списка кодов блоков: в строку пакета и обратно.</summary>
 public static class ClaimUseFilterCodesCodec
 {
+    /// <summary>Разделитель кодов блоков в строке пакета (перевод строки).</summary>
     public const char Separator = '\n';
 
+    /// <summary>Собирает список кодов блоков в строку пакета.</summary>
     public static string Join(IEnumerable<string>? codes)
     {
         if (codes == null)
@@ -535,6 +542,7 @@ public static class ClaimUseFilterCodesCodec
         return string.Join(Separator, codes.Where(static code => !string.IsNullOrWhiteSpace(code)));
     }
 
+    /// <summary>Разбирает строку пакета на список кодов блоков.</summary>
     public static List<string> Split(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -567,7 +575,7 @@ public class ClaimMemberPacket
     [ProtoMember(3)]
     public int AccessFlags { get; set; }
 
-    /// <summary>Человекочитаемое название уровня доступа (для UI).</summary>
+    /// <summary>Челочитаемое название уровня доступа (для UI).</summary>
     [ProtoMember(4)]
     public string AccessName { get; set; } = "";
 
@@ -575,7 +583,7 @@ public class ClaimMemberPacket
     [ProtoMember(5)]
     public bool IsOwner { get; set; }
 
-    /// <summary>True, если участник назначен со-владельцем (корона), независимо от Use/Build.</summary>
+    /// <summary>True, если участник назначен со-владельцем (корона независимо от Use/Build).</summary>
     [ProtoMember(6)]
     public bool IsCoOwner { get; set; }
 }

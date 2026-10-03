@@ -90,7 +90,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
-    /// <summary>Собирает пакет подсветки; вызывает HighlightClaim на сервере.</summary>
+    /// <summary>Сбирает пакет подсветки; вызывает HighlightClaim на сервере.</summary>
     private ClaimShowStatePacket BuildClaimShowPacket(IServerPlayer player, int claimId)
     {
         var packet = new ClaimShowStatePacket
@@ -193,7 +193,7 @@ public sealed partial class SwixyClaimChunkServerMod
             1f);
     }
 
-    /// <summary>Собирает список приватов игрока (ClaimId = индекс+1 в World.Claims.All).</summary>
+    /// <summary>Сбирает список приватов игрока (ClaimId = индекс+1 в World.Claims.All).</summary>
     private ClaimListStatePacket BuildClaimListPacket(IServerPlayer player, string message, int messageType)
     {
         var packet = new ClaimListStatePacket
@@ -366,7 +366,7 @@ public sealed partial class SwixyClaimChunkServerMod
             : playerName.Trim();
     }
 
-    /// <summary>ClaimId в пакетах — 1-based индекс в World.Claims.All.</summary>
+    /// <summary>Находит приват по его 1-based индексу в World.Claims.All (идентично ClaimId в пакетах).</summary>
     private bool TryGetClaimById(int claimId, out LandClaim claim)
     {
         claim = null!;

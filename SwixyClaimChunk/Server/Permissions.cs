@@ -30,6 +30,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return $"{claim.OwnedByPlayerUid}:{minX}:{minY}:{minZ}";
     }
 
+    /// <summary>Создаёт или возвращает набор со-владельцев для ключа привата.</summary>
     private HashSet<string> GetOrCreateCoOwners(LandClaim claim)
     {
         var key = BuildClaimStorageKey(claim);
@@ -42,6 +43,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return set;
     }
 
+    /// <summary>Добавляет игрока (uid) в со-владельцы привата.</summary>
     private void AddCoOwner(LandClaim claim, string playerUid)
     {
         if (string.IsNullOrWhiteSpace(playerUid))
@@ -52,6 +54,7 @@ public sealed partial class SwixyClaimChunkServerMod
         GetOrCreateCoOwners(claim).Add(playerUid);
     }
 
+    /// <summary>Удаляет игрока из со-владельцев; очищает запись, если стало пусто.</summary>
     private void RemoveCoOwner(LandClaim claim, string playerUid)
     {
         var key = BuildClaimStorageKey(claim);
@@ -67,12 +70,14 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Полностью удаляет сохранённые со-владельцы привата.</summary>
     private void ClearCoOwners(LandClaim claim)
     {
         var key = BuildClaimStorageKey(claim);
         coOwnerUidsByClaimKey.Remove(key);
     }
 
+    /// <summary>Объединяет со-владельцев: переносит uid из other в primary и убирает old.</summary>
     private void MergeCoOwners(LandClaim primary, LandClaim other)
     {
         var otherKey = BuildClaimStorageKey(other);
@@ -137,7 +142,7 @@ public sealed partial class SwixyClaimChunkServerMod
     {
         if (claim?.PermittedPlayerUids == null || string.IsNullOrWhiteSpace(playerUid))
         {
-            // Не в списке участников (AllowUseEveryone и т.п.) — считаем «только use».
+            // Не в список участников (AllowUseEveryone и т.п.) — считаем «только use».
             return true;
         }
 

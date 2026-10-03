@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Common;
@@ -34,6 +34,7 @@ public static class ClaimCodeUtil
         }
     }
 
+    /// <summary>Признак стаба мультиблока — путь блока начинается с «multiblock».</summary>
     public static bool IsMultiblockStubCode(string? code)
     {
         if (string.IsNullOrWhiteSpace(code))
@@ -282,6 +283,7 @@ public static class ClaimCodeUtil
                && string.Equals(ga, gb, StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>Сравнение кодов нестрого: точное совпадение или совпадение по преф/суф виду X ↔ X-variant.</summary>
     public static bool CodesLooselyMatch(string left, string right)
     {
         if (string.IsNullOrWhiteSpace(left) || string.IsNullOrWhiteSpace(right))
@@ -342,6 +344,7 @@ public static class ClaimCodeUtil
         return $"{domain}:{string.Join("-", parts.Take(end))}";
     }
 
+    /// <summary>Признак «срезаемого» варианта: ориентация/состояние (direction/lit/closed…), не смысловая часть.</summary>
     public static bool IsStrippableVariantPart(string part)
     {
         if (string.IsNullOrWhiteSpace(part))
@@ -529,9 +532,11 @@ public static class ClaimCodeUtil
         "-north-open",
     ];
 
+    /// <summary>Кэш найденного креативного варианта семьи блоков по ключу семьи.</summary>
     private static readonly Dictionary<string, string> CreativeVariantCache =
         new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>Проверяет, существует ли блок в игре по коду (Id != 0).</summary>
     private static bool BlockExists(IWorldAccessor world, string code)
     {
         try
@@ -593,7 +598,7 @@ public static class ClaimCodeUtil
             }
 
             var path = b.Code.Path ?? "";
-            // etermogenerator-south / etermogenerator-north — общий префикс семьи
+            // etermogenerator-south /etermogenerator-north — общий префикс семьи
             if (!path.StartsWith(familyPath, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
@@ -649,6 +654,7 @@ public static class ClaimCodeUtil
         return stripped;
     }
 
+    /// <summary>Оценивает ориентацию для креативного отображения (south > up > north > east/west).</summary>
     private static int ScoreCreativeFacing(string code)
     {
         var lower = code.ToLowerInvariant();
@@ -677,6 +683,7 @@ public static class ClaimCodeUtil
         return 10;
     }
 
+    /// <summary>Код collectible из первого creative-stack блока семьи (нормализованный).</summary>
     private static string? TryFirstCreativeStackCode(IWorldAccessor world, Block block)
     {
         var stack = TryGetFamilyCreativeStack(world, block);
@@ -705,6 +712,7 @@ public static class ClaimCodeUtil
         return TryGetFamilyCreativeStack(world, block.Code.ToString());
     }
 
+    /// <summary>Ищет creative-stack для семьи по строковому коду блока.</summary>
     public static ItemStack? TryGetFamilyCreativeStack(IWorldAccessor world, string? code)
     {
         if (world == null || string.IsNullOrWhiteSpace(code))
@@ -793,6 +801,7 @@ public static class ClaimCodeUtil
         return pick != null ? TryCreativeStacksOn(world, pick) : null;
     }
 
+    /// <summary>Возвращает первый валидный itemstack из CreativeInventoryStacks (с разрешением).</summary>
     private static ItemStack? TryCreativeStacksOn(IWorldAccessor world, Block block)
     {
         if (block.CreativeInventoryStacks is not { Length: > 0 })
@@ -988,6 +997,7 @@ public static class ClaimCodeUtil
                || path.StartsWith("torchrack-", StringComparison.Ordinal);
     }
 
+    /// <summary>Держатель факела по типу блока/поведению, а не только по коду.</summary>
     public static bool IsTorchHolderBlock(Block? block)
     {
         if (block == null)
@@ -1054,6 +1064,7 @@ public static class ClaimCodeUtil
                || path.Contains("hatch", StringComparison.Ordinal);
     }
 
+    /// <summary>Дверь / калитка / люк по типу блока/поведению (не только по коду).</summary>
     public static bool IsDoorOrGateBlock(Block block)
     {
         if (block == null)
@@ -1159,6 +1170,7 @@ public static class ClaimCodeUtil
         return IsInventoryPathCode(block.Code?.ToString());
     }
 
+    /// <summary>Признак контейнера/полки по пути блока (сундук, ящик, полка, верстак…).</summary>
     public static bool IsInventoryPathCode(string? code)
     {
         var path = GetPath(code).ToLowerInvariant();
@@ -1206,6 +1218,7 @@ public static class ClaimCodeUtil
                || path.Contains("container", StringComparison.Ordinal);
     }
 
+    /// <summary>Признак контейнера по имени типа (IBlockEntityContainer-совместимые классы).</summary>
     private static bool IsInventoryTypeName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -1504,6 +1517,7 @@ public static class ClaimCodeUtil
         return null;
     }
 
+    /// <summary>Признак «неизвестного» имени (Unknown / Unknown Block и т.п.).</summary>
     public static bool IsUnknownLabel(string? label)
     {
         if (string.IsNullOrWhiteSpace(label))
@@ -1518,6 +1532,7 @@ public static class ClaimCodeUtil
                || label.StartsWith("Unknown ", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>Выделяет path из кода — часть после ':' без домена.</summary>
     private static string GetPath(string? code)
     {
         if (string.IsNullOrWhiteSpace(code))

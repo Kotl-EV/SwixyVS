@@ -16,10 +16,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return serverApi?.World.Config.GetAsBool("allowLandClaiming", true) != false;
     }
 
-    /// <summary>
-    /// Вычитает removeArea из привата: для каждой пересекающейся области снимает только пересечение
-    /// (поддерживает ванильные приваты, не выровненные по чанкам).
-    /// </summary>
+    /// <summary>Вычитает removeArea из привата: для каждой пересекающейся области снимает только пересечение (поддерживает ванильные приваты, не выровненные по чанкам).</summary>
     private ClaimActionResult TryRemoveAreaFromClaim(LandClaim claim, Cuboidi removeArea)
     {
         if (claim.Areas == null || claim.Areas.Count == 0)
@@ -93,9 +90,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return TryRemoveAreaFromClaim(claim, chunkArea);
     }
 
-    /// <summary>
-    /// Вырезает removeArea из area (одинаковая высота Y); до четырёх оставшихся прямоугольников.
-    /// </summary>
+    /// <summary>Вырезает removeArea из area (одинаковая высота Y); до четырёх оставшихся прямоугольников.</summary>
     private static bool TrySubtractAreaFromArea(Cuboidi area, Cuboidi removeArea, out List<Cuboidi> remainingPieces)
     {
         remainingPieces = [];
@@ -282,7 +277,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return false;
     }
 
-    /// <summary>Возвращает пересечение двух областей; false, если оно пустое.</summary>
+    /// <summary>Возвращает пересение двух областей; false, если оно пустое.</summary>
     private static bool TryGetIntersection(Cuboidi first, Cuboidi second, out Cuboidi intersection)
     {
         intersection = null!;
@@ -301,7 +296,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return true;
     }
 
-    /// <summary>Проверяет пересечение с чужими приватами (свои другого claim — пропуск при merge).</summary>
+    /// <summary>Проверяет пересение с чужими приватами (свои другого claim — пропуск при merge).</summary>
     private bool WouldOverlapAnotherClaim(LandClaim ownClaim, Cuboidi area, string? ownerPlayerUid = null)
     {
         foreach (var claim in serverApi!.World.Claims.All)
@@ -371,7 +366,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return touchesZ && overlapsX;
     }
 
-    /// <summary>Перемещает claim в конец списка World.Claims (обновление порядка/сохранения).</summary>
+    /// <summary>Перемещает claim в конце списка World.Claims (обновление порядка/сохранения).</summary>
     private void TouchClaim(LandClaim claim)
     {
         var claims = serverApi!.World.Claims;

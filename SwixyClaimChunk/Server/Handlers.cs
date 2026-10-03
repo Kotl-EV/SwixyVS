@@ -74,7 +74,7 @@ public sealed partial class SwixyClaimChunkServerMod
             var result = ProcessChunksBatch(fromPlayer, chunks);
             if (truncated && result.MessageType == 0)
             {
-                // Soft note: only first MaxBatchChunks processed.
+                // Мягкое замечание: обработаны только первые MaxBatchChunks.
                 result = ClaimActionResult.SuccessComposite(
                     result.Resolve(fromPlayer) + " "
                     + Lang.GetL(fromPlayer.LanguageCode, "swixyclaimchunk:error-batch-truncated", ClaimConstants.MaxBatchChunks));

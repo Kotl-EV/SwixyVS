@@ -1,5 +1,6 @@
 ﻿// =============================================================================
-// Network hardening: rate limits, field sanitization, packet size caps.
+// Усиление защиты сети: лимиты частоты (rate limits), санитизация полей,
+// ограничение размера пакетов.
 // =============================================================================
 
 using System;
@@ -15,7 +16,7 @@ namespace SwixyClaimChunk.Server;
 /// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — защита и нормализация сетевых пакетов.</summary>
 public sealed partial class SwixyClaimChunkServerMod
 {
-    /// <summary>uid:action → last ElapsedMilliseconds.</summary>
+    /// <summary>uid:действие → последнее время (ElapsedMilliseconds) для rate-limit.</summary>
     private readonly Dictionary<string, long> packetRateByKey = new(StringComparer.Ordinal);
 
     /// <summary>
@@ -47,6 +48,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return true;
     }
 
+    /// <summary>Удаляет устаревшие записи rate-limit, старше 30 секунд.</summary>
     private void TrimPacketRateTable(long now)
     {
         // Drop entries older than 30s.
@@ -61,6 +63,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Обрезает строку до maxLen символов и убирает пробелы по краям.</summary>
     private static string SanitizeShortString(string? value, int maxLen)
     {
         if (string.IsNullOrEmpty(value))
@@ -77,9 +80,11 @@ public sealed partial class SwixyClaimChunkServerMod
         return trimmed[..maxLen];
     }
 
+    /// <summary>Обёртка SanitizeShortString с лимитом MaxPacketMessageLength для сообщений пакетов.</summary>
     private static string SanitizePacketMessage(string? message)
         => SanitizeShortString(message, ClaimConstants.MaxPacketMessageLength);
 
+    /// <summary>Оставляет только разрешённые флаги доступа (Use | BuildOrBreak).</summary>
     private static EnumBlockAccessFlags SanitizeAccessFlags(int flags)
     {
         const EnumBlockAccessFlags allowed =
@@ -87,6 +92,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return (EnumBlockAccessFlags)flags & allowed;
     }
 
+    /// <summary>Ограничивает радиус карты диапазоном [1, MaxRadius].</summary>
     private int ClampMapRadius(int radius)
         => Math.Clamp(radius <= 0 ? ClaimConstants.DefaultRadius : radius, 1, ClaimConstants.MaxRadius);
 
@@ -114,6 +120,7 @@ public sealed partial class SwixyClaimChunkServerMod
         centerChunkZ = Math.Clamp(centerChunkZ, -radius, maxChunkZ + radius);
     }
 
+    /// <summary>Нормализует чанки пачки: дедупликация, отсечение абсурдных координат и обрезка по лимиту.</summary>
     private static List<ClaimChunkCoordPacket> SanitizeBatchChunks(
         IReadOnlyList<ClaimChunkCoordPacket>? chunks,
         out bool truncated)
@@ -158,6 +165,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return list;
     }
 
+    /// <summary>Нормализует поля пакета действия над доступом к привату.</summary>
     private void SanitizeAccessActionPacket(ClaimAccessActionPacket packet)
     {
         packet.PlayerName = SanitizeShortString(packet.PlayerName, ClaimConstants.MaxPlayerNameLength);
@@ -175,6 +183,7 @@ public sealed partial class SwixyClaimChunkServerMod
         packet.UseFilterCodesRaw = raw;
     }
 
+    /// <summary>Нормализует коды фильтров использования; отсеивает слишком длинные коды.</summary>
     private List<string> SanitizeUseFilterCodes(IEnumerable<string>? codes)
     {
         var normalized = ClaimUseFilterLogic.NormalizeUseFilterCodes(codes);

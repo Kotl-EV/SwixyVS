@@ -1,8 +1,6 @@
-// =============================================================================
-// ClaimCairoIcons.cs
-// -----------------------------------------------------------------------------
-// Cairo icons from Group 470.svg (member row) — exact path geometry, 24×24 view.
-// Colors: crown #FFEB61, gear #50B5E1, pickaxe #EAB137, trash #FD5A53.
+﻿// =============================================================================
+// Иконки Cairo из Group 470.svg (строка ряда) — точная геометрия путей, 24×24 viewbox.
+// Цвета: корона #FFEB61, шестерня #50B5E1, кирка #EAB137, мусор #FD5A53.
 // =============================================================================
 
 using System;
@@ -12,7 +10,7 @@ namespace SwixyClaimChunk.Content;
 
 internal static class ClaimCairoIcons
 {
-    // Shared 24×24 icon mapping (matches white rect / Lucide-style wells in SVG).
+    // Общий маппинг 24×24 для иконок (совпадает с белым прямоугольником / Lucide- колодцами в SVG).
     private static double Map(double v, double size) => v * (size / 24.0);
 
     /// <summary>
@@ -24,7 +22,7 @@ internal static class ClaimCairoIcons
         double X(double v) => x + Map(v, size);
         double Y(double v) => y + Map(v, size);
 
-        // Soft plate
+        // Мягкая пластина
         ctx.Save();
         ctx.NewPath();
         RoundRect(ctx, X(3), Y(4), Map(18, size), Map(16, size), Map(2.5, size));
@@ -34,12 +32,12 @@ internal static class ClaimCairoIcons
         ctx.LineWidth = Math.Max(1, Map(1.2, size));
         ctx.Stroke();
 
-        // Three “item” squares on the mat
+        // Три «предмета» на настиле
         DrawMiniItem(ctx, X(5.5), Y(7), Map(5, size), 0.72, 0.55, 0.28);
         DrawMiniItem(ctx, X(11.5), Y(8.5), Map(4.5, size), 0.45, 0.55, 0.7);
         DrawMiniItem(ctx, X(9), Y(12.5), Map(5.5, size), 0.6, 0.45, 0.35);
 
-        // Soft shadow under
+        // Мягкая тень под блоком
         ctx.SetSourceRGBA(0, 0, 0, 0.2);
         ctx.NewPath();
         ctx.Save();
@@ -51,6 +49,7 @@ internal static class ClaimCairoIcons
         ctx.Restore();
     }
 
+    /// <summary>Рисует маленький скруглённый «предмет» заданного цвета.</summary>
     private static void DrawMiniItem(Context ctx, double x, double y, double s, double r, double g, double b)
     {
         ctx.NewPath();
@@ -62,6 +61,7 @@ internal static class ClaimCairoIcons
         ctx.Stroke();
     }
 
+    /// <summary>Формирует путь скруглённого прямоугольника (кривые Безье).</summary>
     private static void RoundRect(Context ctx, double x, double y, double w, double h, double r)
     {
         r = Math.Min(r, Math.Min(w, h) * 0.5);
@@ -78,9 +78,10 @@ internal static class ClaimCairoIcons
         ctx.ClosePath();
     }
 
+    /// <summary>Иконка «лампа» для списка приватов (не в Group 470), с подсветкой в активном состоянии.</summary>
     public static void DrawHighlight(Context ctx, double x, double y, double size, bool active)
     {
-        // Keep bulb for claim-list light (not in Group 470).
+        // Лампа для списка приватов (не в Group 470).
         var cx = x + size * 0.5;
         var cy = y + size * 0.42;
         var bulbR = size * 0.24;
@@ -112,7 +113,7 @@ internal static class ClaimCairoIcons
         DrawLampBase(ctx, cx, cy + bulbR * 0.82, size, active);
     }
 
-    /// <summary>Group 470 trash — stroke #FD5A53, width 2, 24×24 well.</summary>
+    /// <summary>Group 470 «мусор» (корзина) — контур #FD5A53, ширина 2, область 24×24.</summary>
     public static void DrawTrash(Context ctx, double x, double y, double size, bool destructive = true)
     {
         double X(double v) => x + Map(v, size);
@@ -161,7 +162,7 @@ internal static class ClaimCairoIcons
         ctx.Restore();
     }
 
-    /// <summary>Group 470 crown/star — stroke #FFEB61, width 2.</summary>
+    /// <summary>Group 470 корона/звезда — контур #FFEB61, ширина 2.</summary>
     public static void DrawOwner(Context ctx, double x, double y, double size, CrownVisualState state)
     {
         double X(double v) => x + Map(v, size);
@@ -212,11 +213,11 @@ internal static class ClaimCairoIcons
         ctx.Restore();
     }
 
-    /// <summary>Group 470 gear — stroke #50B5E1 + hub circle, width 2.</summary>
+    /// <summary>Group 470 шестерня — контур #50B5E1 + центральное кольцо, ширина 2.</summary>
     public static void DrawGear(Context ctx, double x, double y, double size, bool active, bool locked)
         => DrawGear(ctx, x, y, size, active, locked, r: 0x50 / 255.0, g: 0xB5 / 255.0, b: 0xE1 / 255.0);
 
-    /// <summary>Same gear geometry with custom stroke color (e.g. Group 1347 #FEE4CF @ 0.32).</summary>
+    /// <summary>Та же геометрия шестерни с цветом контура (напр. Group 1347 #FEE4CF @ 0.32).</summary>
     public static void DrawGear(
         Context ctx,
         double x,
@@ -340,14 +341,14 @@ internal static class ClaimCairoIcons
         ctx.ClosePath();
         ctx.Stroke();
 
-        // Hub circle: SVG M292 29 r=4 → local (12,12) r=4 from origin 284,17
+        // Центральное кольцо: SVG M292 29 r=4 → локально (12,12) r=4 от начала координат 284,17
         ctx.NewPath();
         ctx.Arc(X(12), Y(12), Map(4, size), 0, Math.PI * 2);
         ctx.Stroke();
         ctx.Restore();
     }
 
-    /// <summary>Group 470 pickaxe head — stroke #EAB137, width 2.</summary>
+    /// <summary>Group 470 головка кирки — контур #EAB137, ширина 2.</summary>
     public static void DrawPickaxe(Context ctx, double x, double y, double size, bool active, bool locked)
     {
         double X(double v) => x + Map(v, size);
@@ -384,6 +385,7 @@ internal static class ClaimCairoIcons
         ctx.Restore();
     }
 
+    /// <summary>Рисует расходящееся свечение (вложенные полупрозрачные круги).</summary>
     private static void DrawGlow(Context ctx, double cx, double cy, double radius, double r, double g, double b)
     {
         foreach (var (scale, alpha) in new[] { (1.0, 0.1), (0.74, 0.16), (0.48, 0.22) })
@@ -394,6 +396,7 @@ internal static class ClaimCairoIcons
         }
     }
 
+    /// <summary>Рисует лучи вокруг лампы.</summary>
     private static void DrawLightRays(Context ctx, double cx, double cy, double size)
     {
         ctx.SetSourceRGBA(1, 0.9, 0.35, 0.35);
@@ -408,6 +411,7 @@ internal static class ClaimCairoIcons
         }
     }
 
+    /// <summary>Рисует нить накала лампы.</summary>
     private static void DrawFilament(Context ctx, double cx, double cy, double bulbR, bool active)
     {
         ctx.SetSourceRGBA(1, 0.75, 0.2, active ? 0.7 : 0.25);
@@ -418,6 +422,7 @@ internal static class ClaimCairoIcons
         ctx.Stroke();
     }
 
+    /// <summary>Рисует основание лампы.</summary>
     private static void DrawLampBase(Context ctx, double cx, double cy, double size, bool active)
     {
         var w = size * 0.28;
@@ -427,12 +432,14 @@ internal static class ClaimCairoIcons
         ctx.Fill();
     }
 
+    /// <summary>Рисует камень (закрашенный круг).</summary>
     private static void DrawGem(Context ctx, double cx, double cy, double r)
     {
         ctx.Arc(cx, cy, r, 0, Math.PI * 2);
         ctx.Fill();
     }
 
+    /// <summary>Формирует путь скруглённого прямоугольника (дуги).</summary>
     private static void DrawRoundedRect(Context ctx, double x, double y, double w, double h, double r)
     {
         r = Math.Min(r, Math.Min(w, h) * 0.5);
@@ -449,9 +456,9 @@ internal static class ClaimCairoIcons
         ctx.ClosePath();
     }
 
+    /// <summary>Рисует зубчатое колесо (устаревший хелпер, оставленный для совместимости).</summary>
     private static void AppendCogWheel(Context ctx, double cx, double cy, int teeth, double outerR, double rootR, double corner)
     {
-        // Unused legacy helper kept for compatibility if referenced elsewhere.
         ctx.NewPath();
         ctx.Arc(cx, cy, outerR, 0, Math.PI * 2);
     }

@@ -1,4 +1,4 @@
-namespace SwixyClaimChunk.Core;
+﻿namespace SwixyClaimChunk.Core;
 
 /// <summary>Общие константы мода (канал, hotkey, радиусы, ключи SaveGame, net limits).</summary>
 public static class ClaimConstants
@@ -12,7 +12,7 @@ public static class ClaimConstants
     public const string UseFiltersSaveKey = "swixyclaimchunk_use_filters";
     public const string ClaimFlagsSaveKey = "swixyclaimchunk_claim_flags";
 
-    /// <summary>EntityBehavior name for PvP / animal protection.</summary>
+    /// <summary>Имя EntityBehavior для защиты PvP / животных.</summary>
     public const string ClaimProtectBehaviorCode = "swixyclaimchunkclaimprotect";
 
     // ── Network hardening (DoS / abuse) ──
@@ -26,12 +26,13 @@ public static class ClaimConstants
     /// <summary>Макс. длина raw-строки UseFilterCodesRaw.</summary>
     public const int MaxUseFilterCodesRawLength = 4096;
 
-    /// <summary>Макс. длина имени привата.</summary>
+    /// <summary>Макс. length имени привата.</summary>
     public const int MaxClaimNameLength = 48;
 
-    /// <summary>Макс. длина ника / UID в пакетах.</summary>
+    /// <summary>Макс. длина имени игрока (ника) в пакетах.</summary>
     public const int MaxPlayerNameLength = 64;
 
+    /// <summary>Макс. длину UID игрока в пакетах.</summary>
     public const int MaxPlayerUidLength = 64;
 
     /// <summary>Макс. длина Message в ответах UI.</summary>

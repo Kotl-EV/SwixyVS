@@ -50,10 +50,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return TryAddChunkClaim(player, area);
     }
 
-    /// <summary>
-    /// Добавляет область: расширение соседнего, новая area в соседнем привате или новый LandClaim.
-    /// Проверяет квоты volume/areas; после — MergeTouchingOwnClaims.
-    /// </summary>
+    /// <summary>Добавляет область: расширение соседнего привата, новая area в соседнем привате или новый LandClaim. Проверяет квоты volume/areas; после — MergeTouchingOwnClaims.</summary>
     private ClaimActionResult TryAddChunkClaim(IServerPlayer player, Cuboidi area)
     {
         var ownClaims = GetOwnClaims(player.PlayerUID).ToList();
@@ -148,9 +145,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return null;
     }
 
-    /// <summary>
-    /// Пока есть соприкасающиеся приваты того же игрока — поглощает их в anchorClaim.
-    /// </summary>
+    /// <summary>Пока есть соприкасающиеся приваты того же игрока — поглощает их в anchorClaim.</summary>
     private void MergeTouchingOwnClaims(IServerPlayer player, LandClaim anchorClaim)
     {
         if (anchorClaim.Areas == null || anchorClaim.Areas.Count == 0)
@@ -177,9 +172,7 @@ public sealed partial class SwixyClaimChunkServerMod
         ConsolidateClaimAreas(anchorClaim);
     }
 
-    /// <summary>
-    /// Переносит области other в primary, удаляет other; сохраняет меньший индекс в имени.
-    /// </summary>
+    /// <summary>Переносит области other в primary, удаляет other; сохраняет меньший индекс в имени.</summary>
     private void AbsorbClaimInto(IServerPlayer player, LandClaim primary, LandClaim other)
     {
         if (other.Areas == null || primary.Areas == null)
@@ -222,7 +215,7 @@ public sealed partial class SwixyClaimChunkServerMod
             player.PlayerName);
     }
 
-    /// <summary>Объединяет смежные Areas внутри одного LandClaim в один Cuboidi.</summary>
+    /// <summary>Объединяет соседние Areas внутри одного LandClaim в один Cuboidi.</summary>
     private void ConsolidateClaimAreas(LandClaim claim)
     {
         if (claim.Areas == null || claim.Areas.Count <= 1)
@@ -260,7 +253,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
-    /// <summary>True, если у двух приватов есть пересекающиеся или смежные области.</summary>
+    /// <summary>True, если у двух приватов есть пересекающиеся или соседние области.</summary>
     private static bool ClaimsTouch(LandClaim first, LandClaim second)
     {
         if (first.Areas == null || second.Areas == null)
@@ -300,9 +293,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return maxIndex + 1;
     }
 
-    /// <summary>
-    /// Извлекает числовой индекс из Description; поддерживает старый формат «{ник} N».
-    /// </summary>
+    /// <summary>Извлекает числовой индекс из Description; поддерживает старый формат «{ник} N».</summary>
     private static int TryParseClaimIndex(string? description, string playerName)
     {
         if (string.IsNullOrWhiteSpace(description))

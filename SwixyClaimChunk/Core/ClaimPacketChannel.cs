@@ -1,4 +1,4 @@
-using SwixyClaimChunk.Net;
+﻿using SwixyClaimChunk.Net;
 using Vintagestory.API.Client;
 using Vintagestory.API.Server;
 
@@ -7,6 +7,7 @@ namespace SwixyClaimChunk.Core;
 /// <summary>Регистрация protobuf-типов сетевого канала приватов.</summary>
 public static class ClaimPacketChannel
 {
+    /// <summary>Регистрация типов пакетов на клиенте.</summary>
     public static IClientNetworkChannel Register(IClientNetworkChannel channel) =>
         channel
             .RegisterMessageType<ClaimMapRequestPacket>()
@@ -24,6 +25,7 @@ public static class ClaimPacketChannel
             .RegisterMessageType<ClaimUseFilterScanRequestPacket>()
             .RegisterMessageType<ClaimUseFilterScanResultPacket>();
 
+    /// <summary>Регистрация типов пакетов на сервере.</summary>
     public static IServerNetworkChannel Register(IServerNetworkChannel channel) =>
         channel
             .RegisterMessageType<ClaimMapRequestPacket>()

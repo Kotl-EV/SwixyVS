@@ -11,22 +11,22 @@ using Vintagestory.API.Util;
 
 namespace SwixyClaimChunk.Server;
 
-/// <summary>����� <see cref="SwixyClaimChunkServerMod"/> � ������: ������ ������ ��� Use.</summary>
+/// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: обработка фильтров для Use.</summary>
 public sealed partial class SwixyClaimChunkServerMod
 {
+    /// <summary>Возвращает правило use-filter для привата, если оно есть.</summary>
     private UseFilterRuleData? TryGetUseFilter(LandClaim claim)
         => ClaimUseFilterLogic.TryGetUseFilter(useFiltersByClaimKey, claim);
 
+    /// <summary>Ищет whitelist-правило по ключу.</summary>
     private bool TryGetWhitelistRule(string key, out UseFilterRuleData? rule)
         => ClaimUseFilterLogic.TryGetWhitelistRule(useFiltersByClaimKey, key, out rule);
 
+    /// <summary>Нормализует коды фильтров (через ClaimUseFilterLogic).</summary>
     private static List<string> NormalizeUseFilterCodes(IEnumerable<string>? codes)
         => ClaimUseFilterLogic.NormalizeUseFilterCodes(codes);
 
-    /// <summary>
-    /// �������������� ����� ������� ����������� (����� expand),
-    /// ����� coord-���� �� �������������.
-    /// </summary>
+    /// <summary>Пересобирает ключи фильтра Use (напр. при expand); удаляет устаревшие coord-ключи.</summary>
     private void RebindUseFilterKeys(LandClaim claim)
     {
         var rule = TryGetUseFilter(claim);
@@ -40,7 +40,7 @@ public sealed partial class SwixyClaimChunkServerMod
         var name = (claim.Description ?? "").Trim();
         var freshKeys = new HashSet<string>(ClaimStorageKeys.EnumerateClaimStorageKeys(claim), StringComparer.Ordinal);
 
-        // ������� orphan coord-����� ����� ��������� (������ minXYZ ����� expand).
+        // Удаляет orphan coord-ключи, не вошедшие в свежий набор (напр. minXYZ при expand).
         if (!string.IsNullOrWhiteSpace(owner))
         {
             foreach (var key in useFiltersByClaimKey.Keys.ToList())
@@ -50,7 +50,7 @@ public sealed partial class SwixyClaimChunkServerMod
                     continue;
                 }
 
-                // name-���� ������ ������� ���� �� ��������� �� �������.
+                // name-ключ тот же привата — не сравниваем по имени.
                 if (key.StartsWith(owner + ":name:", StringComparison.Ordinal))
                 {
                     var keyName = key[(owner.Length + ":name:".Length)..];
@@ -70,7 +70,7 @@ public sealed partial class SwixyClaimChunkServerMod
         WriteUseFilter(claim, ClaimUseFilterMode.Whitelist, codes);
     }
 
-    /// <summary>������� whitelist ��� �������������� ������� (name-���� ��������).</summary>
+    /// <summary>Мигрирует whitelist для переименованного привата (name-ключ переписан).</summary>
     private void MigrateUseFilterAfterRename(LandClaim claim, string oldName)
     {
         var owner = claim.OwnedByPlayerUid ?? "";
@@ -102,6 +102,7 @@ public sealed partial class SwixyClaimChunkServerMod
         BroadcastUseFiltersSync();
     }
 
+    /// <summary>Удаляет все ключи use-filter привата и синхронизирует клиентов.</summary>
     private void ClearUseFilter(LandClaim claim)
     {
         foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList())
@@ -113,6 +114,7 @@ public sealed partial class SwixyClaimChunkServerMod
         BroadcastUseFiltersSync();
     }
 
+    /// <summary>Объединяет use-filter двух приватов в primary.</summary>
     private void MergeUseFilters(LandClaim primary, LandClaim other)
     {
         var otherRule = TryGetUseFilter(other);
@@ -146,6 +148,7 @@ public sealed partial class SwixyClaimChunkServerMod
         BroadcastUseFiltersSync();
     }
 
+    /// <summary>Удаляет только storage-ключи use-filter (без синхронизации).</summary>
     private void ClearUseFilterKeysOnly(LandClaim claim)
     {
         foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList())
@@ -154,6 +157,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Устанавливает filter для привата: AllowAll или Whitelist.</summary>
     private ClaimActionResult TrySetUseFilter(LandClaim claim, int mode, IEnumerable<string>? codes)
     {
         if (mode != ClaimUseFilterMode.AllowAll && mode != ClaimUseFilterMode.Whitelist)
@@ -190,6 +194,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return ClaimActionResult.Success("swixyclaimchunk:use-filter-message-saved");
     }
 
+    /// <summary>Записает правило use-filter во все ключи привата.</summary>
     private void WriteUseFilter(LandClaim claim, int mode, List<string> codes)
     {
         var rule = new UseFilterRuleData
@@ -208,6 +213,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Заполняет данные об use-filter в пакете ClaimInfo.</summary>
     private void FillClaimUseFilterInfo(ClaimInfoPacket info, LandClaim claim)
     {
         var rule = TryGetUseFilter(claim);
@@ -222,6 +228,7 @@ public sealed partial class SwixyClaimChunkServerMod
         info.UseFilterCodesRaw = ClaimUseFilterCodesCodec.Join(rule.Codes);
     }
 
+    /// <summary>Хендлер проверки доступа к блоку с фильтром Use.</summary>
     private EnumWorldAccessResponse OnServerTestBlockAccess(
         IPlayer player,
         BlockSelection blockSel,
@@ -230,6 +237,7 @@ public sealed partial class SwixyClaimChunkServerMod
         EnumWorldAccessResponse response)
         => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, null, response);
 
+    /// <summary>Хендлер проверки доступа внутри привата с фильтром Use.</summary>
     private EnumWorldAccessResponse OnServerTestBlockAccessClaim(
         IPlayer player,
         BlockSelection blockSel,
@@ -263,6 +271,8 @@ public sealed partial class SwixyClaimChunkServerMod
                 IsClaimOwner(activeClaim, playerUid) || IsCoOwner(activeClaim, playerUid),
             logError: msg => serverApi?.Logger.Error(msg));
     }
+
+    /// <summary>Отправляет синхронизацию use-filter (всем или одному).</summary>
     private void BroadcastUseFiltersSync(IServerPlayer? onlyPlayer = null)
     {
         if (serverApi == null || serverChannel == null)
@@ -283,6 +293,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Сбирает пакет whitelist-фильтров для синхронизации.</summary>
     private ClaimUseFiltersSyncPacket BuildUseFiltersSyncPacket()
     {
         var packet = new ClaimUseFiltersSyncPacket();
@@ -304,6 +315,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return packet;
     }
 
+    /// <summary>Отправляет use-filter входящему игроку (с задержками).</summary>
     private void OnPlayerJoinSendUseFilters(IServerPlayer byPlayer)
     {
         // Небольшая задержка: канал клиента уже готов после NowPlaying.
@@ -311,6 +323,7 @@ public sealed partial class SwixyClaimChunkServerMod
         serverApi?.Event.RegisterCallback(_ => BroadcastUseFiltersSync(byPlayer), 2000);
     }
 
+    /// <summary>Обработчик запроса use-filter (с rate-limit).</summary>
     private void OnUseFiltersRequestPacket(IServerPlayer fromPlayer, ClaimUseFiltersRequestPacket packet)
     {
         if (!TryConsumePacketRate(fromPlayer, "usefilters", ClaimConstants.RateUseFiltersRequestMs))
@@ -321,6 +334,7 @@ public sealed partial class SwixyClaimChunkServerMod
         BroadcastUseFiltersSync(fromPlayer);
     }
 
+    /// <summary>Загружает use-filter из SaveGame (byte[] + fallback).</summary>
     private void OnUseFiltersSaveGameLoaded()
     {
         useFiltersByClaimKey.Clear();
@@ -362,6 +376,7 @@ public sealed partial class SwixyClaimChunkServerMod
             useFiltersByClaimKey.Count);
     }
 
+    /// <summary>Импортирует данные save-фильтров в useFiltersByClaimKey.</summary>
     private void ImportUseFilterSaveData(UseFilterSaveData? saved)
     {
         if (saved?.Entries == null)
@@ -395,6 +410,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Сохраняет use-filter в SaveGame при автосейве мира.</summary>
     private void OnUseFiltersSaveGameSaving()
     {
         PersistUseFiltersNow();
@@ -446,7 +462,7 @@ public sealed partial class SwixyClaimChunkServerMod
 
     /// <summary>
     /// Запускает быстрый фоновый скан: кэш → BlockEntities → уникальные block id в чанках.
-    /// Не блокирует тик (time-budget ~2 ms/шаг).
+    /// Не блокирует тик (time-budget ~2 ms/шаг).
     /// </summary>
     private void OnUseFilterScanRequestPacket(IServerPlayer fromPlayer, ClaimUseFilterScanRequestPacket packet)
     {
@@ -532,6 +548,7 @@ public sealed partial class SwixyClaimChunkServerMod
         serverApi.Event.EnqueueMainThreadTask(() => ProcessUseFilterScanStep(jobKey), "swixy-usefilter-scan");
     }
 
+    /// <summary>Инвалидирует кэш скана для привата.</summary>
     private void InvalidateUseFilterScanCache(LandClaim claim)
     {
         var key = BuildClaimStorageKey(claim);
@@ -541,6 +558,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Вычисляет хеш-подпись областей (для проверки кэша).</summary>
     private static long ComputeAreasSignature(IReadOnlyList<Cuboidi> areas)
     {
         unchecked
@@ -685,7 +703,7 @@ public sealed partial class SwixyClaimChunkServerMod
 
     /// <summary>
     /// Один квант: phase0 = BlockEntities чанка, phase1 = block ids (Data).
-    /// Лимит ~2 ms — сервер не подвисает.
+    /// Лимит ~2 ms — сервер не подвисает.
     /// </summary>
     private void ProcessUseFilterScanStep(string jobKey)
     {
@@ -785,7 +803,7 @@ public sealed partial class SwixyClaimChunkServerMod
                     }
                     catch
                     {
-                        // fallback: Data indexer if available
+                        // fallback: Data-индексатор, если доступен
                         try
                         {
                             blockId = chunk.Data?[i] ?? 0;
@@ -858,6 +876,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Сбирает use-filter из BlockEntities чанка.</summary>
     private void CollectUseFilterFromChunkEntities(
         UseFilterScanJob job,
         IWorldChunk chunk,
@@ -910,10 +929,11 @@ public sealed partial class SwixyClaimChunkServerMod
         }
         catch
         {
-            // chunk BE shape may vary
+            // форма BlockEntities может отличаться
         }
     }
 
+    /// <summary>Регистрирует блок из BlockEntity в скане.</summary>
     private void RegisterUseFilterFromBlockEntity(
         UseFilterScanJob job,
         BlockEntity be,
@@ -964,6 +984,7 @@ public sealed partial class SwixyClaimChunkServerMod
         TryRegisterUseFilterBlock(job, block, pos);
     }
 
+    /// <summary>Классифицирует block id без позиции (фаза 1).</summary>
     private void TryRegisterUseFilterBlockId(UseFilterScanJob job, int blockId)
     {
         if (serverApi == null)
@@ -990,6 +1011,7 @@ public sealed partial class SwixyClaimChunkServerMod
         TryRegisterUseFilterBlock(job, block, pos: null);
     }
 
+    /// <summary>Регистрирует блок как Use-кандидат при скане.</summary>
     private void TryRegisterUseFilterBlock(UseFilterScanJob job, Block block, BlockPos? pos)
     {
         if (serverApi == null || block == null)
@@ -1063,6 +1085,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Проверяет, целиком ли чанк внутри какой-либо области.</summary>
     private static bool IsChunkFullyInsideAnyArea(
         IReadOnlyList<Cuboidi> areas,
         int baseX,
@@ -1093,6 +1116,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return false;
     }
 
+    /// <summary>Находится ли блок внутри какой-либо области claim.</summary>
     private static bool IsBlockInsideAnyArea(IReadOnlyList<Cuboidi> areas, int x, int y, int z)
     {
         for (var i = 0; i < areas.Count; i++)
@@ -1114,6 +1138,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return false;
     }
 
+    /// <summary>Завершает скан: кэширует коды и отправляет результат.</summary>
     private void FinishUseFilterScan(string jobKey, UseFilterScanJob job)
     {
         activeUseFilterScans.Remove(jobKey);
@@ -1133,7 +1158,7 @@ public sealed partial class SwixyClaimChunkServerMod
             AreasSignature = job.AreasSignature,
             CodesRaw = codesRaw,
             CodeCount = codes.Count,
-            ScannedBlocks = job.Scanned
+            ScannedBlocks = (int)job.Scanned
         };
 
         serverChannel.SendPacket(new ClaimUseFilterScanResultPacket
@@ -1141,7 +1166,7 @@ public sealed partial class SwixyClaimChunkServerMod
             ClaimId = job.ClaimId,
             CodesRaw = codesRaw,
             CodeCount = codes.Count,
-            ScannedBlocks = job.Scanned,
+            ScannedBlocks = (int)job.Scanned,
             Message = codes.Count == 0
                 ? Lang.GetL(job.Player.LanguageCode, "swixyclaimchunk:use-filter-scan-empty")
                 : Lang.GetL(job.Player.LanguageCode, "swixyclaimchunk:use-filter-scan-ok", codes.Count)
@@ -1174,6 +1199,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return block.CreativeInventoryStacks is { Length: > 0 };
     }
 
+    /// <summary>Выбираем creative-код блока с учётом кэша.</summary>
     private static string PreferCreativeInventoryCodeCached(
         Dictionary<string, string>? cache,
         Block worldBlock,
@@ -1235,6 +1261,7 @@ public sealed partial class SwixyClaimChunkServerMod
             > ScoreDisplayBlockCode(existing, existingBlock);
     }
 
+    /// <summary>Оценивает, насколько код подходит как display в creative.</summary>
     private static int ScoreDisplayBlockCode(string code, Block? block)
     {
         if (string.IsNullOrWhiteSpace(code))
@@ -1293,6 +1320,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return score;
     }
 
+    /// <summary>Определяет, относится ли материал к террейн.</summary>
     private static bool IsTerrainMaterial(EnumBlockMaterial material)
     {
         return material is EnumBlockMaterial.Air
@@ -1326,6 +1354,7 @@ public sealed partial class SwixyClaimChunkServerMod
                && !ClaimCodeUtil.IsUseFilterCatalogExcluded(code)
                && !ClaimCodeUtil.IsUseFilterCatalogExcluded(groupKey));
 
+    /// <summary>Определяет террейн-класс сущности блока.</summary>
     private static bool IsTerrainEntityClass(string entityClass)
     {
         return entityClass.Contains("Farmland", StringComparison.OrdinalIgnoreCase)
@@ -1406,6 +1435,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return false;
     }
 
+    /// <summary>Определяет Use-взаимодействие по имени класса блока.</summary>
     private static bool IsUseInteractiveName(string? name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -1471,6 +1501,7 @@ public sealed partial class SwixyClaimChunkServerMod
             || name.Contains("Electrical", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <summary>Определяет Use-путь по коду (door, chest и т.п.).</summary>
     private static bool IsUseInteractivePath(string? code)
     {
         if (string.IsNullOrWhiteSpace(code))

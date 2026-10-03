@@ -70,6 +70,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Возвращает размеры чанка (chunkSize) и карты по Y (mapSizeY), подставляя значения по умолчанию.</summary>
     private (int chunkSize, int mapSizeY) GetWorldChunkDims()
     {
         var chunkSize = serverApi?.WorldManager?.ChunkSize ?? 0;
@@ -113,6 +114,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return (int)chunks;
     }
 
+    /// <summary>Мигрирует LandClaimAllowance в ролях: конвертирует старые значения в блоках в чанки.</summary>
     private int MigrateRolesAllowanceViaReflection(int chunkSize, int mapSizeY, long columnVol)
     {
         if (serverApi == null)
@@ -173,6 +175,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return changed;
     }
 
+    /// <summary>Мигрирует ExtraLandClaimAllowance игроков: конвертирует старые значения в блоках в чанки.</summary>
     private int MigratePlayersExtraAllowance(int chunkSize, int mapSizeY, long columnVol)
     {
         if (serverApi == null)
@@ -236,6 +239,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return changed;
     }
 
+    /// <summary>Сохраняет серверный конфиг после миграции квот (Save + MarkConfigDirty).</summary>
     private void PersistServerConfigAfterAllowanceMigration()
     {
         if (serverApi == null)
@@ -292,6 +296,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return null;
     }
 
+    /// <summary>Пытается прочитать int-свойство по имени через reflection.</summary>
     private static bool TryGetIntProp(object target, string name, out int value)
     {
         value = 0;
@@ -326,6 +331,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return false;
     }
 
+    /// <summary>Пытается записать int-свойство по имени ( или backing-поле) через reflection.</summary>
     private static bool TrySetIntProp(object target, string name, int value)
     {
         try
@@ -357,6 +363,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Пытается прочитать строку из свойства по имени через reflection.</summary>
     private static string? TryGetStringProp(object target, string name)
     {
         try

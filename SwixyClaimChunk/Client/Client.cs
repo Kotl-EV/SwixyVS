@@ -16,7 +16,7 @@ public sealed partial class SwixyClaimChunkClientMod
 
         api.Logger.Notification("Swixy Claim Chunk client side starting.");
 
-        // Minecraft fonts (same families as Questbook) before any claim dialog draws.
+        // Minecraft-шрифты (те же семейства, что у Questbook) до отрисовки любого диалога привата.
         ClaimFontHelper.EnsureRegistered(api, Mod);
 
         clientApi = api;
@@ -66,8 +66,8 @@ public sealed partial class SwixyClaimChunkClientMod
     }
 
     /// <summary>
-    /// Soft-called from another pack's ESC menu (no compile reference).
-    /// Opens only — does not toggle closed. Same shape as OneBlock QuestbookClientSystem.OpenFromMenu().
+    /// Мягкий вызов из меню ESC другого мода (без compile-ссылки).
+    /// Только открывает — не переключает закрытие. По форме как OneBlock QuestbookClientSystem.OpenFromMenu().
     /// </summary>
     public bool OpenFromMenu()
     {
@@ -144,6 +144,7 @@ public sealed partial class SwixyClaimChunkClientMod
         dialog.ApplyClaimShow(packet);
     }
 
+    /// <summary>Запрос Whitelist Use-фильтров у сервера.</summary>
     private void RequestUseFiltersFromServer()
     {
         try
@@ -156,6 +157,7 @@ public sealed partial class SwixyClaimChunkClientMod
         }
     }
 
+    /// <summary>Применяет результат скана use-filter к диалогу.</summary>
     private void OnUseFilterScanResultPacket(ClaimUseFilterScanResultPacket packet)
     {
         dialog?.ApplyUseFilterScanResult(packet);

@@ -9,13 +9,14 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 
-// EntityBehaviorClaimProtect is in SwixyClaimChunk namespace (ClaimFlags.cs).
+// Поведение EntityBehaviorClaimProtect находится в namespace SwixyClaimChunk (ClaimFlags.cs).
 
 namespace SwixyClaimChunk.Server;
 
 /// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — сервер: инициализация и /land.</summary>
 public sealed partial class SwixyClaimChunkServerMod
 {
+    /// <summary>Инициализация сервера: канал пакетов, подмена /land, хендлеры событий, защита сущностей и игроков.</summary>
     public override void StartServerSide(ICoreServerAPI api)
     {
         base.StartServerSide(api);
@@ -87,6 +88,7 @@ public sealed partial class SwixyClaimChunkServerMod
         OverrideLandCommandTree(landCommand, handler);
     }
 
+    /// <summary>Рекурсивно подменяет все подкоманды /land на один handler.</summary>
     private static void OverrideLandCommandTree(IChatCommand command, OnCommandDelegate handler)
     {
         command
@@ -99,7 +101,8 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
-    private static bool IsLandChatMessage(string message)
+    /// <summary>Определяет, является ли сообщение чата командой /land.</summary>
+    private bool IsLandChatMessage(string message)
     {
         var trimmed = message.TrimStart();
         if (!trimmed.StartsWith("/", StringComparison.Ordinal))
@@ -119,11 +122,13 @@ public sealed partial class SwixyClaimChunkServerMod
         return true;
     }
 
+    /// <summary>Отправляет игроку пакет открытия GUI карты.</summary>
     private void SendOpenGuiPacket(IServerPlayer player)
     {
         serverChannel?.SendPacket(new ClaimOpenGuiPacket(), player);
     }
 
+    /// <summary>Обработчик команды /land: открывает игроку GUI карты.</summary>
     private TextCommandResult OpenClaimMapServerCommand(TextCommandCallingArgs args)
     {
         if (args.Caller.Player is IServerPlayer serverPlayer)

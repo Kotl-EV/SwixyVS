@@ -1,5 +1,5 @@
 ﻿// =============================================================================
-// Claim flags: PvP allow + animal protection — SaveGame + damage checks.
+// Флаги привата: разрешение PvP + защиту животных — SaveGame и проверки урона.
 // =============================================================================
 
 using System;
@@ -18,6 +18,7 @@ namespace SwixyClaimChunk.Server;
 /// <summary>Часть <see cref="SwixyClaimChunkServerMod"/> — флаги привата (PvP, животные).</summary>
 public sealed partial class SwixyClaimChunkServerMod
 {
+    /// <summary>Возвращает флаги привата из хранилища по ключам ClaimStorageKeys.</summary>
     private int GetClaimFlags(LandClaim claim)
     {
         foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim))
@@ -31,14 +32,16 @@ public sealed partial class SwixyClaimChunkServerMod
         return 0;
     }
 
+    /// <summary>Заполняет поле ClaimFlags в пакете ClaimInfoPacket.</summary>
     private void FillClaimFlagsInfo(ClaimInfoPacket info, LandClaim claim)
     {
         info.ClaimFlags = GetClaimFlags(claim);
     }
 
+    /// <summary>Устанавливает флаги привата для claims, отбрасывая неизвестные биты.</summary>
     private ClaimActionResult TrySetClaimFlags(LandClaim claim, int flags)
     {
-        // Keep only known bits.
+        // Оставляем только известные биты.
         flags &= ClaimFlagBits.AllKnown;
 
         var keys = ClaimStorageKeys.EnumerateClaimStorageKeys(claim).ToList();
@@ -47,7 +50,7 @@ public sealed partial class SwixyClaimChunkServerMod
             return ClaimActionResult.Error("swixyclaimchunk:error-unknown");
         }
 
-        // flags==0 = safe defaults (no PvP, animals protected) — can drop keys.
+        // flags==0 — значения по умолчанию (без PvP, животные под защитой) — ключи можно удалить.
         if (flags == 0)
         {
             foreach (var key in keys)
@@ -67,6 +70,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return ClaimActionResult.Success("swixyclaimchunk:claim-flags-saved");
     }
 
+    /// <summary>Удаёт сохранённые флаги привата по ключам storage и сохраняет изменения.</summary>
     private void ClearClaimFlags(LandClaim claim)
     {
         foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim))
@@ -77,6 +81,7 @@ public sealed partial class SwixyClaimChunkServerMod
         PersistClaimFlagsNow();
     }
 
+    /// <summary>Удаёт только ключи флагов из хранилища без сохранения.</summary>
     private void ClearClaimFlagsKeysOnly(LandClaim claim)
     {
         foreach (var key in ClaimStorageKeys.EnumerateClaimStorageKeys(claim))
@@ -85,6 +90,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Объединяет флаги primary и other в primary, очищая флаги other.</summary>
     private void MergeClaimFlags(LandClaim primary, LandClaim other)
     {
         var merged = GetClaimFlags(primary) | GetClaimFlags(other);
@@ -104,11 +110,12 @@ public sealed partial class SwixyClaimChunkServerMod
         PersistClaimFlagsNow();
     }
 
+    /// <summary>Перезаписывает ключи флагов под текущую идентификацию claims.</summary>
     private void RebindClaimFlagsKeys(LandClaim claim)
     {
         var flags = GetClaimFlags(claim);
-        // Drop old keys for this claim identity and rewrite to current keys.
-        // Safer: rewrite known current keys only.
+        // Сбрасываем старые ключи и перезаписываем их текущими.
+        // Безопаснее: перезаписать только известные текущие ключи.
         if (flags == 0)
         {
             return;
@@ -122,6 +129,7 @@ public sealed partial class SwixyClaimChunkServerMod
         PersistClaimFlagsNow();
     }
 
+    /// <summary>Загружает флаги привата из SaveGame (два формата данных).</summary>
     private void OnClaimFlagsSaveGameLoaded()
     {
         claimFlagsByClaimKey.Clear();
@@ -150,7 +158,7 @@ public sealed partial class SwixyClaimChunkServerMod
             }
             catch
             {
-                // ignore
+                // игнорируем
             }
         }
 
@@ -159,6 +167,7 @@ public sealed partial class SwixyClaimChunkServerMod
             claimFlagsByClaimKey.Count);
     }
 
+    /// <summary>Импортирует флаги привата из загруженных данных SaveGame с учётом версии.</summary>
     private void ImportClaimFlagsSaveData(ClaimFlagsSaveData? saved)
     {
         if (saved?.Entries == null)
@@ -166,7 +175,7 @@ public sealed partial class SwixyClaimChunkServerMod
             return;
         }
 
-        // v0: bit1 = ProtectAnimals (opt-in protect). v1: bit1 = AllowAnimalDamage (opt-in hurt).
+        // v0: bit1 = ProtectAnimals (защита по желанию). v1: bit1 = AllowAnimalDamage (урон по желанию).
         var legacy = saved.Version < 1;
 
         foreach (var entry in saved.Entries)
@@ -179,14 +188,14 @@ public sealed partial class SwixyClaimChunkServerMod
             var flags = entry.Value & ClaimFlagBits.AllKnown;
             if (legacy)
             {
-                // Invert animal bit: was "protect when set" → now "allow damage when set".
+                // Инвертируем животный бит: было "защита при установке" → теперь "разрешить урон при установке".
                 if ((flags & ClaimFlagBits.AllowAnimalDamage) != 0)
                 {
-                    flags &= ~ClaimFlagBits.AllowAnimalDamage; // was protect → still protect
+                    flags &= ~ClaimFlagBits.AllowAnimalDamage; // была защита → остаётся защита
                 }
                 else
                 {
-                    flags |= ClaimFlagBits.AllowAnimalDamage; // was unprotected → allow damage
+                    flags |= ClaimFlagBits.AllowAnimalDamage; // была без защиты → разрешить урон
                 }
             }
 
@@ -197,8 +206,10 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Сохраняет флаги привата при сохранении SaveGame.</summary>
     private void OnClaimFlagsSaveGameSaving() => PersistClaimFlagsNow();
 
+    /// <summary>Сохраняет флаги привата в SaveGame (строковый и объектный форматы).</summary>
     private void PersistClaimFlagsNow()
     {
         if (serverApi == null)
@@ -232,10 +243,7 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
-    /// <summary>
-    /// Attach damage filter — MUST run before EntityBehaviorHealth
-    /// (health applies Health -= damage inside its own OnEntityReceiveDamage).
-    /// </summary>
+    /// <summary>Добавляет поведение защиты к сущности; должно выполняться до EntityBehaviorHealth (здоровье применяется внутри собственного OnEntityReceiveDamage).</summary>
     private void AttachClaimProtectBehavior(Entity entity)
     {
         if (entity == null || entity.World?.Side != EnumAppSide.Server)
@@ -254,7 +262,7 @@ public sealed partial class SwixyClaimChunkServerMod
             var existing = entity.GetBehavior(ClaimConstants.ClaimProtectBehaviorCode);
             if (existing != null)
             {
-                // Already before health?
+                // Уже находится перед health?
                 var idx = list.IndexOf(existing);
                 var healthIdx = IndexOfBehavior(list, "health");
                 if (idx >= 0 && (healthIdx < 0 || idx < healthIdx))
@@ -277,10 +285,11 @@ public sealed partial class SwixyClaimChunkServerMod
         }
         catch
         {
-            // ignore entities that reject behaviors
+            // игнорируем сущности, отклоняющие поведения
         }
     }
 
+    /// <summary>Возвращает индекс поведения по имени property.</summary>
     private static int IndexOfBehavior(IList<EntityBehavior> list, string propertyName)
     {
         for (var i = 0; i < list.Count; i++)
@@ -294,14 +303,14 @@ public sealed partial class SwixyClaimChunkServerMod
             }
             catch
             {
-                // next
+                // далее
             }
         }
 
         return -1;
     }
 
-    /// <summary>Ensure online players always have protect behavior (join / already online).</summary>
+    /// <summary>Убедится, что у онлайн-игроков всегда есть поведение защиты (при входе или уже онлайн).</summary>
     private void EnsurePlayersHaveClaimProtect(IServerPlayer? player = null)
     {
         if (serverApi == null)
@@ -324,16 +333,15 @@ public sealed partial class SwixyClaimChunkServerMod
         }
     }
 
+    /// <summary>Прикрепляет защиту игроку при входе на сервер.</summary>
     private void OnPlayerJoinAttachClaimProtect(IServerPlayer byPlayer)
         => EnsurePlayersHaveClaimProtect(byPlayer);
 
+    /// <summary>Прикрепляет защиту всем игрокам после загрузки SaveGame.</summary>
     private void OnSaveGameLoadedAttachClaimProtectToPlayers()
         => EnsurePlayersHaveClaimProtect();
 
-    /// <summary>
-    /// Server authority for claim flags on damage.
-    /// Returns true if damage should be cancelled (set to 0).
-    /// </summary>
+    /// <summary>По авторитету сервера решает, отменить урон на основе флагов привата (вернёт true — урон обнулить).</summary>
     internal bool ShouldCancelDamageInClaim(Entity target, DamageSource damageSource, ref float damage)
     {
         if (serverApi == null || damage <= 0 || target?.World == null)
@@ -428,6 +436,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return false;
     }
 
+    /// <summary>Сообщает о заблокированном уроне в чат с анти-спам задержкой 2 с.</summary>
     private void NotifyDamageBlocked(IPlayer? player, string langKey)
     {
         if (player is not IServerPlayer sp)
@@ -449,6 +458,7 @@ public sealed partial class SwixyClaimChunkServerMod
             EnumChatType.Notification);
     }
 
+    /// <summary>Возвращает сущность-атакующего из источника урона.</summary>
     private static Entity? ResolveAttackingEntity(DamageSource damageSource)
     {
         if (damageSource == null)
@@ -466,10 +476,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return damageSource.SourceEntity ?? damageSource.CauseEntity;
     }
 
-    /// <summary>
-    /// Creatures worth protecting in a claim: farm/passive animals, pets.
-    /// Not players, hostiles, traders, or utility entities.
-    /// </summary>
+    /// <summary>Определяет, является ли сущность защищаемым животным в привате (фермерские/пассивные животные, питомцы). Не игроки, враждебные, торговцы или сущности-утилиты.</summary>
     internal static bool IsProtectableAnimal(Entity entity)
     {
         if (entity is EntityPlayer || entity is not EntityAgent)
@@ -526,9 +533,7 @@ public sealed partial class SwixyClaimChunkServerMod
     }
 }
 
-/// <summary>
-/// Lightweight behavior: filters damage using claim flags (server only).
-/// </summary>
+/// <summary>Лёгкое поведение: фильтрует урон с использованием флагов привата (только сервер).</summary>
 public sealed class EntityBehaviorClaimProtect : EntityBehavior
 {
     public EntityBehaviorClaimProtect(Entity entity)
@@ -551,7 +556,7 @@ public sealed class EntityBehaviorClaimProtect : EntityBehavior
             return;
         }
 
-        // Zero damage BEFORE EntityBehaviorHealth runs (this behavior is inserted at index 0).
+        // Ноль урона ДО EntityBehaviorHealth ( это поведение вставлено на индекс 0).
         if (mod.ShouldCancelDamageInClaim(entity, damageSource, ref damage))
         {
             damage = 0;

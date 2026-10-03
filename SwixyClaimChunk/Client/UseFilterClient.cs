@@ -7,6 +7,7 @@ namespace SwixyClaimChunk.Client;
 /// <summary>Часть <see cref="SwixyClaimChunkClientMod"/> — client prediction whitelist Use.</summary>
 public sealed partial class SwixyClaimChunkClientMod
 {
+    /// <summary>Клиентская проверка доступа к блоку (без известного привата).</summary>
     private EnumWorldAccessResponse OnClientTestBlockAccess(
         IPlayer player,
         BlockSelection blockSel,
@@ -15,6 +16,7 @@ public sealed partial class SwixyClaimChunkClientMod
         EnumWorldAccessResponse response)
         => ApplyUseBlockFilter(player, blockSel, accessType, ref claimant, null, response);
 
+    /// <summary>Клиентская проверка доступа к блоку с уже известным приватом.</summary>
     private EnumWorldAccessResponse OnClientTestBlockAccessClaim(
         IPlayer player,
         BlockSelection blockSel,

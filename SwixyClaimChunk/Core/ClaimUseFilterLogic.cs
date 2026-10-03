@@ -13,6 +13,7 @@ namespace SwixyClaimChunk.Core;
 /// </summary>
 public static class ClaimUseFilterLogic
 {
+    /// <summary>Ищет правило whitelist Use для привата по ключам хранения и по владельцу.</summary>
     public static UseFilterRuleData? TryGetUseFilter(
         Dictionary<string, UseFilterRuleData> store,
         LandClaim claim)
@@ -68,6 +69,7 @@ public static class ClaimUseFilterLogic
         return soleCount == 1 ? sole : null;
     }
 
+    /// <summary>Проверяет, что в store по ключу лежит активное правило whitelist с кодами.</summary>
     public static bool TryGetWhitelistRule(
         Dictionary<string, UseFilterRuleData> store,
         string key,
@@ -85,6 +87,7 @@ public static class ClaimUseFilterLogic
         return true;
     }
 
+    /// <summary>Нормализует коды (регистр, дубликаты) и сортирует по возрастанию.</summary>
     public static List<string> NormalizeUseFilterCodes(IEnumerable<string>? codes)
     {
         if (codes == null)
@@ -107,6 +110,7 @@ public static class ClaimUseFilterLogic
         return set.OrderBy(static code => code, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
+    /// <summary>Является ли игрок владельцем привата.</summary>
     public static bool IsClaimOwner(LandClaim? claim, string? playerUid)
     {
         return claim != null
@@ -114,6 +118,7 @@ public static class ClaimUseFilterLogic
             && claim.OwnedByPlayerUid == playerUid;
     }
 
+    /// <summary>Есть ли у игрока право Build/Break в привате.</summary>
     public static bool HasBuildAccess(LandClaim? claim, string? playerUid)
     {
         if (claim?.PermittedPlayerUids == null || string.IsNullOrWhiteSpace(playerUid))
@@ -205,7 +210,7 @@ public static class ClaimUseFilterLogic
                 codesToTest.Add(resolved.AltBlockCode);
             }
 
-            // Only upgrades Denied → Granted for public whitelist blocks.
+            // Только улучшает Denied → Granted для публичных блоков из whitelist.
             var result = response;
 
             foreach (var activeClaim in claims)
@@ -293,6 +298,7 @@ public static class ClaimUseFilterLogic
         }
     }
 
+    /// <summary>Находит приваты в точке (по lookup/оригинал, либо перебором всех).</summary>
     public static LandClaim[] ResolveClaimsAt(
         IWorldAccessor world,
         LandClaim? claim,
@@ -333,13 +339,14 @@ public static class ClaimUseFilterLogic
             }
             catch
             {
-                // ignore broken claim
+                // игнорируем битый приват
             }
         }
 
         return list.ToArray();
     }
 
+    /// <summary>Разобранный код блока для фильтра Use + control-pos multiblock.</summary>
     public readonly struct ResolvedUseFilterBlock
     {
         public readonly string BlockCode;

@@ -1,5 +1,5 @@
-// =============================================================================
-// Use-filter catalog: doors/gates + blocks with inventory only.
+﻿// =============================================================================
+// Каталог Use-фильтра: двери/калитки + только блоки с инвентарем.
 // =============================================================================
 
 using System;
@@ -11,17 +11,15 @@ using Vintagestory.API.MathTools;
 namespace SwixyClaimChunk.Core;
 
 /// <summary>
-/// Determines whether a placed block should appear in the Use-filter catalog.
-/// Only doors/gates and inventory containers (chests, shelves, firepits…).
+/// Определяет, должен ли установленный блок отображаться в каталоге Use-фильтра.
+/// Только двери/калитки и контейнеры инвентаря (сундуки, полки, костры…).
 /// </summary>
 public static class ClaimUseInteractability
 {
-    /// <summary>Cache: Block.Id → show? (ids stable per session).</summary>
+    /// <summary>Кэш: Block.Id → показывать? (id стабильны в течение сессии).</summary>
     private static readonly Dictionary<int, bool> Cache = new();
 
-    /// <summary>
-    /// True if the block is a useful Use-whitelist candidate near the player.
-    /// </summary>
+    /// <summary>Показывать ли блок как подходящий кандидат в whitelist Use рядом с игроком.</summary>
     public static bool ShouldShowInUseFilterCatalog(
         ICoreClientAPI api,
         Block block,
@@ -42,13 +40,13 @@ public static class ClaimUseInteractability
         return show;
     }
 
-    /// <summary>Server/path-only check without client help API.</summary>
+    /// <summary>Проверка только на сервере/в логике мира без участия client API.</summary>
     public static bool ShouldShowInUseFilterCatalog(
         IWorldAccessor world,
         Block block,
         BlockPos? pos)
         => ClaimCodeUtil.IsUseFilterCatalogCandidate(world, block, pos);
 
-    /// <summary>Optional: clear cache if mods hot-reload (rarely needed).</summary>
+    /// <summary>Очистить кэш (нужно редко — при hot-reload модов).</summary>
     public static void ClearCache() => Cache.Clear();
 }

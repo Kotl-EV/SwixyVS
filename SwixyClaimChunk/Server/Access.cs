@@ -177,13 +177,13 @@ public sealed partial class SwixyClaimChunkServerMod
         var oldName = (claim.Description ?? "").Trim();
         claim.Description = claimName;
         MigrateUseFilterAfterRename(claim, oldName);
-        // Name-key for flags follows claim description.
+        // Ключи флагов привязываются к описанию привата.
         RebindClaimFlagsKeys(claim);
         TouchClaim(claim);
         return ClaimActionResult.Success("swixyclaimchunk:claims-message-renamed");
     }
 
-    /// <summary>Ищет IServerPlayerData по UID или нику (онлайн / last known name).</summary>
+    /// <summary>Ищет IServerPlayerData по UID или нику (онлайн / последнее имя).</summary>
     private IServerPlayerData? ResolvePlayerData(string playerName, string playerUid = "")
     {
         playerName = playerName.Trim();

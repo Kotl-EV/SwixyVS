@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
-// Lives in Shared.dll so Server/Client assemblies can see internal types.
+// Находится в Shared.dll, чтобы Server/Client сборки видели внутренние типы.
 [assembly: InternalsVisibleTo("SwixyClaimChunk.Server")]
 [assembly: InternalsVisibleTo("SwixyClaimChunk.Client")]

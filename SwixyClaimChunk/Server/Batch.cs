@@ -144,9 +144,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return ClaimActionResult.SuccessComposite(message);
     }
 
-    /// <summary>
-    /// Клеймит свободные чанки: один чанк, сплошной прямоугольник или связная область.
-    /// </summary>
+    /// <summary>Клеймит свободные чанки: один чанк, сплошной прямоугольник или связная область.</summary>
     private ClaimActionResult TryClaimFreeChunksBatch(IServerPlayer player, IReadOnlyList<(int ChunkX, int ChunkZ)> chunks)
     {
         if (chunks.Count == 1)
@@ -172,9 +170,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return TryAddConnectedChunkAreas(player, chunks);
     }
 
-    /// <summary>
-    /// Снимает клейм с чанков; для прямоугольника — одна операция по bounding area.
-    /// </summary>
+    /// <summary>Снимает клейм с чанков; для прямоугольника — одна операция по ограничивающей области.</summary>
     private ClaimActionResult TryUnclaimChunksBatch(
         IServerPlayer player,
         IReadOnlyList<(int ChunkX, int ChunkZ)> chunks,
@@ -289,10 +285,7 @@ public sealed partial class SwixyClaimChunkServerMod
         return true;
     }
 
-    /// <summary>
-    /// Клеймит несвязный прямоугольник: итеративно добавляет чанки к соседнему привату
-    /// или создаёт новый; после — MergeTouchingOwnClaims.
-    /// </summary>
+    /// <summary>Клеймит несвязный прямоугольник: итеративно добавляет чанки к соседнему привату или создаёт новый; после — MergeTouchingOwnClaims.</summary>
     private ClaimActionResult TryAddConnectedChunkAreas(IServerPlayer player, IReadOnlyList<(int ChunkX, int ChunkZ)> chunks)
     {
         var remaining = new HashSet<long>(chunks.Count);
@@ -457,6 +450,7 @@ public sealed partial class SwixyClaimChunkServerMod
             : Lang.GetL(langCode, "swixyclaimchunk:error-unknown");
     }
 
+    /// <summary>Преобразует ошибку EnumClaimError в ключ сообщения об ошибке мода.</summary>
     private static string ClaimErrorKey(EnumClaimError error)
     {
         return error switch

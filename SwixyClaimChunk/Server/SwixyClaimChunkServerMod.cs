@@ -13,9 +13,13 @@ namespace SwixyClaimChunk.Server;
 /// <summary>Серверная логика LandClaim / use-filter / сетевые обработчики.</summary>
 public sealed partial class SwixyClaimChunkServerMod : ModSystem
 {
+    /// <summary>API сервера (ICoreServerAPI).</summary>
     private ICoreServerAPI? serverApi;
+    /// <summary>Сетевой канал пакетов приватов.</summary>
     private IServerNetworkChannel? serverChannel;
+    /// <summary>Хендлер чата для перехода команды /land.</summary>
     private PlayerChatDelegate? serverPlayerChatHandler;
+    /// <summary>Со-владельцы по storage-ключу привата (кэш в памяти).</summary>
     private readonly Dictionary<string, HashSet<string>> coOwnerUidsByClaimKey = new(StringComparer.Ordinal);
     /// <summary>Серверное хранилище whitelist Use (и SP-источник истины).</summary>
     private readonly Dictionary<string, UseFilterRuleData> useFiltersByClaimKey = new(StringComparer.Ordinal);
@@ -32,8 +36,10 @@ public sealed partial class SwixyClaimChunkServerMod : ModSystem
     /// <summary>Анти-спам сообщений о блокировке урона (uid → elapsed ms).</summary>
     private readonly Dictionary<string, long> damageNotifyCooldown = new(StringComparer.Ordinal);
 
+    /// <summary>Мод грузится только на серверной стороне.</summary>
     public override bool ShouldLoad(EnumAppSide forSide) => forSide == EnumAppSide.Server;
 
+    /// <summary>Отписывает все события и обнуляет поля при выгрузке мода.</summary>
     public override void Dispose()
     {
         if (serverApi != null)

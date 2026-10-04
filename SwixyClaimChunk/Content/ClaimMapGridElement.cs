@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // Файл: ClaimMapGridElement.cs
 // Модуль: Electrical Progressive — Claims
 // Назначение: GUI-элемент сетки чанков поверх мировой карты Vintage Story.
@@ -114,6 +114,24 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <summary>Время последнего вызова onViewChanged (для троттлинга 250 мс).</summary>
     private long lastViewChangedCallbackMs;
 
+    /// <summary>Очередь обхода BFS при построении связных регионов одного привата.</summary>
+    private static readonly Queue<ClaimChunkCellPacket> claimRegionQueue = new();
+
+    /// <summary>Кэш уже посещённых чанков в текущем проходе BFS по регионам приватов.</summary>
+    private static HashSet<long> claimVisitedCache = new();
+
+    /// <summary>Кэш экранных прямоугольников чанков для текущего набора данных.
+    /// Пересчитывается в начале каждого DrawOverlay (<see cref="CacheScreenRects"/>),
+    /// поэтому между кадрами stale-записи отсутствуют.</summary>
+    private static readonly Dictionary<long, ScreenRect> screenRects = new();
+
+    /// <summary>Кэш индекса чанков по координатам. Переиспользуется между кадрами,
+    /// пересоздаётся при смене state (см. <see cref="GetCellsByCoord"/> и <see cref="SetState"/>).</summary>
+    private Dictionary<long, ClaimChunkCellPacket>? cellsByCoordCache;
+
+    /// <summary>Состояние, для которого собран <see cref="cellsByCoordCache"/> (для проверки по ссылке).</summary>
+    private ClaimMapStatePacket? cellsByCoordOwner;
+
     #endregion
 
     /// <summary>
@@ -134,7 +152,7 @@ public sealed class ClaimMapGridElement : GuiElement
         this.onViewChanged = onViewChanged;
         MouseOverCursor = "pointer";
 
-        // Пытаемся подключить стандартную мировую карту игры как подложку
+        // Пытаемся подключить стандартную мировую игру как подложку
         var worldMapManager = capi.ModLoader.GetModSystem<WorldMapManager>();
         if (worldMapManager == null || capi.World.Player?.Entity == null)
         {
@@ -236,6 +254,7 @@ public sealed class ClaimMapGridElement : GuiElement
         canAdminUnclaimOthers = newState.CanAdminUnclaimOthers;
         ApplyFixedMapViewSize();
         MarkOverlayDirty();
+        cellsByCoordOwner = null; // пересобрать кэш-индекс на следующем кадре
     }
 
     /// <summary>
@@ -390,20 +409,35 @@ public sealed class ClaimMapGridElement : GuiElement
             return;
         }
 
-        // Индекс чанков по упакованным координатам для O(1) поиска при отрисовке
-        var cellsByCoord = new Dictionary<long, ClaimChunkCellPacket>(state.Chunks.Count);
+        // Экранные прямоугольники чанков — вычисляем один раз на кадр вместо вызова в каждом слое.
+        CacheScreenRects();
+        // Индекс чанков по координатам — переиспользуемый кэш (перестраивается при смене state).
+        var cellsByCoord = GetCellsByCoord();
+
+        // Единый проход: группируем прямоугольники по цвету состояния, чтобы залить их батчами.
+        var fillsByState = new Dictionary<int, List<ScreenRect>>(4);
         foreach (var chunk in state.Chunks)
         {
-            cellsByCoord[Pack(chunk.ChunkX, chunk.ChunkZ)] = chunk;
+            if (screenRects.TryGetValue(Pack(chunk.ChunkX, chunk.ChunkZ), out var r))
+            {
+                AddFillRect(fillsByState, chunk.State, r);
+            }
         }
 
-        // Слой 1: заливка цветом по состоянию чанка
-        foreach (var chunk in state.Chunks)
+        // Слой 1: заливка цветом по состоянию — один Fill на каждый цвет вместо ~256.
+        foreach (var group in fillsByState)
         {
-            DrawChunk(ctx, chunk);
+            SetCellColor(ctx, group.Key);
+            ctx.NewPath();
+            foreach (var rect in group.Value)
+            {
+                ctx.Rectangle(rect.X, rect.Y, rect.W, rect.H);
+            }
+
+            ctx.Fill();
         }
 
-        // Слой 2: подсветка выделенных чанков
+        // Слой 2: подсветка выделенных чанков (остаётся поверх заливки, как в оригинале).
         foreach (var packed in selectedChunks)
         {
             if (cellsByCoord.TryGetValue(packed, out var selectedChunk))
@@ -412,11 +446,16 @@ public sealed class ClaimMapGridElement : GuiElement
             }
         }
 
-        // Слой 3: тонкие границы всех чанков
-        foreach (var chunk in state.Chunks)
+        // Слой 3: тонкие границы всех чанков — единый Stroke вместо ~256 отдельных.
+        ctx.SetSourceRGBA(0, 0, 0, 0.42);
+        ctx.LineWidth = 1.0;
+        ctx.NewPath();
+        foreach (var r in screenRects.Values)
         {
-            DrawChunkBorder(ctx, chunk, 0, 0, 0, 0.42, 1.0);
+            ctx.Rectangle(r.X, r.Y, r.W, r.H);
         }
+
+        ctx.Stroke();
 
         // Слой 4: внешние контуры приватов (только грани без соседа того же claimId)
         DrawClaimContours(ctx, cellsByCoord);
@@ -432,6 +471,65 @@ public sealed class ClaimMapGridElement : GuiElement
         }
 
         DrawMapBorder(ctx, width, height);
+    }
+
+    /// <summary>Добавляет прямоугольник в группу заливки по цвету состояния чанка.</summary>
+    /// <param name="byState">Словарь групп заливки по коду состояния.</param>
+    /// <param name="state">Числовой код состояния чанка.</param>
+    /// <param name="rect">Экранный прямоугольник чанка.</param>
+    private static void AddFillRect(Dictionary<int, List<ScreenRect>> byState, int state, ScreenRect rect)
+    {
+        if (!byState.TryGetValue(state, out var list))
+        {
+            list = new List<ScreenRect>();
+            byState[state] = list;
+        }
+
+        list.Add(rect);
+    }
+
+    /// <summary>Заполняет кэш экранных прямоугольников чанков для текущего набора данных.</summary>
+    private void CacheScreenRects()
+    {
+        screenRects.Clear();
+        if (state == null)
+        {
+            return;
+        }
+
+        foreach (var chunk in state.Chunks)
+        {
+            if (TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out var x, out var y, out var w, out var h))
+            {
+                screenRects[Pack(chunk.ChunkX, chunk.ChunkZ)] = new ScreenRect(x, y, w, h);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Возвращает кэш-индекс чанков по координатам. Перестраивает словарь, только если
+    /// <see cref="state"/> поменял ссылку (или кэш был сброшен в <see cref="SetState"/>).
+    /// </summary>
+    /// <returns>Словарь «упакованные координаты → ячейка чанка».</returns>
+    private IReadOnlyDictionary<long, ClaimChunkCellPacket> GetCellsByCoord()
+    {
+        if (cellsByCoordCache != null && ReferenceEquals(cellsByCoordOwner, state))
+        {
+            return cellsByCoordCache;
+        }
+
+        var dict = new Dictionary<long, ClaimChunkCellPacket>(state?.Chunks.Count ?? 0);
+        if (state != null)
+        {
+            foreach (var chunk in state.Chunks)
+            {
+                dict[Pack(chunk.ChunkX, chunk.ChunkZ)] = chunk;
+            }
+        }
+
+        cellsByCoordCache = dict;
+        cellsByCoordOwner = state;
+        return dict;
     }
 
     /// <summary>Рисует чёрную рамку по периметру карты.</summary>
@@ -457,13 +555,13 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="chunk">Данные ячейки чанка.</param>
     private void DrawChunk(Context ctx, ClaimChunkCellPacket chunk)
     {
-        if (!TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out var x, out var y, out var width, out var height))
+        if (!TryGetCachedScreenRect(chunk, out var x, out var y, out var w, out var h))
         {
             return;
         }
 
         SetCellColor(ctx, chunk.State);
-        ctx.Rectangle(x, y, width, height);
+        ctx.Rectangle(x, y, w, h);
         ctx.Fill();
     }
 
@@ -472,13 +570,13 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="chunk">Выделенный чанк.</param>
     private void DrawChunkSelection(Context ctx, ClaimChunkCellPacket chunk)
     {
-        if (!TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out var x, out var y, out var width, out var height))
+        if (!TryGetCachedScreenRect(chunk, out var x, out var y, out var w, out var h))
         {
             return;
         }
 
         ctx.SetSourceRGBA(1, 0.86, 0.2, 0.34);
-        ctx.Rectangle(x, y, width, height);
+        ctx.Rectangle(x, y, w, h);
         ctx.Fill();
         DrawChunkBorder(ctx, chunk, 1, 0.86, 0.2, 0.98, 2.5);
     }
@@ -493,14 +591,14 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="lineWidth">Толщина линии в пикселях.</param>
     private void DrawChunkBorder(Context ctx, ClaimChunkCellPacket chunk, double r, double g, double b, double a, double lineWidth)
     {
-        if (!TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out var x, out var y, out var width, out var height))
+        if (!TryGetCachedScreenRect(chunk, out var x, out var y, out var w, out var h))
         {
             return;
         }
 
         ctx.SetSourceRGBA(r, g, b, a);
         ctx.LineWidth = lineWidth;
-        ctx.Rectangle(x, y, width, height);
+        ctx.Rectangle(x, y, w, h);
         ctx.Stroke();
     }
 
@@ -514,7 +612,7 @@ public sealed class ClaimMapGridElement : GuiElement
     {
         foreach (var chunk in cellsByCoord.Values)
         {
-            if (!IsClaimedChunk(chunk) || !TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out var x, out var y, out var width, out var height))
+            if (!IsClaimedChunk(chunk) || !TryGetCachedScreenRect(chunk, out var x, out var y, out var w, out var h))
             {
                 continue;
             }
@@ -525,25 +623,25 @@ public sealed class ClaimMapGridElement : GuiElement
             // Левая грань — если слева нет чанка того же привата
             if (!HasSameClaimNeighbor(cellsByCoord, chunk, -1, 0))
             {
-                DrawLine(ctx, x, y, x, y + height);
+                DrawLine(ctx, x, y, x, y + h);
             }
 
             // Правая грань
             if (!HasSameClaimNeighbor(cellsByCoord, chunk, 1, 0))
             {
-                DrawLine(ctx, x + width, y, x + width, y + height);
+                DrawLine(ctx, x + w, y, x + w, y + h);
             }
 
             // Верхняя грань (по Z-)
             if (!HasSameClaimNeighbor(cellsByCoord, chunk, 0, -1))
             {
-                DrawLine(ctx, x, y, x + width, y);
+                DrawLine(ctx, x, y, x + w, y);
             }
 
             // Нижняя грань (по Z+)
             if (!HasSameClaimNeighbor(cellsByCoord, chunk, 0, 1))
             {
-                DrawLine(ctx, x, y + height, x + width, y + height);
+                DrawLine(ctx, x, y + h, x + w, y + h);
             }
         }
     }
@@ -1010,7 +1108,7 @@ public sealed class ClaimMapGridElement : GuiElement
     }
 
     /// <summary>
-    /// Колбэк смены вида мировой карты: обновляет слои и запрашивает перерисовку оверлея.
+    /// Колбэк смены видовой карты: обновляет слои и запрашивает перерисовку оверлея.
     /// </summary>
     /// <param name="nowVisibleChunks">Чанки, ставшие видимыми.</param>
     /// <param name="nowHiddenChunks">Чанки, скрывшиеся из вида.</param>
@@ -1099,7 +1197,7 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="chunk">Текущий чанк.</param>
     /// <param name="offsetX">Смещение соседа по X (-1, 0, 1).</param>
     /// <param name="offsetZ">Смещение соседа по Z (-1, 0, 1).</param>
-    /// <returns>true, если сосед занят тем же приватом.</returns>
+    /// <returns>true, если занят тем же приватом.</returns>
     private static bool HasSameClaimNeighbor(
         IReadOnlyDictionary<long, ClaimChunkCellPacket> cellsByCoord,
         ClaimChunkCellPacket chunk,
@@ -1175,7 +1273,8 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="cellsByCoord">Индекс всех чанков в текущем состоянии.</param>
     private void DrawClaimNames(Context ctx, IReadOnlyDictionary<long, ClaimChunkCellPacket> cellsByCoord)
     {
-        var visited = new HashSet<long>();
+        claimVisitedCache.Clear();
+        claimRegionQueue.Clear();
 
         foreach (var chunk in cellsByCoord.Values)
         {
@@ -1185,26 +1284,85 @@ public sealed class ClaimMapGridElement : GuiElement
             }
 
             var startKey = Pack(chunk.ChunkX, chunk.ChunkZ);
-            // Уже обработанный чанк входит в регион, найденный ранее из другой стартовой точки
-            if (visited.Contains(startKey))
+            if (claimVisitedCache.Contains(startKey))
             {
                 continue;
             }
 
-            // BFS: собираем все чанки одного привата, 4-связные друг с другом
-            var region = CollectConnectedClaimRegion(cellsByCoord, chunk, visited);
-            if (region.Count == 0 || string.IsNullOrWhiteSpace(region[0].ClaimName))
+            // BFS без выделения List — сразу считаем bounding box видимых чанков региона.
+            if (!CollectClaimRegionBounds(cellsByCoord, chunk, out var claimName,
+                    out double minX, out double minY, out double maxX, out double maxY, out bool hasVisible))
             {
                 continue;
             }
 
-            if (!TryGetRegionScreenBounds(region, out var x, out var y, out var width, out var height))
+            if (string.IsNullOrWhiteSpace(claimName) || !hasVisible)
             {
                 continue;
             }
 
-            DrawClaimNameLabel(ctx, region[0].ClaimName, x, y, width, height);
+            var width = maxX - minX;
+            var height = maxY - minY;
+            if (width < 12 || height < 10)
+            {
+                continue;
+            }
+
+            DrawClaimNameLabel(ctx, claimName!, minX, minY, width, height);
         }
+    }
+
+    /// <summary>
+    /// Обходит связный 4-связный регион чанков одного привата от стартового чанка
+    /// и вычисляет экранный bounding box только видимых чанков региона.
+    /// </summary>
+    /// <param name="cellsByCoord">Индекс чанков по координатам.</param>
+    /// <param name="start">Стартовый чанк региона.</param>
+    /// <param name="claimName">Выход: название привата.</param>
+    /// <param name="minX">Выход: минимальная X bounding box в пикселях.</param>
+    /// <param name="minY">Выход: минимальная Y bounding box в пикселях.</param>
+    /// <param name="maxX">Выход: максимальная X bounding box в пикселях.</param>
+    /// <param name="maxY">Выход: максимальная Y bounding box в пикселях.</param>
+    /// <param name="hasVisible">Выход: были ли видимые чанки в регионе.</param>
+    /// <returns>true, если регион обработан.</returns>
+    private static bool CollectClaimRegionBounds(
+        IReadOnlyDictionary<long, ClaimChunkCellPacket> cellsByCoord,
+        ClaimChunkCellPacket start,
+        out string? claimName,
+        out double minX, out double minY, out double maxX, out double maxY,
+        out bool hasVisible)
+    {
+        claimName = start.ClaimName;
+        minX = minY = double.MaxValue;
+        maxX = maxY = double.MinValue;
+        hasVisible = false;
+
+        // claimRegionQueue очищается один раз в начале DrawClaimNames.
+        var claimId = start.ClaimId;
+        var startKey = Pack(start.ChunkX, start.ChunkZ);
+        claimVisitedCache.Add(startKey);
+        claimRegionQueue.Enqueue(start);
+
+        while (claimRegionQueue.Count > 0)
+        {
+            var current = claimRegionQueue.Dequeue();
+
+            if (screenRects.TryGetValue(Pack(current.ChunkX, current.ChunkZ), out var r))
+            {
+                hasVisible = true;
+                minX = Math.Min(minX, r.X);
+                minY = Math.Min(minY, r.Y);
+                maxX = Math.Max(maxX, r.X + r.W);
+                maxY = Math.Max(maxY, r.Y + r.H);
+            }
+
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX - 1, current.ChunkZ, claimId);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX + 1, current.ChunkZ, claimId);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX, current.ChunkZ - 1, claimId);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX, current.ChunkZ + 1, claimId);
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -1212,7 +1370,7 @@ public sealed class ClaimMapGridElement : GuiElement
     /// </summary>
     /// <param name="cellsByCoord">Индекс чанков.</param>
     /// <param name="start">Стартовый чанк региона.</param>
-    /// <param name="visited">Глобальный набор уже обработанных координат (между регионами).</param>
+    /// <param name="visited">Посещённые координаты (между регионами).</param>
     /// <returns>Список чанков связного компонента.</returns>
     private static List<ClaimChunkCellPacket> CollectConnectedClaimRegion(
         IReadOnlyDictionary<long, ClaimChunkCellPacket> cellsByCoord,
@@ -1233,10 +1391,10 @@ public sealed class ClaimMapGridElement : GuiElement
             region.Add(current);
 
             // 4-связность: только ортогональные соседи
-            TryEnqueueNeighbor(cellsByCoord, current.ChunkX - 1, current.ChunkZ, claimId, visited, queue);
-            TryEnqueueNeighbor(cellsByCoord, current.ChunkX + 1, current.ChunkZ, claimId, visited, queue);
-            TryEnqueueNeighbor(cellsByCoord, current.ChunkX, current.ChunkZ - 1, claimId, visited, queue);
-            TryEnqueueNeighbor(cellsByCoord, current.ChunkX, current.ChunkZ + 1, claimId, visited, queue);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX - 1, current.ChunkZ, claimId);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX + 1, current.ChunkZ, claimId);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX, current.ChunkZ - 1, claimId);
+            TryEnqueueNeighbor(cellsByCoord, current.ChunkX, current.ChunkZ + 1, claimId);
         }
 
         return region;
@@ -1249,18 +1407,14 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <param name="chunkX">X соседа.</param>
     /// <param name="chunkZ">Z соседа.</param>
     /// <param name="claimId">Идентификатор привата для фильтрации.</param>
-    /// <param name="visited">Посещённые координаты.</param>
-    /// <param name="queue">Очередь обхода.</param>
     private static void TryEnqueueNeighbor(
         IReadOnlyDictionary<long, ClaimChunkCellPacket> cellsByCoord,
         int chunkX,
         int chunkZ,
-        int claimId,
-        HashSet<long> visited,
-        Queue<ClaimChunkCellPacket> queue)
+        int claimId)
     {
         var key = Pack(chunkX, chunkZ);
-        if (visited.Contains(key)
+        if (claimVisitedCache.Contains(key)
             || !cellsByCoord.TryGetValue(key, out var neighbor)
             || !IsClaimedChunk(neighbor)
             || neighbor.ClaimId != claimId)
@@ -1268,14 +1422,15 @@ public sealed class ClaimMapGridElement : GuiElement
             return;
         }
 
-        visited.Add(key);
-        queue.Enqueue(neighbor);
+        claimVisitedCache.Add(key);
+        claimRegionQueue.Enqueue(neighbor);
     }
 
     /// <summary>
     /// Вычисляет экранный ограничивающий прямоугольник региона чанков.
     /// </summary>
     /// <param name="region">Список чанков связного региона.</param>
+    /// <param name="rects">Кэш экранных прямоугольников чанков.</param>
     /// <param name="x">Выход: левый край.</param>
     /// <param name="y">Выход: верхний край.</param>
     /// <param name="width">Выход: ширина.</param>
@@ -1283,6 +1438,7 @@ public sealed class ClaimMapGridElement : GuiElement
     /// <returns>true, если регион достаточно велик для отображения текста (≥12×10 px).</returns>
     private bool TryGetRegionScreenBounds(
         IReadOnlyList<ClaimChunkCellPacket> region,
+        IReadOnlyDictionary<long, ScreenRect> rects,
         out double x,
         out double y,
         out double width,
@@ -1297,16 +1453,14 @@ public sealed class ClaimMapGridElement : GuiElement
 
         foreach (var chunk in region)
         {
-            if (!TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out var chunkX, out var chunkY, out var chunkW, out var chunkH))
+            if (rects.TryGetValue(Pack(chunk.ChunkX, chunk.ChunkZ), out var r))
             {
-                continue;
+                hasBounds = true;
+                minX = Math.Min(minX, r.X);
+                minY = Math.Min(minY, r.Y);
+                maxX = Math.Max(maxX, r.X + r.W);
+                maxY = Math.Max(maxY, r.Y + r.H);
             }
-
-            hasBounds = true;
-            minX = Math.Min(minX, chunkX);
-            minY = Math.Min(minY, chunkY);
-            maxX = Math.Max(maxX, chunkX + chunkW);
-            maxY = Math.Max(maxY, chunkY + chunkH);
         }
 
         if (!hasBounds)
@@ -1417,21 +1571,52 @@ public sealed class ClaimMapGridElement : GuiElement
         }
 
         const string ellipsis = "...";
-        for (var length = trimmed.Length - 1; length > 0; length--)
+        var lo = 1;
+        var hi = trimmed.Length - 1;
+        var best = ellipsis;
+
+        // Длина префикса монотонно сужает ширину => бинарный поиск самого длинного вписывающегося.
+        while (lo <= hi)
         {
-            var candidate = trimmed[..length] + ellipsis;
+            var mid = (lo + hi) / 2;
+            var candidate = trimmed[..mid] + ellipsis;
             if (ctx.TextExtents(candidate).Width <= maxWidth)
             {
-                return candidate;
+                best = candidate;
+                lo = mid + 1; // пытаемся более длинный префикс
+            }
+            else
+            {
+                hi = mid - 1;
             }
         }
 
-        return ellipsis;
+        return best;
     }
 
     #endregion
 
     #region Вспомогательные методы координат
+
+    /// <summary>Кэшированный прямоугольник чанка: берёт из <see cref="screenRects"/>,
+    /// если его там нет — вычисляет один раз через <see cref="TryGetChunkScreenRect"/>.</summary>
+    /// <param name="chunk">Ячейка чанка.</param>
+    /// <param name="x">Выход: левый край в пикселях.</param>
+    /// <param name="y">Выход: верхний край в пикселях.</param>
+    /// <param name="w">Выход: ширина в пикселях.</param>
+    /// <param name="h">Выход: высота в пикселях.</param>
+    /// <returns>true, если прямоугольник удалось получить.</returns>
+    private bool TryGetCachedScreenRect(ClaimChunkCellPacket chunk, out double x, out double y, out double w, out double h)
+    {
+        var key = Pack(chunk.ChunkX, chunk.ChunkZ);
+        if (screenRects.TryGetValue(key, out var r))
+        {
+            x = r.X; y = r.Y; w = r.W; h = r.H;
+            return true;
+        }
+
+        return TryGetChunkScreenRect(chunk.ChunkX, chunk.ChunkZ, out x, out y, out w, out h);
+    }
 
     /// <summary>Упаковывает пару координат чанка в один long для HashSet/Dictionary.</summary>
     /// <param name="chunkX">Индекс X.</param>
@@ -1468,4 +1653,35 @@ public sealed class ClaimMapGridElement : GuiElement
     }
 
     #endregion
+}
+
+/// <summary>Экранный прямоугольник чанка (x, y, ширина, высота в пикселях).</summary>
+public readonly struct ScreenRect
+{
+    /// <summary>Левый край прямоугольника в пикселях.</summary>
+    public double X { get; }
+
+    /// <summary>Верхний край прямоугольника в пикселях.</summary>
+    public double Y { get; }
+
+    /// <summary>Ширина прямоугольника в пикселях.</summary>
+    public double W { get; }
+
+    /// <summary>Высота прямоугольника в пикселях.</summary>
+    public double H { get; }
+
+    /// <summary>
+    /// Создаёт экранный прямоугольник чанка.
+    /// </summary>
+    /// <param name="x">Левый край в пикселях.</param>
+    /// <param name="y">Верхний край в пикселях.</param>
+    /// <param name="w">Ширина в пикселях.</param>
+    /// <param name="h">Высота в пикселях.</param>
+    public ScreenRect(double x, double y, double w, double h)
+    {
+        X = x;
+        Y = y;
+        W = w;
+        H = h;
+    }
 }
